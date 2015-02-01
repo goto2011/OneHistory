@@ -1,0 +1,146 @@
+body {
+	font-family: Georgia, "Times New Roman", 
+             "Microsoft YaHei", "微软雅黑", 
+             STXihei, "华文细黑", 
+             serif;
+}
+
+form {line-height: 5px;}
+p.thick {font-size:15px; font-weight: bold}
+p.normal {font-size:14px; font-weight: normal}
+nobr.thick {font-size:13px; font-weight: bold}
+nobr.normal {font-size:12px; font-weight: normal}
+
+table.normal {
+	line-height:15px;
+	width:800px; 
+	table-layout:fixed
+}
+
+textarea.has_text {
+	color:blue; 
+	font-weight:bold; 
+	height:50px; 
+	width:500px
+}
+
+textarea.no_text {
+	height:50px; 
+	width:500px
+}
+
+textarea.self_introduction {
+	height:60px; 
+	width:350px
+}
+
+div.system_user{
+	border-width:1px; 
+	border-style:solid; 
+	height:100%; 
+	width:580px;
+  	margin: 15px;
+  	padding: 15px;
+}
+
+div.alert {
+	font-size:18px; 
+	color:red; 
+	font-weight:bold; 
+	display:none
+}
+
+div.label {
+	font-size:18px; 
+	color:black; 
+	font-weight:normal; 
+	display:none
+}
+
+table.altrowstable {
+	font-family: verdana,arial,sans-serif;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #a9c6c9;
+	border-collapse: collapse;
+}
+table.altrowstable th {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.altrowstable td {
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+.oddrowcolor{
+	background-color:#d4e3e5;
+}
+.evenrowcolor{
+	background-color:#c3dde0;
+}
+
+.fixed{
+	position:fixed; 
+	z-index:1
+}
+
+#fixed_menu1{
+	padding:5px; 
+	text-align:right; 
+	font-weight:bold; 
+	background:#CCC; 
+	top:0; 
+	left:0; 
+	right:0; 
+	height:55px
+}
+
+#fixed_menu2{
+	width:100%; 
+	padding:10px; 
+	text-align:center; 
+	font-weight:bold;
+	background:#000; 
+	color:#FFF; 
+	bottom:0;
+}
+
+#fixed_menu3{
+	width:75px; 
+	height:150px; 
+	padding:10px; 
+	background:#333; 
+	line-height:20px; 
+	color:#FFF; 
+	margin-top:-75px; 
+	top:50%; 
+	left:0
+}
+
+#fixed_menu4{
+	width:75px; 
+	height:150px; 
+	padding:10px; 
+	background:#333; 
+	line-height:20px; 
+	color:#FFF; 
+	margin-top:-75px; 
+	top:50%; 
+	right:16px;
+}
+	
+a.red_black_underline:link, a.red_black_underline:visited{
+	color:red;
+	text-decoration:none;   /* link无下划线. */
+}
+
+a.red_black_underline:hover, a.red_black_underline:active{
+	color:blue;
+	text-decoration:underline;    /* 鼠标到位有下划线. */
+}
+	

@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>用户注册</title>
+
+<style type="text/css">
+    html{font-size:16px;}
+	fieldset{width:680px; margin: 0 auto;}
+	legend{font-weight:bold; font-size:14px;}
+	label{float:left; width:70px; margin-left:10px;}
+	.left{margin-left:80px;}
+	.input{width:150px;}
+	span{color: #666666;}
+</style>
+
+<script type="text/javascript">
+	function input_check(RegForm)
+	{
+		if (RegForm.user_name.value == "")
+		{
+		  	alert("请输入用户名!");
+		  	RegForm.user_name.focus();
+		  	return (false);
+		}
+		if ((RegForm.user_name.value.length < 3) || (RegForm.user_name.value.length > 15))
+		{
+		  	alert("用户名长度不合格!");
+		  	RegForm.user_name.focus();
+		  	return (false);
+		}
+		if (RegForm.password.value == "")
+		{
+		  	alert("请输入密码!");
+		  	RegForm.password.focus();
+		  	return (false);
+		}
+		if (RegForm.password.value.length < 6)
+		{
+		  	alert("密码长度不够!");
+		  	RegForm.password.focus();
+		  	return (false);
+		}
+		if (RegForm.repass.value != RegForm.password.value)
+		{
+		  	alert("两次密码不一致!");
+		  	RegForm.repass.focus();
+		  	return (false);
+		}
+	}
+</script>
+
+</head>
+<body>
+
+<div>
+<fieldset>
+<legend>用户注册</legend>
+<form name="RegForm" method="post" action="register.php" onSubmit="return input_check(this)">
+<p>
+<label for="user_name" class="label">用 户 名:</label>
+<input id="user_name" name="user_name" type="text" class="input" autofocus="autofocus" />
+<span>（必填，3-15字符长度，支持汉字、字母、数字及下划线）</span>
+</p>
+
+<p>
+<label for="password" class="label">密 &nbsp;&nbsp;&nbsp; 码:</label>
+<input id="password" name="password" type="password" class="input" />
+<span>（必填，不得少于6位）</span>
+</p>
+
+<p>
+<label for="repass" class="label">重复密码:</label>
+<input id="repass" name="repass" type="password" class="input" />
+<span>（必填）</span>
+</p>
+
+<p>
+<label for="email" class="label">email:</label>
+<input id="email" name="email" type="text" class="input" />
+<span>（可以不填, 但建议你提供一个 email 地址, 或者 qq 号.）</span>
+</p>
+
+<p>
+<input type="submit" name="submit" value="  提交注册  " class="left" />
+</p>
+</form>
+</fieldset>
+</div>
+
+</body>
+</html>

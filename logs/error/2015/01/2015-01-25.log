@@ -1,0 +1,7 @@
+2015/01/25 04:12:29 ERROR [/Users/duangan/Sites/localhost/import_do.php] 127.0.0.1 """error: insert_thing_to_db() -- <br />Incorrect string value: '\xF0\xA8\xAE\x81\xEF\xBC...' for column 'thing' at row 1"""
+2015/01/25 07:46:17 ERROR [/Users/duangan/Sites/localhost/php-lib/sql.php] 127.0.0.1 """error: insert_user() -- <br /> """
+2015/01/25 16:26:55 ERROR [/Users/duangan/Sites/localhost/php-lib/sql.php] 127.0.0.1 """error: insert_user() -- <br /> """
+2015/01/25 16:28:37 ERROR [/Users/duangan/Sites/localhost/php-lib/sql.php] 127.0.0.1 """error: insert_user() -- <br /> """
+2015/01/25 16:28:58 ERROR [/Users/duangan/Sites/localhost/php-lib/sql.php] 127.0.0.1 """error: insert_user() -- <br /> """
+2015/01/25 22:15:06 ERROR [/Users/duangan/Sites/localhost/login.php] 127.0.0.1 """登陆失败! user_name: Gandhi"""
+2015/01/25 22:15:23 ERROR [/Users/duangan/Sites/localhost/login.php] 127.0.0.1 """登陆失败! user_name: Gandhi"""
