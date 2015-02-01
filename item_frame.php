@@ -55,17 +55,28 @@
     }
     
     // 处理检索
-    if(!empty($_GET['search_key']))
+    if (is_total())
     {
-        set_is_search(1);
-        set_search_key($_GET['search_key']);
-        set_search_object($_GET['object']);
-        set_search_tag_type($_GET['tag_type']);
-        
-        if(check_search_param() == false)
+        if(!empty($_GET['search_key']))
+        {
+            set_is_search(1);
+            set_search_key($_GET['search_key']);
+            set_search_object($_GET['object']);
+            set_search_tag_type($_GET['tag_type']);
+            
+            if(check_search_param() == false)
+            {
+                search_param_init();
+            }
+        }
+        else 
         {
             search_param_init();
         }
+    }
+    else 
+    {
+        search_param_init();
     }
 ?>
 

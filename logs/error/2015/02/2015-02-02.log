@@ -1,0 +1,5 @@
+2015/02/02 00:11:29 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from thing where thing like '蒋介石' 。"""
+2015/02/02 00:11:29 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_item_by_search() -- select * from thing_time  where thing like '蒋介石'
+         order by thing_time.time ASC limit ,   。"""
+2015/02/02 00:14:45 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_item_by_search() -- select * from thing_time  where thing like '%蒋介石%'
+         order by thing_time.time ASC limit ,   。"""

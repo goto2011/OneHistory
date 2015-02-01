@@ -377,7 +377,33 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 // 根据检索条件获取满足条件的条目的数量.
 function get_thing_count_by_search($search_key)
 {
+    $sql_string = "select count(*) from thing_time where thing like '%$search_key%'";
+    $result = mysql_query($sql_string);
     
+    if($result == FALSE)
+    {
+       $GLOBALS['log']->error("error: get_thing_count_by_search() -- $sql_string 。");
+       return -1;
+    }
+    
+    $row = mysql_fetch_row($result);    // 返回一行.
+    return $row[0];
+}
+
+// 根据检索条件获取 thing 表的数据
+function get_thing_item_by_search($search_key, $offset, $page_size)
+{
+    $sql_string = "select * from thing_time  where thing like '%$search_key%'
+         order by thing_time.time ASC limit $offset, $page_size ";
+    
+    $result = mysql_query($sql_string);
+    if($result ==FALSE)
+    {
+       $GLOBALS['log']->error("error: get_thing_item_by_search() -- $sql_string 。");
+       return NULL;
+    }
+    
+    return $result;
 }
 
 // 生成 period 查询之条件字句

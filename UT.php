@@ -102,6 +102,8 @@
     echo get_year_order(get_time_number("2015-12-31", 3), 3) . "<br/>";
     
     assert("is_infinite(log(0))");
+    
+    print_r(explode(" ", "中国 首都 财政"));
 ?>
 
 </body>

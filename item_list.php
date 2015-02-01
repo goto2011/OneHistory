@@ -27,6 +27,12 @@
     {
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
+    
+    // 处理检索
+    if (!is_total())
+    {
+        search_param_init();
+    }
 ?>
 
 <link rel="stylesheet" type="text/css" href="./css/data.css" />
@@ -317,6 +323,10 @@ window.onload=function()
         else if(is_period_tag())
         {
             $result = get_thing_item_by_period($begin_year, $end_year, $offset, $page_size);
+        }
+        else if(is_search() == 1)
+        {
+            $result = get_thing_item_by_search(search_key(), $offset, $page_size);
         }
 		else
 		{
