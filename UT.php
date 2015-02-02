@@ -4,6 +4,7 @@
     require_once 'init.php';
     is_user(1);
 	require_once "data.php";
+    require_once "sql.php";
     
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
@@ -103,7 +104,10 @@
     
     assert("is_infinite(log(0))");
     
-    print_r(explode(" ", "中国 首都 财政"));
+    echo get_search_where_sub("中国 and 首都 and 财政") . "<br />";
+    echo get_search_where_sub("蒋介石 or 毛泽东") . "<br />";
+    echo get_search_where_sub("唐朝 and 诗人 - 李白") . "<br />";
+    echo get_search_where_sub("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
 ?>
 
 </body>

@@ -340,6 +340,10 @@ function get_thing_item_db($list_type, $offset, $page_size)
 	return $result;
 }
 
+////////////////////////////////// 2.thing_time end //////////////////////////
+
+
+////////////////////////////////// 3.tag begin //////////////////////////
 // 根据 tag 获取 thing 条目数量
 function get_thing_count_by_tag($property_UUID)
 {
@@ -362,7 +366,7 @@ function get_thing_count_by_tag($property_UUID)
 function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 {
 	$sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
-			where property_UUID = '$property_UUID') order by thing_time.time ASC limit $offset, $page_size ";
+			where property_UUID = '$property_UUID') order by thing_time.year_order ASC limit $offset, $page_size ";
 	
 	$result = mysql_query($sql_string);
 	if($result ==FALSE)
@@ -373,11 +377,74 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 	
 	return $result;
 }
+////////////////////////////////// 3.tag end //////////////////////////
+
+
+////////////////////////////////// 4.search begin //////////////////////////
+// 判断查询字符串是否为复杂查询串.
+function is_complex_search($search_key)
+{
+    if ((stristr($search_key, "(")) || (stristr($search_key, ")")) || (stristr($search_key, "and"))
+        || (stristr($search_key, "or")) || (stristr($search_key, "-")) || (stristr($search_key, "+")))
+    {
+        return true;
+    }
+    else 
+    {
+        return false;
+    }
+}
+
+// 生成 search 查询之条件字句
+function get_search_where_sub($search_key)
+{
+    $search_sub = " where ";
+    
+    $key_array = explode(" ", $search_key);
+    // $key_array = preg_split(" ", $search_key);
+    
+    for ($ii = 0; $ii < count($key_array); $ii++)
+    {
+        if ($key_array[$ii] == "(")
+        {
+            $search_sub .= " ( ";
+        }
+        else if ($key_array[$ii] == ")")
+        {
+            $search_sub .= " ) ";
+        }
+        else if ($key_array[$ii] == "and")
+        {
+            $search_sub .= " and ";
+        }
+        else if ($key_array[$ii] == "or")
+        {
+            $search_sub .= " or ";
+        }
+        else if ($key_array[$ii] == "-")
+        {
+            $search_sub .= " and not ";
+        }
+        else if (strlen(trim($key_array[$ii])) > 0)
+        {
+            if (substr($key_array[$ii], 0, 1) == "-")
+            {
+                $left_len = strlen($key_array[$ii]) - 1;
+                $search_sub .= " and not ( thing like '%" . substr($key_array[$ii], 1, $left_len) . "%' ) ";
+            }
+            else 
+            {
+                $search_sub .= " ( thing like '%" . $key_array[$ii] . "%' ) ";
+            }
+        }
+    }
+    return $search_sub;
+}
 
 // 根据检索条件获取满足条件的条目的数量.
 function get_thing_count_by_search($search_key)
 {
-    $sql_string = "select count(*) from thing_time where thing like '%$search_key%'";
+    $sql_string = "select count(*) from thing_time " . get_search_where_sub($search_key);
     $result = mysql_query($sql_string);
     
     if($result == FALSE)
@@ -393,8 +460,8 @@ function get_thing_count_by_search($search_key)
 // 根据检索条件获取 thing 表的数据
 function get_thing_item_by_search($search_key, $offset, $page_size)
 {
-    $sql_string = "select * from thing_time  where thing like '%$search_key%'
-         order by thing_time.time ASC limit $offset, $page_size ";
+    $sql_string = "select * from thing_time " . get_search_where_sub($search_key) .
+         " order by thing_time.year_order ASC limit $offset, $page_size ";
     
     $result = mysql_query($sql_string);
     if($result ==FALSE)
@@ -405,7 +472,10 @@ function get_thing_item_by_search($search_key, $offset, $page_size)
     
     return $result;
 }
+////////////////////////////////// 4.search end //////////////////////////
 
+
+////////////////////////////////// 5.period begin //////////////////////////
 // 生成 period 查询之条件字句
 function get_period_where_sub($begin_year, $end_year)
 {
@@ -449,7 +519,7 @@ function get_thing_count_by_period($begin_year, $end_year)
 function get_thing_item_by_period($begin_year, $end_year, $offset, $page_size)
 {
     $sql_string = "select * from thing_time " . get_period_where_sub($begin_year, $end_year)
-        . " order by thing_time.time ASC limit $offset, $page_size ";
+        . " order by thing_time.year_order ASC limit $offset, $page_size ";
     
     $result = mysql_query($sql_string);
     if($result ==FALSE)
@@ -460,12 +530,10 @@ function get_thing_item_by_period($begin_year, $end_year, $offset, $page_size)
     
     return $result;
 }
-
-////////////////////////////////// 2.thing_time end //////////////////////////
-
+////////////////////////////////// 5.period end //////////////////////////
 
 
-////////////////////////////////// 3.property start //////////////////////////
+////////////////////////////////// 6.property start //////////////////////////
 // 将tag 插入数据库
 function insert_tags($tags, $tags_type, $thing_uuid)
 {
@@ -795,11 +863,11 @@ function re_calc_year_order()
     return 1;
 }
 
-////////////////////////////////// 3.property end //////////////////////////
+////////////////////////////////// 6.property end //////////////////////////
 
 
 
-////////////////////////////////// 4.user start //////////////////////////
+////////////////////////////////// 7.user start //////////////////////////
 // 用户校验
 function user_validate($user_name, $password)
 {
@@ -922,10 +990,10 @@ function is_manager()
     return ((get_user_right() == 1) || (get_user_right() == 2));
 }
 
-////////////////////////////////// 4.user end //////////////////////////
+////////////////////////////////// 7.user end //////////////////////////
 
 
-////////////////////////////////// 5.follow start //////////////////////////
+////////////////////////////////// 8.follow start //////////////////////////
 // 判断当前 tag 是否已关注
 function is_followed($tag_uuid)
 {
@@ -1008,7 +1076,7 @@ function delete_follow_to_db($tag_uuid)
     
 }
 
-////////////////////////////////// 5.follow end //////////////////////////
+////////////////////////////////// 8.follow end //////////////////////////
 
 
 ?>

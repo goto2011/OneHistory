@@ -3,3 +3,90 @@
          order by thing_time.time ASC limit ,   。"""
 2015/02/02 00:14:45 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_item_by_search() -- select * from thing_time  where thing like '%蒋介石%'
          order by thing_time.time ASC limit ,   。"""
+2015/02/02 20:43:43 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: insert_thing_to_db() -- time array error."""
+2015/02/02 20:43:43 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+大分事件"""
+2015/02/02 20:43:43 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: insert_thing_to_db() -- time array error."""
+2015/02/02 20:56:29 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:01:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:01:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:01:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:01:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:01:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:06:19 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:15:32 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/02 21:59:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from  where  ( thing like '%蒋介石%' )  。"""
+2015/02/02 22:00:51 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from  where  ( thing like '%蒋介石%' )  。"""
+2015/02/02 22:03:13 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from  where  ( thing like '%蒋介石%' )  。"""
+2015/02/02 22:03:37 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from  where  ( thing like '%蒋介石%' )  or  ( thing like '%毛泽东%' )  。"""
+2015/02/02 22:03:49 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] 127.0.0.1 """error: get_thing_count_by_search() -- select count(*) from  where  ( thing like '%蒋介石%' )  or  ( thing like '%毛泽东%' )  。"""

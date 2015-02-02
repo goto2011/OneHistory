@@ -52,7 +52,7 @@ window.onload=function()
     function print_search_zone()
     {
         echo "<div align='left' style='font-family:微软雅黑'>";
-        echo "<form atcion='item_frame.php' method='get'>";
+        echo "<form action='item_frame.php' method='get'>";
         echo "<p style='font-family:微软雅黑;color:red;font-size:15px'>查找：";
         
         echo "<input name='search_key' type='text' width='240px' value='" . search_key() . "' />";
@@ -78,8 +78,6 @@ window.onload=function()
     // 打印时期 tag 链接
     function create_period_link($index)
     {
-        global $period;
-        
         $result = "";
         for ($ii = get_small_id_begin($index); $ii <= get_small_id_end($index); $ii++)
         {
