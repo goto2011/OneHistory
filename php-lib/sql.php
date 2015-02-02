@@ -401,43 +401,61 @@ function get_search_where_sub($search_key)
     $search_sub = " where ";
     
     $key_array = explode(" ", $search_key);
-    // $key_array = preg_split(" ", $search_key);
+    // $key_array = preg_split("/\s+-\(\)/", $search_key);
     
-    for ($ii = 0; $ii < count($key_array); $ii++)
+    if (is_complex_search($search_key))
     {
-        if ($key_array[$ii] == "(")
+        for ($ii = 0; $ii < count($key_array); $ii++)
         {
-            $search_sub .= " ( ";
-        }
-        else if ($key_array[$ii] == ")")
-        {
-            $search_sub .= " ) ";
-        }
-        else if ($key_array[$ii] == "and")
-        {
-            $search_sub .= " and ";
-        }
-        else if ($key_array[$ii] == "or")
-        {
-            $search_sub .= " or ";
-        }
-        else if ($key_array[$ii] == "-")
-        {
-            $search_sub .= " and not ";
-        }
-        else if (strlen(trim($key_array[$ii])) > 0)
-        {
-            if (substr($key_array[$ii], 0, 1) == "-")
+            if ($key_array[$ii] == "(")
             {
-                $left_len = strlen($key_array[$ii]) - 1;
-                $search_sub .= " and not ( thing like '%" . substr($key_array[$ii], 1, $left_len) . "%' ) ";
+                $search_sub .= " ( ";
             }
-            else 
+            else if ($key_array[$ii] == ")")
+            {
+                $search_sub .= " ) ";
+            }
+            else if ($key_array[$ii] == "and")
+            {
+                $search_sub .= " and ";
+            }
+            else if (($key_array[$ii] == "or") || ($key_array[$ii] == "+"))
+            {
+                $search_sub .= " or ";
+            }
+            else if ($key_array[$ii] == "-")
+            {
+                $search_sub .= " and not ";
+            }
+            else if (strlen(trim($key_array[$ii])) > 0)
+            {
+                if (substr($key_array[$ii], 0, 1) == "-")
+                {
+                    $left_len = strlen($key_array[$ii]) - 1;
+                    $search_sub .= " and not ( thing like '%" . substr($key_array[$ii], 1, $left_len) . "%' ) ";
+                }
+                else 
+                {
+                    $search_sub .= " ( thing like '%" . $key_array[$ii] . "%' ) ";
+                }
+            }
+       } // for 
+    } // if
+    else
+    {
+        for ($ii = 0; $ii < count($key_array); $ii++)
+        {
+            if ($ii == 0)
             {
                 $search_sub .= " ( thing like '%" . $key_array[$ii] . "%' ) ";
             }
-        }
-    }
+            else 
+            {
+                $search_sub .= " or ( thing like '%" . $key_array[$ii] . "%' ) ";
+            }
+        } // for
+    } // else
+    
     return $search_sub;
 }
 
