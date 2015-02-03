@@ -195,7 +195,7 @@ function get_time_string($time_number, $time_type)
     
      if($time_type == 1)
      {
-        $my_time_string = "距今 $time_number年前";
+        $my_time_string = "距今 $time_number 年前";
      }
      else if($time_type == 2)
      {

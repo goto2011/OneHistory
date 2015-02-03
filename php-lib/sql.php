@@ -400,14 +400,24 @@ function get_search_where_sub($search_key)
 {
     $search_sub = " where ";
     
+    $search_key = str_replace("+", " + ", $search_key);
+    $search_key = str_replace("-", " - ", $search_key);
+    $search_key = str_replace("(", " ( ", $search_key);
+    $search_key = str_replace(")", " ) ", $search_key);
+    
     $key_array = explode(" ", $search_key);
+    // 这个正则表达式是对的, 但不合乎需求.
     // $key_array = preg_split("/\s+-\(\)/", $search_key);
     
     if (is_complex_search($search_key))
     {
         for ($ii = 0; $ii < count($key_array); $ii++)
         {
-            if ($key_array[$ii] == "(")
+            if (strlen(trim($key_array[$ii])) == 0)
+            {
+                continue;
+            }
+            else if ($key_array[$ii] == "(")
             {
                 $search_sub .= " ( ";
             }
@@ -427,17 +437,9 @@ function get_search_where_sub($search_key)
             {
                 $search_sub .= " and not ";
             }
-            else if (strlen(trim($key_array[$ii])) > 0)
+            else
             {
-                if (substr($key_array[$ii], 0, 1) == "-")
-                {
-                    $left_len = strlen($key_array[$ii]) - 1;
-                    $search_sub .= " and not ( thing like '%" . substr($key_array[$ii], 1, $left_len) . "%' ) ";
-                }
-                else 
-                {
-                    $search_sub .= " ( thing like '%" . $key_array[$ii] . "%' ) ";
-                }
+                $search_sub .= " ( thing like '%" . $key_array[$ii] . "%' ) ";
             }
        } // for 
     } // if

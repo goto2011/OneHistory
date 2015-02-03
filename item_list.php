@@ -39,10 +39,41 @@
 <script type='text/javascript' src='./js/data.js'></script>
 
 <script type="text/javascript">
-window.onload=function()
+window.onload = function()
 {
     altRows('alternatecolor');
 }
+
+function select_all(thisform)
+{
+    for ( var i = 0; i < thisform.elements.length; i++)
+    {
+        // 提取控件  
+        var checkbox = thisform.elements[i];
+        // 检查是否是指定的控件  
+        if (checkbox.name === "groupCheckbox" && checkbox.type === "checkbox" && checkbox.checked === false)
+        {
+            // 正选
+            checkbox.checked = true;
+        }
+    }
+}
+
+function select_none(thisform)
+{
+    for ( var i = 0; i < thisform.elements.length; i++)
+    {
+        // 提取控件  
+        var checkbox = thisform.elements[i];
+        // 检查是否是指定的控件  
+        if (checkbox.name === "groupCheckbox" && checkbox.type === "checkbox" && checkbox.checked === true)
+        {
+            // 反选  
+            checkbox.checked = false;
+        }
+    }
+}
+
 </script>
 
 <?php 
@@ -156,7 +187,31 @@ window.onload=function()
 		
 		return $result_string;
 	}
-	
+    
+    // 判断当前页号是否显示.
+    function page_is_show($curr_page, $showing_page, $total_pages)
+    {
+        if ($total_pages <= 15)
+        {
+            return true;
+        }
+        if (($curr_page == 1) || ($curr_page == $total_pages) || ($curr_page == $showing_page))
+        {
+            return true;
+        }
+        if (($curr_page >= $showing_page - 3) && ($curr_page <= $showing_page + 3))
+        {
+            return true;
+        }
+        $index = floor(($total_pages - 7) / 8);
+        
+        if (($curr_page % $index) == 0)
+        {
+            return true;
+        }
+        
+        return false;
+    }
 	
 	// 打印表格控制区(表格上下两条都有)
 	function print_list_control($item_count, $page_size, $pages, $curr_page)
@@ -177,18 +232,37 @@ window.onload=function()
             $item_start = $item_end;
         }
 		
-		echo "<div align='left' style='font-family:微软雅黑;color:red'> 
-		      本页条目:$item_start-$item_end -- 总计条目:$item_count -- ";
+		echo "<div align='left' style='font-family:微软雅黑; color:red; font-weight: bold'> ";
+        if(is_search())
+        {
+            echo "<span onclick='select_all(this.form)'>全选</span> -- 
+                  <span onclick='select_none(this.form)'>全不选</span> -- ";
+        }
+		echo "总计条目:$item_count -- 本页条目:$item_start-$item_end -- ";
 
 		for ($index = 1; $index < $curr_page; $index++)
 		{
-			echo "<a href='item_frame.php?page=$index'>[$index]</a> ";
+		    if (page_is_show($index, $curr_page, $pages))
+            {
+			     echo "<a href='item_frame.php?page=$index'> [$index] </a> ";
+            }
+            else 
+            {
+                echo ".";    
+            }
 		}
 		echo "[$curr_page]";
 		
 		for ($index = $curr_page + 1; $index <= $pages; $index++)
 		{
-			echo "<a href='item_frame.php?page=$index'>[$index]</a> ";
+		    if (page_is_show($index, $curr_page, $pages))
+            {
+			     echo "<a href='item_frame.php?page=$index'> [$index] </a> ";
+            }
+            else 
+            {
+                echo ".";    
+            }
 		}
         
         if(!is_tag() && !is_period_tag())
@@ -244,6 +318,10 @@ window.onload=function()
 	{
 		echo "<table class='altrowstable' id='alternatecolor' style='border-width: 1px;'>";
 		echo "<tr>";
+        if(is_search())
+        {
+            echo "<td></td>";
+        }
 		echo "<td style='font-family:微软雅黑; text-align:center; width:3%' >编号</td>";
 		echo "<td style='font-family:微软雅黑; text-align:center; width:8%' >时间</td>";
 		echo "<td style='font-family:微软雅黑; text-align:center; width:5%' >时间上下限</td>";
@@ -299,9 +377,10 @@ window.onload=function()
         }
         
 		// 打印标签区
-		print_tags_zone();  // tags.
+		print_tags_zone();
 		
-		print_list_control($item_count, $page_size, $pages, get_page());   // list control.
+        // 打印表格控制条.
+		print_list_control($item_count, $page_size, $pages, get_page());
 		if (is_tag())
         {
             print_tag_control();
@@ -339,6 +418,10 @@ window.onload=function()
 			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
 			
 			echo "<tr>";
+            if(is_search())
+            {
+                echo "<td><input name='groupCheckbox' type='checkbox' value=''></td>";
+            }
 			echo "<td>$index</td>";
 			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
 			echo "<td></td>";
