@@ -43,37 +43,6 @@ window.onload = function()
 {
     altRows('alternatecolor');
 }
-
-function select_all(thisform)
-{
-    for ( var i = 0; i < thisform.elements.length; i++)
-    {
-        // 提取控件  
-        var checkbox = thisform.elements[i];
-        // 检查是否是指定的控件  
-        if (checkbox.name === "groupCheckbox" && checkbox.type === "checkbox" && checkbox.checked === false)
-        {
-            // 正选
-            checkbox.checked = true;
-        }
-    }
-}
-
-function select_none(thisform)
-{
-    for ( var i = 0; i < thisform.elements.length; i++)
-    {
-        // 提取控件  
-        var checkbox = thisform.elements[i];
-        // 检查是否是指定的控件  
-        if (checkbox.name === "groupCheckbox" && checkbox.type === "checkbox" && checkbox.checked === true)
-        {
-            // 反选  
-            checkbox.checked = false;
-        }
-    }
-}
-
 </script>
 
 <?php 
@@ -96,11 +65,11 @@ function select_none(thisform)
         echo "&nbsp;&nbsp;&nbsp;<nobr class='normal'>标签类型: ";
         echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='1' checked='checked'>全部";
         echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='2' >国家民族";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='3' >时间起止";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='4' >人物";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='5' >地理";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='6' >出处";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='7' >自由标签";
+        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='3' >自由标签";
+        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='4' >事件起止";
+        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='5' >人物";
+        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='6' >地理";
+        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='7' >出处";
         echo "</nobr>";
         
         echo "</form></div>";
@@ -235,8 +204,8 @@ function select_none(thisform)
 		echo "<div align='left' style='font-family:微软雅黑; color:red; font-weight: bold'> ";
         if(is_search())
         {
-            echo "<span onclick='select_all(this.form)'>全选</span> -- 
-                  <span onclick='select_none(this.form)'>全不选</span> -- ";
+            echo "<span class='link' onclick='select_all()'>全选</span> -- 
+                  <span class='link' onclick='select_none()'>全不选</span> -- ";
         }
 		echo "总计条目:$item_count -- 本页条目:$item_start-$item_end -- ";
 
@@ -265,7 +234,7 @@ function select_none(thisform)
             }
 		}
         
-        if(!is_tag() && !is_period_tag())
+        if(!is_tag() && !is_period_tag() && !is_search())
         {
             echo "</div>";
         }
@@ -311,6 +280,26 @@ function select_none(thisform)
             : get_time_string(get_end_year($big_id, $small_id), 2);
             
         echo " -- <nobr class='thick'>当前时间: $name ( $begin - $end ) </nobr></div>";
+    }
+    
+    // 打印添加 tag 界面.
+    function print_add_tag_form()
+    {
+        echo "<form method='get' action='' style='display:inline-block; right:3%; position:absolute;' ";
+        echo "<span>添加标签</span>";
+        echo "<select name='tag_type'>";
+        echo "  <option value='1'>国家民族</option>";
+        echo "  <option value='2'>自由标签</option>";
+        echo "  <option value='3'>事件开始</option>";
+        echo "  <option value='4'>事件结束</option>";
+        echo "  <option value='5'>人物</option>";
+        echo "  <option value='6'>地理</option>";
+        echo "  <option value='7'>出处</option>";
+        echo "</select>";
+        echo "<nobr><input name='add_tag' type='text' width='150px'></nobr>";
+        echo "<input name='' type='submit' value='添加'>";
+        echo "</form>";
+        echo "</div>";
     }
 	
 	// 打印条目列表的表头
@@ -388,6 +377,10 @@ function select_none(thisform)
         else if(is_period_tag())
         {
             print_period_info();
+        }
+        else if (is_search())
+        {
+            print_add_tag_form();
         }
             
 		print_item_list_head();   // table head.

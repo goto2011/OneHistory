@@ -50,7 +50,14 @@
 	$thing = $_GET['thing'];
 	$time_array['time'] = get_time_number($_GET['time'], $_GET['time_type']);
 	$time_array['time_type']  = $_GET['time_type'];
-	$time_array['time_limit'] = $_GET['time_limit'];
+    if (empty($_GET['time_limit']))
+    {
+        $time_array['time_limit'] = 0;
+    }
+    else 
+    {
+        $time_array['time_limit'] = $_GET['time_limit'];
+    }
 	$time_array['time_limit_type'] = $_GET['time_limit_type'];
     $time_array['status'] = "ok";
 	

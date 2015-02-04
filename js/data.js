@@ -22,7 +22,31 @@ function altRows(id)
 	}
 }
 
+// item list 界面 checkbox 全选
+function select_all()
+{
+	var checkboxs = document.getElementsByName("groupCheckbox");
+	for (var ii = 0; ii < checkboxs.length; ii++)
+	{
+		if (checkboxs[ii].checked == false)
+		{
+			checkboxs[ii].checked = true;
+		}
+	}
+}
 
+// item list 界面 checkbox 全不选
+function select_none()
+{
+	var checkboxs = document.getElementsByName("groupCheckbox");
+	for (var ii = 0; ii < checkboxs.length; ii++)
+	{
+		if (checkboxs[ii].checked == true)
+		{
+			checkboxs[ii].checked = false;
+		}
+	}
+}
 
 function onAddTag(tag)
 {

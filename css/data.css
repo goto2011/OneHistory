@@ -11,6 +11,14 @@ p.normal {font-size:14px; font-weight: normal}
 nobr.thick {font-size:13px; font-weight: bold}
 nobr.normal {font-size:12px; font-weight: normal}
 
+/* 文本带有下划线 */
+span.link{
+	color:blue;
+	font-weight:bold;
+	text-decoration:underline;
+	cursor:pointer;
+}
+
 table.normal {
 	line-height:15px;
 	width:800px; 

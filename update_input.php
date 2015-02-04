@@ -82,6 +82,7 @@
 			$time_type = $row['time_type'];
 			$time = get_time_string_lite($row['time'], $time_type);
 			$time_limit = $row['time_limit'];
+            if ($time_limit == 0)$time_limit = null;
 			$time_limit_type = $row['time_limit_type'];
 			
 			// echo "$time - " . $row['time'] . "-" . $row['time_type'] . "<br />";
