@@ -5,7 +5,7 @@ body {
              serif;
 }
 
-form {line-height: 5px;}
+/* form {line-height: 5px;} */
 p.thick {font-size:15px; font-weight: bold}
 p.normal {font-size:14px; font-weight: normal}
 nobr.thick {font-size:13px; font-weight: bold}

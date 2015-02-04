@@ -25,7 +25,7 @@ function altRows(id)
 // item list 界面 checkbox 全选
 function select_all()
 {
-	var checkboxs = document.getElementsByName("groupCheckbox");
+	var checkboxs = document.getElementsByName("groupCheckbox[]");
 	for (var ii = 0; ii < checkboxs.length; ii++)
 	{
 		if (checkboxs[ii].checked == false)
@@ -38,7 +38,7 @@ function select_all()
 // item list 界面 checkbox 全不选
 function select_none()
 {
-	var checkboxs = document.getElementsByName("groupCheckbox");
+	var checkboxs = document.getElementsByName("groupCheckbox[]");
 	for (var ii = 0; ii < checkboxs.length; ii++)
 	{
 		if (checkboxs[ii].checked == true)
@@ -46,6 +46,22 @@ function select_none()
 			checkboxs[ii].checked = false;
 		}
 	}
+}
+
+// item list 界面 checkbox 检查是否都没有选中.
+function checkbox_check()
+{
+	var checkboxs = document.getElementsByName("groupCheckbox[]");
+	for (var ii = 0; ii < checkboxs.length; ii++)
+	{
+		if (checkboxs[ii].checked == true)
+		{
+			return true;
+		}
+	}
+	
+	alert("请至少选中一个表格行.");
+	return false;
 }
 
 function onAddTag(tag)

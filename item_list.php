@@ -200,6 +200,12 @@ window.onload = function()
         {
             $item_start = $item_end;
         }
+        
+        // form 要包大部分.
+        if (is_search())
+        {
+            echo "<form method='post' action='./ajax/list_add_tag_do.php'  onSubmit='return checkbox_check()'>";
+        }
 		
 		echo "<div align='left' style='font-family:微软雅黑; color:red; font-weight: bold'> ";
         if(is_search())
@@ -285,8 +291,7 @@ window.onload = function()
     // 打印添加 tag 界面.
     function print_add_tag_form()
     {
-        echo "<form method='get' action='' style='display:inline-block; right:3%; position:absolute;' ";
-        echo "<span>添加标签</span>";
+        echo "<span style='display:inline-block; right:3%; position:absolute;' >添加标签 : ";
         echo "<select name='tag_type'>";
         echo "  <option value='1'>国家民族</option>";
         echo "  <option value='2'>自由标签</option>";
@@ -298,6 +303,7 @@ window.onload = function()
         echo "</select>";
         echo "<nobr><input name='add_tag' type='text' width='150px'></nobr>";
         echo "<input name='' type='submit' value='添加'>";
+        echo "</span>";
         echo "</form>";
         echo "</div>";
     }
@@ -413,7 +419,7 @@ window.onload = function()
 			echo "<tr>";
             if(is_search())
             {
-                echo "<td><input name='groupCheckbox' type='checkbox' value=''></td>";
+                echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
             }
 			echo "<td>$index</td>";
 			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
@@ -430,6 +436,10 @@ window.onload = function()
         if (is_tag())
         {
             print_tag_control();
+        }
+        if (is_search())
+        {
+            echo "</form>";
         }
         
         // exit
