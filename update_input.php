@@ -149,7 +149,7 @@
 	}
 ?>
 
-<form action="update_do.php" method="get" onsubmit="return validate_form(this)">
+<form action="./ajax/update_do.php" method="get" onsubmit="return validate_form(this)">
 
 <p class="thick">时间类型：
 <nobr class="normal"><input type="radio" id="time_type_1" name="time_type" value="1" <?php flash_time_type($is_edit, 1, $time_type); ?> />

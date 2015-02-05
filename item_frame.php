@@ -19,6 +19,7 @@
             set_property_UUID("");
             set_period_big_index(-1);
             set_period_small_index(-1);
+            search_param_init();
         }
         else 
         {
@@ -68,10 +69,6 @@
             {
                 search_param_init();
             }
-        }
-        else 
-        {
-            search_param_init();
         }
     }
     else 

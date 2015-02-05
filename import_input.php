@@ -22,7 +22,7 @@
 <!-- 页眉 end -->
 
 <font size="5" color="red">批量数据录入</font><br>
-<form action="import_do.php" method="post">
+<form action="./ajax/import_do.php" method="post">
 
 <p>导入内容：<textarea class="context" rows="16" cols="88" name="context" 
 	required=required autofocus="autofocus"></textarea></p>

@@ -554,8 +554,71 @@ function get_thing_item_by_period($begin_year, $end_year, $offset, $page_size)
 
 
 ////////////////////////////////// 6.property start //////////////////////////
-// 将tag 插入数据库
-function insert_tags($tags, $tags_type, $thing_uuid)
+// 将单个 tag 插入数据库.
+function insert_tag($tag_name, $tag_type, $thing_uuid)
+{
+    $tag_uuid = "";
+
+    // 先检查是不是有重复。
+    $sql_string = "select property_UUID from property 
+        where property_name='$tag_name' and property_type=$tag_type";
+
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。");
+        return 0;
+    }
+
+    if (mysql_num_rows($result) == 0)
+    {
+        $tag_uuid = create_guid();
+            
+        // 如果没有就插入标签表.
+        $sql_string = "insert into property(property_UUID, property_name, property_type, add_time, user_UUID)
+            VALUES('$tag_uuid', '$tag_name', $tag_type, now(), '" . get_user_id() . "')";
+            
+        if (mysql_query($sql_string) === FALSE)
+        {
+            $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。" . mysql_error());
+            return 0;
+        }
+    }
+    else
+    {
+        $row = mysql_fetch_array($result);
+        $tag_uuid = $row['property_UUID'];
+    }
+
+    // 插入事件-标签表
+    $sql_string = "select property_UUID from thing_property
+        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid'";
+
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。");
+        return 0;
+    }
+
+    if (mysql_num_rows($result) == 0)
+    {
+        $sql_string = "insert into thing_property(thing_UUID, property_UUID, add_time, user_UUID)
+            VALUES('$thing_uuid', '$tag_uuid', now(), '" . get_user_id() . "')";
+            
+        if (mysql_query($sql_string) === FALSE)
+        {
+            $GLOBALS['log']->error("Error: insert_tag() -- $sql_string , " . mysql_error());
+            return 0;
+        }
+        // 更新 tag 的 hot 指数.
+        update_tag_hot_index(1, $tag_uuid);
+    }
+    return 1;
+}
+
+// 将多个 tag 插入数据库
+function insert_tags($tags, $tag_type, $thing_uuid)
 {
 	$index = 0;
 
@@ -565,66 +628,7 @@ function insert_tags($tags, $tags_type, $thing_uuid)
 			
 		while(($token != false) && (strlen($token) > 0))
 		{
-			$tags_uuid = "";
-
-			// 先检查是不是有重复。
-			$sql_string = "select property_UUID from property 
-				where property_name='$token' and property_type=$tags_type";
-
-			$result = mysql_query($sql_string);
-			if($result == FALSE)
-            {
-                $GLOBALS['log']->error("error: insert_tags() -- $sql_string 。");
-                return -1;
-            }
-
-			if (mysql_num_rows($result) == 0)
-			{
-				$tags_uuid = create_guid();
-					
-				// 如果没有就插入标签表.
-				$sql_string = "insert into property(property_UUID, property_name, property_type, add_time, user_UUID)
-					VALUES('$tags_uuid', '$token', $tags_type, now(), '" . get_user_id() . "')";
-					
-				if (mysql_query($sql_string) === FALSE)
-				{
-					$GLOBALS['log']->error("error: insert_tags() -- $sql_string 。" . mysql_error());
-                    return -1;
-				}
-			}
-			else
-			{
-				$row = mysql_fetch_array($result);
-				$tags_uuid = $row['property_UUID'];
-			}
-
-			// 插入事件-标签表
-			$sql_string = "select property_UUID from thing_property
-				where thing_UUID='$thing_uuid' and property_UUID='$tags_uuid'";
-
-			$result = mysql_query($sql_string);
-			if ($result == FALSE)
-            {
-                $GLOBALS['log']->error("error: insert_tags() -- $sql_string 。");
-                return -1;
-            }
-
-			if (mysql_num_rows($result) == 0)
-			{
-				$index++;  // tag count.
-				
-				$sql_string = "insert into thing_property(thing_UUID, property_UUID, add_time, user_UUID)
-					VALUES('$thing_uuid', '$tags_uuid', now(), '" . get_user_id() . "')";
-					
-				if (mysql_query($sql_string) === FALSE)
-				{
-					$GLOBALS['log']->error("Error: $sql_string , " . mysql_error());
-					return -1;
-				}
-                // 更新 tag 的 hot 指数.
-                update_tag_hot_index(1, $tags_uuid);
-			}
-
+		    $index += insert_tag($token, $tag_type, $thing_uuid);
 			$token = strtok(",");
 		}
 	}

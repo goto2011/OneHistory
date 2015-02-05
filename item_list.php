@@ -293,18 +293,17 @@ window.onload = function()
     {
         echo "<span style='display:inline-block; right:3%; position:absolute;' >添加标签 : ";
         echo "<select name='tag_type'>";
-        echo "  <option value='1'>国家民族</option>";
-        echo "  <option value='2'>自由标签</option>";
-        echo "  <option value='3'>事件开始</option>";
-        echo "  <option value='4'>事件结束</option>";
-        echo "  <option value='5'>人物</option>";
-        echo "  <option value='6'>地理</option>";
-        echo "  <option value='7'>出处</option>";
+        echo "  <option value='7'>国家民族</option>";
+        echo "  <option value='6'>自由标签</option>";
+        echo "  <option value='1'>事件开始</option>";
+        echo "  <option value='2'>事件结束</option>";
+        echo "  <option value='4'>人物</option>";
+        echo "  <option value='5'>地理</option>";
+        echo "  <option value='3'>出处</option>";
         echo "</select>";
-        echo "<nobr><input name='add_tag' type='text' width='150px'></nobr>";
+        echo "<nobr><input name='tag_name' type='text' width='150px'></nobr>";
         echo "<input name='' type='submit' value='添加'>";
         echo "</span>";
-        echo "</form>";
         echo "</div>";
     }
 	
