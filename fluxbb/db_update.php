@@ -699,8 +699,8 @@ switch ($stage)
 		$db->alter_field('bans', 'email', 'VARCHAR(80)', true) or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('posts', 'poster_email', 'VARCHAR(80)', true) or error('Unable to alter poster_email field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'email', 'VARCHAR(80)', false, '') or error('Unable to alter email field', __FILE__, __LINE__, $db->error());
-		$db->alter_field('users', 'jabber', 'VARCHAR(80)', true) or error('Unable to alter jabber field', __FILE__, __LINE__, $db->error());
-		$db->alter_field('users', 'msn', 'VARCHAR(80)', true) or error('Unable to alter msn field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'weixin', 'VARCHAR(48)', true) or error('Unable to alter weixin field', __FILE__, __LINE__, $db->error());
+		$db->alter_field('users', 'qq', 'VARCHAR(48)', true) or error('Unable to alter qq field', __FILE__, __LINE__, $db->error());
 		$db->alter_field('users', 'activate_string', 'VARCHAR(80)', true) or error('Unable to alter activate_string field', __FILE__, __LINE__, $db->error());
 
 		// Make all IP fields VARCHAR(39) to support IPv6

@@ -774,7 +774,8 @@ else if (isset($_GET['find_user']))
 	$like_command = ($db_type == 'pgsql') ? 'ILIKE' : 'LIKE';
 	foreach ($form as $key => $input)
 	{
-		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 'jabber', 'icq', 'msn', 'aim', 'yahoo', 'location', 'signature', 'admin_note')))
+		if ($input != '' && in_array($key, array('username', 'email', 'title', 'realname', 'url', 
+		  'weixin', 'weibo', 'qq', 'facebook', 'twitter', 'location', 'signature', 'admin_note')))
 		{
 			$conditions[] = 'u.'.$db->escape($key).' '.$like_command.' \''.$db->escape(str_replace('*', '%', $input)).'\'';
 			$query_str[] = 'form%5B'.$key.'%5D='.urlencode($input);
@@ -957,24 +958,24 @@ else
 									<td><input type="text" name="form[url]" size="35" maxlength="100" tabindex="6" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['Jabber label'] ?></th>
-									<td><input type="text" name="form[jabber]" size="30" maxlength="75" tabindex="7" /></td>
+									<th scope="row"><?php echo $lang_admin_users['weixin label'] ?></th>
+									<td><input type="text" name="form[weixin]" size="30" maxlength="75" tabindex="7" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['ICQ label'] ?></th>
-									<td><input type="text" name="form[icq]" size="12" maxlength="12" tabindex="8" /></td>
+									<th scope="row"><?php echo $lang_admin_users['weibo label'] ?></th>
+									<td><input type="text" name="form[weibo]" size="12" maxlength="12" tabindex="8" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['MSN label'] ?></th>
-									<td><input type="text" name="form[msn]" size="30" maxlength="50" tabindex="9" /></td>
+									<th scope="row"><?php echo $lang_admin_users['qq label'] ?></th>
+									<td><input type="text" name="form[qq]" size="30" maxlength="50" tabindex="9" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['AOL label'] ?></th>
-									<td><input type="text" name="form[aim]" size="20" maxlength="20" tabindex="10" /></td>
+									<th scope="row"><?php echo $lang_admin_users['facebook label'] ?></th>
+									<td><input type="text" name="form[facebook]" size="20" maxlength="20" tabindex="10" /></td>
 								</tr>
 								<tr>
-									<th scope="row"><?php echo $lang_admin_users['Yahoo label'] ?></th>
-									<td><input type="text" name="form[yahoo]" size="20" maxlength="20" tabindex="11" /></td>
+									<th scope="row"><?php echo $lang_admin_users['twitter label'] ?></th>
+									<td><input type="text" name="form[twitter]" size="20" maxlength="20" tabindex="11" /></td>
 								</tr>
 								<tr>
 									<th scope="row"><?php echo $lang_admin_users['Location label'] ?></th>

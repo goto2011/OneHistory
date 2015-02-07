@@ -4,6 +4,7 @@
 
 require_once 'init.php';
 require_once "data.php";
+require_once "functions.php";
 
 ////////////////////////////////// 1.数据库管理 begin //////////////////////////
 // 打开数据库
@@ -895,8 +896,9 @@ function re_calc_year_order()
 // 用户校验
 function user_validate($user_name, $password)
 {
-	$password_md5 = MD5($password);
-	$sql_string = "select user_UUID, user_right from user where user_name='$user_name' and password='$password_md5' limit 1";
+	$password_hash = pun_hash($password);
+	$sql_string = "select user_UUID, group_id from users where username='$user_name' 
+	       and password='$password_hash' limit 1";
 	$check_query = mysql_query($sql_string);
     
     if($check_query == FALSE)
@@ -908,7 +910,7 @@ function user_validate($user_name, $password)
 	if($result = mysql_fetch_array($check_query))
 	{
 		return array("user_UUID" => $result['user_UUID'], 
-		      "user_right" => $result['user_right']);
+		      "user_right" => $result['group_id']);
 	}
 	else
 	{
@@ -921,7 +923,7 @@ function get_user_name_from_id($user_id)
 {
 	$user_name = "";
 
-	$user_query = mysql_query("select user_name from user where user_UUID='$user_id' limit 1");
+	$user_query = mysql_query("select username from users where user_UUID='$user_id' limit 1");
 	if($user_query == FALSE)
     {
         $GLOBALS['log']->error("error: get_user_name_from_id() -- $sql_string 。");
@@ -930,13 +932,13 @@ function get_user_name_from_id($user_id)
 	
 	$row = mysql_fetch_array($user_query);
 
-	return $row['user_name'];
+	return $row['username'];
 }
 
 // 根据user id 获取用户信息
 function get_user_info($user_id)
 {
-	$user_query = mysql_query("select * from user where user_UUID='$user_id' limit 1");
+	$user_query = mysql_query("select * from users where user_UUID='$user_id' limit 1");
 	$row = mysql_fetch_array($user_query);
     
     if($row == FALSE)
@@ -951,7 +953,7 @@ function get_user_info($user_id)
 // 检测用户名是否已经存在
 function check_user_exist($user_name)
 {
-	$sql_string = "select user_UUID from user where user_name='$user_name' limit 1";
+	$sql_string = "select user_UUID from users where username='$user_name' limit 1";
 	$check_query = mysql_query($sql_string);
     
 	if($check_query == FALSE)
@@ -974,10 +976,11 @@ function check_user_exist($user_name)
 function insert_user($user_name, $password, $email)
 {
 	$user_UUID = create_guid();
-	$password_md5 = MD5($password);
+	$password_hash = pun_hash($password);
+    $now = time();
 	
-	$sql_string = "INSERT INTO user(user_UUID, user_name, password, user_right, email, add_time)
-		VALUES('$user_UUID', '$user_name', '$password_md5', 11, '$email', now())";
+	$sql_string = "INSERT INTO users(user_UUID, username, password, group_id, email, registered)
+		VALUES('$user_UUID', '$user_name', '$password_hash', 4, '$email', $now)";
         
 	if(mysql_query($sql_string))
 	{

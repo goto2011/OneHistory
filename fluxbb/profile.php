@@ -847,16 +847,16 @@ else if (isset($_POST['form_sent']))
 		case 'messaging':
 		{
 			$form = array(
-				'jabber'		=> pun_trim($_POST['form']['jabber']),
-				'icq'			=> pun_trim($_POST['form']['icq']),
-				'msn'			=> pun_trim($_POST['form']['msn']),
-				'aim'			=> pun_trim($_POST['form']['aim']),
-				'yahoo'			=> pun_trim($_POST['form']['yahoo']),
+				'weixin'		=> pun_trim($_POST['form']['weixin']),
+				'weibo'			=> pun_trim($_POST['form']['weibo']),
+				'qq'			=> pun_trim($_POST['form']['qq']),
+				'facebook'		=> pun_trim($_POST['form']['facebook']),
+				'twitter'		=> pun_trim($_POST['form']['twitter']),
 			);
 
 			// If the ICQ UIN contains anything other than digits it's invalid
-			if (preg_match('%[^0-9]%', $form['icq']))
-				message($lang_prof_reg['Bad ICQ']);
+			if (preg_match('%[^0-9]%', $form['qq']))
+				message($lang_prof_reg['Bad qq']);
 
 			break;
 		}
@@ -1028,7 +1028,14 @@ else if (isset($_POST['form_sent']))
 flux_hook('profile_after_form_handling');
 
 
-$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.jabber, u.icq, u.msn, u.aim, u.yahoo, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id='.$id) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.username, u.email, u.title, u.realname, u.url, u.weixin, u.weibo, 
+    u.qq, u.facebook, u.twitter, u.location, u.signature, u.disp_topics, u.disp_posts, u.email_setting, 
+    u.notify_with_post, u.auto_notify, u.show_smilies, u.show_img, u.show_img_sig, u.show_avatars, 
+    u.show_sig, u.timezone, u.dst, u.language, u.style, u.num_posts, u.last_post, u.registered, 
+    u.registration_ip, u.admin_note, u.date_format, u.time_format, u.last_visit, g.g_id, 
+    g.g_user_title, g.g_moderator FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups 
+    AS g ON g.g_id=u.group_id WHERE u.id='.$id) 
+    or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 if (!$db->num_rows($result))
 	message($lang_common['Bad request'], false, '404 Not Found');
 
@@ -1093,34 +1100,34 @@ if ($pun_user['id'] != $id &&																	// If we aren't the user (i.e. edi
 
 	$user_messaging = array();
 
-	if ($user['jabber'] != '')
+	if ($user['weixin'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['Jabber'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['jabber']) : $user['jabber']).'</dd>';
+		$user_messaging[] = '<dt>'.$lang_profile['weixin'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['weixin']) : $user['weixin']).'</dd>';
 	}
 
-	if ($user['icq'] != '')
+	if ($user['weibo'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['ICQ'].'</dt>';
-		$user_messaging[] = '<dd>'.$user['icq'].'</dd>';
+		$user_messaging[] = '<dt>'.$lang_profile['weibo'].'</dt>';
+		$user_messaging[] = '<dd>'.$user['weibo'].'</dd>';
 	}
 
-	if ($user['msn'] != '')
+	if ($user['qq'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['MSN'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['msn']) : $user['msn']).'</dd>';
+		$user_messaging[] = '<dt>'.$lang_profile['qq'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['qq']) : $user['qq']).'</dd>';
 	}
 
-	if ($user['aim'] != '')
+	if ($user['facebook'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['AOL IM'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['aim']) : $user['aim']).'</dd>';
+		$user_messaging[] = '<dt>'.$lang_profile['facebook'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['facebook']) : $user['facebook']).'</dd>';
 	}
 
-	if ($user['yahoo'] != '')
+	if ($user['twitter'] != '')
 	{
-		$user_messaging[] = '<dt>'.$lang_profile['Yahoo'].'</dt>';
-		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['yahoo']) : $user['yahoo']).'</dd>';
+		$user_messaging[] = '<dt>'.$lang_profile['twitter'].'</dt>';
+		$user_messaging[] = '<dd>'.pun_htmlspecialchars(($pun_config['o_censoring'] == '1') ? censor_words($user['twitter']) : $user['twitter']).'</dd>';
 	}
 
 	$user_personality = array();
@@ -1507,11 +1514,11 @@ else
 						<legend><?php echo $lang_profile['Contact details legend'] ?></legend>
 						<div class="infldset">
 							<input type="hidden" name="form_sent" value="1" />
-							<label><?php echo $lang_profile['Jabber'] ?><br /><input id="jabber" type="text" name="form[jabber]" value="<?php echo pun_htmlspecialchars($user['jabber']) ?>" size="40" maxlength="75" /><br /></label>
-							<label><?php echo $lang_profile['ICQ'] ?><br /><input id="icq" type="text" name="form[icq]" value="<?php echo $user['icq'] ?>" size="12" maxlength="12" /><br /></label>
-							<label><?php echo $lang_profile['MSN'] ?><br /><input id="msn" type="text" name="form[msn]" value="<?php echo pun_htmlspecialchars($user['msn']) ?>" size="40" maxlength="50" /><br /></label>
-							<label><?php echo $lang_profile['AOL IM'] ?><br /><input id="aim" type="text" name="form[aim]" value="<?php echo pun_htmlspecialchars($user['aim']) ?>" size="20" maxlength="30" /><br /></label>
-							<label><?php echo $lang_profile['Yahoo'] ?><br /><input id="yahoo" type="text" name="form[yahoo]" value="<?php echo pun_htmlspecialchars($user['yahoo']) ?>" size="20" maxlength="30" /><br /></label>
+							<label><?php echo $lang_profile['weixin'] ?><br /><input id="weixin" type="text" name="form[weixin]" value="<?php echo pun_htmlspecialchars($user['weixin']) ?>" size="40" maxlength="75" /><br /></label>
+							<label><?php echo $lang_profile['weibo'] ?><br /><input id="weibo" type="text" name="form[weibo]" value="<?php echo $user['weibo'] ?>" size="40" maxlength="75" /><br /></label>
+							<label><?php echo $lang_profile['qq'] ?><br /><input id="qq" type="text" name="form[qq]" value="<?php echo pun_htmlspecialchars($user['qq']) ?>" size="40" maxlength="75" /><br /></label>
+							<label><?php echo $lang_profile['facebook'] ?><br /><input id="facebook" type="text" name="form[facebook]" value="<?php echo pun_htmlspecialchars($user['facebook']) ?>" size="40" maxlength="75" /><br /></label>
+							<label><?php echo $lang_profile['twitter'] ?><br /><input id="twitter" type="text" name="form[twitter]" value="<?php echo pun_htmlspecialchars($user['twitter']) ?>" size="40" maxlength="75" /><br /></label>
 						</div>
 					</fieldset>
 				</div>

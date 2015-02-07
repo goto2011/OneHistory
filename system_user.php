@@ -33,8 +33,8 @@
 
 <div class="system_user">
 <p class="thick">用户信息</p>
-<p class="thick">用 户 名：<nobr class="normal"><?=$row['user_name']?></nobr></p>
-<p class="thick">注册日期：<nobr class="normal"><?=$row['add_time']?></nobr></p>
+<p class="thick">用 户 名：<nobr class="normal"><?=$row['username']?></nobr></p>
+<p class="thick">注册日期：<nobr class="normal"><?=date("Y-m-d H:i:s",$row['registered'])?></nobr></p>
 <p class="thick">添加事件：<nobr class="normal"><?=$add_thing_count?></nobr></p>
 <p class="thick">添加标签：<nobr class="normal"><?=$add_tag_count?></nobr></p>
 <p class="thick">添加事件-标签对：<nobr class="normal"><?=$add_thing_tag_count?></nobr></p>
@@ -44,7 +44,7 @@
 <form action="system_user.php" method="get" onsubmit="">
 <p class="thick" id="self_introduction_label">自我介绍(不多于80个字)：</nobr>
 <textarea name='self_introduction' id='self_introduction' class='self_introduction' autofocus=autofocus >
-    <?=$row['self_introduction']?>
+    <?=$row['signature']?>
 </textarea>
 
 <p class="thick" id="email_label">电子邮箱：
