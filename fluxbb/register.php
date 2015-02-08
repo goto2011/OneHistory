@@ -9,8 +9,10 @@
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
+// 2015-02-08
 require_once '../init.php';
 require_once "data.php";
+define("PAGE_TYPE", $lang_register['Register']);
 
 // If we are logged in, we shouldn't be here
 if (!$pun_user['is_guest'])

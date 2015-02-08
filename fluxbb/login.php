@@ -12,12 +12,17 @@ if (isset($_GET['action']))
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
+// 2015-02-08
+require_once '../init.php';
+require_once "data.php";
+define("PAGE_TYPE", $lang_common['Login']);
 
 // Load the login.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
+// 登录之后.
 if (isset($_POST['form_sent']) && $action == 'in')
 {
 	flux_hook('login_before_validation');
@@ -36,34 +41,14 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	if (!empty($cur_user['password']))
 	{
 		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
-
-		// If there is a salt in the database we have upgraded from 1.3-legacy though haven't yet logged in
-		if (!empty($cur_user['salt']))
-		{
-			if (sha1($cur_user['salt'].sha1($form_password)) == $cur_user['password']) // 1.3 used sha1(salt.sha1(pass))
-			{
-				$authorized = true;
-
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\', salt=NULL WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// If the length isn't 40 then the password isn't using sha1, so it must be md5 from 1.2
-		else if (strlen($cur_user['password']) != 40)
-		{
-			if (md5($form_password) == $cur_user['password'])
-			{
-				$authorized = true;
-
-				$db->query('UPDATE '.$db->prefix.'users SET password=\''.$form_password_hash.'\' WHERE id='.$cur_user['id']) or error('Unable to update user password', __FILE__, __LINE__, $db->error());
-			}
-		}
-		// Otherwise we should have a normal sha1 password
-		else
-			$authorized = ($cur_user['password'] == $form_password_hash);
+		
+		// 2015-02-08
+		$authorized = ($cur_user['password'] == $form_password_hash);
+        user_login($form_username, $cur_user['user_UUID'], $cur_user['group_id']);
 	}
 
 	if (!$authorized)
-		message($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
+		message_user($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
 
 	flux_hook('login_after_validation');
 
@@ -88,18 +73,19 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	// Reset tracked topics
 	set_tracked_topics(null);
 
+    // 2015-02-08
 	// Try to determine if the data in redirect_url is valid (if not, we redirect to index.php after login)
-	$redirect_url = validate_redirect($_POST['redirect_url'], 'index.php');
+	$redirect_url = validate_redirect($_POST['redirect_url'], '../item_frame.php');
 
 	redirect(pun_htmlspecialchars($redirect_url), $lang_login['Login redirect']);
 }
 
-
+// 退出登录
 else if ($action == 'out')
 {
 	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
 	{
-		header('Location: index.php');
+		header('Location: ../item_frame.php');
 		exit;
 	}
 
@@ -112,15 +98,15 @@ else if ($action == 'out')
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
 
-	redirect('index.php', $lang_login['Logout redirect']);
+	redirect('../item_frame.php', $lang_login['Logout redirect']);
 }
 
-
+// 忘记密码.
 else if ($action == 'forget' || $action == 'forget_2')
 {
 	if (!$pun_user['is_guest'])
 	{
-		header('Location: index.php');
+		header('Location: ../item_frame.php');
 		exit;
 	}
 
@@ -157,13 +143,13 @@ else if ($action == 'forget' || $action == 'forget_2')
 
 				// Do the generic replacements first (they apply to all emails sent out here)
 				$mail_message = str_replace('<base_url>', get_base_url().'/', $mail_message);
-				$mail_message = str_replace('<board_mailer>', $pun_config['o_board_title'], $mail_message);
+				$mail_message = str_replace('<board_mailer>', get_system_name(), $mail_message);
 
 				// Loop through users we found
 				while ($cur_hit = $db->fetch_assoc($result))
 				{
 					if ($cur_hit['last_email_sent'] != '' && (time() - $cur_hit['last_email_sent']) < 3600 && (time() - $cur_hit['last_email_sent']) >= 0)
-						message(sprintf($lang_login['Email flood'], intval((3600 - (time() - $cur_hit['last_email_sent'])) / 60)), true);
+						message_user(sprintf($lang_login['Email flood'], intval((3600 - (time() - $cur_hit['last_email_sent'])) / 60)), true);
 
 					// Generate a new password and a new password activation code
 					$new_password = random_pass(12);
@@ -179,21 +165,21 @@ else if ($action == 'forget' || $action == 'forget_2')
 					pun_mail($email, $mail_subject, $cur_mail_message);
 				}
 
-				message($lang_login['Forget mail'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.', true);
+				message_user($lang_login['Forget mail'].' <a href="mailto:'.pun_htmlspecialchars($pun_config['o_admin_email']).'">'.pun_htmlspecialchars($pun_config['o_admin_email']).'</a>.', true);
 			}
 			else
 				$errors[] = $lang_login['No email match'].' '.htmlspecialchars($email).'.';
 			}
 		}
 
-	$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_login['Request pass']);
+	$page_title = array(pun_htmlspecialchars(get_system_name()), $lang_login['Request pass']);
 	$required_fields = array('req_email' => $lang_common['Email']);
 	$focus_element = array('request_pass', 'req_email');
 
 	flux_hook('forget_password_before_header');
 
 	define ('PUN_ACTIVE_PAGE', 'login');
-	require PUN_ROOT.'header.php';
+	require PUN_ROOT.'header_user.php';
 
 // If there are errors, we display them
 if (!empty($errors))
@@ -241,13 +227,13 @@ if (!empty($errors))
 </div>
 <?php
 
-	require PUN_ROOT.'footer.php';
+	require PUN_ROOT.'footer_user.php';
 }
 
 
 if (!$pun_user['is_guest'])
 {
-	header('Location: index.php');
+	header('Location: ../item_frame.php');
 	exit;
 }
 
@@ -256,18 +242,18 @@ if (!empty($_SERVER['HTTP_REFERER']))
 	$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);
 
 if (!isset($redirect_url))
-	$redirect_url = get_base_url(true).'/index.php';
+	$redirect_url = get_base_url(true).'../item_frame.php';
 else if (preg_match('%viewtopic\.php\?pid=(\d+)$%', $redirect_url, $matches))
 	$redirect_url .= '#p'.$matches[1];
 
-$page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Login']);
+$page_title = array(pun_htmlspecialchars(get_system_name()), $lang_common['Login']);
 $required_fields = array('req_username' => $lang_common['Username'], 'req_password' => $lang_common['Password']);
 $focus_element = array('login', 'req_username');
 
 flux_hook('login_before_header');
 
 define('PUN_ACTIVE_PAGE', 'login');
-require PUN_ROOT.'header.php';
+require PUN_ROOT.'header_user.php';
 
 ?>
 <div class="blockform">
@@ -288,7 +274,7 @@ require PUN_ROOT.'header.php';
 						</div>
 
 						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="5"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
+						<p class="actions"><span><a href="register.php" tabindex="5" style="font-size:17px;"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
 					</div>
 				</fieldset>
 			</div>
@@ -299,4 +285,4 @@ require PUN_ROOT.'header.php';
 </div>
 <?php
 
-require PUN_ROOT.'footer.php';
+require PUN_ROOT.'footer_user.php';

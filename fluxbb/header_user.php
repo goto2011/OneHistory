@@ -175,8 +175,16 @@ $tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($_SERVER['PHP_SE
 
 // 此处为网页标题.
 // START SUBST - <pun_title>
+if (PAGE_TYPE == "注册")
+{
+    $my_title = "新用户注册";
+}
+else 
+{
+	$my_title = "用户登录";
+}
 $tpl_main = str_replace('<pun_title>', '<h1><a href="../item_frame.php">' . 
-    get_system_name() . ' ' .get_system_version() . ' — 新用户注册</a></h1>', $tpl_main);
+    get_system_name() . ' ' .get_system_version() . '</a> — ' . $my_title . '</h1>', $tpl_main);
 // END SUBST - <pun_title>
 
 

@@ -12,8 +12,8 @@
         .PATH_SEPARATOR.dirname(__FILE__).'/fluxbb/include/' 
         .PATH_SEPARATOR.get_include_path());
      
-     // 设置时区为北京时间.
-     Date_default_timezone_set("PRC");
+    // 设置时区为北京时间.
+    Date_default_timezone_set("PRC");
      
     // 打开 log 系统.
     require_once 'plog.php';
@@ -31,5 +31,25 @@
                 exit;
             }
         }
+    }
+    
+    require_once "list_control.php";
+    require_once "list_search.php";
+    
+    // 用户登陆处理
+    function user_login($user_name, $user_UUID, $user_right)
+    {
+        //登录成功
+        $_SESSION['user_name'] = $user_name;
+        $_SESSION['user_id'] = $user_UUID;
+        $_SESSION['user_right'] = $user_right;
+        
+        // 初始化界面参数.
+        set_current_list(1);
+        for ($ii = 1; $ii <= get_list_count(); $ii++)
+        {
+            list_param_init($ii);
+        }
+        search_param_init();
     }
 ?>
