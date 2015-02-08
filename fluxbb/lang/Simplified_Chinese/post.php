@@ -26,7 +26,7 @@ $lang_post = array(
 'Subscribe'			=>	'订阅该主题',
 'Stay subscribed'	=>	'继续订阅该主题',
 'Topic review'		=>	'主题回顾 (新帖优先)',
-'Flood start'		=>	'您所在的用户组两次发帖之间至少须间隔',//根据中文语法作了修改，下同。
+'Flood start'		=>	'您所在的用户组两次发帖之间至少须间隔 %s 秒。请稍后重新尝试发帖。',
 'flood end'			=>	'秒。请稍后重新尝试发帖。',
 'Preview'			=>	'预览', // submit button to preview message
 

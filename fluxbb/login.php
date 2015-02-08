@@ -281,7 +281,11 @@ require PUN_ROOT.'header_user.php';
 						</div>
 
 						<p class="clearb"><?php echo $lang_login['Login info'] ?></p>
-						<p class="actions"><span><a href="register.php" tabindex="5" style="font-size:17px;"><?php echo $lang_login['Not registered'] ?></a></span> <span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span></p>
+						<p class="actions">
+						    <span><a href="register.php" tabindex="5" style="font-size:17px;"><?php echo $lang_login['Not registered'] ?></a></span>
+						    &nbsp;&nbsp;&nbsp;<span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span>
+						    &nbsp;&nbsp;&nbsp;<span><a href="index.php" tabindex="7">以访客身份访问</a></span>
+						    </p>
 					</div>
 				</fieldset>
 			</div>
