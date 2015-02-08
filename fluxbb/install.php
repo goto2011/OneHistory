@@ -1659,7 +1659,7 @@ else
 	$cookie_name = 'pun_cookie_'.random_key(6, false, true);
 
 	// Generate the config.php file data
-	$config = generate_config_file();
+	$my_config = generate_config_file();
 
 	// Attempt to write config.php and serve it up for download if writing fails
 	$written = false;
@@ -1668,7 +1668,7 @@ else
 		$fh = @fopen(PUN_ROOT.'config.php', 'wb');
 		if ($fh)
 		{
-			fwrite($fh, $config);
+			fwrite($fh, $my_config);
 			fclose($fh);
 
 			$written = true;

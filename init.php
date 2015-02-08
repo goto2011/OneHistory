@@ -17,7 +17,7 @@
      
     // 打开 log 系统.
     require_once 'plog.php';
-    Plog::set_config(include 'config.php');
+    Plog::set_config(include 'plog_config.php');
     $log = Plog::factory(__FILE__);
     
     // 检查用户是否登录。如果没有则进入登陆界面。

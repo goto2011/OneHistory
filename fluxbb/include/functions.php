@@ -937,6 +937,41 @@ function paginate($num_pages, $cur_page, $link)
 //
 // Display a message
 //
+function message_user($message, $no_back_link = false, $http_status = null)
+{
+    global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
+
+    // Did we receive a custom header?
+    if(!is_null($http_status)) {
+        header('HTTP/1.1 ' . $http_status);
+    }
+
+    if (!defined('PUN_HEADER'))
+    {
+        $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
+        define('PUN_ACTIVE_PAGE', 'index');
+        require PUN_ROOT.'header_user.php';
+    }
+
+?>
+
+<div id="msg" class="block">
+    <h2><span><?php echo $lang_common['Info'] ?></span></h2>
+    <div class="box">
+        <div class="inbox">
+            <p><?php echo $message ?></p>
+<?php if (!$no_back_link): ?>           <p><a href="javascript: history.go(-1)"><?php echo $lang_common['Go back'] ?></a></p>
+<?php endif; ?>     </div>
+    </div>
+</div>
+<?php
+
+    require PUN_ROOT.'footer_user.php';
+}
+
+//
+// Display a message
+//
 function message($message, $no_back_link = false, $http_status = null)
 {
 	global $db, $lang_common, $pun_config, $pun_start, $tpl_main, $pun_user;
