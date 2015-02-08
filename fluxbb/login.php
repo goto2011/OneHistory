@@ -47,9 +47,11 @@ if (isset($_POST['form_sent']) && $action == 'in')
         user_login($form_username, $cur_user['user_UUID'], $cur_user['group_id']);
 	}
 
+    // 密码错, 进入忘记密码流程.
 	if (!$authorized)
+    {
 		message_user($lang_login['Wrong user/pass'].' <a href="login.php?action=forget">'.$lang_login['Forgotten pass'].'</a>');
-
+    }
 	flux_hook('login_after_validation');
 
 	// Update the status if this is the first time the user logged in
@@ -83,9 +85,11 @@ if (isset($_POST['form_sent']) && $action == 'in')
 // 退出登录
 else if ($action == 'out')
 {
-	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != pun_hash($pun_user['id'].pun_hash(get_remote_address())))
+	if ($pun_user['is_guest'] || !isset($_GET['id']) || $_GET['id'] != $pun_user['id'] 
+	   || !isset($_GET['csrf_token']) || $_GET['csrf_token'] != 
+	   pun_hash($pun_user['id'].pun_hash(get_remote_address())))
 	{
-		header('Location: ../item_frame.php');
+	    header('Location: login.php');
 		exit;
 	}
 
@@ -97,8 +101,11 @@ else if ($action == 'out')
 		$db->query('UPDATE '.$db->prefix.'users SET last_visit='.$pun_user['logged'].' WHERE id='.$pun_user['id']) or error('Unable to update user visit data', __FILE__, __LINE__, $db->error());
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
+    
+    // 2015-02-08
+    user_logout();
 
-	redirect('../item_frame.php', $lang_login['Logout redirect']);
+	// redirect('../item_frame.php', $lang_login['Logout redirect']);
 }
 
 // 忘记密码.

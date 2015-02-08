@@ -113,7 +113,7 @@
 <body>
 
 <!-- 页眉 begin -->
-<iframe name="content" src="./header.php" height="65px" width="100%" scrolling="auto" frameborder="0"></iframe>
+<iframe name="content" src="./main_header.php" height="65px" width="100%" scrolling="auto" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
 <!-- tab页 begin -->
@@ -123,7 +123,10 @@
 
 <div title="我的关注" 	style="padding:10px;" <?php get_selected_tab(2); ?> ></div>
 
+<!--
+// 小组功能的需求暂时不确定, 所以暂时不提供.
 <div title="我的小组" 	style="padding:10px;" <?php get_selected_tab(3); ?> ></div>
+-->
 
 <!--
 // "全部条目"中标签也是按热门指数排序, 重复功能, 此项删除.

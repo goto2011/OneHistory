@@ -32,20 +32,20 @@ if (isset($_SERVER['HTTP_X_MOZ']) && $_SERVER['HTTP_X_MOZ'] == 'prefetch')
 
 // Attempt to load the configuration file config.php
 if (file_exists(PUN_ROOT.'config.php'))
-	require PUN_ROOT.'config.php';
+	require_once PUN_ROOT.'config.php';
 
 // If we have the 1.3-legacy constant defined, define the proper 1.4 constant so we don't get an incorrect "need to install" message
 if (defined('FORUM'))
 	define('PUN', FORUM);
 
 // Load the functions script
-require PUN_ROOT.'include/functions.php';
+require_once PUN_ROOT.'include/functions.php';
 
 // Load addon functionality
-require PUN_ROOT.'include/addons.php';
+require_once PUN_ROOT.'include/addons.php';
 
 // Load UTF-8 functions
-require PUN_ROOT.'include/utf8/utf8.php';
+require_once PUN_ROOT.'include/utf8/utf8.php';
 
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
@@ -113,7 +113,7 @@ define('PUN_GUEST', 3);
 define('PUN_MEMBER', 4);
 
 // Load DB abstraction layer and connect
-require PUN_ROOT.'include/dblayer/common_db.php';
+require_once PUN_ROOT.'include/dblayer/common_db.php';
 
 // Start a transaction
 $db->start_transaction();

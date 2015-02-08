@@ -13,7 +13,7 @@
 <body>
     
 <!-- 页眉 begin -->
-<iframe name="content" src="./header.php" height="65px" width="100%" scrolling="auto" frameborder="0"></iframe>
+<iframe name="content" src="./main_header.php" height="65px" width="100%" scrolling="auto" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
 <h1>故事之三：历史，让社会远离蝴蝶的翅膀</h1>

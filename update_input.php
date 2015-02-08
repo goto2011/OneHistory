@@ -51,7 +51,7 @@
 <body>
     
 <!-- 页眉 begin -->
-<iframe src="./header.php" height="65px" width="100%" scrolling="no" frameborder="0"></iframe>
+<iframe src="./main_header.php" height="65px" width="100%" scrolling="no" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
 <?php 

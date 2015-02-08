@@ -183,8 +183,10 @@ $tpl_main = str_replace('<pun_desc>', '<div id="brddesc">'.$pun_config['o_board_
 // START SUBST - <pun_navlinks>
 $links = array();
 
+// 2015-02-08
 // Index should always be displayed
-$links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">'.$lang_common['Index'].'</a></li>';
+$links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="../item_frame.php">返回时间系统</a></li>';
+$links[] = '<li id="navindex"'.((PUN_ACTIVE_PAGE == 'index') ? ' class="isactive"' : '').'><a href="index.php">论坛首页</a></li>';
 
 if ($pun_user['g_read_board'] == '1' && $pun_user['g_view_users'] == '1')
 	$links[] = '<li id="navuserlist"'.((PUN_ACTIVE_PAGE == 'userlist') ? ' class="isactive"' : '').'><a href="userlist.php">'.$lang_common['User list'].'</a></li>';
@@ -197,8 +199,9 @@ if ($pun_user['g_read_board'] == '1' && $pun_user['g_search'] == '1')
 
 if ($pun_user['is_guest'])
 {
-	$links[] = '<li id="navregister"'.((PUN_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a></li>';
-	$links[] = '<li id="navlogin"'.((PUN_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a></li>';
+    // 2015-02-08, 论坛界面不再提供登陆和注册界面.
+	// $links[] = '<li id="navregister"'.((PUN_ACTIVE_PAGE == 'register') ? ' class="isactive"' : '').'><a href="register.php">'.$lang_common['Register'].'</a></li>';
+	// $links[] = '<li id="navlogin"'.((PUN_ACTIVE_PAGE == 'login') ? ' class="isactive"' : '').'><a href="login.php">'.$lang_common['Login'].'</a></li>';
 }
 else
 {
@@ -207,6 +210,7 @@ else
 	if ($pun_user['is_admmod'])
 		$links[] = '<li id="navadmin"'.((PUN_ACTIVE_PAGE == 'admin') ? ' class="isactive"' : '').'><a href="admin_index.php">'.$lang_common['Admin'].'</a></li>';
 
+    // 注销.
 	$links[] = '<li id="navlogout"><a href="login.php?action=out&amp;id='.$pun_user['id'].'&amp;csrf_token='.pun_hash($pun_user['id'].pun_hash(get_remote_address())).'">'.$lang_common['Logout'].'</a></li>';
 }
 

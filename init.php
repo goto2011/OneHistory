@@ -27,7 +27,7 @@
         {
             if(!isset($_SESSION['user_id']))
             {
-                header("Location:login.html");
+                header("Location:./fluxbb/login.php");
                 exit;
             }
         }
@@ -51,5 +51,13 @@
             list_param_init($ii);
         }
         search_param_init();
+    }
+    
+    // 退出
+    function user_logout()
+    {
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_right']);
+        unset($_SESSION['user_name']);
     }
 ?>

@@ -8,6 +8,9 @@
     is_user(1);
     require_once "data.php";
     require_once "sql.php";
+    
+    define('PUN_ROOT', dirname(__FILE__).'/fluxbb/');
+    require_once "common.php";
 ?>
 
 <link rel="stylesheet" type="text/css" href="./css/data.css" />
@@ -39,10 +42,13 @@
     <a href="./update_input.php?update_once=<?php echo get_update_token(); ?>" class="red_black_underline"  target="_top">新增事件</a> |
     <a href="./import_input.php?import_once=<?php echo get_import_token(); ?>" class="red_black_underline"  target="_top">
         批量导入事件</a> |
+<!--
+// 小组功能的需求暂时不确定, 所以暂时不提供.
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |
+-->
     <a href="./system_frame.php" class="red_black_underline"  target="_top">系统设置</a> |
     <a href="./fluxbb/index.php" class="red_black_underline"  target="_top">进入论坛</a> |
-    <a href="./login.php?action=logout" class="red_black_underline"  target="_top">退出</a>
+    <a href="./fluxbb/login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
 </div>
 </div>
 
