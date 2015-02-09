@@ -10,7 +10,7 @@
 if (!defined('PUN'))
 	exit;
 
-require_once '../init.php';
+require_once 'init.php';
 require_once "data.php";
 
 // Send no-cache headers
@@ -183,7 +183,8 @@ else
 {
 	$my_title = "用户登录";
 }
-$tpl_main = str_replace('<pun_title>', '<h1><a href="../item_frame.php">' . 
+
+$tpl_main = str_replace('<pun_title>', '<h1><a href="./item_frame.php">' . 
     get_system_name() . ' ' .get_system_version() . '</a> — ' . $my_title . '</h1>', $tpl_main);
 // END SUBST - <pun_title>
 

@@ -8,10 +8,10 @@
     is_user(1);
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/easyui.css">
-<link rel="stylesheet" type="text/css" href="./css/demo.css">
+<link rel="stylesheet" type="text/css" href="./style/easyui.css">
+<link rel="stylesheet" type="text/css" href="./style/demo.css">
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 
 <script type="text/javascript" src="./js/jquery.min.js"></script>
 <script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
@@ -26,10 +26,6 @@
 
 <!-- tab页 begin -->
 <div class="easyui-tabs" style="" >
-
-<div title="用户中心"     style="padding:10px;" href='system_user.php' ></div>
-
-<div title="用户配置"   style="padding:10px;" href='system_config.php' ></div>
 
 <div title="用户积分"   style="padding:10px;" href='system_score.php' ></div>
 

@@ -9,11 +9,11 @@
 if (isset($_GET['action']))
 	define('PUN_QUIET_VISIT', 1);
 
-define('PUN_ROOT', dirname(__FILE__).'/');
+define('PUN_ROOT', dirname(__FILE__).'/bbs/');
 require PUN_ROOT.'include/common.php';
 
-// 2015-02-08
-require_once '../init.php';
+// 2015-02-08, duangan
+require_once 'init.php';
 require_once "data.php";
 define("PAGE_TYPE", $lang_common['Login']);
 
@@ -105,7 +105,7 @@ else if ($action == 'out')
     // 2015-02-08
     user_logout();
 
-	// redirect('../item_frame.php', $lang_login['Logout redirect']);
+	// redirect('./item_frame.php', $lang_login['Logout redirect']);
 }
 
 // 忘记密码.
@@ -113,7 +113,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 {
 	if (!$pun_user['is_guest'])
 	{
-		header('Location: ../item_frame.php');
+		header('Location: ./item_frame.php');
 		exit;
 	}
 
@@ -186,7 +186,7 @@ else if ($action == 'forget' || $action == 'forget_2')
 	flux_hook('forget_password_before_header');
 
 	define ('PUN_ACTIVE_PAGE', 'login');
-	require PUN_ROOT.'header_user.php';
+	require 'header_user.php';
 
 // If there are errors, we display them
 if (!empty($errors))
@@ -234,13 +234,13 @@ if (!empty($errors))
 </div>
 <?php
 
-	require PUN_ROOT.'footer_user.php';
+	require 'footer_user.php';
 }
 
 
 if (!$pun_user['is_guest'])
 {
-	header('Location: ../item_frame.php');
+	header('Location: ./item_frame.php');
 	exit;
 }
 
@@ -260,7 +260,7 @@ $focus_element = array('login', 'req_username');
 flux_hook('login_before_header');
 
 define('PUN_ACTIVE_PAGE', 'login');
-require PUN_ROOT.'header_user.php';
+require 'header_user.php';
 
 ?>
 <div class="blockform">
@@ -284,7 +284,7 @@ require PUN_ROOT.'header_user.php';
 						<p class="actions">
 						    <span><a href="register.php" tabindex="5" style="font-size:17px;"><?php echo $lang_login['Not registered'] ?></a></span>
 						    &nbsp;&nbsp;&nbsp;<span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span>
-						    &nbsp;&nbsp;&nbsp;<span><a href="index.php" tabindex="7">以访客身份访问</a></span>
+						    &nbsp;&nbsp;&nbsp;<span><a href="./bbs/index.php" tabindex="7">以访客身份访问</a></span>
 						    </p>
 					</div>
 				</fieldset>
@@ -296,4 +296,4 @@ require PUN_ROOT.'header_user.php';
 </div>
 <?php
 
-require PUN_ROOT.'footer_user.php';
+require 'footer_user.php';

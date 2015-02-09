@@ -15,7 +15,7 @@ function get_system_name()
 // 系统版本号
 function get_system_version()
 {
-	return "V1.4";
+	return "V1.5";
 }
 
 // 系统说明

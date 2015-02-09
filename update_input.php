@@ -28,10 +28,10 @@
 	// echo $_SESSION['update_once'];
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="./css/jquery.tagsinput.css" />
+<link rel="stylesheet" type="text/css" href="./style/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="./style/jquery.tagsinput.css" />
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 
 <script type='text/javascript' src='./js/jquery-ui.min.js'></script>
 <script type="text/javascript" src="./js/jquery.min.js"></script>

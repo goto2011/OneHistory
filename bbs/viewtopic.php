@@ -9,6 +9,11 @@
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
+// duangan
+require_once '../init.php';
+// is_user(1);
+require_once "data.php";
+require_once "sql.php";
 
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
@@ -223,7 +228,14 @@ if (empty($post_ids))
 	error('The post table and topic table seem to be out of sync!', __FILE__, __LINE__);
 
 // Retrieve the posts (and their respective poster/online status)
-$result = $db->query('SELECT u.email, u.title, u.url, u.location, u.signature, u.email_setting, u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, g.g_promote_next_group, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '.$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.user_UUID, u.email, u.title, u.url, u.location, u.signature, u.email_setting, 
+    u.num_posts, u.registered, u.admin_note, p.id, p.poster AS username, p.poster_id, p.poster_ip, 
+    p.poster_email, p.message, p.hide_smilies, p.posted, p.edited, p.edited_by, g.g_id, g.g_user_title, 
+    g.g_promote_next_group, o.user_id AS is_online FROM '.$db->prefix.'posts AS p INNER JOIN '
+    .$db->prefix.'users AS u ON u.id=p.poster_id INNER JOIN '.$db->prefix.
+    'groups AS g ON g.g_id=u.group_id LEFT JOIN '.$db->prefix.'online AS o ON 
+    (o.user_id=u.id AND o.user_id!=1 AND o.idle=0) WHERE p.id IN ('.implode(',', $post_ids).
+    ') ORDER BY p.id', true) or error('Unable to fetch post info', __FILE__, __LINE__, $db->error());
 while ($cur_post = $db->fetch_assoc($result))
 {
 	$post_count++;
@@ -271,6 +283,15 @@ while ($cur_post = $db->fetch_assoc($result))
 
 			$user_info[] = '<dd><span>'.$lang_topic['Registered'].' '.format_time($cur_post['registered'], true).'</span></dd>';
 
+            // duangan.
+            $add_thing_count = get_thing_count_by_user($cur_post['user_UUID']);
+            $add_tag_count = get_tag_count_by_user($cur_post['user_UUID']);
+            $add_thing_tag_count = get_thing_tag_count_by_user($cur_post['user_UUID']);
+            
+            $user_info[] = "<dd><span>添加事件: $add_thing_count</span></dd>";
+            $user_info[] = "<dd><span>添加标签: $add_tag_count</span></dd>";
+            $user_info[] = "<dd><span>添加事件-标签对: $add_thing_tag_count</span></dd>";
+    
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 				$user_info[] = '<dd><span>'.$lang_topic['Posts'].' '.forum_number_format($cur_post['num_posts']).'</span></dd>';
 

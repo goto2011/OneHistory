@@ -6,18 +6,17 @@
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-define('PUN_ROOT', dirname(__FILE__).'/');
+define('PUN_ROOT', dirname(__FILE__).'/bbs/');
 require PUN_ROOT.'include/common.php';
 
-// 2015-02-08
-require_once '../init.php';
+// 2015-02-08, duangan
+require_once 'init.php';
 require_once "data.php";
-define("PAGE_TYPE", $lang_register['Register']);
 
 // If we are logged in, we shouldn't be here
 if (!$pun_user['is_guest'])
 {
-	header('Location: index.php');
+	header('Location: ./item_frame.php');
 	exit;
 }
 
@@ -27,20 +26,23 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/register.php';
 // Load the register.php/profile.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/prof_reg.php';
 
+// 2015-02-09, duangan
+define("PAGE_TYPE", $lang_register['Register']);
+
 if ($pun_config['o_regs_allow'] == '0')
 	message_user($lang_register['No new regs']);
 
 
 // User pressed the cancel button
 if (isset($_GET['cancel']))
-	redirect('index.php', $lang_register['Reg cancel redirect']);
+	redirect('./item_frame.php', $lang_register['Reg cancel redirect']);
 
 
 else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POST['form_sent']))
 {
 	$page_title = array(pun_htmlspecialchars(get_system_name()), $lang_register['Register'], $lang_register['Forum rules']);
 	define('PUN_ACTIVE_PAGE', 'register');
-	require PUN_ROOT.'header_user.php';
+	require 'header_user.php';
 
 ?>
 <div id="rules" class="blockform">
@@ -61,7 +63,7 @@ else if ($pun_config['o_rules'] == '1' && !isset($_GET['agree']) && !isset($_POS
 </div>
 <?php
 
-	require PUN_ROOT.'footer_user.php';
+	require 'footer_user.php';
 }
 
 // Start with a clean slate
@@ -143,8 +145,10 @@ if (isset($_POST['form_sent']))
 	}
 	else
 		$language = $pun_config['o_default_lang'];
-
-	$timezone = round($_POST['timezone'], 1);
+    
+    // duangan.
+	// $timezone = round($_POST['timezone'], 1);
+	$timezone = 8;
 
 	$dst = isset($_POST['dst']) ? '1' : '0';
 
@@ -270,7 +274,7 @@ if (isset($_POST['form_sent']))
 
 		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
 
-		redirect('index.php', $lang_register['Reg complete']);
+		redirect('./item_frame.php', $lang_register['Reg complete']);
 	}
 }
 
@@ -282,7 +286,7 @@ $focus_element = array('register', 'req_user');
 flux_hook('register_before_header');
 
 define('PUN_ACTIVE_PAGE', 'register');
-require PUN_ROOT.'header_user.php';
+require 'header_user.php';
 
 $timezone = isset($timezone) ? $timezone : $pun_config['o_default_timezone'];
 $dst = isset($dst) ? $dst : $pun_config['o_default_dst'];
@@ -369,4 +373,4 @@ if (!empty($errors))
 </div>
 <?php
 
-require PUN_ROOT.'footer_user.php';
+require 'footer_user.php';

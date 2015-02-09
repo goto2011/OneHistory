@@ -950,7 +950,7 @@ function message_user($message, $no_back_link = false, $http_status = null)
     {
         $page_title = array(pun_htmlspecialchars($pun_config['o_board_title']), $lang_common['Info']);
         define('PUN_ACTIVE_PAGE', 'index');
-        require PUN_ROOT.'header_user.php';
+        require 'header_user.php';
     }
 
 ?>
@@ -966,7 +966,7 @@ function message_user($message, $no_back_link = false, $http_status = null)
 </div>
 <?php
 
-    require PUN_ROOT.'footer_user.php';
+    require 'footer_user.php';
 }
 
 //

@@ -10,7 +10,7 @@
     require_once "sql.php";
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 
 <title></title>
 </head>

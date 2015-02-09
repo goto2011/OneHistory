@@ -77,10 +77,10 @@
     }
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/easyui.css">
-<link rel="stylesheet" type="text/css" href="./css/demo.css">
+<link rel="stylesheet" type="text/css" href="./style/easyui.css">
+<link rel="stylesheet" type="text/css" href="./style/demo.css">
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 
 <script type="text/javascript" src="./js/jquery.min.js"></script>
 <script type="text/javascript" src="./js/jquery.easyui.min.js"></script>

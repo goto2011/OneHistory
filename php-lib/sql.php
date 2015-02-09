@@ -2,7 +2,6 @@
 // created by duangan, 2014-12-28 -->
 // support data deal function.    -->
 
-require_once 'init.php';
 require_once "data.php";
 require_once "functions.php";
 

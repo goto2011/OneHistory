@@ -1619,32 +1619,6 @@ else
 			echo "\t\t\t".'<div><input type="hidden" name="form[style]" value="'.$styles[0].'" /></div>'."\n";
 		else if (count($styles) > 1)
 		{
-
-?>
-				<div class="inform">
-					<fieldset>
-						<legend><?php echo $lang_profile['Style legend'] ?></legend>
-						<div class="infldset">
-							<label><?php echo $lang_profile['Styles'] ?><br />
-							<select name="form[style]">
-<?php
-
-			foreach ($styles as $temp)
-			{
-				if ($user['style'] == $temp)
-					echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'" selected="selected">'.str_replace('_', ' ', $temp).'</option>'."\n";
-				else
-					echo "\t\t\t\t\t\t\t\t".'<option value="'.$temp.'">'.str_replace('_', ' ', $temp).'</option>'."\n";
-			}
-
-?>
-							</select>
-							<br /></label>
-						</div>
-					</fieldset>
-				</div>
-<?php
-
 		}
 
 ?>

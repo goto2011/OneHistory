@@ -13,7 +13,7 @@
     require_once "common.php";
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 <title></title>
 </head>
 <body>
@@ -46,9 +46,16 @@
 // 小组功能的需求暂时不确定, 所以暂时不提供.
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |
 -->
+<?php
+    if(is_manager())
+    {
+?>
     <a href="./system_frame.php" class="red_black_underline"  target="_top">系统设置</a> |
+<?php
+    }
+?>
     <a href="./bbs/index.php" class="red_black_underline"  target="_top">进入论坛</a> |
-    <a href="./bbs/login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
+    <a href="./login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
 </div>
 </div>
 

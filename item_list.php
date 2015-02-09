@@ -35,7 +35,7 @@
     }
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 <script type='text/javascript' src='./js/data.js'></script>
 
 <script type="text/javascript">

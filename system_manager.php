@@ -18,7 +18,7 @@
     }
 ?>
 
-<link rel="stylesheet" type="text/css" href="./css/data.css" />
+<link rel="stylesheet" type="text/css" href="./style/data.css" />
 
 <script>
 function manager_show_status(this_form, is_ok)
