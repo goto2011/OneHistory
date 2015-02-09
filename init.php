@@ -8,8 +8,8 @@
         .PATH_SEPARATOR.dirname(__FILE__).'/php-lib/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/ajax/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/plog/'  
-        .PATH_SEPARATOR.dirname(__FILE__).'/fluxbb/'  
-        .PATH_SEPARATOR.dirname(__FILE__).'/fluxbb/include/' 
+        .PATH_SEPARATOR.dirname(__FILE__).'/bbs/'  
+        .PATH_SEPARATOR.dirname(__FILE__).'/bbs/include/' 
         .PATH_SEPARATOR.get_include_path());
      
     // 设置时区为北京时间.
@@ -27,7 +27,7 @@
         {
             if(!isset($_SESSION['user_id']))
             {
-                header("Location:./fluxbb/login.php");
+                header("Location:./bbs/login.php");
                 exit;
             }
         }

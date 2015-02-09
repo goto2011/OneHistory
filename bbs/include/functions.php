@@ -1555,7 +1555,7 @@ function error($message, $file = null, $line = null, $db_error = false)
 	if (empty($pun_config))
 	{
 		$pun_config = array(
-			'o_board_title'	=> 'FluxBB',
+			'o_board_title'	=> 'BBS',
 			'o_gzip'		=> '0'
 		);
 	}
@@ -1610,7 +1610,7 @@ H2 {MARGIN: 0; COLOR: #FFFFFF; BACKGROUND-COLOR: #B84623; FONT-SIZE: 1.1em; PADD
 
 	if (defined('PUN_DEBUG') && !is_null($file) && !is_null($line))
 	{
-		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>FluxBB reported</strong>: '.$message."\n";
+		echo "\t\t".'<strong>File:</strong> '.$file.'<br />'."\n\t\t".'<strong>Line:</strong> '.$line.'<br /><br />'."\n\t\t".'<strong>BBS reported</strong>: '.$message."\n";
 
 		if ($db_error)
 		{

@@ -9,7 +9,7 @@
     require_once "data.php";
     require_once "sql.php";
     
-    define('PUN_ROOT', dirname(__FILE__).'/fluxbb/');
+    define('PUN_ROOT', dirname(__FILE__).'/bbs/');
     require_once "common.php";
 ?>
 
@@ -47,8 +47,8 @@
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |
 -->
     <a href="./system_frame.php" class="red_black_underline"  target="_top">系统设置</a> |
-    <a href="./fluxbb/index.php" class="red_black_underline"  target="_top">进入论坛</a> |
-    <a href="./fluxbb/login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
+    <a href="./bbs/index.php" class="red_black_underline"  target="_top">进入论坛</a> |
+    <a href="./bbs/login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
 </div>
 </div>
 

@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Copyright (C) 2008-2012 FluxBB
+ * Copyright (C) 2008-2012 BBS
  * based on code by Rickard Andersson copyright (C) 2002-2008 PunBB
  * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher
  */
 
-// The FluxBB version this script updates to
+// The BBS version this script updates to
 define('UPDATE_TO', '1.5.8');
 
 define('UPDATE_TO_DB_REVISION', 21);
@@ -19,7 +19,7 @@ define('MIN_PGSQL_VERSION', '7.0.0');
 define('PUN_SEARCH_MIN_WORD', 3);
 define('PUN_SEARCH_MAX_WORD', 20);
 
-// The MySQL connection character set that was used for FluxBB 1.2 - in 99% of cases this should be detected automatically,
+// The MySQL connection character set that was used for BBS 1.2 - in 99% of cases this should be detected automatically,
 // but can be overridden using the below constant if required.
 //define('FORUM_DEFAULT_CHARSET', 'latin1');
 
@@ -32,7 +32,7 @@ define('FORUM_NO_SET_NAMES', 1);
 
 // Make sure we are running at least MIN_PHP_VERSION
 if (!function_exists('version_compare') || version_compare(PHP_VERSION, MIN_PHP_VERSION, '<'))
-	exit('You are running PHP version '.PHP_VERSION.'. FluxBB '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
+	exit('You are running PHP version '.PHP_VERSION.'. BBS '.UPDATE_TO.' requires at least PHP '.MIN_PHP_VERSION.' to run properly. You must upgrade your PHP installation before you can continue.');
 
 define('PUN_ROOT', dirname(__FILE__).'/');
 
@@ -172,7 +172,7 @@ $default_style = $pun_config['o_default_style'];
 if (!file_exists(PUN_ROOT.'style/'.$default_style.'.css'))
 	$default_style = 'Air';
 
-// Start a session, used to queue up errors if duplicate users occur when converting from FluxBB v1.2.
+// Start a session, used to queue up errors if duplicate users occur when converting from BBS v1.2.
 session_start();
 
 //
