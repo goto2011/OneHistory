@@ -97,6 +97,9 @@ if (!defined('PUN_ALLOW_INDEX'))
 	echo '<meta name="ROBOTS" content="NOINDEX, FOLLOW" />'."\n";
 
 ?>
+
+<link rel="shortcut icon" href="./favicon.ico" media="screen" />
+
 <title><?php echo generate_page_title($page_title, $p) ?></title>
 <link rel="stylesheet" type="text/css" href="style/Air.css" />
 <?php
