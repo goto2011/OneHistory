@@ -85,18 +85,18 @@
 	// 保存成功
 	if (($is_edit == 0) && (strlen($thing_uuid) > 0))
 	{
-		echo "<p style='font-weight:bold;'>保存成功！</p>";
+		echo "ok";
 		alloc_update_token();
-		header("refresh:1; url=./update_input.php?update_once=" . get_update_token());
+		header("refresh:1; url=../update_input.php?update_once=" . get_update_token());
 	}
 	else if(($is_edit == 1) && ($update_flag == 1))
 	{
-		echo "<p style='font-weight:bold;'>更新成功！</p>";
+		echo "ok";
 		echo "<script>history.go(-2);</script>";
 	}
 	else
 	{
-		echo "<p style='font-weight:bold;'>保存失败！返回修改. </p>";
+		echo "fail";
 		header("refresh:1; Location:.getenv('HTTP_REFERER')");
 	}
 	

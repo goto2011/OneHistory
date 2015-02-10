@@ -98,7 +98,7 @@ if (!defined('PUN_ALLOW_INDEX'))
 
 ?>
 
-<link rel="shortcut icon" href="./favicon.ico" media="screen" />
+<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
 <title><?php echo generate_page_title($page_title, $p) ?></title>
 <link rel="stylesheet" type="text/css" href="style/Air.css" />

@@ -1,4 +1,7 @@
+<html>
 <head><meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
+
 <title>UT</title></head><body>
 <?php
     require_once 'init.php';

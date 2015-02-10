@@ -258,13 +258,13 @@ window.onload = function()
         }
         else 
         {
-            echo " (当前有 $follower_count 人关注)";
+            echo " (有 $follower_count 人关注)";
         }
         
         if(is_followed(get_property_UUID()))
         {
             echo " -- 你已关注! --<a href='./ajax/follow_do.php?del_tag_id=" . get_property_UUID() 
-                . "'>取消关注</a></nb>";
+                . "'>取消关注</a></nobr>";
         }
         else 
         {

@@ -40,7 +40,7 @@
 	$conn = null;
     
     // 导入成功
-    echo "<p style='font-weight:bold;'>导入成功！</p>";
+    echo "ok";
     alloc_import_token();
-    header("refresh:1; url=./import_input.php?import_once=" . get_import_token());
+    header("refresh:1; url=../import_input.php?import_once=" . get_import_token());
 ?>

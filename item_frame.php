@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
 <?php
     require_once 'init.php';
@@ -13,13 +14,15 @@
     
     if(!empty($_GET['property_UUID']))
     {
+        // 如果tag被设置,则tag优先.
+        set_period_big_index(-1);
+        set_period_small_index(-1);
+        search_param_init();
+        
         // all 即显示全部.
         if ($_GET['property_UUID'] == "all")
         {
             set_property_UUID("");
-            set_period_big_index(-1);
-            set_period_small_index(-1);
-            search_param_init();
         }
         else 
         {
@@ -64,6 +67,7 @@
             set_search_key($_GET['search_key']);
             set_search_object($_GET['object']);
             set_search_tag_type($_GET['tag_type']);
+            set_property_UUID("");
             
             if(check_search_param() == false)
             {
