@@ -97,7 +97,7 @@
 	else
 	{
 		echo "fail";
-		header("refresh:1; Location:.getenv('HTTP_REFERER')");
+		echo "<script>history.go(-2);</script>";
 	}
 	
 ?>

@@ -171,7 +171,7 @@
 
 <p class="thick" id="time_label">时间(必需)：
 <input type="text" id="time" name="time" autofocus=autofocus <?php flash_time($is_edit, $time); ?> />
-<div class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！ </div>
+<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！
 </nobr>
 
 <p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($is_edit, $time_limit); ?> ></input>
@@ -195,7 +195,7 @@
 	}
 ?>
 </textarea>
-<div class="alert" id="thing_alert">&nbsp;&nbsp;&nbsp;<-- 请输入事件！ </div>
+<nobr class="alert" id="thing_alert">&nbsp;&nbsp;&nbsp;<-- 请输入事件!
 </nobr>
 
 <table class="normal">

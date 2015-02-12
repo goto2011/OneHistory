@@ -36,9 +36,11 @@ function error_exit($exit_string)
 {
 	echo "<html>";
 	echo "<head><meta http-equiv='Content-Type' content='text/html; charset=UTF-8'>";
-	echo "<body>访问失败了！点击<a href='item_frame.php'>此处 返回主页</a><br /><br />";
+	echo "<body>访问失败了！请返回上一页. </a><br /><br />";
 	exit($exit_string);
 	echo "</body></html>";
+    echo "<script>history.go(-1);</script>";
+    // header("refresh:1; Location:" . $_SESSION['HTTP_REFERER']);
 }
 
 // 分配更新界面令牌, 避免重复提交.

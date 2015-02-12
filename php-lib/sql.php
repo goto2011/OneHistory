@@ -66,7 +66,7 @@ function insert_thing_to_db($time_array, $thing)
 
 	$thing_uuid = create_guid();
 	$sql_string = "INSERT INTO thing_time(uuid, time, time_type, time_limit, time_limit_type, 
-	   thing, add_time, public_tag, user_UUID, year_order) VALUES('$thing_uuid', $time, $time_type, 
+	   thing, add_time, public_tag, user_UUID, year_order) VALUES('$thing_uuid', '$time', $time_type, 
 	   $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order)";
 	
 	if (mysql_query($sql_string) === TRUE)
@@ -97,7 +97,7 @@ function update_thing_to_db($thing_uuid, $time_array, $thing)
     $year_order = get_year_order($time, $time_type);
     
 	// 保存数据
-	$sql_string = "UPDATE thing_time set time = $time, time_type = $time_type, thing = '$thing', 
+	$sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
 		time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order 
 		where uuid = '$thing_uuid' ";
 	

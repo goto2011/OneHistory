@@ -1,0 +1,45 @@
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:12:57 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """import_do.php: 时间格式错误. -- 
+"""
+2015/02/11 20:14:18 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """error: update_thing_to_db() -- UPDATE thing_time set time = 1970-01-01 08:33:35, time_type = 4, thing = '邓力群于北京去世, 享年100岁。', 
+		time_limit = 30, time_limit_type = 3 , year_order = 1970 
+		where uuid = '885b9487-ee98-36af-9ad9-54db47f8d09a'  。You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '08:33:35, time_type = 4, thing = '邓力群于北京去世, 享年100岁。', 
+	' at line 1"""
+2015/02/11 20:25:23 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:29:37 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:29:42 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:30:46 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:30:59 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:31:07 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:36:45 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """error: update_thing_to_db() -- UPDATE thing_time set time = '1970-01-01 08:33:35', time_type = 4, thing = '邓力群于北京去世, 享年100岁。', 
+		time_limit = 30, time_limit_type = 3 , year_order = 1970 
+		where uuid = '885b9487-ee98-36af-9ad9-54db47f8d09a'  。Data truncated for column 'time' at row 1"""
+2015/02/11 20:39:13 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:39:14 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:39:25 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """update_do.php: 有人绕开正常的流程重复提交表单."""
+2015/02/11 20:39:55 ERROR [/Users/duangan/Sites/localhost/one-history/init.php] ::1 """error: update_thing_to_db() -- UPDATE thing_time set time = '1970-01-01 08:33:35', time_type = 4, thing = '邓力群于北京去世, 享年100岁。', 
+		time_limit = 0, time_limit_type = 1 , year_order = 1970 
+		where uuid = '885b9487-ee98-36af-9ad9-54db47f8d09a'  。Data truncated for column 'time' at row 1"""
