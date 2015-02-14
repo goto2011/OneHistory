@@ -11,7 +11,6 @@ require PUN_ROOT.'include/common.php';
 
 // duangan
 require_once '../init.php';
-// is_user(1);
 require_once "data.php";
 require_once "sql.php";
 

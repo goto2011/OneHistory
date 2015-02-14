@@ -35,8 +35,8 @@
 
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
 
-<script type='text/javascript' src='./js/jquery-ui.min.js'></script>
 <script type="text/javascript" src="./js/jquery.min.js"></script>
+<script type='text/javascript' src='./js/jquery-ui.min.js'></script>
 <script type="text/javascript" src="./js/jquery.tagsinput.js"></script>
 
 <script type='text/javascript' src='./js/data.js'></script>

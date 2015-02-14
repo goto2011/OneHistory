@@ -54,7 +54,7 @@
 <?php
     }
 ?>
-    <a href="./bbs/index.php" class="red_black_underline"  target="_top">进入论坛</a> |
+    <a href="./bbs/index.php" class="red_black_underline"  target="_top">前往论坛</a> |
     <a href="./login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
 </div>
 </div>

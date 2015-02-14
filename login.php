@@ -22,7 +22,7 @@ require PUN_ROOT.'lang/'.$pun_user['language'].'/login.php';
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 
-// 登录之后.
+// 点击登陆按钮之后的处理.
 if (isset($_POST['form_sent']) && $action == 'in')
 {
 	flux_hook('login_before_validation');
@@ -237,13 +237,16 @@ if (!empty($errors))
 	require 'footer_user.php';
 }
 
-
-if (!$pun_user['is_guest'])
+if(user_is_login() == 1)
 {
-	header('Location: ./item_frame.php');
-	exit;
+    if (!$pun_user['is_guest'])
+    {
+    	header('Location: ./item_frame.php');
+    	exit;
+    }
 }
 
+// 处理登陆成功后去哪一页面的问题. 原则是优先回到登陆前的最后一页, 如果没有, 则进入 item_frame.php. 
 // Try to determine if the data in HTTP_REFERER is valid (if not, we redirect to index.php after login)
 if (!empty($_SERVER['HTTP_REFERER']))
 	$redirect_url = validate_redirect($_SERVER['HTTP_REFERER'], null);

@@ -1,6 +1,6 @@
 <?php
     require_once '../init.php';
-    is_user(1);
+    is_user(2);
 	require_once "data.php";
 	require_once "sql.php";
     

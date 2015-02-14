@@ -20,16 +20,34 @@
     Plog::set_config(include 'plog_config.php');
     $log = Plog::factory(__FILE__);
     
-    // 检查用户是否登录。如果没有则进入登陆界面。
-    function is_user($is_need_check)
+    // 如果用户没有登陆, 则进入登录界面.
+    function is_user($login_type)
     {
-        if ($is_need_check == 1)
+        if(user_is_login() == 0)
         {
-            if(!isset($_SESSION['user_id']))
+            if ($login_type == 1)
             {
                 header("Location:./login.php");
-                exit;
             }
+            else 
+            {
+                header("Location:../login.php");
+            }
+        }
+    }
+    
+    // 检查用户是否登录.
+    function user_is_login()
+    {
+        if(!isset($_SESSION['user_id']))
+        {
+            // 清除状态.
+            user_logout();
+            return 0;
+        }
+        else 
+        {
+        	return 1;
         }
     }
     
