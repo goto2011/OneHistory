@@ -17,10 +17,9 @@
     require_once "sql.php";
     
     // 唯一可设置 list_type 的位置.
-    @$list_type = $_GET['list_type'];
-    if (!empty($list_type))
+    if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
     {
-        set_current_list($list_type);
+        set_current_list($_GET['list_type']);
     }
     
     if (check_list_param() == false)
@@ -28,10 +27,14 @@
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
     
-    // 处理检索
-    if (!is_total())
+    // 如果不统一, 则清除检索条件.
+    if (is_total())
     {
-        search_param_init();
+        set_is_search(1);
+    }
+    else 
+    {
+        set_is_search(0);
     }
 ?>
 

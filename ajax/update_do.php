@@ -13,7 +13,7 @@
 	
 	if(isset($_SESSION['update_input_thing_uuid']))
 	{
-		$thing_uuid = $_SESSION['update_input_thing_uuid'];
+		$thing_uuid = html_encode($_SESSION['update_input_thing_uuid']);
 		unset($_SESSION['update_input_thing_uuid']);
 	}
 	else
@@ -23,7 +23,7 @@
 	
 	if(isset($_SESSION['update_input_is_edit']))
 	{
-		$is_edit = $_SESSION['update_input_is_edit'];
+		$is_edit = html_encode($_SESSION['update_input_is_edit']);
 		unset($_SESSION['update_input_is_edit']);
 	}
 	else
@@ -34,20 +34,21 @@
 	$conn = open_db();
 	
 	// 1. 读入输入界面传入的更新数据。
+    $thing = html_encode($_GET['thing']);
+    
     $time_array = array("status"=>"init", "time"=>0, "time_type"=>2, 
                     "time_limit"=>0, "time_limit_type"=>1);
-	$thing = $_GET['thing'];
-	$time_array['time'] = get_time_number($_GET['time'], $_GET['time_type']);
-	$time_array['time_type']  = $_GET['time_type'];
+	$time_array['time'] = get_time_number(html_encode($_GET['time']), html_encode($_GET['time_type']));
+	$time_array['time_type']  = html_encode($_GET['time_type']);
     if (empty($_GET['time_limit']))
     {
         $time_array['time_limit'] = 0;
     }
     else 
     {
-        $time_array['time_limit'] = $_GET['time_limit'];
+        $time_array['time_limit'] = html_encode($_GET['time_limit']);
     }
-	$time_array['time_limit_type'] = $_GET['time_limit_type'];
+	$time_array['time_limit_type'] = html_encode($_GET['time_limit_type']);
     $time_array['status'] = "ok";
 	
 	$update_flag = 0;
@@ -67,13 +68,13 @@
 	if(strlen($thing_uuid) > 0)
 	{
 		$index = 0;
-		$index += insert_tags($_GET['start_tags'] , 1, $thing_uuid);
-		$index += insert_tags($_GET['end_tags'] , 2, $thing_uuid);
-		$index += insert_tags($_GET['source_tags'] , 3, $thing_uuid);
-		$index += insert_tags($_GET['person_tags'] , 4, $thing_uuid);
-		$index += insert_tags($_GET['geography_tags'] , 5, $thing_uuid);
-		$index += insert_tags($_GET['free_tags'] , 6, $thing_uuid);
-		$index += insert_tags($_GET['country_tags'] , 7, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['start_tags']),   1, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['end_tags']),     2, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['source_tags']),  3, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['person_tags']),  4, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['geography_tags']), 5, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['free_tags']),    6, $thing_uuid);
+		$index += insert_tags(html_encode($_GET['country_tags']), 7, $thing_uuid);
 		
 		// echo "$index tags finished. <br/>";
 	}

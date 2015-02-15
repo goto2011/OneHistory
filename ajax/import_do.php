@@ -14,8 +14,9 @@
 	$conn = open_db();
 
 	// 按行读入输入界面传入的批量数据。
-	$token = strtok($_POST['context'], "\r");
-	$line_total = substr_count($_POST['context'], "\r");
+	$context = html_encode($_POST['context']);
+	$token = strtok($context, "\r");
+	$line_total = substr_count($context, "\r");
 	$index = 0;
 	
 	while(($token != false) && (strlen($token) > 0))

@@ -44,7 +44,8 @@ if (isset($_POST['form_sent']) && $action == 'in')
 		
 		// 2015-02-08
 		$authorized = ($cur_user['password'] == $form_password_hash);
-        user_login($form_username, $cur_user['user_UUID'], $cur_user['group_id']);
+        user_login(html_encode($form_username), html_encode($cur_user['user_UUID']), 
+            html_encode($cur_user['group_id']));
 	}
 
     // 密码错, 进入忘记密码流程.

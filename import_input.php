@@ -7,6 +7,7 @@
 <?php 
 	require_once 'init.php';
     is_user(1);
+    require_once "data.php";
 ?>
 
 <style type="text/css">
@@ -34,7 +35,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<input type="hidden" name="originator" value="<?php echo $_GET['import_once'] ?>">
+<input type="hidden" name="originator" value="<?php echo html_encode($_GET['import_once']) ?>">
 
 <input type="submit" style="font-size:30pt" /></p>
 </form>

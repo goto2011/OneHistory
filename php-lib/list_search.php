@@ -30,7 +30,7 @@ function check_search_param()
     return true;
 }
 
-// is_search
+// is_search. 0:no; 1:yes.
 function set_is_search($is_search)
 {
     $_SESSION["search_param"]["is_search"] = $is_search;

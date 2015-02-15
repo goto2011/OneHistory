@@ -220,6 +220,12 @@ function splite_string($token)
     return array("time"=>$time_sub, "thing"=>$thing_sub);
 }
 
+// html 编码, 防范html注入.
+function html_encode($str)
+{
+    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
+}
+
 
 /////////////////////////////// 3.STRING end //////////////////////////////////////
 

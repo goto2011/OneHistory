@@ -13,10 +13,11 @@
     require_once "list_control.php";
 
 	// 判断是新增，还是编辑
-	@$thing_uuid = $_GET['thing_uuid'];
-	if(strlen($thing_uuid) > 0)
+	$thing_uuid = "";
+	if(strlen($_GET['thing_uuid']) > 0)
 	{
-		$_SESSION['update_input_thing_uuid'] = $thing_uuid;   /// thing uuid.
+		$thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
+        $_SESSION['update_input_thing_uuid'] = $thing_uuid;
 		$_SESSION['update_input_is_edit'] = 1;                /// is edit.
 	}
 	else
@@ -70,22 +71,21 @@
 		$is_edit = 1;
         
         // 更新 item_index.
-        @$item_index = $_GET['item_index'];
-        if (!empty($item_index))
+        if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
         {
-            set_item_index($item_index);
+            set_item_index(html_encode($_GET['item_index']));
         }
         
 		$result = get_thing_db($thing_uuid);
 		
 		while($row = mysql_fetch_array($result))
 		{
-			$thing = $row['thing'];
-			$time_type = $row['time_type'];
-			$time = get_time_string_lite($row['time'], $time_type);
-			$time_limit = $row['time_limit'];
+			$thing = html_encode($row['thing']);
+			$time_type = html_encode($row['time_type']);
+			$time = get_time_string_lite(html_encode($row['time']), $time_type);
+			$time_limit = html_encode($row['time_limit']);
             if ($time_limit == 0)$time_limit = null;
-			$time_limit_type = $row['time_limit_type'];
+			$time_limit_type = html_encode($row['time_limit_type']);
 			
 			// echo "$time - " . $row['time'] . "-" . $row['time_type'] . "<br />";
 		}
@@ -209,10 +209,10 @@
 </tr>
 
 <tr>
-<td><p class="thick">国家、民族、地区标签：<input id='country_tags' 		name='country_tags' 	type='text' 	class='tags' 
+<td><p class="thick">文化/国家/民族/地区标签：<input id='country_tags' 		name='country_tags' 	type='text' 	class='tags' 
 	value="<?php flash_tags($is_edit, 7, $thing_uuid); ?>"></p></td>
 
-<td><p class="thick">地理标签（特定地名放在这里）：<input id='geography_tags' 	name='geography_tags' type='text' 	class='tags' 
+<td><p class="thick">地理标签：<input id='geography_tags' 	name='geography_tags' type='text' 	class='tags' 
 	value="<?php flash_tags($is_edit, 5, $thing_uuid); ?>"></p></td>
 </tr>
 
@@ -236,7 +236,7 @@
 <input type="radio" name=public_type value="3" / >隐私
 -->
 
-<input type="hidden" name="originator" value="<?php echo $_GET['update_once']; ?>">
+<input type="hidden" name="originator" value="<?php echo html_encode($_GET['update_once']); ?>">
 <input type="hidden" name="thing_length" value="<?php echo get_thing_length(); ?>">
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

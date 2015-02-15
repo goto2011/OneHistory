@@ -5,15 +5,16 @@
     require_once '../init.php';
     is_user(2);
     require_once "sql.php";
+    require_once "data.php";
     
     if(!empty($_GET['tag_id']))
     {
-        $tag_uuid = $_GET['tag_id'];
+        $tag_uuid = html_encode($_GET['tag_id']);
         $is_add_follow = TRUE;
     }
     else if(!empty($_GET['del_tag_id']))
     {
-        $tag_uuid = $_GET['del_tag_id'];
+        $tag_uuid = html_encode($_GET['del_tag_id']);
         $is_add_follow = FALSE;
     }
     else 

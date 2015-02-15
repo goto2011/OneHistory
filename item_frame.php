@@ -26,11 +26,11 @@
         }
         else 
         {
-            set_property_UUID($_GET['property_UUID']);
+            set_property_UUID(html_encode($_GET['property_UUID']));
         }
     }
     
-    if(!empty($_GET['page']))
+    if(!empty($_GET['page']) && is_numeric($_GET['page']))
     {
         set_page($_GET['page']);
     }
@@ -39,7 +39,7 @@
         set_page(1);
     }
     
-    if(!empty($_GET['item_index']))
+    if(!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
     {
         set_item_index($_GET['item_index']);
     }
@@ -48,12 +48,12 @@
         set_item_index(1);
     }
     
-    if(!empty($_GET['big']))
+    if(!empty($_GET['big']) && is_numeric($_GET['big']))
     {
         set_period_big_index($_GET['big']);
     }
     
-    if(!empty($_GET['small']))
+    if(!empty($_GET['small']) && is_numeric($_GET['small']))
     {
         set_period_small_index($_GET['small']);
     }
@@ -64,9 +64,9 @@
         if(!empty($_GET['search_key']))
         {
             set_is_search(1);
-            set_search_key($_GET['search_key']);
-            set_search_object($_GET['object']);
-            set_search_tag_type($_GET['tag_type']);
+            set_search_key(html_encode($_GET['search_key']));
+            set_search_object(html_encode($_GET['object']));
+            set_search_tag_type(html_encode($_GET['tag_type']));
             set_property_UUID("");
             
             if(check_search_param() == false)
