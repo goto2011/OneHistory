@@ -218,15 +218,21 @@ window.onload = function()
         }
 		echo "总计条目:$item_count -- 本页条目:$item_start-$item_end -- ";
 
+        $point_count = 0;
 		for ($index = 1; $index < $curr_page; $index++)
 		{
 		    if (page_is_show($index, $curr_page, $pages))
             {
 			     echo "<a href='item_frame.php?page=$index'> [$index] </a> ";
+                 $point_count = 0;
             }
             else 
             {
-                echo ".";    
+                if ($point_count < 4)
+                {
+                    echo ".";
+                }
+                $point_count++;
             }
 		}
 		echo "[$curr_page]";
@@ -236,10 +242,15 @@ window.onload = function()
 		    if (page_is_show($index, $curr_page, $pages))
             {
 			     echo "<a href='item_frame.php?page=$index'> [$index] </a> ";
+			     $point_count = 0;
             }
             else 
             {
-                echo ".";    
+                if ($point_count < 4)
+                {
+                    echo ".";
+                }
+                $point_count++;
             }
 		}
         

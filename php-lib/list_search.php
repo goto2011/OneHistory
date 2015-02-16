@@ -37,7 +37,8 @@ function set_is_search($is_search)
 }
 function is_search()
 {
-    return $_SESSION["search_param"]["is_search"];
+    return ($_SESSION["search_param"]["is_search"] 
+        && $_SESSION["search_param"]["search_key"] != "");
 }
 
 // search_key

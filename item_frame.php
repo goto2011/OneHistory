@@ -59,20 +59,17 @@
     }
     
     // 处理检索
-    if (is_total())
+    if (is_total() && !empty($_GET['search_key']))
     {
-        if(!empty($_GET['search_key']))
+        set_is_search(1);
+        set_search_key(html_encode($_GET['search_key']));
+        set_search_object(html_encode($_GET['object']));
+        set_search_tag_type(html_encode($_GET['tag_type']));
+        set_property_UUID("");
+        
+        if(check_search_param() == false)
         {
-            set_is_search(1);
-            set_search_key(html_encode($_GET['search_key']));
-            set_search_object(html_encode($_GET['object']));
-            set_search_tag_type(html_encode($_GET['tag_type']));
-            set_property_UUID("");
-            
-            if(check_search_param() == false)
-            {
-                search_param_init();
-            }
+            search_param_init();
         }
     }
     else 

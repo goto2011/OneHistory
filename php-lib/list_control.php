@@ -148,14 +148,14 @@ function get_period_small_index()
 // 每一页的长度限制
 function get_page_size()
 {
-    $_SESSION['page_size'] = 100; // 每页的条目数，暂时写死，后续再写活。
+    $_SESSION['page_size'] = 30; // 每页的条目数，暂时写死，后续再写活。
     return $_SESSION['page_size'];
 }
 
 // 每一页的 tag 的数量限制
 function get_page_tags_size()
 {
-    $_SESSION['page_tags_size'] = 100; // 每页的tags数，暂时写死，后续再写活。
+    $_SESSION['page_tags_size'] = 40; // 每页的tags数，暂时写死，后续再写活。
     return $_SESSION['page_tags_size'];
 }
 
