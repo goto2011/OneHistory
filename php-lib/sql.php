@@ -9,7 +9,7 @@ require_once "functions.php";
 // 打开数据库
 function open_db()
 {
-	$conn = @mysql_connect("localhost", "root", "1234") or die("数据库链接错误!");
+	$conn = @mysql_connect("localhost", "root", "Daisyabc1234") or die("数据库链接错误!");
 	mysql_select_db("one-history", $conn);		// data为数据库名称
 	mysql_query("set names 'UTF8'"); 			// 使用utf8中文编码
 	

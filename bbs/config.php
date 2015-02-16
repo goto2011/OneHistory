@@ -4,7 +4,7 @@ $db_type = 'mysql';
 $db_host = 'localhost';
 $db_name = 'one-history';
 $db_username = 'root';
-$db_password = '1234';
+$db_password = 'Daisyabc1234';
 $db_prefix = '';
 $p_connect = false;
 
