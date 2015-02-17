@@ -2,6 +2,8 @@
 // created by duangan, 2015-1-19 -->
 // support time deal function.    -->
 
+require_once 'data_number.php';
+
 // 每月多少天.
 $month_days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
@@ -195,7 +197,20 @@ function get_time_string($time_number, $time_type)
     
      if($time_type == 1)
      {
-        $my_time_string = "距今 $time_number 年前";
+        $my_year = abs($time_number);
+        if ($my_year > 100000000)
+        {
+            $my_year2 = (float)($my_year / 100000000) . "亿";
+        }
+        else if($my_year > 10000)
+        {
+            $my_year2 = (float)($my_year / 10000) . "万";
+        }
+        else 
+        {
+            $my_year2 = $my_year;
+        }
+        $my_time_string = "距今" . $my_year2 . "年前";
      }
      else if($time_type == 2)
      {
@@ -264,8 +279,10 @@ function get_month($date_string)
 // 从批量数字字符串中获取时间子串
 function get_time_from_native($native_string)
 {
+    // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
+    // time_limit_type: 1:年; 2:日; 3:秒.
     $time_array = array("status"=>"init", "time"=>0, "time_type"=>2, 
-                    "time_limit"=>0, "time_limit_type"=>1);
+                    "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
     
     // step 1: 搞定"距今 ... 年"这种时间表达.
     if (stristr($native_string, "年前"))
@@ -291,11 +308,12 @@ function get_time_from_native($native_string)
     }
     
     // step 2: 搞定"公元"和"公元前"
-    if(is_bc($native_string))
+    // 注意,这里修改了$native_string.
+    if (is_bc($native_string))
     {
-        // 注意,这里修改了$native_string.
-        $native_string = trim_time_string($native_string);
+        $time_array['is_bc'] = 1;
     }
+    $native_string = trim_time_string($native_string);
     
     // step 3: 搞定数字
     if(is_numeric($native_string))
@@ -461,13 +479,55 @@ function get_time_from_native($native_string)
         $time_array['time'] = $my_year;
         $time_array['time_type'] = 2;    /// 公元年
         $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 1;  // 日
+        $time_array['time_limit_type'] = 1;  // 年
         $time_array['status'] = "ok";
         
         return $time_array;
     }
     
-    // step 11: 搞定世纪/年代, 每个又分为前期/中期/后期.(暂时不支持.)
+    // step 11: 搞定世纪/年代.
+    if (stristr($native_string, "世纪"))
+    {
+        $my_year = $temp1 = str_replace("世纪", "", $native_string);
+        if (is_numeric($my_year))
+        {
+            if ($time_array['is_bc'] == 1)
+            {
+                $time_array['time'] = $my_year * 100 + 50;
+            }
+            else 
+            {
+                $time_array['time'] = $my_year * 100 - 50;
+            }
+            $time_array['time_type'] = 2;    /// 年
+            $time_array['time_limit'] = 50;
+            $time_array['time_limit_type'] = 1;  // 年
+            $time_array['status'] = "ok";
+            
+            return $time_array;
+        }
+        else
+        {
+	        $my_year2 = chinese_to_number($my_year);
+            if ($my_year2 != 0)
+            {
+                if ($time_array['is_bc'] == 1)
+                {
+                    $time_array['time'] = $my_year2 * 100 + 50;
+                }
+                else 
+                {
+                    $time_array['time'] = $my_year2 * 100 - 50;
+                }
+                $time_array['time_type'] = 2;    /// 年
+                $time_array['time_limit'] = 50;
+                $time_array['time_limit_type'] = 1;  // 年
+                $time_array['status'] = "ok";
+                
+                return $time_array;
+            }
+        }
+    }
     
     // step 12: 最后保底
     if(strtotime($native_string) == TRUE)
@@ -476,7 +536,7 @@ function get_time_from_native($native_string)
         $time_array['time'] = unixtojd(strtotime($native_string)) + 13;
         $time_array['time_type'] = 3;    /// 年月日
         $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 1;  // 日
+        $time_array['time_limit_type'] = 1;  // 年
         $time_array['status'] = "ok";
         
         return $time_array;

@@ -26,16 +26,6 @@
     {
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
-    
-    // 如果不统一, 则清除检索条件.
-    if (is_total())
-    {
-        set_is_search(1);
-    }
-    else 
-    {
-        set_is_search(0);
-    }
 ?>
 
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
@@ -50,6 +40,12 @@ window.onload = function()
 
 <?php 
 	flash_item_list();
+    
+    // 是否显示查找结果.
+    function is_search_ex()
+    {
+        return is_search() && is_total();
+    }
     
     // 打印检索区
     function print_search_zone()
@@ -205,13 +201,13 @@ window.onload = function()
         }
         
         // form 要包大部分.
-        if (is_search())
+        if (is_search_ex())
         {
             echo "<form method='post' action='./ajax/list_add_tag_do.php'  onSubmit='return checkbox_check()'>";
         }
 		
 		echo "<div align='left' style='font-family:微软雅黑; color:red; font-weight: bold'> ";
-        if(is_search())
+        if(is_search_ex())
         {
             echo "<span class='link' onclick='select_all()'>全选</span> -- 
                   <span class='link' onclick='select_none()'>全不选</span> -- ";
@@ -254,7 +250,7 @@ window.onload = function()
             }
 		}
         
-        if(!is_tag() && !is_period_tag() && !is_search())
+        if(!is_tag() && !is_period_tag() && !is_search_ex())
         {
             echo "</div>";
         }
@@ -326,7 +322,7 @@ window.onload = function()
 	{
 		echo "<table class='altrowstable' id='alternatecolor' style='border-width: 1px;'>";
 		echo "<tr>";
-        if(is_search())
+        if(is_search_ex())
         {
             echo "<td></td>";
         }
@@ -360,7 +356,7 @@ window.onload = function()
         {
             $item_count = get_thing_count_by_period($begin_year, $end_year);
         }
-        else if(is_search() == 1)
+        else if(is_search_ex())
         {
             $item_count = get_thing_count_by_search(search_key());
         }
@@ -397,7 +393,7 @@ window.onload = function()
         {
             print_period_info();
         }
-        else if (is_search())
+        else if (is_search_ex())
         {
             print_add_tag_form();
         }
@@ -413,7 +409,7 @@ window.onload = function()
         {
             $result = get_thing_item_by_period($begin_year, $end_year, $offset, $page_size);
         }
-        else if(is_search() == 1)
+        else if(is_search_ex())
         {
             $result = get_thing_item_by_search(search_key(), $offset, $page_size);
         }
@@ -430,7 +426,7 @@ window.onload = function()
 			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
 			
 			echo "<tr>";
-            if(is_search())
+            if(is_search_ex())
             {
                 echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
             }
@@ -450,7 +446,7 @@ window.onload = function()
         {
             print_tag_control();
         }
-        if (is_search())
+        if (is_search_ex())
         {
             echo "</form>";
         }

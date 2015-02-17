@@ -59,7 +59,7 @@
     }
     
     // 处理检索
-    if (is_total() && !empty($_GET['search_key']))
+    if (!empty($_GET['search_key']))
     {
         set_is_search(1);
         set_search_key(html_encode($_GET['search_key']));
@@ -71,10 +71,6 @@
         {
             search_param_init();
         }
-    }
-    else 
-    {
-        search_param_init();
     }
 ?>
 

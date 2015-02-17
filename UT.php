@@ -8,6 +8,7 @@
     is_user(1);
 	require_once "data.php";
     require_once "sql.php";
+    require_once "data_number.php";
     
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
@@ -28,7 +29,8 @@
     assert_options(ASSERT_CALLBACK, 'my_assert_handler');
     
     ///////////////////////// UT begin /////////////////////////
-    
+    ///////////////////////// dock /////////////////////////
+        
     function UT_get_time_from_native($time_string, $time, $time_type, 
                                 $time_limit, $time_limit_type)
     {
@@ -44,6 +46,13 @@
         $my_array = splite_string($token);
         return (($my_array['time'] == $time) && ($my_array['thing'] == $thing));
     }
+    
+    function UT_get_year_order($date_string, $year_order)
+    {
+        return float_cmp(get_year_order(get_time_number($date_string, 3), 3), $year_order, 8);
+    }
+    
+    ///////////////////////// UT /////////////////////////
     
     UT_splite_string("前730000年，周口店北京人", "前730000年", "周口店北京人");
     UT_splite_string("前7500年，彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
@@ -92,6 +101,18 @@
     assert('UT_get_time_from_native("1913", 1913, 2, 0, 1)');
     assert('UT_get_time_from_native("1950年12月19日", time_string_to_days("1950-12-19"), 3, 0, 1)');
     
+    assert('UT_get_time_from_native("公元前15世纪",      -1450, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪",    -1450, 2, 50, 1)');
+    assert('UT_get_time_from_native("前15世纪",          -1450, 2, 50, 1)');
+    assert('UT_get_time_from_native("前十五世纪",        -1450, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元前70世纪",      -6950, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元前七十世纪",    -6950, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元前1世纪",       -50, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元1世纪",         50, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元一世纪",        50, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元17世纪",        1650, 2, 50, 1)');
+    assert('UT_get_time_from_native("公元十七世纪",      1650, 2, 50, 1)');
+    
     assert('is_leap_year(1980)');
     assert('!is_leap_year(1981)');
     assert('!is_leap_year(1900)');
@@ -103,10 +124,10 @@
     assert('preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", "likecat@gmail.com")');
     assert('preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", "451877089@qq.com")');
     
-    echo get_year_order(get_time_number("2015-1-2", 3), 3) . "<br/>";
-    echo get_year_order(get_time_number("2015-6-31", 3), 3) . "<br/>";
-    echo get_year_order(get_time_number("2015-11-31", 3), 3) . "<br/>";
-    echo get_year_order(get_time_number("2015-12-31", 3), 3) . "<br/>";
+    assert('UT_get_year_order("2015-1-2", 2015.002739726)');
+    assert('UT_get_year_order("2015-6-31", 2015.495890411)');
+    assert('UT_get_year_order("2015-11-31", 2015.9150684932)');
+    assert('UT_get_year_order("2015-12-31", 2015.997260274)');
     
     assert("is_infinite(log(0))");
     
