@@ -35,8 +35,18 @@
                                 $time_limit, $time_limit_type)
     {
         $my = get_time_from_native($time_string);
-        // print_r($my);
-        // echo "<br />";
+        return (($time == $my['time']) && ($time_type == $my['time_type']) 
+            && ($time_limit == $my['time_limit']) && ($time_limit_type == $my['time_limit_type']));
+    }
+    
+    function UT_get_time_from_native_with_print($time_string, $time, $time_type, 
+                                $time_limit, $time_limit_type)
+    {
+        $my = get_time_from_native($time_string);
+        print_r($my);
+        echo "<br />";
+        echo "$time -- $time_type -- $time_limit -- $time_limit_type";
+        echo "<br />";
         return (($time == $my['time']) && ($time_type == $my['time_type']) 
             && ($time_limit == $my['time_limit']) && ($time_limit_type == $my['time_limit_type']));
     }
@@ -94,9 +104,17 @@
     assert('UT_get_time_from_native("1750年上半年", time_string_to_days("1750-3-31"), 3, 90, 2)');
     assert('UT_get_time_from_native("234年下半年", time_string_to_days("234-9-30"), 3, 90, 2)');
     assert('UT_get_time_from_native("1234年第一季度", time_string_to_days("1234-2-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年春天", time_string_to_days("1234-4-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年春季", time_string_to_days("1234-4-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年春", time_string_to_days("1234-4-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年夏", time_string_to_days("1234-7-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年秋", time_string_to_days("1234-10-15"), 3, 45, 2)');
+    assert('UT_get_time_from_native("1234年冬", time_string_to_days("1235-1-15"), 3, 45, 2)');
     
     assert('UT_get_time_from_native("前386年", -386, 2, 0, 1)');
     assert('UT_get_time_from_native("前2100", -2100, 2, 0, 1)');
+    assert('UT_get_time_from_native("公元前2100", -2100, 2, 0, 1)');
+    assert('UT_get_time_from_native("12", 12, 2, 0, 1)');
     assert('UT_get_time_from_native("17年", 17, 2, 0, 1)');
     assert('UT_get_time_from_native("1913", 1913, 2, 0, 1)');
     assert('UT_get_time_from_native("1950年12月19日", time_string_to_days("1950-12-19"), 3, 0, 1)');
@@ -111,7 +129,16 @@
     assert('UT_get_time_from_native("公元1世纪",         50, 2, 50, 1)');
     assert('UT_get_time_from_native("公元一世纪",        50, 2, 50, 1)');
     assert('UT_get_time_from_native("公元17世纪",        1650, 2, 50, 1)');
-    assert('UT_get_time_from_native("公元十七世纪",      1650, 2, 50, 1)');
+    
+    assert('UT_get_time_from_native("1939-9-1",      time_string_to_days("1939-9-1"), 3, 0, 1)');
+    assert('UT_get_time_from_native("1939/9/1",      time_string_to_days("1939/9/1"), 3, 0, 1)');
+    assert('UT_get_time_from_native("1939.09.01",    time_string_to_days("1939.09.01"), 3, 0, 1)');
+    assert('UT_get_time_from_native("1939-09",    time_string_to_days("1939-09-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1939.09",    time_string_to_days("1939-09-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1939-9",    time_string_to_days("1939-9-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1919.6",    time_string_to_days("1919-6-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1932",    1932, 2, 0, 1)');
+    // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。
     
     assert('is_leap_year(1980)');
     assert('!is_leap_year(1981)');
@@ -135,6 +162,8 @@
     echo get_search_where_sub("蒋介石 or 毛泽东") . "<br />";
     echo get_search_where_sub("唐朝 and 诗人 - 李白") . "<br />";
     echo get_search_where_sub("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
+    
+
 ?>
 
 </body>

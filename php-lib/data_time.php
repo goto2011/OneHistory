@@ -284,7 +284,7 @@ function get_time_from_native($native_string)
     $time_array = array("status"=>"init", "time"=>0, "time_type"=>2, 
                     "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
     
-    // step 1: 搞定"距今 ... 年"这种时间表达.
+    // step 1: 搞定"距今 ... 年前"这种时间表达.
     if (stristr($native_string, "年前"))
     {
         if(stristr($native_string, "亿"))
@@ -315,10 +315,10 @@ function get_time_from_native($native_string)
     }
     $native_string = trim_time_string($native_string);
     
-    // step 3: 搞定数字
-    if(is_numeric($native_string))
+    // step 3: 搞定单个整数的情况. 单个整数指年份。
+    if(is_numeric($native_string) && !strstr($native_string, "."))
     {
-        $time_array['time'] = $native_string;
+        $time_array['time'] = (int)$native_string;
         $time_array['time_type'] = 2;    /// 公元年
         $time_array['time_limit'] = 0;
         $time_array['time_limit_type'] = 1;
@@ -327,9 +327,10 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    
-    // step 4: 搞定"年-月-日", 以及"Y-M-D". 分割线也支持"/".
+    // step 4: 搞定"年-月-日", 以及"Y-M-D". 分割线也支持"/"和".".
     $my_string = "";
+    $my_days = 0;
+    $day_is_empty = 0;
     if (is_chinese_day($native_string))
     {
         $my_string = trim_chinese_day($native_string);
@@ -338,12 +339,40 @@ function get_time_from_native($native_string)
     {
         $my_string = $native_string;
     }
-    if(time_string_to_days($my_string) != 0)
+    $my_time_array = get_time_array($my_string);
+    
+    // 处理公元前的年份
+    if(empty($my_time_array[0]) && count($my_time_array) == 4)
     {
-        $time_array['time'] = time_string_to_days($my_string);
+        $my_year = 0 - (int)$my_time_array[1];
+        $my_days = juliantojd($my_time_array[2], $my_time_array[3], $my_year);
+    }
+    else if(count($my_time_array) == 3)
+    {
+        $my_days = juliantojd($my_time_array[1], $my_time_array[2], $my_time_array[0]);
+    }
+    // 只有年月，没有日的情况.
+    else if (count($my_time_array) == 2 && !empty($my_time_array[0]))
+    {
+        $my_days = juliantojd($my_time_array[1], 15, $my_time_array[0]);
+        $day_is_empty = 1;
+    }
+    
+    if($my_days != 0)
+    {
+        $time_array['time'] = $my_days;
         $time_array['time_type'] = 3;    /// 年月日
-        $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 1;
+        if ($day_is_empty == 0)
+        {
+            $time_array['time_limit'] = 0;
+            $time_array['time_limit_type'] = 1;
+        }
+        else
+        {
+            $time_array['time_limit'] = 15;
+            $time_array['time_limit_type'] = 2;
+        }
+        
         $time_array['status'] = "ok";
         
         return $time_array;
@@ -358,7 +387,7 @@ function get_time_from_native($native_string)
         $my_year = intval(trim_time_string($native_string));
     }
     
-    // step 6: 搞定有月份的情况
+    // step 6: 搞定有年-月的情况
     if (stristr($native_string, "月"))
     {
         $my_month = get_month($native_string);
@@ -444,25 +473,30 @@ function get_time_from_native($native_string)
     }
     
     // step 9: 搞定春夏秋冬四季
-    if (stristr($native_string, "季"))
+    $is_season = 0;
+    if (stristr($native_string, "春"))
     {
-        if (stristr($native_string, "春"))
-        {
-            $my_month = 4;
-        }
-        else if (stristr($native_string, "夏"))
-        {
-            $my_month = 7;
-        }
-        else if (stristr($native_string, "秋"))
-        {
-            $my_month = 10;
-        }
-        else if (stristr($native_string, "冬"))
-        {
-            $my_year = $my_year + 1;
-            $my_month = 1;
-        }
+        $my_month = 4;
+        $is_season = 1;
+    }
+    else if (stristr($native_string, "夏"))
+    {
+        $my_month = 7;
+        $is_season = 1;
+    }
+    else if (stristr($native_string, "秋"))
+    {
+        $my_month = 10;
+        $is_season = 1;
+    }
+    else if (stristr($native_string, "冬"))
+    {
+        $my_year = $my_year + 1;
+        $my_month = 1;
+        $is_season = 1;
+    }
+    if ($is_season == 1)
+    {
         $my_day = 15;
         $time_array['time'] = juliantojd($my_month, $my_day, $my_year);
         $time_array['time_type'] = 3;    /// 年月日
@@ -485,7 +519,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 11: 搞定世纪/年代.
+    // step 11: 搞定世纪
     if (stristr($native_string, "世纪"))
     {
         $my_year = $temp1 = str_replace("世纪", "", $native_string);
@@ -548,6 +582,14 @@ function get_time_from_native($native_string)
     }
 }
 
+// 将年月日字符串转化为字符串数组。
+function get_time_array($time_string)
+{
+    $my_string = str_replace("/", "-", $time_string);
+    $my_string = str_replace(".", "-", $my_string);
+    
+    return explode("-", $my_string);
+}
 
 // 将“年月日”转成天数（时间范围从公元前4713年1月1日开始）
 // 入参为: "2014-1-19"
@@ -556,6 +598,7 @@ function time_string_to_days($time_string)
     $my_days = 0;
     
     $my_string = str_replace("/", "-", $time_string);
+    $my_string = str_replace(".", "-", $my_string);
     $string_array = explode("-", $my_string);
     
     // 处理公元前的年份
