@@ -352,7 +352,7 @@ function get_time_from_native($native_string)
         $my_days = juliantojd($my_time_array[1], $my_time_array[2], $my_time_array[0]);
     }
     // 只有年月，没有日的情况.
-    else if (count($my_time_array) == 2 && !empty($my_time_array[0]))
+    else if (count($my_time_array) == 2 && is_numeric($my_time_array[0]) && is_numeric($my_time_array[1]))
     {
         $my_days = juliantojd($my_time_array[1], 15, $my_time_array[0]);
         $day_is_empty = 1;

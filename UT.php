@@ -78,6 +78,24 @@
     UT_splite_string("前3000年,龙山文化", "前3000年", "龙山文化");
     UT_splite_string("前2100,禹建立夏朝。", "前2100", "禹建立夏朝。");
     
+    UT_splite_string("前730000年：周口店,北京人", "前730000年", "周口店,北京人");
+    UT_splite_string("前7500年：彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
+    UT_splite_string("前7000年：裴李岗文化", "前7000年", "裴李岗文化");
+    UT_splite_string("前6000年：磁山文化：是个好文化", "前6000年", "磁山文化：是个好文化");
+    UT_splite_string("前3000年：龙山文化", "前3000年", "龙山文化");
+    UT_splite_string("前2100：禹建立夏朝，夏朝。", "前2100", "禹建立夏朝，夏朝。");
+    
+    UT_splite_string("前730000年:周口店,北京人", "前730000年", "周口店,北京人");
+    UT_splite_string("前7500年:彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
+    UT_splite_string("前7000年:裴李岗文化", "前7000年", "裴李岗文化");
+    UT_splite_string("前6000年:磁山文化：是个好文化", "前6000年", "磁山文化：是个好文化");
+    UT_splite_string("前3000年:龙山文化", "前3000年", "龙山文化");
+    UT_splite_string("前2100:禹建立夏朝，夏朝。", "前2100", "禹建立夏朝，夏朝。");
+    
+    UT_splite_string("前900年：凯尔特人出现在英格兰；爱尔兰文明出现。", "前900年", "凯尔特人出现在英格兰；爱尔兰文明出现。");
+    
+    
+    
     assert('days_to_time_string(time_string_to_days("-1975-10-3")) == "10/3/-1975"');
     assert('days_to_time_string(time_string_to_days("2015-10-3")) == "10/3/2015"');
     
@@ -138,6 +156,10 @@
     assert('UT_get_time_from_native("1939-9",    time_string_to_days("1939-9-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("1919.6",    time_string_to_days("1919-6-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("1932",    1932, 2, 0, 1)');
+    assert('UT_get_time_from_native("前900年",    -900, 2, 0, 1)');
+    assert('UT_get_time_from_native("-900年",    -900, 2, 0, 1)');
+    assert('UT_get_time_from_native("公元前2000年",    -2000, 2, 0, 1)');
+    assert('UT_get_time_from_native("前54年",    -54, 2, 0, 1)');
     // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。
     
     assert('is_leap_year(1980)');

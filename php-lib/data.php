@@ -177,44 +177,35 @@ function get_thing_length()
 // 将字符串按特定分隔符切分成两半.
 function splite_string($token)
 {
-    // 支持两种分隔符
-    $time_index1 = strpos($token, "，");
-    $time_index2 = strpos($token, ",");
+    // 支持多种分隔符
+    $my_tokens = array(
+        array("length"=>strpos($token, "，"), "token"=>"，"),
+        array("length"=>strpos($token, ","), "token"=>","),
+        array("length"=>strpos($token, "："), "token"=>"："),
+        array("length"=>strpos($token, ":"), "token"=>":"),
+       );
     
-    // 这段代码很冗余, 以后优化.
-    if(($time_index1 > 0) && ($time_index2 > 0))
+    $time_index = 0;
+    $char_len = 0;
+    foreach ($my_tokens as $my_token)
     {
-        if($time_index1 < $time_index2)
+        if ($my_token['length'] > 0)
         {
-            $time_index = $time_index1;
-            $my_char = "，";
-        }
-        else
-        {
-            $time_index = $time_index2;
-            $my_char = ",";
-        }
-    }
-    else 
-    {
-        if ($time_index1 > 0)
-        {
-            $time_index = $time_index1;
-            $my_char = "，";
-        }
-        else if($time_index2 > 0)
-        {
-            $time_index = $time_index2;
-            $my_char = ",";
-        }
-        else
-        {
-            return FALSE;
+            if ($time_index == 0)
+            {
+                $time_index = $my_token['length'];
+                $char_len = strlen($my_token['token']);
+            }
+            else if($my_token['length'] < $time_index)
+            {
+                $time_index = $my_token['length'];
+                $char_len = strlen($my_token['token']);
+            }
         }
     }
     
     $time_sub = substr($token, 0, $time_index);
-    $thing_sub = substr($token, $time_index + strlen($my_char), strlen($token));
+    $thing_sub = substr($token, $time_index + $char_len, strlen($token));
     $thing_sub = addslashes($thing_sub);   // 对引号等特殊字符进行转义，方便sql语句中使用。
     
     return array("time"=>$time_sub, "thing"=>$thing_sub);

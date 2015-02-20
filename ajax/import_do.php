@@ -18,6 +18,7 @@
 	$token = strtok($context, "\r");
 	$line_total = substr_count($context, "\r");
 	$index = 0;
+    $succ_count = 0;
 	
 	while(($token != false) && (strlen($token) > 0))
 	{
@@ -25,7 +26,10 @@
         $my_array = splite_string($token);
         if($my_array != FALSE)
         {
-		    insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']);
+		    if (insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']) != "")
+            {
+                $succ_count++;
+            }
         }
         else 
         {
@@ -41,7 +45,7 @@
 	$conn = null;
     
     // 导入成功
-    echo "ok";
+    echo "ok. $index -- $succ_count.";
     alloc_import_token();
-    header("refresh:1; url=../import_input.php?import_once=" . get_import_token());
+    header("refresh:3; url=../import_input.php?import_once=" . get_import_token());
 ?>
