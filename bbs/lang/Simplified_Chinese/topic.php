@@ -27,6 +27,9 @@ $lang_topic = array(
 'Mod controls'		=>	'Moderator controls',
 'New icon'			=>	'New post',
 'Re'				=>	'Re:',
-'Preview'			=>	'预览'
+'Preview'			=>	'预览',
+'Add_thing'         =>  '新增事件：',
+'Add_tag'           =>  '新增标签：',
+'Add_thing_tag'     =>  '添加事件-标签对：'
 
 );

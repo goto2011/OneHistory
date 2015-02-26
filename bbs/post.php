@@ -221,7 +221,7 @@ if (isset($_POST['form_sent']))
                     u.username=b.username WHERE b.username IS NULL AND COALESCE(o.logged, u.last_visit)>'
                     .$previous_post_time.' AND (fp.read_forum IS NULL OR fp.read_forum=1) AND 
                     s.topic_id='.$tid.' AND u.id!='.$pun_user['id'];
-                echo $sql_string;
+                // echo $sql_string;
 				$result = $db->query($sql_string) or error('Unable to fetch subscription info', __FILE__, __LINE__, $db->error());
 				if ($db->num_rows($result))
 				{

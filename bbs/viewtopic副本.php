@@ -9,14 +9,12 @@
 define('PUN_ROOT', dirname(__FILE__).'/');
 require PUN_ROOT.'include/common.php';
 
-// duangan
-require_once '../init.php';
-require_once "data.php";
-require_once "sql.php";
-
 if ($pun_user['g_read_board'] == '0')
 	message($lang_common['No view'], false, '403 Forbidden');
 
+// duangan
+require_once '../init.php';
+require_once "sql_public.php";
 
 $action = isset($_GET['action']) ? $_GET['action'] : null;
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -27,6 +25,12 @@ if ($id < 1 && $pid < 1)
 // Load the viewtopic.php language file
 require PUN_ROOT.'lang/'.$pun_user['language'].'/topic.php';
 
+// 数据库访问桩。
+function db_query_dock($sql_string)
+{
+    global $db;
+    return $db->query($sql_string);
+}
 
 // If a post ID is specified we determine topic ID and page number so we can redirect to the correct message
 if ($pid)
@@ -283,13 +287,19 @@ while ($cur_post = $db->fetch_assoc($result))
 			$user_info[] = '<dd><span>'.$lang_topic['Registered'].' '.format_time($cur_post['registered'], true).'</span></dd>';
 
             // duangan.
-            // $add_thing_count = get_thing_count_by_user($cur_post['user_UUID']);
+            $user_uuid = $cur_post['user_UUID'];
+            $sql_string = "select count(*) from thing_time where user_UUID = '$user_uuid'";
+            // $result2 = $db->query($sql_string);
+            // $row = mysql_fetch_row($result2);    // 返回一行.
+            // $add_thing_count = $row[0];
+            $add_thing_count = 0;
+            // $add_thing_count = get_thing_count_by_user($cur_post['user_UUID'], "db_query_dock");
             // $add_tag_count = get_tag_count_by_user($cur_post['user_UUID']);
             // $add_thing_tag_count = get_thing_tag_count_by_user($cur_post['user_UUID']);
             
-            // $user_info[] = "<dd><span>添加事件: $add_thing_count</span></dd>";
-            // $user_info[] = "<dd><span>添加标签: $add_tag_count</span></dd>";
-            // $user_info[] = "<dd><span>添加事件-标签对: $add_thing_tag_count</span></dd>";
+            $user_info[] = '<dd><span>'.$lang_topic['Add_thing'].' '.forum_number_format($add_thing_count).'</span></dd>';
+            $user_info[] = '<dd><span>'.$lang_topic['Add_tag'].' '.forum_number_format($add_tag_count).'</span></dd>';
+            $user_info[] = '<dd><span>'.$lang_topic['Add_thing_tag'].' '.forum_number_format($add_thing_tag_count).'</span></dd>';
     
 			if ($pun_config['o_show_post_count'] == '1' || $pun_user['is_admmod'])
 				$user_info[] = '<dd><span>'.$lang_topic['Posts'].' '.forum_number_format($cur_post['num_posts']).'</span></dd>';

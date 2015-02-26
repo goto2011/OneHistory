@@ -14,7 +14,7 @@
 
 	// 判断是新增，还是编辑
 	$thing_uuid = "";
-	if(strlen($_GET['thing_uuid']) > 0)
+	if(!empty($_GET['thing_uuid']))
 	{
 		$thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
         $_SESSION['update_input_thing_uuid'] = $thing_uuid;

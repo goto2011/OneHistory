@@ -9,7 +9,7 @@ require_once "functions.php";
 // 打开数据库
 function open_db()
 {
-	$conn = @mysql_connect("localhost", "root", "Daisyabc1234") or die("数据库链接错误!");
+	$conn = @mysql_connect("localhost", "root", "1234") or die("数据库链接错误!");
 	mysql_select_db("one-history", $conn);		// data为数据库名称
 	mysql_query("set names 'UTF8'"); 			// 使用utf8中文编码
 	
@@ -111,24 +111,6 @@ function update_thing_to_db($thing_uuid, $time_array, $thing)
 		return 0;
 	}
 }
-
-// 根据 user_uuid 获取 thing 的数量
-function get_thing_count_by_user($user_uuid)
-{
-    $sql_string = "select count(*) from thing_time where user_UUID = '$user_uuid'";
-    
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_count_by_user() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
-}
-
 
 // 根据 list type 给出符合条件的条目总数
 function get_thing_count($list_type)
@@ -634,40 +616,6 @@ function insert_tags($tags, $tag_type, $thing_uuid)
 	}
 	
 	return $index;
-}
-
-// 根据 user_uuid 获取 thing_tag 的数量
-function get_thing_tag_count_by_user($user_uuid)
-{
-    $sql_string = "select count(*) from thing_property where user_UUID = '$user_uuid'";
-    
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_tag_count_by_user() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
-}
-
-// 根据 user_uuid 获取 tag 的数量
-function get_tag_count_by_user($user_uuid)
-{
-    $sql_string = "select count(*) from property where user_UUID = '$user_uuid'";
-    
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_tag_count_by_user() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
 }
 
 // 更新 tag 的 hot 指数
