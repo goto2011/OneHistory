@@ -126,25 +126,51 @@ while ($cur_group = $db->fetch_assoc($result))
 			<thead>
 				<tr>
 					<th class="tcl" scope="col"><?php echo $lang_common['Username'] ?></th>
-					<th class="tc2" scope="col"><?php echo $lang_common['Title'] ?></th>
+					<th class="tc1" scope="col"><?php echo $lang_common['Title'] ?></th>
+                    <th class="tc1" scope="col"><?php echo $lang_ul['Add_thing'] ?></th>
+                    <th class="tc1" scope="col"><?php echo $lang_ul['Add_tag'] ?></th>
+                    <th class="tc1" scope="col"><?php echo $lang_ul['Add_thing_tag'] ?></th>
 <?php if ($show_post_count): ?>					<th class="tc3" scope="col"><?php echo $lang_common['Posts'] ?></th>
 <?php endif; ?>					<th class="tcr" scope="col"><?php echo $lang_common['Registered'] ?></th>
 				</tr>
 			</thead>
 			<tbody>
 <?php
+// duangan
+require_once '../init.php';
+require_once "sql_public.php";
+// 数据库访问桩。
+function db_query_dock($sql_string)
+{
+    global $db;
+    return $db->query($sql_string);
+}
 
 // Retrieve a list of user IDs, LIMIT is (really) expensive so we only fetch the IDs here then later fetch the remaining data
-$result = $db->query('SELECT u.id FROM '.$db->prefix.'users AS u WHERE u.id>1 AND u.group_id!='.PUN_UNVERIFIED.(!empty($where_sql) ? ' AND '.implode(' AND ', $where_sql) : '').' ORDER BY '.$sort_by.' '.$sort_dir.', u.id ASC LIMIT '.$start_from.', 50') or error('Unable to fetch user IDs', __FILE__, __LINE__, $db->error());
+$result = $db->query('SELECT u.id,u.user_UUID FROM '.$db->prefix.'users AS u WHERE u.id>1 AND u.group_id!='.PUN_UNVERIFIED.(!empty($where_sql) ? ' AND '.implode(' AND ', $where_sql) : '').' ORDER BY '.$sort_by.' '.$sort_dir.', u.id ASC LIMIT '.$start_from.', 50') or error('Unable to fetch user IDs', __FILE__, __LINE__, $db->error());
 
 if ($db->num_rows($result))
 {
 	$user_ids = array();
-	for ($i = 0;$cur_user_id = $db->result($result, $i);$i++)
+	for ($i = 0; $cur_user_id = $db->result($result, $i, 0); $i++)
+    {
 		$user_ids[] = $cur_user_id;
+    }
+    
+    // duangan
+    // 获取 user uuid。
+    $user_uuids = array();
+    for ($i = 0; $cur_user_uuid = $db->result($result, $i, 1); $i++)
+    {
+        $user_uuids[] = $cur_user_uuid;
+    }
+    // get user stat.
+    $add_thing_count = get_thing_count_by_user($user_uuids, "db_query_dock");
+    $add_tag_count = get_tag_count_by_user($user_uuids, "db_query_dock");
+    $add_thing_tag_count = get_thing_tag_count_by_user($user_uuids, "db_query_dock");
 
 	// Grab the users
-	$result = $db->query('SELECT u.id, u.username, u.title, u.num_posts, u.registered, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id IN('.implode(',', $user_ids).') ORDER BY '.$sort_by.' '.$sort_dir.', u.id ASC') or error('Unable to fetch user list', __FILE__, __LINE__, $db->error());
+	$result = $db->query('SELECT u.id, u.user_UUID, u.username, u.title, u.num_posts, u.registered, g.g_id, g.g_user_title FROM '.$db->prefix.'users AS u LEFT JOIN '.$db->prefix.'groups AS g ON g.g_id=u.group_id WHERE u.id IN('.implode(',', $user_ids).') ORDER BY '.$sort_by.' '.$sort_dir.', u.id ASC') or error('Unable to fetch user list', __FILE__, __LINE__, $db->error());
 
 	while ($user_data = $db->fetch_assoc($result))
 	{
@@ -153,7 +179,10 @@ if ($db->num_rows($result))
 ?>
 				<tr>
 					<td class="tcl"><?php echo '<a href="profile.php?id='.$user_data['id'].'">'.pun_htmlspecialchars($user_data['username']).'</a>' ?></td>
-					<td class="tc2"><?php echo $user_title_field ?></td>
+					<td class="tcl"><?php echo $user_title_field ?></td>
+                    <td class="tcl"><?php echo $add_thing_count[$user_data['user_UUID']] ?></td>
+                    <td class="tcl"><?php echo $add_tag_count[$user_data['user_UUID']] ?></td>
+                    <td class="tcl"><?php echo $add_thing_tag_count[$user_data['user_UUID']] ?></td>
 <?php if ($show_post_count): ?>					<td class="tc3"><?php echo forum_number_format($user_data['num_posts']) ?></td>
 <?php endif; ?>
 					<td class="tcr"><?php echo format_time($user_data['registered'], true) ?></td>
