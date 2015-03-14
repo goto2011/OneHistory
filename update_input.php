@@ -209,7 +209,7 @@
 </tr>
 
 <tr>
-<td><p class="thick">文化/国家/民族/地区标签：<input id='country_tags' 		name='country_tags' 	type='text' 	class='tags' 
+<td><p class="thick">国家/朝代/民族/文明标签：<input id='country_tags' 		name='country_tags' 	type='text' 	class='tags' 
 	value="<?php flash_tags($is_edit, 7, $thing_uuid); ?>"></p></td>
 
 <td><p class="thick">地理标签：<input id='geography_tags' 	name='geography_tags' type='text' 	class='tags' 
@@ -229,6 +229,8 @@
 	value="<?php flash_tags($is_edit, 6, $thing_uuid); ?>"></p></td>
 </tr>
 </table>
+
+<p style="text-align:center"><a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a></p>
 
 <!--  公开范围（暂时删除）：
 <input type="radio" name=public_type value="1" checked="checked" / >公开
