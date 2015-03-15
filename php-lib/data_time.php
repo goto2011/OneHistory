@@ -145,10 +145,21 @@ function get_year_order($time_number, $time_type)
         $my_string = get_time_string_lite($time_number, $time_type);
         $my_array = explode("-", $my_string);
         
-        $my_year_order += $my_array[0];   // year
-        $my_year_days = is_bc($my_array[0]) ? 366 : 365;
-        $my_year_order += (float)get_year_days($my_array[0], $my_array[1], $my_array[2]) 
-                    / $my_year_days;
+        if (count($my_array) == 3)
+        {
+            $my_year_order += $my_array[0];   // year
+            $my_year_days = is_bc($my_array[0]) ? 366 : 365;
+            $my_year_order += (float)get_year_days($my_array[0], $my_array[1], $my_array[2]) 
+                        / $my_year_days;
+        }
+        // 兼容公元前的情况。
+        else 
+        {
+            $my_year_order -= $my_array[1];   // year
+            $my_year_days = is_bc($my_array[1]) ? 366 : 365;
+            $my_year_order -= (float)get_year_days($my_array[1], $my_array[2], $my_array[3]) 
+                        / $my_year_days;
+        }
         
         return $my_year_order;
     }

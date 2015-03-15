@@ -179,6 +179,9 @@
     assert('UT_get_year_order("2015-11-31", 2015.9150684932)');
     assert('UT_get_year_order("2015-12-31", 2015.997260274)');
     
+    // echo get_year_order(get_time_number("-581-1-15", 3), 3);
+    assert('UT_get_year_order("-581-1-15", -581.03835616438)');
+    
     assert("is_infinite(log(0))");
     
     echo get_search_where_sub("中国 and 首都 and 财政") . "<br />";
