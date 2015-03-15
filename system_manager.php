@@ -53,6 +53,7 @@ function make_button_status(operate_type, is_ok)
 function ajax_do(operate_type)
 {
     var xmlhttp;
+    var res_status;
     if (window.XMLHttpRequest)
     {
         // code for IE7+, Firefox, Chrome, Opera, Safari
@@ -73,11 +74,20 @@ function ajax_do(operate_type)
             
             if (xmlhttp.response == "ok")
             {
-                manager_show_status("re_calc_year_order_label", 1);
+                res_status = 1;
             }
             else
             {
-                manager_show_status("re_calc_year_order_label", 0);
+                res_status = 0;
+            }
+            
+            if (operate_type == "re_calc_year_order")
+            {
+                manager_show_status("re_calc_year_order_label", res_status);
+            }
+            else if (operate_type == "re_calc_tag_hot_index")
+            {
+                manager_show_status("re_calc_tag_hot_index_label", res_status);
             }
         }
     }
@@ -88,17 +98,19 @@ function ajax_do(operate_type)
 </script>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算时间轴指数" 
+    <input type="submit" style="font-size:18pt" value="重新计算时间轴指数" 
     id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" /></p> <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算tag热门指数" /></p> <!-- 提交 -->
+    <input type="submit" style="font-size:18pt" value="重新计算tag热门指数" 
+    id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /></p> <!-- 提交 -->
+    <div class="label" id="re_calc_tag_hot_index_label"></div>
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算用户积分" /></p> <!-- 提交 -->
+    <input type="submit" style="font-size:18pt" value="重新计算用户积分" /></p> <!-- 提交 -->
 </div>
 
 </body>

@@ -14,7 +14,7 @@
      
     // 设置时区为北京时间.
     Date_default_timezone_set("PRC");
-     
+    
     // 打开 log 系统.
     require_once 'plog.php';
     Plog::set_config(include 'plog_config.php');

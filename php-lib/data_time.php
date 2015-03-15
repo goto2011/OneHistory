@@ -188,6 +188,23 @@ function get_time_string_lite($time_number, $time_type)
     return $my_time_string;
 }
 
+// 将大于1亿的数字转换成1亿多少的字符串，将大于1万的数字转化为1万多少。
+function get_chiness_unit($number)
+{
+    if ($number > 100000000)
+    {
+        return (float)($number / 100000000) . "亿";
+    }
+    else if($number > 10000)
+    {
+        return (float)($number / 10000) . "万";
+    }
+    else 
+    {
+        return $number;
+    }
+}
+
 // 根据时间（数字）和类型，获得时间字符串(目的是显示在页面上)
 // 输入: thing-time 表的 time 字段的数字
 // 输出: 显示在 item_list 界面上的时间字符串, 目的是方便使用者识别, 所以加入汉字. 格式化程度很低.
@@ -198,19 +215,7 @@ function get_time_string($time_number, $time_type)
      if($time_type == 1)
      {
         $my_year = abs($time_number);
-        if ($my_year > 100000000)
-        {
-            $my_year2 = (float)($my_year / 100000000) . "亿";
-        }
-        else if($my_year > 10000)
-        {
-            $my_year2 = (float)($my_year / 10000) . "万";
-        }
-        else 
-        {
-            $my_year2 = $my_year;
-        }
-        $my_time_string = "距今" . $my_year2 . "年前";
+        $my_time_string = "距今" . get_chiness_unit($my_year) . "年前";
      }
      else if($time_type == 2)
      {
@@ -255,6 +260,34 @@ function get_time_string($time_number, $time_type)
      }
     
      return $my_time_string;
+}
+
+// 根据时间（数字）和类型，获得时间上下限字符串(目的是显示在页面上)
+function get_time_limit_string($time_limit, $time_limit_type)
+{
+    $my_time_limit = "";
+    
+    if (empty($time_limit) || ($time_limit == 0))
+    {
+        return $my_time_limit;
+    }
+    
+    $my_time_limit = "±";
+    switch ($time_limit_type)
+    {
+        case 1:
+            $my_time_limit .= get_chiness_unit($time_limit) . "年";
+            break;
+        case 2:
+            $my_time_limit .= $time_limit . "日";
+            break;
+        case 3:
+            $my_time_limit .= $time_limit . "秒";
+            break;
+        default:
+            $my_time_limit .= "";
+    }
+    return $my_time_limit;
 }
 
 // 用最野蛮的方法获取月份

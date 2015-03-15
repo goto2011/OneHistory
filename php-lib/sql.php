@@ -4,14 +4,20 @@
 
 require_once "data.php";
 require_once "functions.php";
+require_once "config.php";
+require_once "sql_config.php";
 
 ////////////////////////////////// 1.数据库管理 begin //////////////////////////
 // 打开数据库
 function open_db()
 {
-	$conn = @mysql_connect("localhost", "root", "1234") or die("数据库链接错误!");
-	mysql_select_db("one-history", $conn);		// data为数据库名称
-	mysql_query("set names 'UTF8'"); 			// 使用utf8中文编码
+    global $db_host;
+    global $db_username;
+    global $db_password;
+    global $db_name;
+	$conn = @mysql_connect($db_host, $db_username, $db_password) or die("数据库链接错误!");
+	mysql_select_db($db_name, $conn);	       // 打开数据库
+	mysql_query("set names 'UTF8'");           // 使用utf8中文编码
 	
 	return $conn;
 }
@@ -19,7 +25,7 @@ function open_db()
 // 将数据库查询到的多条记录集一次放入一个数组（通用接口，暂时没有使用）
 function mysql_fetch_all($result)
 {
-	if(! is_resource($result))
+	if(!is_resource($result))
 	{
 		$GLOBALS['log']->error('$result 不是一个有效的资源');
 		return false;
@@ -835,6 +841,64 @@ function re_calc_year_order()
     return 1;
 }
 
+// 重新计算tag热门指数
+function re_calc_tag_hot_index()
+{
+    $tag_uuids = array();
+    
+    $sql_string = "select property_UUID from property";
+    
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
+        return 0;
+    }
+        
+    while($row = mysql_fetch_array($result))
+    {
+        $tag_uuids[] = $row['property_UUID'];
+    }
+    
+    foreach ($tag_uuids as $tag_uuid)
+    {
+        $my_hot_index = 0;
+        
+        // 关联了多少的thing。
+        $sql_string = "select count(*) from thing_property where property_UUID='$tag_uuid'";
+        $result = mysql_query($sql_string);
+        if ($result == FALSE)
+        {
+            $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
+            return 0;
+        }
+        $row = mysql_fetch_row($result);
+        $my_hot_index += $row[0];
+        
+        // 被多少人关注
+        $sql_string = "select count(*) from follow where property_UUID='$tag_uuid'";
+        $result = mysql_query($sql_string);
+        if ($result == FALSE)
+        {
+            $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
+            return 0;
+        }
+        $row = mysql_fetch_row($result);
+        $my_hot_index += get_follow_hot_rate() * $row[0];
+        
+        // 更新
+        $sql_string = "update property set hot_index = $my_hot_index where property_UUID = '$tag_uuid'";
+        
+        if (mysql_query($sql_string) === FALSE)
+        {
+            $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 ////////////////////////////////// 6.property end //////////////////////////
 
 
@@ -1017,7 +1081,7 @@ function insert_follow_to_db($tag_uuid)
         if(mysql_query($sql_string))
         {
             // 完成加分.
-            update_tag_hot_index(5, $tag_uuid);
+            update_tag_hot_index(get_follow_hot_rate(), $tag_uuid);
             return 1;
         }
         else
@@ -1038,7 +1102,7 @@ function delete_follow_to_db($tag_uuid)
         if(mysql_query($sql_string))
         {
             // 完成减分.
-            update_tag_hot_index(-5, $tag_uuid);
+            update_tag_hot_index(0 - get_follow_hot_rate(), $tag_uuid);
             return 1;
         }
         else

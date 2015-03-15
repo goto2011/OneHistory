@@ -15,6 +15,7 @@
     require_once "list_control.php";
     require_once "list_search.php";
     require_once "sql.php";
+    require_once "sql_config.php";
     
     // 唯一可设置 list_type 的位置.
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
@@ -432,7 +433,7 @@ window.onload = function()
             }
 			echo "<td>$index</td>";
 			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
-			echo "<td></td>";
+			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
 			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
 				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
 			echo "<td>" . print_item_tags($row['uuid']) . "</td>";

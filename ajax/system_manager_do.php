@@ -14,9 +14,23 @@
     }
     
     $conn = open_db();
+    
+    // 重新计算时间轴指数
     if($_GET['operate_type'] == "re_calc_year_order")
     {
         if (re_calc_year_order() == 1)
+        {
+            echo "ok";
+        }
+        else
+        {
+            echo "fail";
+        }
+    }
+    // 重新计算tag热门指数
+    else if ($_GET['operate_type'] == "re_calc_tag_hot_index")
+    {
+        if (re_calc_tag_hot_index() == 1)
         {
             echo "ok";
         }
