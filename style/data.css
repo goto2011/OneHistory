@@ -11,6 +11,9 @@ p.normal {font-size:14px; font-weight: normal}
 nobr.thick {font-size:13px; font-weight: bold}
 nobr.normal {font-size:12px; font-weight: normal}
 
+p.context {font-weight: normal}
+p.remark {color:blue;font-style:italic}
+
 /* 文本带有下划线 */
 span.link{
 	color:blue;

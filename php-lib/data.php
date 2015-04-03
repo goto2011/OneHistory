@@ -2,7 +2,9 @@
 // created by duangan, 2014-12-28 -->
 // support data deal function.    -->
 
-require_once 'data_time.php';
+require_once "data_time.php";
+require_once "data_string.php";
+require_once "data_number.php";
 // require_once 'data_chinese.php';
 
 /////////////////////////////// 1.SYSTEM start //////////////////////////////////////
@@ -98,9 +100,9 @@ function user_import_token($import_token)
 /////////////////////////////// 1.SYSTEM end //////////////////////////////////////
 
 
-
 /////////////////////////////// 2.GUID begin //////////////////////////////////////
-function create_guid(){
+function create_guid()
+{
 	$microTime = microtime();
 	list($a_dec, $a_sec) = explode(" ", $microTime);
 	$dec_hex = dechex($a_dec* 1000000);
@@ -122,7 +124,8 @@ function create_guid(){
 	return $guid;
 }
 
-function ensure_length(&$string, $length){
+function ensure_length(&$string, $length)
+{
 	$strlen = strlen($string);
 	if($strlen < $length)
 	{
@@ -134,7 +137,8 @@ function ensure_length(&$string, $length){
 	}
 }
 
-function create_guid_section($characters){
+function create_guid_section($characters)
+{
 	$return = "";
 	for($i=0; $i<$characters; $i++)
 	{
@@ -143,82 +147,5 @@ function create_guid_section($characters){
 	return $return;
 }
 /////////////////////////////// 2.GUID begin //////////////////////////////////////
-
-
-/////////////////////////////// 3.STRING start //////////////////////////////////////
-// 将字符串数组变成以“,”分割的字符串，方便tags输出。
-function get_string_from_array($array)
-{
-	$result_string = "";
-	
-	$count = count($array);
-		
-	if($count == 1)
-	{
-		$result_string = $array[0];
-	}
-	else if($count > 1)
-	{
-		for($index = 0; $index < $count; $index++) 
-		{
-			$result_string .= $array[$index] . ",";
-		}
-	}
-	
-	return $result_string;
-}
-
-// 获取thing字段的最大长度。暂定为400。
-function get_thing_length()
-{
-	return 400;
-}
-
-// 将字符串按特定分隔符切分成两半.
-function splite_string($token)
-{
-    // 支持多种分隔符
-    $my_tokens = array(
-        array("length"=>strpos($token, "，"), "token"=>"，"),
-        array("length"=>strpos($token, ","), "token"=>","),
-        array("length"=>strpos($token, "："), "token"=>"："),
-        array("length"=>strpos($token, ":"), "token"=>":"),
-       );
-    
-    $time_index = 0;
-    $char_len = 0;
-    foreach ($my_tokens as $my_token)
-    {
-        if ($my_token['length'] > 0)
-        {
-            if ($time_index == 0)
-            {
-                $time_index = $my_token['length'];
-                $char_len = strlen($my_token['token']);
-            }
-            else if($my_token['length'] < $time_index)
-            {
-                $time_index = $my_token['length'];
-                $char_len = strlen($my_token['token']);
-            }
-        }
-    }
-    
-    $time_sub = substr($token, 0, $time_index);
-    $thing_sub = substr($token, $time_index + $char_len, strlen($token));
-    $thing_sub = addslashes($thing_sub);   // 对引号等特殊字符进行转义，方便sql语句中使用。
-    
-    return array("time"=>$time_sub, "thing"=>$thing_sub);
-}
-
-// html 编码, 防范html注入.
-function html_encode($str)
-{
-    return htmlspecialchars($str, ENT_QUOTES, 'UTF-8');
-}
-
-
-/////////////////////////////// 3.STRING end //////////////////////////////////////
-
 
 ?>

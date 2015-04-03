@@ -390,10 +390,18 @@ function get_time_from_native($native_string)
     {
         $my_year = 0 - (int)$my_time_array[1];
         $my_days = juliantojd($my_time_array[2], $my_time_array[3], $my_year);
+        if (!(is_numeric($my_time_array[2]) && is_numeric($my_time_array[3]) && is_numeric($my_year)))
+        {
+            $my_days = -1;
+        }
     }
     else if(count($my_time_array) == 3)
     {
         $my_days = juliantojd($my_time_array[1], $my_time_array[2], $my_time_array[0]);
+        if (!(is_numeric($my_time_array[0]) && is_numeric($my_time_array[1]) && $my_time_array[2]))
+        {
+            $my_days = -1;
+        }
     }
     // 只有年月，没有日的情况.
     else if (count($my_time_array) == 2 && is_numeric($my_time_array[0]) && is_numeric($my_time_array[1]))
@@ -402,7 +410,7 @@ function get_time_from_native($native_string)
         $day_is_empty = 1;
     }
     
-    if($my_days != 0)
+    if($my_days > 0)
     {
         $time_array['time'] = $my_days;
         $time_array['time_type'] = 3;    /// 年月日
@@ -419,6 +427,12 @@ function get_time_from_native($native_string)
         
         $time_array['status'] = "ok";
         
+        return $time_array;
+    }
+    // 2015-4-1, $my_days == -1表示进入了juliantojd()的流程，但识别失败，这种情况下需要退出。
+    else if($my_days == -1)
+    {
+        $time_array['status'] = "fail";
         return $time_array;
     }
     

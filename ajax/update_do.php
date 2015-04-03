@@ -67,15 +67,7 @@
 	// 2.保存tags
 	if(strlen($thing_uuid) > 0)
 	{
-		$index = 0;
-		$index += insert_tags(html_encode($_GET['start_tags']),   1, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['end_tags']),     2, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['source_tags']),  3, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['person_tags']),  4, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['geography_tags']), 5, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['free_tags']),    6, $thing_uuid);
-		$index += insert_tags(html_encode($_GET['country_tags']), 7, $thing_uuid);
-		
+        insert_tag_from_input($_GET, $thing_uuid);
 		// echo "$index tags finished. <br/>";
 	}
 	
