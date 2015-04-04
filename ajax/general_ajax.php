@@ -27,6 +27,7 @@
             echo "fail";
         }
     }
+    
     // 重新计算tag热门指数
     else if ($_GET['operate_type'] == "re_calc_tag_hot_index")
     {

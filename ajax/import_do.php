@@ -4,7 +4,7 @@
     require_once "data.php";
 	require_once "sql.php";
     
-    if(empty($_POST['operate_type']))
+    if(empty($_POST['operate_type']) || (strlen($_POST['context']) == 0))
     {
         echo "fail";
         exit;

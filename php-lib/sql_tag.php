@@ -3,6 +3,7 @@
 // tag 相关的函数。主要是和sql相关的。    -->
 
 require_once 'data_string.php';
+require_once 'data_time.php';
 
 // 根据 tag 获取 thing 条目数量
 function get_thing_count_by_tag($property_UUID)
@@ -145,12 +146,13 @@ function insert_tags($tags, $tag_type, $thing_uuid)
 
     if(strlen($tags) > 0)
     {
-        $token = strtok($tags, ",");
-            
-        while(($token != false) && (strlen($token) > 0))
+        $my_array = explode(",", $tags);
+        for ($ii = 0; $ii < count($my_array); $ii++)
         {
-            $index += insert_tag($token, $tag_type, $thing_uuid);
-            $token = strtok(",");
+            if (strlen($my_array[$ii]) > 0)
+            {
+                $index += insert_tag($my_array[$ii], $tag_type, $thing_uuid);
+            }
         }
     }
     

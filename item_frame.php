@@ -86,7 +86,7 @@
 
 	// 分配令牌。
 	alloc_update_token();
-	alloc_import_token();
+	// alloc_import_token();
 	
 	// 确认当前tab是否选中
 	function get_selected_tab($my_list_type)

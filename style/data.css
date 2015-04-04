@@ -6,7 +6,7 @@ body {
 }
 
 /* form {line-height: 5px;} */
-p.thick {font-size:15px; font-weight: bold}
+p.thick {font-size:16px; font-weight: bold}
 p.normal {font-size:14px; font-weight: normal}
 nobr.thick {font-size:13px; font-weight: bold}
 nobr.normal {font-size:12px; font-weight: normal}
@@ -23,9 +23,22 @@ span.link{
 }
 
 table.normal {
-	line-height:15px;
-	width:800px; 
+	line-height:14px;
+	width:800px;
 	table-layout:fixed
+}
+
+table.tag_normal {
+	line-height:14px;
+	width:800px;
+	padding:0;
+	margin:0;
+	table-layout:fixed;
+}
+
+tr.tag_normal {
+	padding:0;
+	margin:0;
 }
 
 textarea.has_text {

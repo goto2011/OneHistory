@@ -39,9 +39,12 @@
 
 <div>
     <a href="./item_frame.php" class="red_black_underline" target="_top">回到首页</a> |
+<!--
+// 新增单个事件和批量事件合一。
     <a href="./update_input.php?update_once=<?php echo get_update_token(); ?>" class="red_black_underline"  target="_top">新增事件</a> |
-    <a href="./import_input.php?import_once=<?php echo get_import_token(); ?>" class="red_black_underline"  target="_top">
-        批量导入事件</a> |
+-->
+    <a href="./import_input.php" class="red_black_underline"  target="_top">
+        外部数据导入</a> |
 <!--
 // 小组功能的需求暂时不确定, 所以暂时不提供.
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |

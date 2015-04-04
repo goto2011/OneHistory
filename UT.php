@@ -188,16 +188,21 @@
     echo get_search_where_sub("唐朝 and 诗人 - 李白") . "<br />";
     echo get_search_where_sub("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
     
-    $context = "1837年，林则徐任湖广总督，其后在武昌、汉口、汉阳等地查禁鸦片，成绩卓著。\r
-1840年1月5日，道光二十年，前湖广总督林则徐正式就任两广总督。\r
-1838年12月31日，林则徐奉命为钦差大臣，赴广州查办海口禁烟事务，节制广东水师。";
-    $token = strtok($context, "\r");
+    $context = "1840年1月5日，道光二十年，前湖广总督林则徐正式就任两广总督。
+1838年12月31日，林则徐奉命为钦差大臣，赴广州查办海口禁烟事务，节制广东水师。
+1841年7月，道光二十一年，汉口、江夏水灾，灾民10余万，仕商设粥场救济。";
+    $token = strtok(html_encode(one_line_flag($context)), "\r");
     while(($token != false) && (strlen($token) > 0))
     {
-        echo $token . "<br />";
+        echo $token . " -- <br />";
         $token = strtok("\r");
     }
-
+    
+    print_r(explode(",", "123, 456"));
+    print_r(explode(",", "123 456"));
+    print_r(explode(",", ""));
+    print_r(explode(",", "123 , "));
+    
 ?>
 
 </body>
