@@ -125,15 +125,51 @@ function succ_callback(operate_type, data)
     }
 }
 
+// tag 数据检查。=1，不合格；=0，合格。
+function tag_check(tag, tag_name)
+{
+    if(is_dot(tag_name))
+    {
+        document.getElementById(tag).focus();
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+function tags_check()
+{
+    var ret = 0;
+    ret += tag_check("start_tags", document.getElementById("start_tags").value);
+    ret += tag_check("end_tags", document.getElementById("end_tags").value);
+    ret += tag_check("country_tags", document.getElementById("country_tags").value);
+    ret += tag_check("geography_tags", document.getElementById("geography_tags").value);
+    ret += tag_check("person_tags", document.getElementById("person_tags").value);
+    ret += tag_check("source_tags", document.getElementById("source_tags").value);
+    ret += tag_check("free_tags", document.getElementById("free_tags").value);
+    
+    return ret;
+}
+
 // 发起Ajax通讯。
 function ajax_do(operate_type)
 {
+    // 数据检查。
+    if (tags_check() > 0)
+    {
+        alert("标签名称不能带有标点符号。");
+        return;
+    }
+    
     var import_ajax = xhr({
         url:'./ajax/import_do.php',
         data:{
             'operate_type'  :operate_type,
             'originator'    :document.getElementById("originator").value,
             'context'       :document.getElementById("context").value,
+            
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,
@@ -157,10 +193,9 @@ function ajax_do(operate_type)
     });
     // system_manager_ajax.send();
 }
-
 </script>
 
-<title>批量数据导入</title>
+<title>数据导入</title>
 </head>
 <body>
 

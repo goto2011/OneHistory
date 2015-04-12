@@ -1,13 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-
-<title></title>
-</head>
-<body>
-
+<div>
 <?php 
     require_once 'init.php';
     // is_user(1);
@@ -73,6 +64,8 @@ function succ_callback(operate_type, data)
 // 发起Ajax通讯。
 function ajax_do(operate_type)
 {
+    alert("1");
+    
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -98,7 +91,7 @@ function ajax_do(operate_type)
 
 <div class="system_user">
     <input type="submit" style="font-size:18pt" value="重新计算时间轴指数" 
-    id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" /></p> <!-- 提交 -->
+    id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" /></p>  <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
 </div>
 
@@ -111,6 +104,4 @@ function ajax_do(operate_type)
 <div class="system_user">
     <input type="submit" style="font-size:18pt" value="重新计算用户积分" /></p> <!-- 提交 -->
 </div>
-
-</body>
-</html>
+</div>

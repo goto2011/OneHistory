@@ -1,6 +1,19 @@
 // <!--  // created by duangan, 2015-1-11	-->
 // <!--  // support data deal function.	-->
 
+// 获取单选框的值，都没选中，则返回0。通用。
+function get_checkbox_value(checkbox_name)
+{
+	for (var i = 0; i < document.getElementsByName(checkbox_name).length; i++)
+	{
+		if(document.getElementsByName(checkbox_name)[i].checked)
+		{
+			return document.getElementsByName(checkbox_name)[i].value;
+		}
+	}
+	return 0;
+}
+
 // 表格显示效果, 一行浅色/一行深色.
 function altRows(id)
 {
@@ -64,9 +77,19 @@ function checkbox_check()
 	return false;
 }
 
+// 检查是否是标点符号。=1，是；=0，不是。通用。
+function is_dot(string)
+{
+	return (!(/^[,(\-)《》.a-zA-z0-9\u4E00-\u9FA5]*$/.test(string)));
+}
+
+// 添加标签时对标签文本做检查。
 function onAddTag(tag)
 {
-	alert("Added a tag: " + tag);
+	if (is_dot(tag))
+	{
+		alert("标签名称不能带有标点符号。");
+	}
 }
 
 function onRemoveTag(tag)
@@ -85,7 +108,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
+		onAddTag: function(elem, elem_tags)
 		{
 			$('.tag', elem_tags).each(function()
 			{
@@ -95,13 +118,7 @@ $(function() {
 			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
 			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
 		},
-		onAddTag: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'red');
-			});
-		}
+		onAddTag: onAddTag
 	});
 
 	$('#end_tags').tagsInput({
@@ -109,16 +126,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'red');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 
 	$('#country_tags').tagsInput({
@@ -126,16 +134,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'blue');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 
 	$('#source_tags').tagsInput({
@@ -143,16 +142,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'blue');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 
 	$('#person_tags').tagsInput({
@@ -160,16 +150,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'yellow');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 
 	$('#geography_tags').tagsInput({
@@ -177,16 +158,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'purple');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 	
 	$('#free_tags').tagsInput({
@@ -194,11 +166,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
-		onChange: function(elem, elem_tags)
-		{
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		}
+		onAddTag: onAddTag
 	});
 		
 // Uncomment this line to see the callback functions in action

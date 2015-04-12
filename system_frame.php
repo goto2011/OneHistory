@@ -28,11 +28,11 @@
 <!-- tab页 begin -->
 <div class="easyui-tabs" style="" >
 
+<div title="管理员界面"   style="padding:10px;"  selected='true' href='system_manager.php' ></div>
+
 <div title="用户积分"   style="padding:10px;" href='system_score.php' ></div>
 
 <div title="全球排名"   style="padding:10px;" href='system_rank.php' ></div>
-
-<div title="管理员界面"   style="padding:10px;" href='system_manager.php' ></div>
 
 </div>
 <!-- tab页 end -->

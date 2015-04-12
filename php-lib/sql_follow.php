@@ -38,7 +38,7 @@ function get_follows_count($tag_uuid)
     return $row[0];
 }
 
-// 将 follow 信息保存到数据库中去.
+// 将 follow 信息保存到数据库中去。return 1, ok；return 0，fail。
 function insert_follow_to_db($tag_uuid)
 {
     $user_id = get_user_id();
@@ -60,9 +60,13 @@ function insert_follow_to_db($tag_uuid)
             return 0;
         }
     }
+    else 
+    {
+        return 0;
+    }
 }
 
-// 删除 follow 信息
+// 删除 follow 信息。return 1, ok；return 0，fail。
 function delete_follow_to_db($tag_uuid)
 {
     $user_id = get_user_id();
@@ -80,6 +84,10 @@ function delete_follow_to_db($tag_uuid)
             $GLOBALS['log']->error("error: delete_follow_to_db() -- $sql_string 。");
             return 0;
         }
+    }
+    else 
+    {
+        return 0;
     }
 }
 

@@ -12,9 +12,10 @@
     require_once "list_control.php";
     require_once "list_search.php";
     
+    // 统一在item_frame.php中处理list的各种过滤器。
+    // 1.如果tag被设置,则tag第一优先.
     if(!empty($_GET['property_UUID']))
     {
-        // 如果tag被设置,则tag优先.
         set_period_big_index(-1);
         set_period_small_index(-1);
         search_param_init();
@@ -30,6 +31,7 @@
         }
     }
     
+    // 2.page 可以和其它各种过滤器配合使用。
     if(!empty($_GET['page']) && is_numeric($_GET['page']))
     {
         set_page($_GET['page']);
@@ -39,6 +41,7 @@
         set_page(1);
     }
     
+    // 3.item_index 可以和其它各种过滤器配合使用（暂未使用）
     if(!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
     {
         set_item_index($_GET['item_index']);
@@ -48,9 +51,11 @@
         set_item_index(1);
     }
     
+    // 4.分期之big和small设置，则清空标签。
     if(!empty($_GET['big']) && is_numeric($_GET['big']))
     {
         set_period_big_index($_GET['big']);
+        set_property_UUID("");
     }
     
     if(!empty($_GET['small']) && is_numeric($_GET['small']))
@@ -58,7 +63,7 @@
         set_period_small_index($_GET['small']);
     }
     
-    // 处理检索
+    // 5. 处理检索
     if (!empty($_GET['search_key']))
     {
         set_is_search(1);

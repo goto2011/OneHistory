@@ -41,15 +41,108 @@
 <script type="text/javascript" src="./js/jquery.tagsinput.js"></script>
 
 <script type='text/javascript' src='./js/data.js'></script>
+<script type='text/javascript' src='./js/ajax.js'></script>
 
-<!-- To test using the original jQuery.autocomplete, uncomment the following -->
-<!--
-<script type="text/javascript" src="http://xoxco.com/projects/code/tagsinput/jquery.tagsinput.js"></script>
-<script type='text/javascript' src='http://xoxco.com/x/tagsinput/jquery-autocomplete/jquery.autocomplete.min.js'></script>
-<link rel="stylesheet" type="text/css" href="http://xoxco.com/x/tagsinput/jquery-autocomplete/jquery.autocomplete.css" />
--->
+<script>
+// 设置按钮的状态.
+function make_button_status(disabled)
+{
+    document.getElementById("update_data").disabled = disabled;
+}
 
-<title>新增事件</title>
+// 调用成功后的回调函数。
+function succ_callback(data)
+{
+    make_button_status(false);
+    
+    if (data.substring(0, 2) == "ok")
+    {
+        alert("保存成功！");
+    }
+    else if (data.substring(0, 4) == "fail")
+    {
+        alert("保存失败！");
+    }
+    // alert("Ajax_status: " + data);
+
+    history.go(-1);
+}
+
+// tag 数据检查。=1，不合格；=0，合格。
+function tag_check(tag, tag_name)
+{
+    if(is_dot(tag_name))
+    {
+        document.getElementById(tag).focus();
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+function tags_check()
+{
+    var ret = 0;
+    ret += tag_check("start_tags", document.getElementById("start_tags").value);
+    ret += tag_check("end_tags", document.getElementById("end_tags").value);
+    ret += tag_check("country_tags", document.getElementById("country_tags").value);
+    ret += tag_check("geography_tags", document.getElementById("geography_tags").value);
+    ret += tag_check("person_tags", document.getElementById("person_tags").value);
+    ret += tag_check("source_tags", document.getElementById("source_tags").value);
+    ret += tag_check("free_tags", document.getElementById("free_tags").value);
+    
+    return ret;
+}
+
+// 发起Ajax通讯。
+function ajax_do()
+{
+    // 数据检查。
+    if (tags_check() > 0)
+    {
+        alert("标签名称不能带有标点符号。");
+        return;
+    }
+    
+    var update_ajax = xhr({
+        url:'./ajax/update_do.php',
+        data:{
+            'originator'    :document.getElementById("originator").value,
+            'thing'         :document.getElementById("thing").value,
+            'time'          :document.getElementById("time").value,
+            'time_type'     :get_checkbox_value("time_type"),
+            'time_limit'    :document.getElementById("time_limit").value,
+            'time_limit_type':get_checkbox_value("time_limit_type"),
+            
+            'start_tags'    :document.getElementById("start_tags").value,
+            'end_tags'      :document.getElementById("end_tags").value,
+            'country_tags'  :document.getElementById("country_tags").value,
+            'geography_tags':document.getElementById("geography_tags").value,
+            'person_tags'   :document.getElementById("person_tags").value,
+            'source_tags'   :document.getElementById("source_tags").value,
+            'free_tags'     :document.getElementById("free_tags").value
+        },
+        async:false,
+        method:'POST',
+        complete: function () {
+            // 将控件灰掉，防止用户多次点击。
+            make_button_status(true);
+        },
+        success: function  (data) {
+            succ_callback(data);
+        },
+        error: function () {
+            succ_callback("fail");
+        }
+    });
+    // system_manager_ajax.send();
+}
+
+</script>
+
+<title>编辑事件</title>
 </head>
 <body>
     
@@ -151,8 +244,6 @@
 	}
 ?>
 
-<form action="./ajax/update_do.php" method="get" onsubmit="return validate_form(this)">
-
 <p class="thick">时间类型：
 <nobr class="normal"><input type="radio" id="time_type_1" name="time_type" value="1" <?php flash_time_type($is_edit, 1, $time_type); ?> />
 距今年（138.2亿年前-15000年前，单位为年） </nobr>
@@ -230,7 +321,7 @@
 </tr>
 </table>
 
-<p style="text-align:center"><a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a></p>
+<p style="text-align:center"><a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a>
 
 <!--  公开范围（暂时删除）：
 <input type="radio" name=public_type value="1" checked="checked" / >公开
@@ -238,21 +329,19 @@
 <input type="radio" name=public_type value="3" / >隐私
 -->
 
-<input type="hidden" name="originator" value="<?php echo html_encode($_GET['update_once']); ?>">
-<input type="hidden" name="thing_length" value="<?php echo get_thing_length(); ?>">
+<input type="hidden" id="originator" name="originator" value="<?php echo html_encode($_GET['update_once']); ?>">
+<input type="hidden" id="thing_length" name="thing_length" value="<?php echo get_thing_length(); ?>">
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="reset" style="font-size:25pt" value="恢复到最初状态">  <!-- 提交 -->
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="submit" style="font-size:25pt" /></p> <!-- 提交 -->
+<input type="submit" style="font-size:22pt; color:red" id="update_data" onclick="ajax_do()" /> <!-- 提交 -->
 
 <?php
     // exit
     mysql_close($conn);
     $conn = null;
 ?>
-
-</form>
 
 </body>
 </html>

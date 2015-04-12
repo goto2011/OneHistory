@@ -1,21 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title></title>
-</head>
-<body>
-
 <?php
     require_once 'init.php';
     is_user(1);
+    require_once "sql.php";
     require_once "data.php";
-    require_once "data_time.php";
-    require_once "data_period.php";
     require_once "list_control.php";
     require_once "list_search.php";
-    require_once "sql.php";
-    require_once "sql_config.php";
     
     // 唯一可设置 list_type 的位置.
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
@@ -131,7 +120,6 @@ window.onload = function()
                     . create_period_link($ii) . "<br />";
             }
         }
-		
 		echo "</div>";
 	}
 	
@@ -153,7 +141,6 @@ window.onload = function()
 			}
 			$result_string .= "</div>";
 		}
-		
 		return $result_string;
 	}
     
@@ -458,5 +445,4 @@ window.onload = function()
 	}
 ?>
 
-</body>
-</html>
+<input type="hidden" id="tag_id" name="tag_id" value="<?=get_property_UUID()?>">
