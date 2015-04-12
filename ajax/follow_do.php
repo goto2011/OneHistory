@@ -38,4 +38,5 @@
     $conn = null;
     
     echo "ok";
+    header("refresh:1; url=" . $_SERVER['HTTP_REFERER']);
 ?>

@@ -38,6 +38,10 @@
         $ok_count += insert_tag($tag_name, $tag_type, $thing_uuid);
     }
     
+    // exit.
+    mysql_close($conn);
+    $conn = null;
+    
     if ($ok_count == count($_POST['groupCheckbox']))
     {
         echo "ok";
@@ -46,9 +50,6 @@
     {
         echo "fail";
     }
-
-    // exit.
-    mysql_close($conn);
-    $conn = null;
     
+    header("refresh:1; url=" . $_SERVER['HTTP_REFERER']);
 ?>

@@ -43,7 +43,6 @@ function error_exit($exit_string)
 	exit($exit_string);
 	echo "</body></html>";
     echo "<script>history.go(-1);</script>";
-    // header("refresh:1; Location:" . $_SESSION['HTTP_REFERER']);
 }
 
 // 分配更新界面令牌, 避免重复提交.
