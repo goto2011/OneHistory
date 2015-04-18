@@ -114,17 +114,77 @@ function get_user_name()
     return $_SESSION['user_name'];
 }
 
-// 获取当前用户权限
-function get_user_right()
+// 用户登陆。
+function user_login_succ($user_name, $user_UUID, $user_right)
 {
-    return $_SESSION['user_right'];
+    // 登录成功
+    $_SESSION['user_name'] = $user_name;
+    $_SESSION['user_id'] = $user_UUID;
+    $_SESSION['user_right'] = $user_right;
+}
+
+// 用户注销
+function user_logout()
+{
+    // unset($_SESSION['user_id']);
+    // unset($_SESSION['user_right']);
+    // unset($_SESSION['user_name']);
+    
+    // 用户注销后，获取 guest 权限。
+    $_SESSION['user_id'] = 0;
+    $_SESSION['user_right'] = 0;
+    $_SESSION['user_name'] = "guest";
+}
+
+// 检查用户是否登录. 返回1 表示登陆中；=0 表示没有登陆。
+function user_is_login()
+{
+    // 清理状态。
+    if(!isset($_SESSION['user_id']))
+    {
+        user_logout();
+    }
+    
+    if (is_guest())
+    {
+        return 0;
+    }
+    else 
+    {
+        return 1;
+    }
 }
 
 // 确认当前用户是否是管理员
 function is_manager()
 {
-    return ((get_user_right() == 1) || (get_user_right() == 2));
+    return (($_SESSION['user_right'] == 1) || ($_SESSION['user_right'] == 2));
 }
+
+// 确认当前用户是否是添加者
+function is_adder()
+{
+    return ($_SESSION['user_right'] == 5);
+}
+
+// 确认当前用户是否是删除者
+function is_deleter()
+{
+    return ($_SESSION['user_right'] == 6);
+}
+
+// 确认当前用户是否是普通登录用户
+function is_normal()
+{
+    return ($_SESSION['user_right'] == 4);
+}
+
+// 确认当前用户是否是未登录用户
+function is_guest()
+{
+    return ($_SESSION['user_right'] == 0);
+}
+
 
 
 ?>

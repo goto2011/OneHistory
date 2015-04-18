@@ -5,7 +5,7 @@
 
 <?php 
     require_once 'init.php';
-    is_user(1);
+    is_user(3);
     require_once "data.php";
     require_once "sql.php";
     
@@ -58,7 +58,23 @@
     }
 ?>
     <a href="./bbs/index.php" class="red_black_underline"  target="_top">前往论坛</a> |
+
+<?php
+    if(user_is_login() == 1)
+    {
+?>
     <a href="./login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
+<?php
+    }
+    else 
+    {
+?>
+    <a href="./register.php"  class="red_black_underline"  target="_top">注册账号</a>
+    /
+    <a href="./login.php"  class="red_black_underline"  target="_top">登陆</a>
+<?php        
+    }
+?>    
 </div>
 </div>
 

@@ -6,7 +6,7 @@
 
 <?php 
     require_once 'init.php';
-    is_user(1);
+    is_user(3);
 ?>
 
 <title>故事之三：历史，让社会远离蝴蝶的翅膀</title>

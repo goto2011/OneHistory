@@ -42,7 +42,7 @@ if (isset($_POST['form_sent']) && $action == 'in')
 	{
 		$form_password_hash = pun_hash($form_password); // Will result in a SHA-1 hash
 		
-		// 2015-02-08
+		// 2015-02-08, duangan.
 		$authorized = ($cur_user['password'] == $form_password_hash);
         user_login(html_encode($form_username), html_encode($cur_user['user_UUID']), 
             html_encode($cur_user['group_id']));
@@ -103,7 +103,7 @@ else if ($action == 'out')
 
 	pun_setcookie(1, pun_hash(uniqid(rand(), true)), time() + 31536000);
     
-    // 2015-02-08
+    // 2015-02-08，duangan
     user_logout();
 
 	// redirect('./item_frame.php', $lang_login['Logout redirect']);
@@ -288,7 +288,7 @@ require 'header_user.php';
 						<p class="actions">
 						    <span><a href="register.php" tabindex="5" style="font-size:17px;"><?php echo $lang_login['Not registered'] ?></a></span>
 						    &nbsp;&nbsp;&nbsp;<span><a href="login.php?action=forget" tabindex="6"><?php echo $lang_login['Forgotten pass'] ?></a></span>
-						    &nbsp;&nbsp;&nbsp;<span><a href="./bbs/index.php" tabindex="7">以访客身份访问</a></span>
+						    &nbsp;&nbsp;&nbsp;<span><a href="./item_frame.php" tabindex="7">以访客身份访问</a></span>
 						    </p>
 					</div>
 				</fieldset>

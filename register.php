@@ -16,8 +16,8 @@ require_once "data.php";
 // If we are logged in, we shouldn't be here
 if (!$pun_user['is_guest'])
 {
-	header('Location: ./item_frame.php');
-	exit;
+	// header('Location: ./item_frame.php');
+	// exit;
 }
 
 // Load the register.php language file
@@ -72,13 +72,16 @@ $errors = array();
 if (isset($_POST['form_sent']))
 {
 	flux_hook('register_before_validation');
-
+    
+    // 确认是否为同一ip短时间内反复注册。
 	// Check that someone from this IP didn't register a user within the last hour (DoS prevention)
-	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.$db->escape(get_remote_address()).'\' AND registered>'.(time() - 3600)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
+    // duangan.
+    $interval = 3600;
+	// $interval = 1;
+	$result = $db->query('SELECT 1 FROM '.$db->prefix.'users WHERE registration_ip=\''.$db->escape(get_remote_address()).'\' AND registered>'.(time() - $interval)) or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 
 	if ($db->num_rows($result))
 		message_user($lang_register['Registration flood']);
-
 
 	$username = pun_trim($_POST['req_user']);
 	$email1 = strtolower(pun_trim($_POST['req_email1']));
@@ -96,6 +99,7 @@ if (isset($_POST['form_sent']))
 		$password2 = pun_trim($_POST['req_password2']);
 	}
 
+    // 检查用户名和密码是否合规。
 	// Validate username and passwords
 	check_username($username);
 
@@ -126,6 +130,7 @@ if (isset($_POST['form_sent']))
 	// Check if someone else already has registered with that email address
 	$dupe_list = array();
 
+    // 确认email是否重复。
 	$result = $db->query('SELECT username FROM '.$db->prefix.'users WHERE email=\''.$db->escape($email1).'\'') or error('Unable to fetch user info', __FILE__, __LINE__, $db->error());
 	if ($db->num_rows($result))
 	{
@@ -168,6 +173,7 @@ if (isset($_POST['form_sent']))
 		$password_hash = pun_hash($password1);
         $user_UUID = create_guid();
 
+        // 添加用户。duangan.
 		// Add the user
 		$db->query('INSERT INTO '.$db->prefix.'users (username, user_UUID, group_id, password, 
         email, email_setting, timezone, dst, language, style, registered, registration_ip, 
@@ -273,8 +279,11 @@ if (isset($_POST['form_sent']))
 		}
 
 		pun_setcookie($new_uid, $password_hash, time() + $pun_config['o_timeout_visit']);
-
-		redirect('./item_frame.php', $lang_register['Reg complete']);
+        
+        // duangan.
+        user_login(html_encode($username), $user_UUID, $intial_group_id);
+        
+		redirect('../item_frame.php', $lang_register['Reg complete']);
 	}
 }
 

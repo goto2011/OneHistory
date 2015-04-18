@@ -6,7 +6,7 @@
 
 <?php
     require_once 'init.php';
-    is_user(1);
+    is_user(3);
     require_once "data.php";
     require_once "sql.php";
     require_once "list_control.php";
@@ -123,7 +123,14 @@
 
 <div title="全部" 	style="padding:10px;" <?php get_selected_tab(1); ?> ></div>
 
+<?php
+    if (user_is_login() == 1)
+    {
+?>
 <div title="我的关注" 	style="padding:10px;" <?php get_selected_tab(2); ?> ></div>
+<?php
+    }
+?>
 
 <!--
 // 小组功能的需求暂时不确定, 所以暂时不提供.
@@ -135,7 +142,7 @@
 <div title="最热门" 		style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
 -->
 
-<div title="最新" 		style="padding:10px;" <?php get_selected_tab(5); ?> ></div>
+<div title="最新标签" 		style="padding:10px;" <?php get_selected_tab(5); ?> ></div>
 
 <!--
 // 非必须功能.
