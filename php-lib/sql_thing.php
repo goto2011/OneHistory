@@ -78,7 +78,7 @@ function update_thing_to_db($thing_uuid, $time_array, $thing)
     }
 }
 
-// 根据 list type 给出符合条件的条目总数
+// 根据 list type 给出符合条件的条目数量。
 function get_thing_count($list_type)
 {
     switch ($list_type)
@@ -95,14 +95,20 @@ function get_thing_count($list_type)
                 where user_UUID = '" . get_user_id() . "'))";
             break;
 
-        // 我的小组(暂无功能)
+        // add, 2015-4-19
+        // 中国朝代标签
         case 3:
-            $sql_string = "select count(*) from thing_time";
+            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
+                where property_UUID in(select property_UUID from property
+                where property_type = 8))";
             break;
 
-        // 最热门(此功能可删除)
+        // add, 2015-4-19
+        // 官制
         case 4:
-            $sql_string = "select count(*) from thing_time";
+            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
+                where property_UUID in(select property_UUID from property
+                where property_type = 9))";
             break;
 
         // 最新，指1天内的
@@ -111,13 +117,16 @@ function get_thing_count($list_type)
                     where property_UUID in(select property_UUID from property
                     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))";
             break;
-                
-        // 无标签
+
+        // add, 2015-4-19
+        // 事件类型
         case 6:
-            $sql_string = "select count(*) from thing_time where UUID not in(select thing_UUID from thing_property)";
+            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
+                where property_UUID in(select property_UUID from property
+                where property_type = 10))";
             break;
 
-        // 时代
+        // 分期
         case 7:
             $sql_string = "select count(*) from thing_time";
             break;
@@ -197,15 +206,23 @@ function get_thing_item_db($list_type, $offset, $page_size)
                 where property_UUID in(select property_UUID from follow
                 where user_UUID = '" . get_user_id() . "')) $order_sub ";
             break;
-    
-        // 我的小组(暂无功能)
+
+        // add, 2015-4-19
+        // 中国朝代标签
         case 3:
-            $sql_string = "select * from thing_time $order_sub ";
+            $sql_string = "select * from thing_time
+                where UUID in(select thing_UUID from thing_property 
+                where property_UUID in(select property_UUID from property
+                where property_type = 8)) $order_sub ";
             break;
-    
-        // 最热门(此项目删除)
+
+        // add, 2015-4-19
+        // 官制
         case 4:
-            $sql_string = "select * from thing_time $order_sub ";
+            $sql_string = "select * from thing_time
+                where UUID in(select thing_UUID from thing_property 
+                where property_UUID in(select property_UUID from property
+                where property_type = 9)) $order_sub ";
             break;
     
         // 最新，指7天内的
@@ -215,13 +232,16 @@ function get_thing_item_db($list_type, $offset, $page_size)
                 where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time))) $order_sub ";
             break;
     
-        // 无标签
+        // add, 2015-4-19
+        // 事件类型
         case 6:
-            $sql_string = "select * from thing_time where UUID not in(select thing_UUID 
-                 from thing_property) $order_sub ";
+            $sql_string = "select * from thing_time
+                where UUID in(select thing_UUID from thing_property 
+                where property_UUID in(select property_UUID from property
+                where property_type = 10)) $order_sub ";
             break;
     
-        // 时代
+        // 分期
         case 7:
             $sql_string = "select * from thing_time $order_sub";
             break;

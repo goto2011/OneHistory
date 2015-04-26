@@ -21,6 +21,41 @@ function get_current_list_id()
     return $_SESSION['current_list'];
 }
 
+// 返回界面是否初始化的状态。返回1表示已经初始化；返回0表示没有初始化。
+function get_list_control_init_status()
+{
+    if ($_SESSION['list_control_inited'] == 1)
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// list 界面初始化
+function list_control_init()
+{
+    if (empty($_SESSION['list_control_inited']) || ($_SESSION['list_control_inited']) == 0)
+    {
+        set_current_list(1);
+        for ($ii = 1; $ii <= get_list_count(); $ii++)
+        {
+            list_param_init($ii);
+        }
+        
+        $_SESSION['list_control_inited'] = 1;
+    }
+}
+
+// list 界面重新初始化
+function list_control_reinit()
+{
+    $_SESSION['list_control_inited'] = 0;
+    list_control_init();
+}
+
 // 获得当前 list 的结构信息
 function &get_current_list()
 {
@@ -28,12 +63,20 @@ function &get_current_list()
     return $_SESSION[$session_name];
 }
 
-// list 界面初始状态, 系统登录时调用. 将来可做成恢复原状
+// 指定 list id 初始化, 系统登录时调用. 将来可做成恢复原状
 function list_param_init($list_id)
 {
     $session_name = "list_number_" . $list_id;
     $_SESSION[$session_name] = array("property_UUID"=>"", "page"=>1, "item_index"=>1,
         "period_big_index"=>-1, "period_small_index"=>-1);
+}
+
+// 为了调试方便，打印 list控制变量
+function print_list_param()
+{
+    $list_info = get_current_list();
+    echo get_current_list_id() . " - " . get_list_count() . " - " . $list_info['page'] 
+        . " - " . $list_info['item_index'] . "<br/>";
 }
 
 // 判断传入的参数是否 ok 

@@ -12,6 +12,13 @@
     require_once "list_control.php";
     require_once "list_search.php";
     
+    // 界面初始化。
+    if (get_list_control_init_status() == 0)
+    {
+        list_control_init();
+        search_param_init();
+    }
+    
     // 统一在item_frame.php中处理list的各种过滤器。
     // 1.如果tag被设置,则tag第一优先.
     if(!empty($_GET['property_UUID']))
@@ -151,9 +158,10 @@
 
 <div title="分期" 		style="padding:10px;" <?php get_selected_tab(7); ?> ></div>
 
-<div title="国家民族"   style="padding:10px;" <?php get_selected_tab(12); ?> ></div>
+<!-- add， 2015-4-19 -->
+<div title="中国朝代"   style="padding:10px;" <?php get_selected_tab(3); ?> ></div>
 
-<div title="自由标签"   style="padding:10px;" <?php get_selected_tab(13); ?> ></div>
+<div title="国家民族"   style="padding:10px;" <?php get_selected_tab(12); ?> ></div>
 
 <div title="事件起止" 	style="padding:10px;" <?php get_selected_tab(8); ?> ></div>
 
@@ -162,6 +170,12 @@
 <div title="地理" 		style="padding:10px;" <?php get_selected_tab(10); ?> ></div>
 
 <div title="出处" 		style="padding:10px;" <?php get_selected_tab(11); ?> ></div>
+
+<!-- add， 2015-4-19 -->
+<div title="官制"   style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
+<div title="事件性质"   style="padding:10px;" <?php get_selected_tab(6); ?> ></div>
+
+<div title="自由标签"   style="padding:10px;" <?php get_selected_tab(13); ?> ></div>
 
 </div>
 <!-- tab页 end -->

@@ -12,8 +12,13 @@
         set_current_list($_GET['list_type']);
     }
     
+    // debug
+    print_list_param();
+    
     if (check_list_param() == false)
     {
+        // debug.
+        print_list_param();
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
 ?>
@@ -29,12 +34,22 @@ window.onload = function()
 </script>
 
 <?php 
+    // main().
 	flash_item_list();
     
-    // 是否显示查找结果.
+    // add, 2015-4-21
+    // 是否显示"添加标签"
+    function is_show_add_tag()
+    {
+        // 普通用户在查找界面；adder在所有jie'm
+        return ((is_search_ex()) || (is_adder()));
+    }
+    
+    // 是否显示查找界面.
     function is_search_ex()
     {
-        return is_search() && is_total();
+        // 如果是adder，则在任何界面都可以添加标签。
+        return (is_search() && is_total());
     }
     
     // 打印检索区
@@ -64,7 +79,7 @@ window.onload = function()
         echo "</form></div>";
     }
     
-    // 打印时期 tag 链接
+    // 打印 分期 tag 链接
     function create_period_link($index)
     {
         $result = "";
@@ -75,8 +90,32 @@ window.onload = function()
         }
         return $result;
     }
+    
+    // add, 2015-4-20
+    // 打印 中国朝代 tag 链接
+    function create_dynasty_link($index, $tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_dynasty_begin($index); $ii <= get_small_dynasty_end($index); $ii++)
+        {
+            $my_dynasty_name = get_dynasty_name($index, $ii);
+            $my_uuid = "";
+            $my_uuid = array_search($my_dynasty_name, $tags_db);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_dynasty_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_dynasty_name . "&nbsp;&nbsp;";
+            }
+        }
+        return $result;
+    }
 	
-	// 打印tag联结
+	// 打印tag链接
 	function create_tag_link($property_type, $property_UUID, $property_name)
 	{
 		if(($property_type == 1) || ($property_type == 2))
@@ -90,6 +129,13 @@ window.onload = function()
 				$property_UUID . "'>". $property_name . "</a>&nbsp;&nbsp;";
 		}
 	}
+    
+    // add, 2015-4-19
+    // 是否是普通标签区
+    function is_normal_tags_zone()
+    {
+        return ((get_current_list_id() != 7) && (get_current_list_id() != 3));
+    }
 	
 	// 打印标签区
 	function print_tags_zone()
@@ -100,7 +146,9 @@ window.onload = function()
         // 打印"全部"
         echo "<a href='item_frame.php?property_UUID=all'>全部</a> &nbsp;&nbsp;";
         
-        if(get_current_list_id() != 7)
+        // add, 2015-4-19
+        // 打印一般标签区
+        if(is_normal_tags_zone())
         {
             // 获取property数据表的数据
             $result = get_tags_db(get_current_list_id(), get_page_tags_size());
@@ -110,7 +158,8 @@ window.onload = function()
     			echo create_tag_link($row['property_type'], $row['property_UUID'], $row['property_name']);
     		}
         }
-        else
+        // 是时期
+        else if(get_current_list_id() == 7)
         {
             echo "<br />";
             
@@ -119,6 +168,28 @@ window.onload = function()
                 echo get_big_period_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_period_link($ii) . "<br />";
             }
+        }
+        // add, 2015-4-19
+        // 是中国朝代
+        else 
+        {
+            echo "<br />";
+            
+            // 获取property数据表的数据
+            $tags_array = array();
+            
+            $result = get_tags_db(get_current_list_id(), 200);
+            while($row = mysql_fetch_array($result))
+            {
+                $tags_array[$row['property_UUID']] = $row['property_name'];
+            }
+            
+            for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end(); $ii++)
+            {
+                echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_dynasty_link($ii, $tags_array) . "<br />";
+            }
+            
         }
 		echo "</div>";
 	}
@@ -189,13 +260,13 @@ window.onload = function()
         }
         
         // form 要包大部分.
-        if (is_search_ex())
+        if (is_show_add_tag())
         {
             echo "<form method='post' action='./ajax/list_add_tag_do.php'  onSubmit='return checkbox_check()'>";
         }
 		
 		echo "<div align='left' style='font-family:微软雅黑; color:red; font-weight: bold'> ";
-        if(is_search_ex())
+        if(is_show_add_tag())
         {
             echo "<span class='link' onclick='select_all()'>全选</span> -- 
                   <span class='link' onclick='select_none()'>全不选</span> -- ";
@@ -238,7 +309,7 @@ window.onload = function()
             }
 		}
         
-        if(!is_tag() && !is_period_tag() && !is_search_ex())
+        if(!is_tag() && !is_period_tag() && !is_show_add_tag())
         {
             echo "</div>";
         }
@@ -291,6 +362,8 @@ window.onload = function()
     {
         echo "<span style='display:inline-block; right:3%; position:absolute;' >添加标签 : ";
         echo "<select name='tag_type'>";
+        // add, 2015-4-19
+        echo "  <option value='8'>中国朝代</option>";
         echo "  <option value='7'>国家民族</option>";
         echo "  <option value='6'>自由标签</option>";
         echo "  <option value='1'>事件开始</option>";
@@ -298,6 +371,8 @@ window.onload = function()
         echo "  <option value='4'>人物</option>";
         echo "  <option value='5'>地理</option>";
         echo "  <option value='3'>出处</option>";
+        echo "  <option value='9'>官制</option>";
+        echo "  <option value='10'>事件类型</option>";
         echo "</select>";
         echo "<nobr><input name='tag_name' type='text' width='150px'></nobr>";
         echo "<input name='' type='submit' value='添加'>";
@@ -310,7 +385,7 @@ window.onload = function()
 	{
 		echo "<table class='altrowstable' id='alternatecolor' style='border-width: 1px;'>";
 		echo "<tr>";
-        if(is_search_ex())
+        if(is_show_add_tag())
         {
             echo "<td></td>";
         }
@@ -381,7 +456,9 @@ window.onload = function()
         {
             print_period_info();
         }
-        else if (is_search_ex())
+        
+        // 2015-4-21
+        if (is_show_add_tag())
         {
             print_add_tag_form();
         }
@@ -414,7 +491,7 @@ window.onload = function()
 			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
 			
 			echo "<tr>";
-            if(is_search_ex())
+            if(is_show_add_tag())
             {
                 echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
             }
@@ -434,7 +511,7 @@ window.onload = function()
         {
             print_tag_control();
         }
-        if (is_search_ex())
+        if (is_show_add_tag())
         {
             echo "</form>";
         }

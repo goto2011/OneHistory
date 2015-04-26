@@ -52,12 +52,9 @@
         // 用户信息写入后台。
         user_login_succ($user_name, $user_UUID, $user_right);
         
-        // 初始化界面参数.
-        set_current_list(1);
-        for ($ii = 1; $ii <= get_list_count(); $ii++)
-        {
-            list_param_init($ii);
-        }
+        // 界面参数重新初始化.
+        list_control_reinit();
+        
         search_param_init();
     }
 ?>

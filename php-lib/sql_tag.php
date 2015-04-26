@@ -72,6 +72,19 @@ function insert_tag_from_input($tags_array, $thing_uuid)
     {
         $tags_insert_count += insert_tags(html_encode($tags_array['country_tags']), 7, $thing_uuid);
     }
+    // add, 2015-4-19
+    if(!empty($tags_array['dynasty_tags']))
+    {
+        $tags_insert_count += insert_tags(html_encode($tags_array['dynasty_tags']), 8, $thing_uuid);
+    }
+    if(!empty($tags_array['office_tags']))
+    {
+        $tags_insert_count += insert_tags(html_encode($tags_array['office_tags']), 9, $thing_uuid);
+    }
+    if(!empty($tags_array['type_tags']))
+    {
+        $tags_insert_count += insert_tags(html_encode($tags_array['type_tags']), 10, $thing_uuid);
+    }
     
     return $tags_insert_count;
 }
@@ -238,17 +251,19 @@ function get_tags_db($list_type, $tags_show_limit)
                     where user_UUID = '" . get_user_id() . "') order by hot_index desc
                     limit 0, " . $tags_show_limit;
             break;
-
-        // 我的小组(暂无功能)
+        
+        // add, 2015-4-19
+        // 中国朝代标签
         case 3:
-            $sql_string = "select property_UUID, property_name, property_type from property order by hot_index desc 
-                     limit 0, " . $tags_show_limit;
+            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 8 
+                     order by hot_index desc limit 0, " . $tags_show_limit;
             break;
 
-        // 最热门(此项删除)
+        // add, 2015-4-19
+        // 官制
         case 4:
-            $sql_string = "select property_UUID, property_name, property_type from property order by hot_index desc
-                     limit 0, " . $tags_show_limit;
+            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 9 
+                     order by hot_index desc limit 0, " . $tags_show_limit;
             break;
 
         // 最新，指1天内的
@@ -258,18 +273,20 @@ function get_tags_db($list_type, $tags_show_limit)
                     limit 0, " . $tags_show_limit;
             break;
 
-        // 无标签, 不需要这条.
+        // add, 2015-4-19
+        // 事件类型
         case 6:
-            return NULL;
+            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 10 
+                     order by hot_index desc limit 0, " . $tags_show_limit;
             break;
 
-        // 时代
+        // 分期
         case 7:
             $sql_string = "select property_UUID, property_name, property_type from property
                      limit 0, " . $tags_show_limit;
             break;
 
-        // 事件
+        // 事件起止
         case 8:
             $sql_string = "select property_UUID, property_name, property_type from property 
                     where property_type = 1 or property_type = 2  order by hot_index desc
@@ -300,7 +317,7 @@ function get_tags_db($list_type, $tags_show_limit)
                      order by hot_index desc limit 0, " . $tags_show_limit;
             break;
 
-        // 事件特征
+        // 自由标签
         case 13:
             $sql_string = "select property_UUID, property_name, property_type from property where property_type = 6 
                      order by hot_index desc limit 0, " . $tags_show_limit;

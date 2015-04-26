@@ -244,23 +244,37 @@ function ajax_do(operate_type)
 <tr><td>
 <!-- 标签输入 begin -->
 <table class="normal">
+    
 <tr class="tag_normal">
 <td width='400'>
     <p class="thick">事件开始标签：<input id='start_tags'      name='start_tags'   type='text'     class='tags' ></p></td>
 <td width='400'>
     <p class="thick">事件结束标签：<input id='end_tags'        name='end_tags'     type='text'     class='tags' ></p></td>
 </tr>
+
 <tr class="tag_normal">
-<td><p class="thick">国家/朝代/民族/文明标签：<input id='country_tags'     name='country_tags'  type='text'     class='tags' ></p></td>
-<td><p class="thick">地理标签：<input id='geography_tags'    name='geography_tags' type='text'   class='tags' ></p></td>
+<td><p class="thick">国家/民族/文明标签：<input id='country_tags'     name='country_tags'  type='text'     class='tags' ></p></td>
+<!-- add, 2015-4-19 -->
+<td><p class="thick">中国朝代标签：<input id='dynasty_tags'     name='dynasty_tags'  type='text'     class='tags' ></p></td>
 </tr>
+
 <tr class="tag_normal">
-<td><p class="thick">人物标签：<input id='person_tags'       name='person_tags'  type='text'     class='tags' ></p></td>
+<td><p class="thick">地理标签：<input id='geography_tags'    name='geography_tags' type='text'   class='tags' ></p></td>
 <td><p class="thick">出处标签：<input id='source_tags'       name='source_tags'  type='text'     class='tags' ></p></td>
 </tr>
+
 <tr class="tag_normal">
-<td colspan="2"><p class="thick">自由标签：<input id='free_tags'  name='free_tags'    type='text'     class='tags' ></p></td>
+<td><p class="thick">人物标签：<input id='person_tags'       name='person_tags'  type='text'     class='tags' ></p></td>
+<!-- add, 2015-4-19 -->
+<td><p class="thick">官制标签：<input id='office_tags'       name='office_tags'  type='text'     class='tags' ></p></td>
 </tr>
+    
+<tr class="tag_normal">
+<!-- add, 2015-4-19 -->
+<td><p class="thick">事件类型标签：<input id='type_tags'  name='type_tags'    type='text'     class='tags' ></p></td>
+<td><p class="thick">自由标签：<input id='free_tags'  name='free_tags'    type='text'     class='tags' ></p></td>
+</tr>
+
 </table>
 <!-- 标签输入 end -->
 </td>

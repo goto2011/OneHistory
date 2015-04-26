@@ -162,7 +162,31 @@ $(function() {
 	});
 	
 	$('#free_tags').tagsInput({
-		width: '750px',
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#dynasty_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#office_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#class_tags').tagsInput({
+		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',

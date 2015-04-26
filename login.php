@@ -91,6 +91,9 @@ else if ($action == 'out')
 	   pun_hash($pun_user['id'].pun_hash(get_remote_address())))
 	{
 	    header('Location: login.php');
+        // 2015-02-08，duangan
+        user_logout();
+        
 		exit;
 	}
 
