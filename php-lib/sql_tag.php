@@ -337,6 +337,36 @@ function get_tags_db($list_type, $tags_show_limit)
     return $result;
 }
 
+// 将 tag 转化为 key-value数组. 2015-4-27.
+function get_tags_array($list_id)
+{
+    // 获取property数据表的数据
+    $tags_array = array();
+    
+    $result = get_tags_db($list_id, 200);
+    while($row = mysql_fetch_array($result))
+    {
+        $tags_array[$row['property_UUID']] = $row['property_name'];
+    }
+    
+    return $tags_array;
+}
+
+// 检查tag array中是否有指定name的key。参数 is_need_delete 表示知道后是否删除, =1删除，=0不删除。
+// 返回空串表示没找到。
+function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
+{
+    $my_uuid = "";
+    
+    $my_uuid = array_search($tag_name, $tags_array);
+    if (($my_uuid != "") && ($is_need_delete == 1))
+    {
+        unset($tags_array[$my_uuid]);
+    }
+    
+    return $my_uuid;
+}
+
 // 获取property数据表的数据
 function get_tags_from_thing_UUID($thing_UUID)
 {

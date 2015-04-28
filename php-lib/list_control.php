@@ -153,6 +153,11 @@ function get_item_index()
     return $list_info['item_index'];
 }
 
+// 判断当前界面是否是 period
+function is_period()
+{
+    return (get_current_list_id() == 7);
+}
 
 // 判断是不是 period tag.
 function is_period_tag()
@@ -185,6 +190,18 @@ function get_period_small_index()
 {
     $list_info = get_current_list();
     return $list_info['period_small_index'];
+}
+
+// 判断当前是否是 中国朝代 页面
+function is_dynasty()
+{
+    return (get_current_list_id() == 3);
+}
+
+// 判断当前是否是 国家民族 页面
+function is_country()
+{
+    return (get_current_list_id() == 12);
 }
 
 ?>

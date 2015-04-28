@@ -13,7 +13,7 @@ $dynasty = array
         array("周朝"),
         array("东周"),
         array("秦朝"),
-        array("西汉"),
+        array("汉朝"),
         array("新朝"),
         array("东汉"),
         array("三国"),
@@ -23,7 +23,6 @@ $dynasty = array
         array("隋朝"),
         array("唐朝"),
         array("五代十国"),
-        array("辽"),
         array("宋朝"),
         array("南宋"),
         array("明朝"),
@@ -43,6 +42,7 @@ $dynasty = array
         array("曲沃"),
         array("秦国"),
         array("楚国"),
+        array("燕国"),
         array("宋国"),
         array("卫国"),
         array("陈国"),
@@ -50,6 +50,7 @@ $dynasty = array
         array("曹国"),
         array("郑国"),
         array("吴国"),
+        array("越国"),
         array("杞国"),
         array("赵国"),
         array("魏国"),
@@ -99,12 +100,14 @@ $dynasty = array
         array("南朝齐"),
         array("南朝梁"),
         array("南朝陈"),
+        array("辽"),
+        array("西夏"),
+        array("金国"),
         array("后梁"),
         array("后唐"),
         array("后晋"),
         array("后汉"),
         array("后周"),
-        array("吴国"),
         array("南唐"),
         array("吴越"),
         array("闽"),
@@ -121,10 +124,13 @@ $dynasty = array
     (
         // 19
         array("戎"),
+        array("东胡"),
         array("粛慎"),
         array("匈奴"),
         array("鲜卑"),
         array("大月氏"),
+        array("乌桓"),
+        array("扶余"),
         array("氐"),
         array("羌"),
         array("羯"),
@@ -132,12 +138,11 @@ $dynasty = array
         array("柔然"),
         array("突厥"),
         array("吐蕃"),
+        array("吐谷浑"),
         array("鉄勒"),
         array("回纥"),
         array("契丹"),
         array("党项"),
-        array("西夏"),
-        array("金国"),
         array("高句丽"),
         array("女真"),
         array("准噶尔汗国"),
@@ -145,7 +150,7 @@ $dynasty = array
     array
     (
         // 18
-        array("卫氏朝鲜"),
+        array("朝鲜"),
         array("南越国"),
         array("弁韩"),
         array("马韩"),
@@ -154,9 +159,14 @@ $dynasty = array
         array("新罗"),
         array("高丽"),
         array("蒙古"),
+        array("元朝"),
         array("帖木儿帝国"),
         array("日本"),
     ),
+    array
+    (
+        
+    )
 );
 
 // 返回大时期的名称

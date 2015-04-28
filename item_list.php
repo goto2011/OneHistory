@@ -12,9 +12,6 @@
         set_current_list($_GET['list_type']);
     }
     
-    // debug
-    print_list_param();
-    
     if (check_list_param() == false)
     {
         // debug.
@@ -41,7 +38,7 @@ window.onload = function()
     // 是否显示"添加标签"
     function is_show_add_tag()
     {
-        // 普通用户在查找界面；adder在所有jie'm
+        // 普通用户在查找界面；adder在所有界面可以用这个功能。
         return ((is_search_ex()) || (is_adder()));
     }
     
@@ -93,25 +90,62 @@ window.onload = function()
     
     // add, 2015-4-20
     // 打印 中国朝代 tag 链接
-    function create_dynasty_link($index, $tags_db)
+    function create_dynasty_link($index, &$tags_db)
     {
         $result = "";
         for ($ii = get_small_dynasty_begin($index); $ii <= get_small_dynasty_end($index); $ii++)
         {
-            $my_dynasty_name = get_dynasty_name($index, $ii);
-            $my_uuid = "";
-            $my_uuid = array_search($my_dynasty_name, $tags_db);
+            $my_name = get_dynasty_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
             
             if ($my_uuid != "")
             {
                 $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_dynasty_name . "</a>&nbsp;&nbsp;";
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
             }
             else 
             {
-                $result .= $my_dynasty_name . "&nbsp;&nbsp;";
+                $result .= $my_name . "&nbsp;&nbsp;";
             }
         }
+        
+        return $result;
+    }
+    
+    // 打印 朝代“其它”部分。发现可以归一。
+    function create_other_link(&$tags_db)
+    {
+        $result = "";
+        
+        while(list($key, $value) = each($tags_db))
+        {
+            $result .= "<a href='item_frame.php?property_UUID=" . $key . "'>". $value . "</a>&nbsp;&nbsp;";
+        }
+        
+        return $result;
+    }
+    
+    // add, 2015-4-28
+    // 打印 国家民族 tag 链接
+    function create_country_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_country_begin($index); $ii <= get_small_country_end($index); $ii++)
+        {
+            $my_name = get_country_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
         return $result;
     }
 	
@@ -134,7 +168,8 @@ window.onload = function()
     // 是否是普通标签区
     function is_normal_tags_zone()
     {
-        return ((get_current_list_id() != 7) && (get_current_list_id() != 3));
+        return ((get_current_list_id() != 7) && (get_current_list_id() != 3)
+            && (get_current_list_id() != 12));
     }
 	
 	// 打印标签区
@@ -147,7 +182,7 @@ window.onload = function()
         echo "<a href='item_frame.php?property_UUID=all'>全部</a> &nbsp;&nbsp;";
         
         // add, 2015-4-19
-        // 打印一般标签区
+        // 打印一般的标签区
         if(is_normal_tags_zone())
         {
             // 获取property数据表的数据
@@ -159,7 +194,7 @@ window.onload = function()
     		}
         }
         // 是时期
-        else if(get_current_list_id() == 7)
+        else if(is_period())
         {
             echo "<br />";
             
@@ -171,26 +206,37 @@ window.onload = function()
         }
         // add, 2015-4-19
         // 是中国朝代
-        else 
+        else if(is_dynasty())
         {
             echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
             
-            // 获取property数据表的数据
-            $tags_array = array();
-            
-            $result = get_tags_db(get_current_list_id(), 200);
-            while($row = mysql_fetch_array($result))
-            {
-                $tags_array[$row['property_UUID']] = $row['property_name'];
-            }
-            
-            for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end(); $ii++)
+            for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
             {
                 echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_dynasty_link($ii, $tags_array) . "<br />";
             }
             
+            // 最后打印其它
+            echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
         }
+        else if(is_country())
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
+            {
+                echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_country_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
+    
 		echo "</div>";
 	}
 	
