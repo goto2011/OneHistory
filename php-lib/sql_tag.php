@@ -482,5 +482,27 @@ function re_calc_tag_hot_index()
 }
 
 
+// 删除指定标签
+function delete_tag_to_db($tag_uuid)
+{
+    // 1. 删除标签相关的标签-事件对
+    $sql_string = "delete from thing_property where property_UUID = '$tag_uuid'";
+    if (mysql_query($sql_string) === FALSE)
+    {
+        $GLOBALS['log']->error("error: delete_tag_to_db() -- $sql_string 。");
+        return 0;
+    }
+    
+    // 2. 删除标签
+    $sql_string = "delete from property where property_UUID = '$tag_uuid'";
+    if (mysql_query($sql_string) === FALSE)
+    {
+        $GLOBALS['log']->error("error: delete_tag_to_db() -- $sql_string 。");
+        return 0;
+    }
+    
+    return 1;
+}
+
 
 ?>

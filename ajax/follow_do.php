@@ -7,15 +7,31 @@
     require_once "sql.php";
     require_once "data.php";
     
-    if(!empty($_GET['tag_id']))
+    // 关注标签
+    if(!empty($_GET['follow_tag']))
     {
-        $tag_uuid = html_encode($_GET['tag_id']);
-        $is_add_follow = TRUE;
+        $tag_uuid = html_encode($_GET['follow_tag']);
+        $function_type = 1;
     }
-    else if(!empty($_GET['del_tag_id']))
+    // 取消关注
+    else if(!empty($_GET['un_follow_tag']))
     {
-        $tag_uuid = html_encode($_GET['del_tag_id']);
-        $is_add_follow = FALSE;
+        $tag_uuid = html_encode($_GET['un_follow_tag']);
+        $function_type = 2;
+    }
+    // 删除标签
+    else if(!empty($_GET['delete_tag']))
+    {
+        if(is_deleter())
+        {
+            $tag_uuid = html_encode($_GET['delete_tag']);
+            $function_type = 3;
+        }
+        else 
+        {
+            echo "parameter_error";
+            exit;
+        }
     }
     else 
     {
@@ -24,13 +40,17 @@
     }
     
     $conn = open_db();
-    if($is_add_follow == TRUE)
+    if($function_type == 1)
     {
         insert_follow_to_db($tag_uuid);
     }
-    else 
+    else if($function_type == 2)
     {
-        delete_follow_to_db($tag_uuid);
+        un_follow_to_db($tag_uuid);
+    }
+    else if($function_type == 3)
+    {
+        delete_tag_to_db($tag_uuid);
     }
 
     // exit.

@@ -9,10 +9,17 @@ function get_page_size()
     return $_SESSION['page_size'];
 }
 
-// 返回每一页的 tag 的数量限制
+// 返回每一页的 tag 的数量限制。暂时写死，后续再写活。
 function get_page_tags_size()
 {
-    $_SESSION['page_tags_size'] = 40; // 每页的tags数，暂时写死，后续再写活。
+    if (is_adder() || is_deleter() || is_manager)
+    {
+        $_SESSION['page_tags_size'] = 200;
+    }
+    else
+    {
+        $_SESSION['page_tags_size'] = 40;
+    }
     return $_SESSION['page_tags_size'];
 }
 

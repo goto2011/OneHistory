@@ -67,7 +67,7 @@ function insert_follow_to_db($tag_uuid)
 }
 
 // 删除 follow 信息。return 1, ok；return 0，fail。
-function delete_follow_to_db($tag_uuid)
+function un_follow_to_db($tag_uuid)
 {
     $user_id = get_user_id();
     if(is_followed($tag_uuid) == TRUE)
@@ -81,7 +81,7 @@ function delete_follow_to_db($tag_uuid)
         }
         else
         {
-            $GLOBALS['log']->error("error: delete_follow_to_db() -- $sql_string 。");
+            $GLOBALS['log']->error("error: un_follow_to_db() -- $sql_string 。");
             return 0;
         }
     }

@@ -378,12 +378,18 @@ window.onload = function()
         
         if(is_followed(get_property_UUID()))
         {
-            echo " -- 你已关注! --<a href='./ajax/follow_do.php?del_tag_id=" . get_property_UUID() 
+            echo " -- 你已关注! --<a href='./ajax/follow_do.php?un_follow_tag=" . get_property_UUID() 
                 . "'>取消关注</a></nobr>";
         }
         else 
         {
-            echo "-- <a href='./ajax/follow_do.php?tag_id=" . get_property_UUID() . "'>关注它!</a></nobr>";
+            echo " -- <a href='./ajax/follow_do.php?follow_tag=" . get_property_UUID() . "'>关注它!</a></nobr>";
+        }
+        
+        // 打开删除标签的功能
+        if (is_deleter())
+        {
+            echo " -- <a href='./ajax/follow_do.php?delete_tag=" . get_property_UUID() . "'>删除这个标签</a></nobr>";
         }
         echo "</div>";
     }

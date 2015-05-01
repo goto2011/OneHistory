@@ -21,8 +21,9 @@ $country = array
         array("古赫梯"),
         array("古巴比伦"),
         array("古腓尼基"),
-        array("古伊朗"),
+        array("古波斯"),
         array("古叙利亚"),
+        array("犹太人"),
         array("阿拉伯"),
         array("奥斯曼"),
         array("埃及"),
@@ -185,10 +186,10 @@ function get_big_country_name($index)
             return "中东北非中亚";
             break;
         case 3:
-            return "欧洲";
+            return "亚洲";
             break;
         case 4:
-            return "亚洲";
+            return "欧洲";
             break;
         case 5:
             return "非洲";
