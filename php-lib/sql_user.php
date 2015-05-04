@@ -173,6 +173,12 @@ function is_deleter()
     return ($_SESSION['user_right'] == 6);
 }
 
+// 是否为 vip 用户
+function is_vip_user()
+{
+    return (is_adder() || is_deleter() || is_manager());
+}
+
 // 确认当前用户是否是普通登录用户
 function is_normal()
 {

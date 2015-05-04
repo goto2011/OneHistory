@@ -65,15 +65,23 @@ window.onload = function()
         
         echo "&nbsp;&nbsp;&nbsp;<nobr class='normal'>标签类型: ";
         echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='1' checked='checked'>全部";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='2' >国家民族";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='3' >自由标签";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='4' >事件起止";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='5' >人物";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='6' >地理";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='7' >出处";
-        echo "</nobr>";
         
-        echo "</form></div>";
+        $tag_array = array();
+        for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
+        {
+            $tag_array = get_tag_type_from_index($ii);
+            
+            // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称。
+            if (($tag_array != -1) && ($tag_array[1] > 0) 
+                && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+            {
+                $tag_id = $tag_array[1];
+                $tag_name = $tag_array[2];
+                echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
+            }
+        }
+        
+        echo "</nobr></form></div>";
     }
     
     // 打印 分期 tag 链接
@@ -414,17 +422,23 @@ window.onload = function()
     {
         echo "<span style='display:inline-block; right:3%; position:absolute;' >添加标签 : ";
         echo "<select name='tag_type'>";
-        // add, 2015-4-19
-        echo "  <option value='8'>中国朝代</option>";
-        echo "  <option value='7'>国家民族</option>";
-        echo "  <option value='6'>自由标签</option>";
-        echo "  <option value='1'>事件开始</option>";
-        echo "  <option value='2'>事件结束</option>";
-        echo "  <option value='4'>人物</option>";
-        echo "  <option value='5'>地理</option>";
-        echo "  <option value='3'>出处</option>";
-        echo "  <option value='9'>官制</option>";
-        echo "  <option value='10'>事件类型</option>";
+        
+        // add, 2015-5-3
+        $tag_array = array();
+        for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
+        {
+            $tag_array = get_tag_type_from_index($ii);
+            
+            // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是否为管理标签。
+            if (($tag_array != -1) && ($tag_array[1] > 0) 
+                && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+            {
+                $tag_id = $tag_array[1];
+                $tag_name = $tag_array[2];
+                echo "  <option value='$tag_id'>$tag_name</option>";
+            }
+        }
+        
         echo "</select>";
         echo "<nobr><input name='tag_name' type='text' width='150px'></nobr>";
         echo "<input name='' type='submit' value='添加'>";

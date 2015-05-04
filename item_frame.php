@@ -113,7 +113,7 @@
         // 传递 item_list.
         $tab_string .= " href='item_list.php?list_type=" . $my_list_type . "' ";
         
-		echo $tab_string;
+	    return $tab_string;
 	}
 ?>
 
@@ -127,55 +127,37 @@
 
 <!-- tab页 begin -->
 <div class="easyui-tabs" style="" >
-
-<div title="全部" 	style="padding:10px;" <?php get_selected_tab(1); ?> ></div>
-
+    
 <?php
-    if (user_is_login() == 1)
+    $tag_array = array();
+    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
-?>
-<div title="我的关注" 	style="padding:10px;" <?php get_selected_tab(2); ?> ></div>
-<?php
+        $tag_array = get_tag_type_from_index($ii);
+        
+        // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是否为管理标签。
+        if (($tag_array != -1) && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+        {
+            $tag_id = $tag_array[0];
+            $tag_name = $tag_array[2];
+            echo "<div title='$tag_name' style='padding:10px;'" . get_selected_tab($tag_id) . "></div>";
+        }
     }
 ?>
-
-<!--
-// 小组功能的需求暂时不确定, 所以暂时不提供.
-<div title="我的小组" 	style="padding:10px;" <?php get_selected_tab(3); ?> ></div>
--->
-
-<!--
-// "全部条目"中标签也是按热门指数排序, 重复功能, 此项删除.
-<div title="最热门" 		style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
--->
-
-<div title="最新标签" 		style="padding:10px;" <?php get_selected_tab(5); ?> ></div>
-
-<!--
-// 非必须功能.
-<div title="无标签" 		style="padding:10px;" <?php get_selected_tab(6); ?> ></div>
--->
-
-<div title="时间分期" 		style="padding:10px;" <?php get_selected_tab(7); ?> ></div>
-
-<!-- add， 2015-4-19 -->
+<div title="全部" 	   style="padding:10px;" <?php get_selected_tab(1); ?> ></div>
+<div title="我的关注"   style="padding:10px;" <?php get_selected_tab(2); ?> ></div>
+<div title="最新标签" 	style="padding:10px;" <?php get_selected_tab(5); ?> ></div>
+<div title="时间分期" 	style="padding:10px;" <?php get_selected_tab(7); ?> ></div>
+<!-- // add， 2015-4-19  -->
 <div title="中国朝代"   style="padding:10px;" <?php get_selected_tab(3); ?> ></div>
-
 <div title="国家民族"   style="padding:10px;" <?php get_selected_tab(12); ?> ></div>
-
-<div title="地区城市"         style="padding:10px;" <?php get_selected_tab(10); ?> ></div>
-
-<div title="人物"         style="padding:10px;" <?php get_selected_tab(9); ?> ></div>
-
-<div title="领域"   style="padding:10px;" <?php get_selected_tab(6); ?> ></div>
-
-<div title="事件起止" 	style="padding:10px;" <?php get_selected_tab(8); ?> ></div>
-
-<!-- add， 2015-4-19 -->
-<div title="官制"   style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
-<div title="自由标签"   style="padding:10px;" <?php get_selected_tab(13); ?> ></div>
-
-<div title="出处"         style="padding:10px;" <?php get_selected_tab(11); ?> ></div>
+<div title="地区城市"   style="padding:10px;" <?php get_selected_tab(10); ?> ></div>
+<div title="人物"       style="padding:10px;" <?php get_selected_tab(9); ?> ></div>
+<div title="领域"       style="padding:10px;" <?php get_selected_tab(6); ?> ></div>
+<div title="事件起止"   style="padding:10px;" <?php get_selected_tab(8); ?> ></div>
+<!-- // add， 2015-4-19 -->
+<div title="官制"     style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
+<div title="自由标签" style="padding:10px;" <?php get_selected_tab(13); ?> ></div>
+<div title="出处"     style="padding:10px;" <?php get_selected_tab(11); ?> ></div>
 
 </div>
 <!-- tab页 end -->

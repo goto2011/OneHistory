@@ -2,8 +2,60 @@
 // created by duangan, 2015-3-30 -->
 // tag 相关的函数。主要是和sql相关的。    -->
 
-require_once 'data_string.php';
-require_once 'data_time.php';
+require_once 'data.php';
+
+// 获取tag list 最小值
+function tag_list_min()
+{
+    return 1;
+}
+
+// 获取tag list 的最大值
+function tag_list_max()
+{
+    return 14;
+}
+
+// 根据排列顺序给出tag 属性。2015-5-3.
+// [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是标签显示特征（0-normal；1-vip；2-login）。
+function get_tag_type_from_index($tag_list_id)
+{
+    switch ($tag_list_id)
+    {
+        case 1:
+            return array($tag_list_id, -1, "全部", 0);
+        case 2:
+            return array($tag_list_id, -1, "我的关注", 0);
+        case 3:
+            return array($tag_list_id, -1, "最新标签", 0);
+        case 4:
+            return array($tag_list_id, -1, "时间分期", 0);
+        case 5:
+            return array($tag_list_id, 8, "中国朝代", 0);
+        case 6:
+            return array($tag_list_id, 7, "国家民族", 0);
+        case 7:
+            return array($tag_list_id, 10, "领域", 0);
+        case 8:
+            return array($tag_list_id, 5, "城市地区", 0);
+        case 9:
+            return array($tag_list_id, 4, "人物", 0);
+        case 10:
+            return array($tag_list_id, 11, "关键事件", 0);
+        case 11:
+            return array($tag_list_id, 6, "自由标签", 0);
+        case 12:
+            return array($tag_list_id, 9, "官制", 0);
+        case 13:
+            return array($tag_list_id, 3, "出处", 0);
+        case 14:
+            return array($tag_list_id, 12, "管理标签", 1);
+        
+        default:
+            return -1;
+    }
+}
+
 
 // 根据 tag 获取 thing 条目数量
 function get_thing_count_by_tag($property_UUID)
@@ -493,7 +545,15 @@ function delete_tag_to_db($tag_uuid)
         return 0;
     }
     
-    // 2. 删除标签
+    // 2.删除标签相关的关注记录
+    $sql_string = "delete from follow where property_UUID = '$tag_uuid'";
+    if (mysql_query($sql_string) === FALSE)
+    {
+        $GLOBALS['log']->error("error: delete_tag_to_db() -- $sql_string 。");
+        return 0;
+    }    
+    
+    // 3. 删除标签
     $sql_string = "delete from property where property_UUID = '$tag_uuid'";
     if (mysql_query($sql_string) === FALSE)
     {
@@ -504,5 +564,42 @@ function delete_tag_to_db($tag_uuid)
     return 1;
 }
 
+// 根据tag uuid 获取tag名称和tag类型。返回值为一个数组，[0]为类型, [1]是名称.
+function get_tag_from_tag_uuid($tag_uuid)
+{
+    $sql_string = "select property_type,property_name from property where property_UUID='$tag_uuid'";
+
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: get_tag_from_tag_uuid() -- $sql_string 。");
+        return 0;
+    }
+    
+    $row = mysql_fetch_array($result);
+    
+    return array($row['property_type'], $row['property_name']);
+}
+
+// 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
+function tag_is_vip($tag_uuid)
+{
+    $tag_array = array();
+    $tag_array = get_tag_from_tag_uuid($tag_uuid);
+    
+    // 1.是否为第一类vip tag。
+    if (($tag_array[0] == 8) && (country_tag_is_exist($tag_array[1]) == 1))
+    {
+        return 1;
+    }
+    
+    // 2.是否为第二类vip tag。
+    if (($tag_array[0] == 7) && (dynasty_tag_is_exist($tag_array[1]) == 1))
+    {
+        return 1;
+    }
+    
+    return 0;
+}
 
 ?>

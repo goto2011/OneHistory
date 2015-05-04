@@ -12,7 +12,7 @@ function get_page_size()
 // 返回每一页的 tag 的数量限制。暂时写死，后续再写活。
 function get_page_tags_size()
 {
-    if (is_adder() || is_deleter() || is_manager)
+    if (is_vip_user())
     {
         $_SESSION['page_tags_size'] = 200;
     }

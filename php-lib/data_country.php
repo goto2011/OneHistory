@@ -7,22 +7,30 @@ $country = array
 (
     array
     (
-        // 史前文明(建立国家或王权前)
+        // 古代文明
         array("古人类遗址"),
         array("远东文明遗址"),
         array("西方文明遗址"),
-        array("其它地区文明遗址"),
-    ),
-    array
-    (
-        // 中东北非中亚
-        array("古埃及"),
         array("古苏美尔"),
+        array("古埃及"),
         array("古赫梯"),
         array("古巴比伦"),
         array("古腓尼基"),
         array("古波斯"),
-        array("古叙利亚"),
+        array("古米诺斯"),
+        array("古希腊"),
+        array("古罗马"),
+        array("日耳曼人"),
+        array("古拜占庭"),
+        array("古印度"),
+        array("班图人文明"),
+        array("黑人文明"),
+        array("古玛雅"),
+        array("古波利尼西亚"),
+    ),
+    array
+    (
+        // 中东北非中亚
         array("犹太人"),
         array("阿拉伯"),
         array("奥斯曼"),
@@ -45,15 +53,12 @@ $country = array
         array("沙特阿拉伯"),
         array("叙利亚"),
         array("土耳其"),
-        array("阿联"),
         array("也门"),
         array("中亚五斯坦"),
     ),
     array
     (
         // 亚洲
-        array("古中国"),
-        array("古印度"),
         array("印度"),
         array("日本"),
         array("朝鲜"),
@@ -77,13 +82,9 @@ $country = array
     array
     (
         // 欧洲
-        array("古米诺斯"),
-        array("古希腊"),
-        array("古罗马"),
-        array("日耳曼人"),
-        array("古拜占庭"),
         array("神圣罗马帝国"),
         array("奥匈帝国"),
+        array("欧盟"),
         array("德国"),
         array("英国"),
         array("法国"),
@@ -96,7 +97,6 @@ $country = array
         array("前南诸国"),
         array("捷克"),
         array("丹麦"),
-        array("爱沙尼亚"),
         array("芬兰"),
         array("希腊"),
         array("匈牙利"),
@@ -116,13 +116,8 @@ $country = array
     array
     (
         // 非洲
-        array("班图人文明"),
-        array("黑人文明"),
-        array("马里帝国"),
-        array("埃塞俄比亚帝国"),
         array("南非"),
         array("阿尔及利亚"),
-        array("刚果（金）"),
         array("刚果"),
         array("布隆迪"),
         array("安哥拉"),
@@ -138,17 +133,11 @@ $country = array
     array
     (
         // 美洲
-        array("古玛雅"),
-        array("古安第斯"),
-        array("古墨西哥"),
-        array("爱斯基摩"),
         array("美国"),
         array("墨西哥"),
         array("加拿大"),
-        array("中美洲"),
+        array("中美洲七国"),
         array("古巴"),
-        array("危地马拉"),
-        array("尼加拉瓜"),
         array("阿根廷"),
         array("玻利维亚"),
         array("巴西"),
@@ -159,14 +148,23 @@ $country = array
         array("秘鲁"),
         array("乌拉圭"),
         array("委内瑞拉"),
+        array("爱斯基摩"),
     ),
     array
     (
         // 大洋洲等
-        array("古波利尼西亚"),
         array("澳大利亚"),
         array("新西兰"),
         array("巴布亚新几内亚"),
+    ),
+    array
+    (
+        // 国际组织
+        array("联合国"),
+        array("东盟"),
+        array("非盟"),
+        array("世界贸易组织"),
+        array("世界银行"),
     ),
     array
     (
@@ -180,7 +178,7 @@ function get_big_country_name($index)
     switch($index)
     {
         case 1:
-            return "史前文明(建立国家或王权前)";
+            return "古代文明";
             break;
         case 2:
             return "中东北非中亚";
@@ -199,6 +197,8 @@ function get_big_country_name($index)
             break;
         case 7:
             return "大洋洲等";
+        case 8:
+            return "国际组织";
             break;
         default:
             return "其它";
@@ -236,6 +236,23 @@ function get_country_name($big_id, $small_id)
 {
     global $country;
     return $country[$big_id - 1][$small_id - 1][0];
+}
+
+// 获取是否存在. =1 表示存在； =0表示不存在。
+function country_tag_is_exist($tag_name)
+{
+    for ($ii = get_big_country_begin(); $ii <= get_big_country_end(); $ii++)
+    {
+        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj)
+        {
+            if(get_country_name($ii, $jj) == $tag_name)
+            {
+                return 1;
+            }
+        }
+    }
+    
+    return 0;
 }
 
 

@@ -22,10 +22,17 @@
     // 删除标签
     else if(!empty($_GET['delete_tag']))
     {
+        // 检查用户权限是否满足，及指定tag是否可删除。
         if(is_deleter())
         {
             $tag_uuid = html_encode($_GET['delete_tag']);
             $function_type = 3;
+            
+            if (tag_is_vip($tag_uuid) == 1)
+            {
+                echo "vip_tag_delete_error";
+                exit;
+            }
         }
         else 
         {

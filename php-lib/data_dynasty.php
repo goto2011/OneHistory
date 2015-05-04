@@ -150,18 +150,12 @@ $dynasty = array
     array
     (
         // 18
-        array("朝鲜"),
         array("南越国"),
-        array("弁韩"),
-        array("马韩"),
-        array("辰韩"),
-        array("百济"),
-        array("新罗"),
-        array("高丽"),
-        array("蒙古"),
+        array("古朝鲜"),
         array("元朝"),
-        array("帖木儿帝国"),
-        array("日本"),
+        array("蒙古"),
+        array("西藏"),
+        array("新疆"),
     ),
     array
     (
@@ -225,6 +219,24 @@ function get_dynasty_name($big_id, $small_id)
 {
     global $dynasty;
     return $dynasty[$big_id - 1][$small_id - 1][0];
+}
+
+
+// 获取是否存在. =1 表示存在； =0表示不存在。
+function dynasty_tag_is_exist($tag_name)
+{
+    for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end(); $ii++)
+    {
+        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj)
+        {
+            if(get_dynasty_name($ii, $jj) == $tag_name)
+            {
+                return 1;
+            }
+        }
+    }
+    
+    return 0;
 }
 
 
