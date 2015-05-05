@@ -113,7 +113,7 @@
         // 传递 item_list.
         $tab_string .= " href='item_list.php?list_type=" . $my_list_type . "' ";
         
-	    return $tab_string;
+		echo $tab_string;
 	}
 ?>
 
@@ -129,6 +129,7 @@
 <div class="easyui-tabs" style="" >
     
 <?php
+/*
     $tag_array = array();
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
@@ -142,7 +143,23 @@
             echo "<div title='$tag_name' style='padding:10px;'" . get_selected_tab($tag_id) . "></div>";
         }
     }
+ */
 ?>
+<div title="全部" 	   style="padding:10px;" <?php get_selected_tab(1); ?> ></div>
+<div title="我的关注"   style="padding:10px;" <?php get_selected_tab(2); ?> ></div>
+<div title="最新标签" 	style="padding:10px;" <?php get_selected_tab(5); ?> ></div>
+<div title="时间分期" 	style="padding:10px;" <?php get_selected_tab(7); ?> ></div>
+<!-- // add， 2015-4-19  -->
+<div title="中国朝代"   style="padding:10px;" <?php get_selected_tab(3); ?> ></div>
+<div title="国家民族"   style="padding:10px;" <?php get_selected_tab(12); ?> ></div>
+<div title="地区城市"   style="padding:10px;" <?php get_selected_tab(10); ?> ></div>
+<div title="人物"       style="padding:10px;" <?php get_selected_tab(9); ?> ></div>
+<div title="领域"       style="padding:10px;" <?php get_selected_tab(6); ?> ></div>
+<div title="事件起止"   style="padding:10px;" <?php get_selected_tab(8); ?> ></div>
+<!-- // add， 2015-4-19 -->
+<div title="官制"     style="padding:10px;" <?php get_selected_tab(4); ?> ></div>
+<div title="自由标签" style="padding:10px;" <?php get_selected_tab(13); ?> ></div>
+<div title="出处"     style="padding:10px;" <?php get_selected_tab(11); ?> ></div>
 
 </div>
 <!-- tab页 end -->

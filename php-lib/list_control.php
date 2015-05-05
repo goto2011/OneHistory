@@ -7,7 +7,7 @@ require_once 'sql.php';
 // 获取 list type 的数量
 function get_list_count()
 {
-    return 13;
+    return 14;
 }
 
 // current list

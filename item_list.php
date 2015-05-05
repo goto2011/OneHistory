@@ -157,6 +157,31 @@ window.onload = function()
         return $result;
     }
 	
+    
+    // add, 2015-5-4
+    // 打印 主题 tag 链接
+    function create_topic_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_topic_begin($index); $ii <= get_small_topic_end($index); $ii++)
+        {
+            $my_name = get_topic_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
+        return $result;
+    }
+    
 	// 打印tag链接
 	function create_tag_link($property_type, $property_UUID, $property_name)
 	{
@@ -176,8 +201,9 @@ window.onload = function()
     // 是否是普通标签区
     function is_normal_tags_zone()
     {
+        // 不是时间分期、中国朝代、国家民族、领域；
         return ((get_current_list_id() != 7) && (get_current_list_id() != 3)
-            && (get_current_list_id() != 12));
+            && (get_current_list_id() != 12) && (get_current_list_id() != 9));
     }
 	
 	// 打印标签区

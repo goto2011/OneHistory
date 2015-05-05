@@ -16,43 +16,42 @@ function tag_list_max()
     return 14;
 }
 
+// tag list 、tag index、tag id 对应关系。
+// [0]表示顺序；
+// [1]表示数据库中的tag type；
+// [2]表示标签名称；
+// [3]表示是标签显示特征（0-normal；1-vip；2-login）。
+
+$tag_control = array(
+    array(1,     -1,     "全部",             0),
+    array(2,     -1,     "我的关注",         0),
+    array(5,     -1,     "最新标签",         0),
+    array(7,     -1,     "时间分期",         0),
+    array(3,      8,      "中国朝代",         0),
+    array(12,     7,      "国家民族",         0),
+    array(6,     10,     "主题",             0),
+    array(10,     5,      "城市地区",         0),
+    array(9,      4,      "人物",             0),
+    array(8,      11,     "关键事件",         0),
+    array(13,     6,      "自由标签",         0),
+    array(4,      9,      "官制",             0),
+    array(11,     3,      "出处",             0),
+    array(14,     12,     "管理标签",         1),
+);
+
+
 // 根据排列顺序给出tag 属性。2015-5-3.
-// [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是标签显示特征（0-normal；1-vip；2-login）。
 function get_tag_type_from_index($tag_list_id)
 {
-    switch ($tag_list_id)
+    global $tag_control;
+    
+    if($tag_list_id > count($tag_control))
     {
-        case 1:
-            return array($tag_list_id, -1, "全部", 0);
-        case 2:
-            return array($tag_list_id, -1, "我的关注", 0);
-        case 3:
-            return array($tag_list_id, -1, "最新标签", 0);
-        case 4:
-            return array($tag_list_id, -1, "时间分期", 0);
-        case 5:
-            return array($tag_list_id, 8, "中国朝代", 0);
-        case 6:
-            return array($tag_list_id, 7, "国家民族", 0);
-        case 7:
-            return array($tag_list_id, 10, "领域", 0);
-        case 8:
-            return array($tag_list_id, 5, "城市地区", 0);
-        case 9:
-            return array($tag_list_id, 4, "人物", 0);
-        case 10:
-            return array($tag_list_id, 11, "关键事件", 0);
-        case 11:
-            return array($tag_list_id, 6, "自由标签", 0);
-        case 12:
-            return array($tag_list_id, 9, "官制", 0);
-        case 13:
-            return array($tag_list_id, 3, "出处", 0);
-        case 14:
-            return array($tag_list_id, 12, "管理标签", 1);
-        
-        default:
-            return -1;
+        return -1;
+    }
+    else
+    {
+        return $tag_control[$tag_list_id - 1];
     }
 }
 
