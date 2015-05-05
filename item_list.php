@@ -69,14 +69,11 @@ window.onload = function()
         $tag_array = array();
         for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
         {
-            $tag_array = get_tag_type_from_index($ii);
-            
-            // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称。
-            if (($tag_array != -1) && ($tag_array[1] > 0) 
-                && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+            if ((is_show_search_add($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))
             {
-                $tag_id = $tag_array[1];
-                $tag_name = $tag_array[2];
+                $tag_id = get_tag_id_from_index($ii);
+                $tag_name = get_tag_list_name_from_index($ii);
+                
                 echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
             }
         }
@@ -185,11 +182,16 @@ window.onload = function()
 	// 打印tag链接
 	function create_tag_link($property_type, $property_UUID, $property_name)
 	{
-		if(($property_type == 1) || ($property_type == 2))
+		if($property_type == 1)
 		{
 			return "<a href='item_frame.php?property_UUID=" . 
-				$property_UUID . "'>[". $property_name . "]</a>&nbsp;&nbsp;";
+				$property_UUID . "'>{". $property_name . "</a>&nbsp;&nbsp;";
 		}
+        else if ($property_type == 2)
+        {
+            return "<a href='item_frame.php?property_UUID=" . 
+                $property_UUID . "'>". $property_name . "}</a>&nbsp;&nbsp;";
+        }
 		else
 		{
 			return "<a href='item_frame.php?property_UUID=" . 
@@ -197,15 +199,6 @@ window.onload = function()
 		}
 	}
     
-    // add, 2015-4-19
-    // 是否是普通标签区
-    function is_normal_tags_zone()
-    {
-        // 不是时间分期、中国朝代、国家民族、领域；
-        return ((get_current_list_id() != 7) && (get_current_list_id() != 3)
-            && (get_current_list_id() != 12) && (get_current_list_id() != 9));
-    }
-	
 	// 打印标签区
 	function print_tags_zone()
 	{
@@ -217,7 +210,7 @@ window.onload = function()
         
         // add, 2015-4-19
         // 打印一般的标签区
-        if(is_normal_tags_zone())
+        if(is_key_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据
             $result = get_tags_db(get_current_list_id(), get_page_tags_size());
@@ -270,6 +263,21 @@ window.onload = function()
             echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
+        else if(is_topic())
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
+            {
+                echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_topic_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
     
 		echo "</div>";
 	}
@@ -295,7 +303,7 @@ window.onload = function()
 		return $result_string;
 	}
     
-    // 判断当前页号是否显示.
+    // 判断当前页号是否显示. 如果全部显示就太长了。
     function page_is_show($curr_page, $showing_page, $total_pages)
     {
         if ($total_pages <= 15)
@@ -453,14 +461,10 @@ window.onload = function()
         $tag_array = array();
         for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
         {
-            $tag_array = get_tag_type_from_index($ii);
-            
-            // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是否为管理标签。
-            if (($tag_array != -1) && ($tag_array[1] > 0) 
-                && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+            if ((is_show_search_add($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))
             {
-                $tag_id = $tag_array[1];
-                $tag_name = $tag_array[2];
+                $tag_id = get_tag_id_from_index($ii);
+                $tag_name = get_tag_list_name_from_index($ii);
                 echo "  <option value='$tag_id'>$tag_name</option>";
             }
         }

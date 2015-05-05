@@ -95,86 +95,31 @@ function get_thing_count($list_type)
                 where user_UUID = '" . get_user_id() . "'))";
             break;
 
-        // add, 2015-4-19
-        // 中国朝代标签
+        // 最新标签，指1天内的
         case 3:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 8))";
-            break;
-
-        // add, 2015-4-19
-        // 官制
-        case 4:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 9))";
-            break;
-
-        // 最新，指1天内的
-        case 5:
             $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
                     where property_UUID in(select property_UUID from property
                     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))";
             break;
 
-        // add, 2015-4-19
-        // 事件类型
-        case 6:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 10))";
-            break;
-
-        // 分期
-        case 7:
+        // 事件分期
+        case 4:
             $sql_string = "select count(*) from thing_time";
             break;
 
-        // 事件始终
-        case 8:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 1 or property_type = 2))";
-            break;
-
-        // 人物
-        case 9:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 4))";
-            break;
-
-        // 地理
-        case 10:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 5))";
-            break;
-
-        // 出处
-        case 11:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 3))";
-            break;
-            
-        // 国家民族
-        case 12:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 7))";
-            break;
-            
-        // 自由标签
-        case 13:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 6))";
-            break;
         default:
-            $GLOBALS['log']->error("error: get_thing_count() -- list_type error 。");
-            return -1;
+            $my_tag_id = get_tag_id_from_index($list_type);
+            if ($my_tag_id != -2)
+            {
+                $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
+                    where property_UUID in(select property_UUID from property
+                    where property_type = $my_tag_id))";
+            }
+            else
+            {
+                echo "string";    $GLOBALS['log']->error("error: get_thing_count() -- list_type error 。");
+                return -1;
+            }
     }
 
     $result = mysql_query($sql_string);
@@ -206,96 +151,31 @@ function get_thing_item_db($list_type, $offset, $page_size)
                 where property_UUID in(select property_UUID from follow
                 where user_UUID = '" . get_user_id() . "')) $order_sub ";
             break;
-
-        // add, 2015-4-19
-        // 中国朝代标签
-        case 3:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from property
-                where property_type = 8)) $order_sub ";
-            break;
-
-        // add, 2015-4-19
-        // 官制
-        case 4:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from property
-                where property_type = 9)) $order_sub ";
-            break;
-    
+            
         // 最新，指7天内的
-        case 5:
+        case 3:
             $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from property 
                 where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time))) $order_sub ";
             break;
-    
-        // add, 2015-4-19
-        // 事件类型
-        case 6:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from property
-                where property_type = 10)) $order_sub ";
-            break;
-    
+
         // 分期
-        case 7:
+        case 4:
             $sql_string = "select * from thing_time $order_sub";
             break;
-    
-        // 事件
-        case 8:
-            $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from property 
-                where property_type = 1 or property_type = 2)) $order_sub ";
-            break;
-    
-        // 人物
-        case 9:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from property
-                where property_type = 4)) $order_sub ";
-            break;
-    
-        // 地理
-        case 10:
-            $sql_string = "select * from thing_time 
-                where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 5)) $order_sub ";
-            break;
-    
-        // 出处
-        case 11:
-            $sql_string = "select * from thing_time 
-                where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 3)) $order_sub ";
-            break;
 
-        // 国家民族
-        case 12:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 7)) $order_sub ";
-            break;
-
-        // 国家民族
-        case 13:
-            $sql_string = "select * from thing_time
-                where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from property
-                where property_type = 6)) $order_sub ";
-            break;
-            
         default:
-            $GLOBALS['log']->error("error: get_thing_item_db() -- list_type error 。");
-            return NULL;
+            $my_tag_id = get_tag_id_from_index($list_type);
+            if ($my_tag_id != -2)
+            {
+                $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property
+                    where property_UUID in(select property_UUID from property where property_type = $my_tag_id)) $order_sub ";
+            }
+            else
+            {
+                $GLOBALS['log']->error("error: get_thing_item_db() -- list_type error 。");
+                return NULL;
+            }
     }
     
     $result = mysql_query($sql_string);

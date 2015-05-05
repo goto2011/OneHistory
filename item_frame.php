@@ -132,14 +132,11 @@
     $tag_array = array();
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
-        $tag_array = get_tag_type_from_index($ii);
-        
-        // [0]表示顺序；[1]表示数据库中的tag type；[2]表示标签名称；[3]表示是否为管理标签。
-        if (($tag_array != -1) && (($tag_array[3] != 1) || (($tag_array[3] == 1) && (is_vip_user()))))
+        // 是否显示在tab list中。
+        if ((is_show_list_tab($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))
         {
-            $tag_id = $tag_array[0];
-            $tag_name = $tag_array[2];
-            echo "<div title='$tag_name' style='padding:10px;'" . get_selected_tab($tag_id) . "></div>";
+            $tag_name = get_tag_list_name_from_index($ii);
+            echo "<div title='$tag_name' style='padding:10px;'" . get_selected_tab($ii) . "></div>";
         }
     }
 ?>

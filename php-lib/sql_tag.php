@@ -13,47 +13,214 @@ function tag_list_min()
 // 获取tag list 的最大值
 function tag_list_max()
 {
-    return 14;
+    global $tag_control;
+    return count($tag_control);
 }
 
 // tag list 、tag index、tag id 对应关系。
-// [0]表示顺序；
-// [1]表示数据库中的tag type；
-// [2]表示标签名称；
-// [3]表示是标签显示特征（0-normal；1-vip；2-login）。
-
+// [0]表示数据库中的tag type；
+// [1]表示标签名称；
+// [2]表示是标签显示特征（0-非tag tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
+// [3]表示是否为key tag, 0不是，1是。
 $tag_control = array(
-    array(1,     -1,     "全部",             0),
-    array(2,     -1,     "我的关注",         0),
-    array(5,     -1,     "最新标签",         0),
-    array(7,     -1,     "时间分期",         0),
-    array(3,      8,      "中国朝代",         0),
-    array(12,     7,      "国家民族",         0),
-    array(6,     10,     "主题",             0),
-    array(10,     5,      "城市地区",         0),
-    array(9,      4,      "人物",             0),
-    array(8,      11,     "关键事件",         0),
-    array(13,     6,      "自由标签",         0),
-    array(4,      9,      "官制",             0),
-    array(11,     3,      "出处",             0),
-    array(14,     12,     "管理标签",         1),
+    array(-1,     "全部",              0,   0),
+    array(-1,     "我的关注",          0,   0),
+    array(-1,     "最新标签",          0,   0),
+    array(-1,     "时间分期",          0,   1),   // key tag.
+    array(8,      "中国朝代",         1,    1),    // key tag.
+    array(7,      "国家民族",         1,    1),    // key tag.
+    array(10,     "专题",             1,    1),    // key tag.
+    array(5,      "城市地区",         1,    0),    // key tag.
+    array(4,      "人物",             1,    0),   // key tag.
+    array(9,      "官制",             1,    0),   // key tag.
+    array(11,     "关键事件",         1,    0),
+    array(6,      "自由标签",         1,    0),
+    array(3,      "出处",             1,    0),
+    array(12,     "管理标签",         3,    0),
+    array(1,      "事件开始",         2,    0),
+    array(2,      "事件结束",         2,    0),
 );
 
-
 // 根据排列顺序给出tag 属性。2015-5-3.
-function get_tag_type_from_index($tag_list_id)
+function get_tag_list_from_index($tag_index_id)
 {
     global $tag_control;
     
-    if($tag_list_id > count($tag_control))
+    if($tag_index_id > count($tag_control))
     {
         return -1;
     }
     else
     {
-        return $tag_control[$tag_list_id - 1];
+        return $tag_control[$tag_index_id - 1];
     }
 }
+
+// 获取 tag id（数据库）。 返回-2表示非法值。
+function get_tag_id_from_index($tag_index_id)
+{
+    $my_tag_list = get_tag_list_from_index($tag_index_id); 
+    if ($my_tag_list != -1)
+    {
+        return $my_tag_list[0];
+    }
+    else 
+    {
+        return -2;
+    }
+}
+
+// 获取 tag 名称。 返回-2表示非法值。
+function get_tag_list_name_from_index($tag_index_id)
+{
+    $my_tag_list = get_tag_list_from_index($tag_index_id); 
+    if ($my_tag_list != -1)
+    {
+        return $my_tag_list[1];
+    }
+    else 
+    {
+        return -2;
+    }
+}
+
+// 获取显示属性。 返回-2表示非法值。
+function get_tag_show_type_from_index($tag_index_id)
+{
+    $my_tag_list = get_tag_list_from_index($tag_index_id); 
+    if ($my_tag_list != -1)
+    {
+        return $my_tag_list[2];
+    }
+    else 
+    {
+        return -2;
+    }
+}
+
+// 获取key tag属性。 返回-2表示非法值。
+function get_key_tag_type_from_index($tag_index_id)
+{
+    $my_tag_list = get_tag_list_from_index($tag_index_id); 
+    if ($my_tag_list != -1)
+    {
+        return $my_tag_list[3];
+    }
+    else 
+    {
+        return -2;
+    }
+}
+
+// 是否显示在list tab界面
+function is_show_list_tab($tag_index_id)
+{
+    $tag_show = get_tag_show_type_from_index($tag_index_id);
+    
+    if (($tag_show == 0) || ($tag_show == 1))
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// 是否显示在检索、add tag等界面下
+function is_show_search_add($tag_index_id)
+{
+    $tag_show = get_tag_show_type_from_index($tag_index_id);
+    
+    if ($tag_show == 1)
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// 是否为vip用户才显示的tab界面
+function is_vip_user_show_tab($tag_index_id)
+{
+    $tag_show = get_tag_show_type_from_index($tag_index_id);
+    
+    // 3是管理界面
+    if ($tag_show == 3)
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// 是否显示在 function-tag edit页面
+function is_tag_edit_show_tab($tag_index_id)
+{
+    $tag_show = get_tag_show_type_from_index($tag_index_id);
+    
+    if (($tag_show == 1) || ($tag_show == 2))
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// 是否是 key tag.
+function is_key_tag_tab($tag_index_id)
+{
+    $tag_show = get_key_tag_type_from_index($tag_index_id);
+    
+    if ($tag_show == 1)
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
+    }
+}
+
+// 是否是"全部"tab 页
+function is_total()
+{
+    return (get_current_list_id() == 1);
+}
+
+// 判断当前界面是否是 period
+function is_period()
+{
+    return (get_current_list_id() == 4);
+}
+
+// 判断当前是否是 中国朝代 页面
+function is_dynasty()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 8);
+}
+
+/* 判断当前是否是 国家民族 页面 */
+function is_country()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 7);
+}
+
+// 判断当前是否是 专题 页面
+function is_topic()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 10);
+}
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
 // 根据 tag 获取 thing 条目数量
@@ -302,80 +469,32 @@ function get_tags_db($list_type, $tags_show_limit)
                     where user_UUID = '" . get_user_id() . "') order by hot_index desc
                     limit 0, " . $tags_show_limit;
             break;
-        
-        // add, 2015-4-19
-        // 中国朝代标签
-        case 3:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 8 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-
-        // add, 2015-4-19
-        // 官制
-        case 4:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 9 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
 
         // 最新，指1天内的
-        case 5:
+        case 3:
             $sql_string = "select property_UUID, property_name, property_type from property 
                     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time) order by add_time DESC 
                     limit 0, " . $tags_show_limit;
             break;
 
-        // add, 2015-4-19
-        // 事件类型
-        case 6:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 10 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-
         // 分期
-        case 7:
+        case 4:
             $sql_string = "select property_UUID, property_name, property_type from property
                      limit 0, " . $tags_show_limit;
             break;
 
-        // 事件起止
-        case 8:
-            $sql_string = "select property_UUID, property_name, property_type from property 
-                    where property_type = 1 or property_type = 2  order by hot_index desc
-                    limit 0, " . $tags_show_limit;
-            break;
-
-        // 人物
-        case 9:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 4 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-
-        // 地理
-        case 10:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 5 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-
-        // 出处
-        case 11:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 3 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-            
-        // 国家民族
-        case 12:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 7 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
-
-        // 自由标签
-        case 13:
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type = 6 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
-            break;
         default:
-            $GLOBALS['log']->error("error: get_tags_db() -- list_type error 。");
-            return NULL;
+            $my_tag_id = get_tag_id_from_index($list_type);
+            if ($my_tag_id != -2)
+            {
+                $sql_string = "select property_UUID, property_name, property_type from property where property_type = $my_tag_id 
+                     order by hot_index desc limit 0, " . $tags_show_limit;
+            }
+            else 
+            {
+                $GLOBALS['log']->error("error: get_tags_db() -- list_type error 。");
+                return NULL;
+            }
     }
     
     $result = mysql_query($sql_string);

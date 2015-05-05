@@ -7,7 +7,7 @@ require_once 'sql.php';
 // 获取 list type 的数量
 function get_list_count()
 {
-    return 14;
+    return tag_list_max();
 }
 
 // current list
@@ -95,12 +95,6 @@ function check_list_param()
     return true;
 }
 
-// 是否是"全部"tab 页
-function is_total()
-{
-    return (get_current_list_id() == 1);
-}
-
 // 是否显示指定 tag list.
 function is_tag()
 {
@@ -153,16 +147,10 @@ function get_item_index()
     return $list_info['item_index'];
 }
 
-// 判断当前界面是否是 period
-function is_period()
-{
-    return (get_current_list_id() == 7);
-}
-
 // 判断是不是 period tag.
 function is_period_tag()
 {
-    return ((get_current_list_id() == 7) && (get_period_big_index() != -1) 
+    return ((is_period() == 1) && (get_period_big_index() != -1) 
         && (get_period_small_index() != -1));
 }
 
@@ -190,18 +178,6 @@ function get_period_small_index()
 {
     $list_info = get_current_list();
     return $list_info['period_small_index'];
-}
-
-// 判断当前是否是 中国朝代 页面
-function is_dynasty()
-{
-    return (get_current_list_id() == 3);
-}
-
-// 判断当前是否是 国家民族 页面
-function is_country()
-{
-    return (get_current_list_id() == 12);
 }
 
 ?>
