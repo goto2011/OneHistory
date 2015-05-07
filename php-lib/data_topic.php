@@ -31,6 +31,7 @@ $topic = array
     (
         // 科学技术
         array("发明创造"),
+        array("诺贝尔奖"),
         array("天文"),
         array("物理"),
         array("基因"),
@@ -38,15 +39,20 @@ $topic = array
         array("化学"),
         array("数学逻辑学"),
         array("地理"),
+        array("医学"),
+        array("心理学"),
     ),
     array
     (
         // 艺术文化体育
         array("文学"),
         array("小说"),
+        array("电影电视剧"),
+        array("奥斯卡奖"),
         array("书法绘画"),
         array("体育"),
         array("足球"),
+        array("奥运会"),
     ),
     array
     (
@@ -65,18 +71,23 @@ $topic = array
         array("存在主义哲学"),
         array("后现代哲学"),
         array("儒家"),
-        array("中国其它"),
+        array("中国其它哲学"),
         array("马克思主义哲学"),
     ),
     array
     (
         // 社会
         array("社会"),
+        array("婚嫁情感"),
+        array("道德伦理"),
+        array("户口"),
     ),
     array
     (
         // 农业
+        array("农业"),
         array("土地制度"),
+        array("水利"),
     ),
     array
     (
@@ -85,6 +96,7 @@ $topic = array
         array("金融业"),
         array("IT技术"),
         array("IT行业"),
+        array("私有制"),
     ),
     array
     (
@@ -96,7 +108,11 @@ $topic = array
     (
         // 政治外交
         array("政治"),
+        array("民主选举"),
+        array("国家制度"),
+        array("法律犯罪"),
         array("国际关系"),
+        array("战略思想"),
     ),
     array
     (

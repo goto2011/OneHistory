@@ -238,7 +238,7 @@ function ajax_do()
 			
 			if(!empty($property_name_array))
 			{
-				echo get_string_from_array($property_name_array);
+				return get_string_from_array($property_name_array);
 			}
 		}
 	}
@@ -291,34 +291,38 @@ function ajax_do()
 
 <table class="normal">
 
-<tr>
-<td width='400'><p class="thick">事件开始标签：<input id='start_tags' 		name='start_tags' 	type='text' 	class='tags'  
-	value="<?php flash_tags($is_edit, 1, $thing_uuid); ?>"></p></td>
+<?php
+    $my_index = 0;
+    
+    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
+    {
+        if (is_show_input_tag($ii) == 1)
+        {
+            $tag_id = get_tag_id_from_index($ii);
+            $tag_name = get_tag_list_name_from_index($ii);
+            $tag_input_id = get_tag_input_id_from_index($ii);
+            
+            $my_print = "<p class='thick'> $tag_name:<input id='$tag_input_id' 
+                    name='$tag_input_id' type='text' class='tags' value='" 
+                    . flash_tags($is_edit, $tag_id, $thing_uuid) . "'></p></td>";
+            
+            if($my_index % 2 == 0)
+            {
+                echo "<tr class='tag_normal'><td width='400'>";
+                echo $my_print;
+                $my_index++;
+            }
+            else 
+            {
+                echo "<td width='400'>";
+                echo $my_print;
+                echo "</tr>";
+                $my_index++;
+            }
+        }
+    } 
+?>
 
-<td width='400'><p class="thick">事件结束标签：<input id='end_tags' 		name='end_tags' 	type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 2, $thing_uuid); ?>"></p></td>
-</tr>
-
-<tr>
-<td><p class="thick">国家/朝代/民族/文明标签：<input id='country_tags' 		name='country_tags' 	type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 7, $thing_uuid); ?>"></p></td>
-
-<td><p class="thick">地理标签：<input id='geography_tags' 	name='geography_tags' type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 5, $thing_uuid); ?>"></p></td>
-</tr>
-
-<tr>
-<td><p class="thick">人物标签：<input id='person_tags' 		name='person_tags' 	type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 4, $thing_uuid); ?>"></p></td>
-	
-<td><p class="thick">出处标签：<input id='source_tags' 		name='source_tags' 	type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 3, $thing_uuid); ?>"></p></td>
-</tr>
-
-<tr>
-<td colspan="2"><p class="thick">自由标签：<input id='free_tags' 		name='free_tags' 	type='text' 	class='tags' 
-	value="<?php flash_tags($is_edit, 6, $thing_uuid); ?>"></p></td>
-</tr>
 </table>
 
 <p style="text-align:center"><a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a>

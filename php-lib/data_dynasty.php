@@ -155,6 +155,7 @@ $dynasty = array
         array("元朝"),
         array("蒙古"),
         array("西藏"),
+        array("台湾"),
         array("新疆"),
     ),
     array

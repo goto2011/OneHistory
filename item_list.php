@@ -66,7 +66,6 @@ window.onload = function()
         echo "&nbsp;&nbsp;&nbsp;<nobr class='normal'>标签类型: ";
         echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='1' checked='checked'>全部";
         
-        $tag_array = array();
         for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
         {
             if ((is_show_search_add($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))
@@ -153,8 +152,7 @@ window.onload = function()
         
         return $result;
     }
-	
-    
+
     // add, 2015-5-4
     // 打印 主题 tag 链接
     function create_topic_link($index, &$tags_db)
@@ -163,6 +161,30 @@ window.onload = function()
         for ($ii = get_small_topic_begin($index); $ii <= get_small_topic_end($index); $ii++)
         {
             $my_name = get_topic_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
+        return $result;
+    }
+    
+    // add, 2015-5-6
+    // 打印 主题 tag 链接
+    function create_city_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_city_begin($index); $ii <= get_small_city_end($index); $ii++)
+        {
+            $my_name = get_city_name($index, $ii);
             $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
             
             if ($my_uuid != "")
@@ -276,6 +298,21 @@ window.onload = function()
             
             // 最后打印其它
             echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
+        else if(is_city())
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
+            {
+                echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_city_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
     
@@ -458,7 +495,6 @@ window.onload = function()
         echo "<select name='tag_type'>";
         
         // add, 2015-5-3
-        $tag_array = array();
         for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
         {
             if ((is_show_search_add($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))

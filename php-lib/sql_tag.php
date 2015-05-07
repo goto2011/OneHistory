@@ -21,24 +21,25 @@ function tag_list_max()
 // [0]表示数据库中的tag type；
 // [1]表示标签名称；
 // [2]表示是标签显示特征（0-非tag tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
-// [3]表示是否为key tag, 0不是，1是。
+// [3]表示是否为key tag (0不是，1是)。
+// [4]表示tag 输入框的id。
 $tag_control = array(
-    array(-1,     "全部",              0,   0),
-    array(-1,     "我的关注",          0,   0),
-    array(-1,     "最新标签",          0,   0),
-    array(-1,     "时间分期",          0,   1),   // key tag.
-    array(8,      "中国朝代",         1,    1),    // key tag.
-    array(7,      "国家民族",         1,    1),    // key tag.
-    array(10,     "专题",             1,    1),    // key tag.
-    array(5,      "城市地区",         1,    0),    // key tag.
-    array(4,      "人物",             1,    0),   // key tag.
-    array(9,      "官制",             1,    0),   // key tag.
-    array(11,     "关键事件",         1,    0),
-    array(6,      "自由标签",         1,    0),
-    array(3,      "出处",             1,    0),
-    array(12,     "管理标签",         3,    0),
-    array(1,      "事件开始",         2,    0),
-    array(2,      "事件结束",         2,    0),
+    array(-1,     "全部",              0,   0,      ""),
+    array(-1,     "我的关注",          0,   0,      ""),
+    array(-1,     "最新标签",          0,   0,      ""),
+    array(-1,     "时间分期",          0,   1,      ""),   // key tag.
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
+    array(10,     "专题",             1,    1,      "topic_tags"),    // key tag.
+    array(5,      "城市地区",         1,    1,      "geography_tags"),    // key tag.
+    array(4,      "人物",             1,    0,      "person_tags"),   // key tag.
+    array(9,      "官制",             1,    0,      "office_tags"),   // key tag.
+    array(11,     "关键事件",         1,    0,      "key_tags"),
+    array(6,      "自由标签",         1,    0,      "free_tags"),
+    array(3,      "出处",             1,    0,      "source_tags"),
+    array(12,     "管理标签",         3,    0,      ""),
+    array(1,      "事件开始",         2,    0,      "start_tags"),
+    array(2,      "事件结束",         2,    0,      "end_tags"),
 );
 
 // 根据排列顺序给出tag 属性。2015-5-3.
@@ -109,6 +110,35 @@ function get_key_tag_type_from_index($tag_index_id)
     else 
     {
         return -2;
+    }
+}
+
+// 获取 tag input id 属性。 返回""表示非法值。
+function get_tag_input_id_from_index($tag_index_id)
+{
+    $my_tag_list = get_tag_list_from_index($tag_index_id); 
+    if ($my_tag_list != -1)
+    {
+        return $my_tag_list[4];
+    }
+    else 
+    {
+        return "";
+    }
+}
+
+// 是否显示在tag input界面上
+function is_show_input_tag($tag_index_id)
+{
+    $tag_show = get_tag_show_type_from_index($tag_index_id);
+    
+    if (($tag_show == 1) || ($tag_show == 2))
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
     }
 }
 
@@ -217,6 +247,13 @@ function is_topic()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 10);
 }
+
+// 判断当前是否是 city 页面
+function is_city()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 5);
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////

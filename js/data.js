@@ -185,7 +185,7 @@ $(function() {
 		onAddTag: onAddTag
 	});
 	
-	$('#class_tags').tagsInput({
+	$('#topic_tags').tagsInput({
 		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,
@@ -193,6 +193,13 @@ $(function() {
 		onAddTag: onAddTag
 	});
 		
+	$('#key_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
 // Uncomment this line to see the callback functions in action
 //			$('input.tags').tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag,onChange: onChangeTag});		
 
