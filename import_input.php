@@ -150,6 +150,10 @@ function tags_check()
     ret += tag_check("person_tags", document.getElementById("person_tags").value);
     ret += tag_check("source_tags", document.getElementById("source_tags").value);
     ret += tag_check("free_tags", document.getElementById("free_tags").value);
+    ret += tag_check("dynasty_tags", document.getElementById("dynasty_tags").value);
+    ret += tag_check("topic_tags", document.getElementById("topic_tags").value);
+    ret += tag_check("office_tags", document.getElementById("office_tags").value);
+    ret += tag_check("key_tags", document.getElementById("key_tags").value);
     
     return ret;
 }
@@ -177,7 +181,11 @@ function ajax_do(operate_type)
             'geography_tags':document.getElementById("geography_tags").value,
             'person_tags'   :document.getElementById("person_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
-            'free_tags'     :document.getElementById("free_tags").value
+            'free_tags'     :document.getElementById("free_tags").value,
+            'dynasty_tags'  :document.getElementById("dynasty_tags").value,
+            'topic_tags'    :document.getElementById("topic_tags").value,
+            'office_tags'   :document.getElementById("office_tags").value,
+            'key_tags'      :document.getElementById("key_tags").value
         },
         async:false,
         method:'POST',
@@ -263,16 +271,14 @@ function ajax_do(operate_type)
             {
                 echo "<tr class='tag_normal'><td width='400'>";
                 echo $my_print;
-                $my_index++;
             }
             else 
             {
                 echo "<td width='400'>";
                 echo $my_print;
                 echo "</tr>";
-                $my_index++;
             }
-            
+            $my_index++;
         }
     } 
 ?>

@@ -35,11 +35,11 @@ $tag_control = array(
     array(4,      "人物",             1,    0,      "person_tags"),   // key tag.
     array(9,      "官制",             1,    0,      "office_tags"),   // key tag.
     array(11,     "关键事件",         1,    0,      "key_tags"),
-    array(6,      "自由标签",         1,    0,      "free_tags"),
     array(3,      "出处",             1,    0,      "source_tags"),
     array(12,     "管理标签",         3,    0,      ""),
     array(1,      "事件开始",         2,    0,      "start_tags"),
     array(2,      "事件结束",         2,    0,      "end_tags"),
+    array(6,      "自由标签",         1,    0,      "free_tags"),
 );
 
 // 根据排列顺序给出tag 属性。2015-5-3.
@@ -299,46 +299,17 @@ function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
     
-    if(!empty($tags_array['start_tags']))
+    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
-        $tags_insert_count += insert_tags(html_encode($tags_array['start_tags']),   1, $thing_uuid);
-    }
-    if(!empty($tags_array['end_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['end_tags']),     2, $thing_uuid);
-    }
-    if(!empty($tags_array['source_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['source_tags']),  3, $thing_uuid);
-    }
-    if(!empty($tags_array['person_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['person_tags']),  4, $thing_uuid);
-    }
-    if(!empty($tags_array['geography_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['geography_tags']), 5, $thing_uuid);
-    }
-    if(!empty($tags_array['free_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['free_tags']),    6, $thing_uuid);
-    }
-    if(!empty($tags_array['country_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['country_tags']), 7, $thing_uuid);
-    }
-    // add, 2015-4-19
-    if(!empty($tags_array['dynasty_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['dynasty_tags']), 8, $thing_uuid);
-    }
-    if(!empty($tags_array['office_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['office_tags']), 9, $thing_uuid);
-    }
-    if(!empty($tags_array['type_tags']))
-    {
-        $tags_insert_count += insert_tags(html_encode($tags_array['type_tags']), 10, $thing_uuid);
+        if (is_show_input_tag($ii) == 1)
+        {
+            $tag_input_id = get_tag_input_id_from_index($ii);
+            if(!empty($tags_array[$tag_input_id]))
+            {
+                $tag_id = get_tag_id_from_index($ii);
+                $tags_insert_count += insert_tags($tags_array[$tag_input_id], $tag_id, $thing_uuid);
+            }
+        }
     }
     
     return $tags_insert_count;

@@ -162,7 +162,7 @@ $(function() {
 	});
 	
 	$('#free_tags').tagsInput({
-		width: '350px',
+		width: '750px',
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',

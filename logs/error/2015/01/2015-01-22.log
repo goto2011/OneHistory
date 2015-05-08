@@ -1,1 +1,0 @@
-2015/01/22 13:37:13 ERROR [/Users/duangan/Sites/localhost/import_do.php] ::1 """error: insert_thing_to_db() -- <br />Incorrect string value: '\xF0\xA8\xAE\x81\xEF\xBC...' for column 'thing' at row 1"""
