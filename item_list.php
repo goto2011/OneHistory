@@ -201,6 +201,30 @@ window.onload = function()
         return $result;
     }
     
+    // add, 2015-5-8
+    // 打印 主题 person 链接
+    function create_person_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_person_begin($index); $ii <= get_small_person_end($index); $ii++)
+        {
+            $my_name = get_person_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
+        return $result;
+    }
+    
 	// 打印tag链接
 	function create_tag_link($property_type, $property_UUID, $property_name)
 	{
@@ -232,7 +256,7 @@ window.onload = function()
         
         // add, 2015-4-19
         // 打印一般的标签区
-        if(is_key_tag_tab(get_current_list_id()) == 0)
+        if(is_vip_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据
             $result = get_tags_db(get_current_list_id(), get_page_tags_size());
@@ -313,6 +337,21 @@ window.onload = function()
             
             // 最后打印其它
             echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
+        else if(is_person())
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
+            {
+                echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_person_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
     

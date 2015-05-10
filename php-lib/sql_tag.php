@@ -27,13 +27,13 @@ $tag_control = array(
     array(-1,     "全部",              0,   0,      ""),
     array(-1,     "我的关注",          0,   0,      ""),
     array(-1,     "最新标签",          0,   0,      ""),
-    array(-1,     "时间分期",          0,   1,      ""),   // key tag.
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
-    array(10,     "专题",             1,    1,      "topic_tags"),    // key tag.
-    array(5,      "城市地区",         1,    1,      "geography_tags"),    // key tag.
-    array(4,      "人物",             1,    0,      "person_tags"),   // key tag.
-    array(9,      "官制",             1,    0,      "office_tags"),   // key tag.
+    array(-1,     "时间分期",          0,   1,      ""),                // vip tag.
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
+    array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
+    array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
+    array(4,      "人物",             1,    1,      "person_tags"),   // vip tag.
+    array(9,      "官制",             1,    0,      "office_tags"),   // vip tag.
     array(11,     "关键事件",         1,    0,      "key_tags"),
     array(3,      "出处",             1,    0,      "source_tags"),
     array(12,     "管理标签",         3,    0,      ""),
@@ -41,6 +41,7 @@ $tag_control = array(
     array(2,      "事件结束",         2,    0,      "end_tags"),
     array(6,      "自由标签",         1,    0,      "free_tags"),
 );
+
 
 // 根据排列顺序给出tag 属性。2015-5-3.
 function get_tag_list_from_index($tag_index_id)
@@ -203,8 +204,8 @@ function is_tag_edit_show_tab($tag_index_id)
     }
 }
 
-// 是否是 key tag.
-function is_key_tag_tab($tag_index_id)
+// 是否是 vip tag.
+function is_vip_tag_tab($tag_index_id)
 {
     $tag_show = get_key_tag_type_from_index($tag_index_id);
     
@@ -254,6 +255,11 @@ function is_city()
     return (get_tag_id_from_index(get_current_list_id()) == 5);
 }
 
+// 判断当前是否是 person 页面
+function is_person()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 4);
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -351,7 +357,7 @@ function insert_tag($tag_name, $tag_type, $thing_uuid)
         $tag_uuid = $row['property_UUID'];
     }
 
-    // 插入事件-标签表
+    // 插入事件-标签表. 先检查是否存在。
     $sql_string = "select property_UUID from thing_property
         where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid'";
 
@@ -708,24 +714,85 @@ function get_tag_from_tag_uuid($tag_uuid)
 }
 
 // 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
+/*
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
+    array(10,     "专题",             1,    1,      "topic_tags"),      // key tag.
+    array(5,      "城市地区",         1,    1,      "geography_tags"),  // key tag.
+    array(4,      "人物",             1,    1,      "person_tags"),     // key tag.
+ */
 function tag_is_vip($tag_uuid)
 {
     $tag_array = array();
     $tag_array = get_tag_from_tag_uuid($tag_uuid);
     
-    // 1.是否为第一类vip tag。
     if (($tag_array[0] == 8) && (country_tag_is_exist($tag_array[1]) == 1))
     {
         return 1;
     }
     
-    // 2.是否为第二类vip tag。
     if (($tag_array[0] == 7) && (dynasty_tag_is_exist($tag_array[1]) == 1))
     {
         return 1;
     }
     
+    if (($tag_array[0] == 10) && (topic_tag_is_exist($tag_array[1]) == 1))
+    {
+        return 1;
+    }
+    
+    if (($tag_array[0] == 5) && (city_tag_is_exist($tag_array[1]) == 1))
+    {
+        return 1;
+    }
+    
+    if (($tag_array[0] == 4) && (person_tag_is_exist($tag_array[1]) == 1))
+    {
+        return 1;
+    }
+    
     return 0;
+}
+
+// 将vip tag 作为关键字自动检索。-1表示失败。
+/*
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
+    array(10,     "专题",             1,    1,      "topic_tags"),      // key tag.
+    array(5,      "城市地区",         1,    1,      "geography_tags"),  // key tag.
+    array(4,      "人物",             1,    1,      "person_tags"),     // key tag.
+ */
+function vip_tag_search_to_db()
+{
+    // dynasty_tags
+    for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
+    {
+        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
+        {
+            $tag_name = get_dynasty_name($ii, $jj);
+            
+            // 1. 生成检索条件。获取符合条件的thing 表结果集
+            $db_result = get_thing_item_by_search_total($tag_name);
+            
+            // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
+            if ($db_result != NULL)
+            {
+                while($row = mysql_fetch_array($db_result))
+                {
+                    $thing_uuid = "";
+                    $thing_uuid = $row['uuid'];
+                    
+                    if (strlen($thing_uuid) > 0)
+                    {
+                        insert_tag($tag_name, 8, $thing_uuid);
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    return 1;
 }
 
 ?>

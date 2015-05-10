@@ -15,7 +15,7 @@
     
     $conn = open_db();
     
-    // 重新计算时间轴指数
+    // 计算时间轴指数
     if($_GET['operate_type'] == "re_calc_year_order")
     {
         if (re_calc_year_order() == 1)
@@ -28,10 +28,23 @@
         }
     }
     
-    // 重新计算tag热门指数
+    // 计算tag热门指数
     else if ($_GET['operate_type'] == "re_calc_tag_hot_index")
     {
         if (re_calc_tag_hot_index() == 1)
+        {
+            echo "ok";
+        }
+        else
+        {
+            echo "fail";
+        }
+    }
+    
+    // 自动将事件添加vip标签
+    else if($_GET['operate_type'] == "re_thing_add_vip_tag")
+    {
+        if (vip_tag_search_to_db() == 1)
         {
             echo "ok";
         }

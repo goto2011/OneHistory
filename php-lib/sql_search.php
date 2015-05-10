@@ -98,16 +98,32 @@ function get_thing_count_by_search($search_key)
     return $row[0];
 }
 
-// 根据检索条件获取 thing 表的数据
+// 根据检索条件获取 thing 表的部分数据
 function get_thing_item_by_search($search_key, $offset, $page_size)
 {
     $sql_string = "select * from thing_time " . get_search_where_sub($search_key) .
          " order by thing_time.year_order ASC limit $offset, $page_size ";
     
     $result = mysql_query($sql_string);
-    if($result ==FALSE)
+    if($result == FALSE)
     {
        $GLOBALS['log']->error("error: get_thing_item_by_search() -- $sql_string 。");
+       return NULL;
+    }
+    
+    return $result;
+}
+
+// 根据检索条件获取 thing 表的全部数据
+function get_thing_item_by_search_total($search_key)
+{
+    $sql_string = "select * from thing_time " . get_search_where_sub($search_key) .
+         " order by thing_time.year_order ASC ";
+    
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+       $GLOBALS['log']->error("error: get_thing_item_by_search_total() -- $sql_string 。");
        return NULL;
     }
     

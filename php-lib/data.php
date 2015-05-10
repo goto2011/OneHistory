@@ -10,6 +10,7 @@ require_once "data_dynasty.php";
 require_once "data_country.php";
 require_once "data_topic.php";
 require_once "data_city.php";
+require_once "data_person.php";
 // require_once 'data_chinese.php';
 
 /////////////////////////////// 1.SYSTEM start //////////////////////////////////////

@@ -59,6 +59,10 @@ function succ_callback(operate_type, data)
     {
         manager_show_status("re_calc_tag_hot_index_label", res_status);
     }
+    else if (operate_type == "re_thing_add_vip_tag")
+    {
+        manager_show_status("re_thing_add_vip_tag_label", res_status);
+    }
 }
 
 // 发起Ajax通讯。
@@ -90,18 +94,22 @@ function ajax_do(operate_type)
 </script>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="重新计算时间轴指数" 
+    <input type="submit" style="font-size:18pt" value="计算时间轴指数" 
     id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" /></p>  <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="重新计算tag热门指数" 
+    <input type="submit" style="font-size:18pt" value="计算tag热门指数" 
     id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /></p> <!-- 提交 -->
     <div class="label" id="re_calc_tag_hot_index_label"></div>
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="重新计算用户积分" /></p> <!-- 提交 -->
+    <input type="submit" style="font-size:18pt" value="自动将事件添加vip标签" 
+    id="re_calc_tag_hot_index" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->
+    <div class="label" id="re_thing_add_vip_tag_label"></div>
 </div>
+
+
 </div>
