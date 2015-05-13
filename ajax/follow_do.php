@@ -27,13 +27,6 @@
         {
             $tag_uuid = html_encode($_GET['delete_tag']);
             $function_type = 3;
-            
-            // vip tag 不接受删除。
-            if (tag_is_vip($tag_uuid) == 1)
-            {
-                echo "该标签属于不可删除标签。";
-                exit;
-            }
         }
         else 
         {
@@ -58,7 +51,15 @@
     }
     else if($function_type == 3)
     {
-        delete_tag_to_db($tag_uuid);
+        // vip tag 不接受删除。
+        if (tag_is_vip($tag_uuid) == 1)
+        {
+            echo "vip tag can`t delete.  ";
+        }
+        else 
+        {
+            delete_tag_to_db($tag_uuid);
+        }
     }
 
     // exit.

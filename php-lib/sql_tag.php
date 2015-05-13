@@ -321,7 +321,9 @@ function insert_tag_from_input($tags_array, $thing_uuid)
     return $tags_insert_count;
 }
 
-// 将单个 tag 插入数据库.
+/**
+ * 将单个 tag 插入数据库.
+ */
 function insert_tag($tag_name, $tag_type, $thing_uuid)
 {
     $tag_uuid = "";
@@ -384,7 +386,9 @@ function insert_tag($tag_name, $tag_type, $thing_uuid)
     return 1;
 }
 
-// 将多个 tag 插入数据库
+/**
+ * 将多个 tag 插入数据库.
+ */
 function insert_tags($tags, $tag_type, $thing_uuid)
 {
     $index = 0;
@@ -404,7 +408,9 @@ function insert_tags($tags, $tag_type, $thing_uuid)
     return $index;
 }
 
-// 更新 tag 的 hot 指数
+/**
+ * 更新 tag 的 hot 指数.
+ */
 function update_tag_hot_index($add_hot_number, $tag_UUID)
 {
     $sql_string = "update property set hot_index = ifNull(hot_index , 0) + " 
@@ -419,8 +425,9 @@ function update_tag_hot_index($add_hot_number, $tag_UUID)
     return true;
 }
 
-
-// 根据thing_uuid获取tags字符串
+/**
+ * 根据thing_uuid获取tags字符串.
+ */
 function get_tags_name($thing_uuid, $tag_type)
 {
     $property_name_array[] = null;
@@ -443,7 +450,9 @@ function get_tags_name($thing_uuid, $tag_type)
     return $property_name_array;
 }
 
-// 根据 uuid 获取name(此函数只允许 list_control.php.)
+/**
+ * 根据 uuid 获取name(此函数只允许 list_control.php.)
+ */
 function get_tag_name_from_UUID($tag_UUID)
 {
     $property_name = "";
@@ -464,7 +473,9 @@ function get_tag_name_from_UUID($tag_UUID)
     return $property_name;
 }
 
-// 获取符合条件的tags。
+/**
+ * 获取符合条件的tags.
+ */
 function get_tags_db($list_type, $tags_show_limit)
 {
     switch ($list_type)
@@ -521,7 +532,9 @@ function get_tags_db($list_type, $tags_show_limit)
     return $result;
 }
 
-// 将 tag 转化为 key-value数组. 2015-4-27.
+/**
+ * 将 tag 转化为 key-value数组. 2015-4-27.
+ */
 function get_tags_array($list_id)
 {
     // 获取property数据表的数据
@@ -536,8 +549,11 @@ function get_tags_array($list_id)
     return $tags_array;
 }
 
-// 检查tag array中是否有指定name的key。参数 is_need_delete 表示知道后是否删除, =1删除，=0不删除。
-// 返回空串表示没找到。
+/**
+ * 检查tag array中是否有指定name的key。
+ * 参数 is_need_delete 表示知道后是否删除, =1删除，=0不删除。
+ * 返回空串表示没找到。
+ */
 function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
 {
     $my_uuid = "";
@@ -551,7 +567,9 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
     return $my_uuid;
 }
 
-// 获取property数据表的数据
+/**
+ * 获取property数据表的数据.
+ */
 function get_tags_from_thing_UUID($thing_UUID)
 {
     $sql_string = "select property_UUID, property_name, property_type from property where property_UUID in(
@@ -566,7 +584,9 @@ function get_tags_from_thing_UUID($thing_UUID)
     return $result;
 }
 
-// 重新计算 thing 的时间轴指数
+/**
+ * 重新计算 thing 的时间轴指数.
+ */
 function re_calc_year_order()
 {
     $sql_string = "update thing_time set year_order=time where time_type=2";
@@ -607,7 +627,9 @@ function re_calc_year_order()
     return 1;
 }
 
-// 重新计算tag热门指数
+/**
+ * 重新计算tag热门指数.
+ */
 function re_calc_tag_hot_index()
 {
     $tag_uuids = array();
@@ -666,7 +688,9 @@ function re_calc_tag_hot_index()
 }
 
 
-// 删除指定标签
+/**
+ * 删除指定标签.
+ */
 function delete_tag_to_db($tag_uuid)
 {
     // 1. 删除标签相关的标签-事件对
@@ -696,7 +720,10 @@ function delete_tag_to_db($tag_uuid)
     return 1;
 }
 
-// 根据tag uuid 获取tag名称和tag类型。返回值为一个数组，[0]为类型, [1]是名称.
+/**
+ * 根据tag uuid 获取tag名称和tag类型。
+ * 返回值为一个数组，[0]为类型, [1]是名称。
+ */
 function get_tag_from_tag_uuid($tag_uuid)
 {
     $sql_string = "select property_type,property_name from property where property_UUID='$tag_uuid'";
@@ -713,25 +740,25 @@ function get_tag_from_tag_uuid($tag_uuid)
     return array($row['property_type'], $row['property_name']);
 }
 
-// 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
-/*
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
-    array(10,     "专题",             1,    1,      "topic_tags"),      // key tag.
-    array(5,      "城市地区",         1,    1,      "geography_tags"),  // key tag.
-    array(4,      "人物",             1,    1,      "person_tags"),     // key tag.
+/**
+ * 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),
+    array(7,      "国家民族",         1,    1,      "country_tags"),
+    array(10,     "专题",             1,    1,      "topic_tags"),
+    array(5,      "城市地区",         1,    1,      "geography_tags"),
+    array(4,      "人物",             1,    1,      "person_tags"),
  */
 function tag_is_vip($tag_uuid)
 {
     $tag_array = array();
     $tag_array = get_tag_from_tag_uuid($tag_uuid);
     
-    if (($tag_array[0] == 8) && (country_tag_is_exist($tag_array[1]) == 1))
+    if (($tag_array[0] == 8) && (dynasty_tag_is_exist($tag_array[1]) == 1))
     {
         return 1;
     }
     
-    if (($tag_array[0] == 7) && (dynasty_tag_is_exist($tag_array[1]) == 1))
+    if (($tag_array[0] == 7) && (country_tag_is_exist($tag_array[1]) == 1))
     {
         return 1;
     }
@@ -754,13 +781,13 @@ function tag_is_vip($tag_uuid)
     return 0;
 }
 
-// 将vip tag 作为关键字自动检索。-1表示失败。
-/*
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // key tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // key tag.
-    array(10,     "专题",             1,    1,      "topic_tags"),      // key tag.
-    array(5,      "城市地区",         1,    1,      "geography_tags"),  // key tag.
-    array(4,      "人物",             1,    1,      "person_tags"),     // key tag.
+/**
+ * 将vip tag 作为关键字自动检索。-1表示失败。
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),
+    array(7,      "国家民族",         1,    1,      "country_tags"),
+    array(10,     "专题",             1,    1,      "topic_tags"),
+    array(5,      "城市地区",         1,    1,      "geography_tags"),
+    array(4,      "人物",             1,    1,      "person_tags"),
  */
 function vip_tag_search_to_db()
 {
@@ -770,29 +797,76 @@ function vip_tag_search_to_db()
         for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
         {
             $tag_name = get_dynasty_name($ii, $jj);
-            
-            // 1. 生成检索条件。获取符合条件的thing 表结果集
-            $db_result = get_thing_item_by_search_total($tag_name);
-            
-            // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
-            if ($db_result != NULL)
-            {
-                while($row = mysql_fetch_array($db_result))
-                {
-                    $thing_uuid = "";
-                    $thing_uuid = $row['uuid'];
-                    
-                    if (strlen($thing_uuid) > 0)
-                    {
-                        insert_tag($tag_name, 8, $thing_uuid);
-                    }
-                }
-            }
+            tag_search_to_db($tag_name, 8);
         }
     }
     
+    // country_tags
+    for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
+    {
+        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
+        {
+            $tag_name = get_country_name($ii, $jj);
+            tag_search_to_db($tag_name, 7);
+        }
+    }
+    
+    // topic_tags
+    for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
+    {
+        for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
+        {
+            $tag_name = get_topic_name($ii, $jj);
+            tag_search_to_db($tag_name, 10);
+        }
+    }
+    
+    // geography_tags
+    for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
+    {
+        for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
+        {
+            $tag_name = get_city_name($ii, $jj);
+            tag_search_to_db($tag_name, 5);
+        }
+    }
+    
+    // person_tags
+    for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
+    {
+        for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
+        {
+            $tag_name = get_person_name($ii, $jj);
+            tag_search_to_db($tag_name, 4);
+        }
+    }
     
     return 1;
+}
+
+
+/**
+ * 将 tag 作为关键字自动检索。
+ */
+function tag_search_to_db($tag_name, $tag_type)
+{
+    // 1. 生成检索条件。获取符合条件的thing 表结果集
+    $db_result = get_thing_item_by_search_total($tag_name);
+    
+    // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
+    if ($db_result != NULL)
+    {
+        while($row = mysql_fetch_array($db_result))
+        {
+            $thing_uuid = "";
+            $thing_uuid = $row['uuid'];
+            
+            if (strlen($thing_uuid) > 0)
+            {
+                insert_tag($tag_name, $tag_type, $thing_uuid);
+            }
+        }
+    }
 }
 
 ?>

@@ -228,7 +228,7 @@ function dynasty_tag_is_exist($tag_name)
 {
     for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end(); $ii++)
     {
-        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj)
+        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
         {
             if(get_dynasty_name($ii, $jj) == $tag_name)
             {

@@ -243,7 +243,7 @@ function country_tag_is_exist($tag_name)
 {
     for ($ii = get_big_country_begin(); $ii <= get_big_country_end(); $ii++)
     {
-        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj)
+        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
         {
             if(get_country_name($ii, $jj) == $tag_name)
             {

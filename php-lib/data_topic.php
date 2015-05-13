@@ -47,6 +47,7 @@ $topic = array
         // 艺术文化体育
         array("文学"),
         array("小说"),
+        array("历史学"),
         array("电影电视剧"),
         array("奥斯卡奖"),
         array("书法绘画"),
@@ -78,6 +79,7 @@ $topic = array
     (
         // 社会
         array("社会"),
+        array("社会学"),
         array("婚嫁情感"),
         array("道德伦理"),
         array("户口"),
@@ -116,6 +118,26 @@ $topic = array
     ),
     array
     (
+        // 中国政治问题
+        array("皇权"),
+        array("中央和地方官制"),
+        array("科举"),
+        array("监察制度"),
+        array("宗室问题"),
+        array("土地问题"),
+        array("奴婢问题"),
+        array("农民起义"),
+        array("士族"),
+        array("外戚"),
+        array("权臣"),
+        array("宦官"),
+        array("中兴"),
+        array("大臣杀皇帝"),
+        array("皇帝杀大臣"),
+        array("以少胜多"),
+    ),
+    array
+    (
         // other
     )
 );
@@ -145,6 +167,8 @@ function get_big_topic_name($index)
             return "财政税收";
         case 10:
             return "政治外交";
+        case 11:
+            return "中国政治问题";
         default:
             return "其它";
     }
@@ -188,7 +212,7 @@ function topic_tag_is_exist($tag_name)
 {
     for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end(); $ii++)
     {
-        for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj)
+        for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
         {
             if(get_topic_name($ii, $jj) == $tag_name)
             {

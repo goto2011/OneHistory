@@ -50,7 +50,7 @@
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |
 -->
 <?php
-    if(is_manager())
+    if(is_vip_user())
     {
 ?>
     <a href="./system_frame.php" class="red_black_underline"  target="_top">系统设置</a> |

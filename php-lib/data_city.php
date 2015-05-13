@@ -342,7 +342,7 @@ function city_tag_is_exist($tag_name)
 {
     for ($ii = get_big_city_begin(); $ii <= get_big_city_end(); $ii++)
     {
-        for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj)
+        for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
         {
             if(get_city_name($ii, $jj) == $tag_name)
             {
