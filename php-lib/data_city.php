@@ -75,6 +75,7 @@ $city = array
         array("哈瓦那"),
         array("巴拿马城"),
         array("里约"),
+        array("海参崴"),
     ),
     array
     (

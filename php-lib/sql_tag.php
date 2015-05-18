@@ -33,8 +33,8 @@ $tag_control = array(
     array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
     array(4,      "人物",             1,    1,      "person_tags"),   // vip tag.
+    array(11,     "关键事件",         1,    1,      "key_tags"),
     array(9,      "官制",             1,    0,      "office_tags"),   // vip tag.
-    array(11,     "关键事件",         1,    0,      "key_tags"),
     array(3,      "出处",             1,    0,      "source_tags"),
     array(12,     "管理标签",         3,    0,      ""),
     array(1,      "事件开始",         2,    0,      "start_tags"),

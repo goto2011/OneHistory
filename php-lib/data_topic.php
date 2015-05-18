@@ -10,9 +10,9 @@ $topic = array
         // 武装冲突
         array("大屠杀"),
         array("战争"),
-        array("第一次世界大战"),
-        array("第二次世界大战"),
-        array("军事思想"),
+        array("国际冲突"),
+        array("国内冲突"),
+        array("种族仇杀"),
     ),
     array
     (
@@ -40,6 +40,7 @@ $topic = array
         array("数学逻辑学"),
         array("地理"),
         array("医学"),
+        array("中医"),
         array("心理学"),
     ),
     array
@@ -64,6 +65,7 @@ $topic = array
         array("佛教"),
         array("道教"),
         array("印度教"),
+        array("萨满教"),
         array("其它宗教"),
         array("古希腊哲学"),
         array("中世纪哲学"),
@@ -74,6 +76,7 @@ $topic = array
         array("儒家"),
         array("中国其它哲学"),
         array("马克思主义哲学"),
+        array("军事思想"),
     ),
     array
     (
@@ -135,6 +138,10 @@ $topic = array
         array("大臣杀皇帝"),
         array("皇帝杀大臣"),
         array("以少胜多"),
+        array("禅让"),
+        array("武将叛乱"),
+        array("边患"),
+        array("党争"),
     ),
     array
     (
