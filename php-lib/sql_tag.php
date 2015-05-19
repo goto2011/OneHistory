@@ -32,7 +32,7 @@ $tag_control = array(
     array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
     array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
-    array(4,      "人物",             1,    1,      "person_tags"),   // vip tag.
+    array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
     array(11,     "关键事件",         1,    1,      "key_tags"),
     array(9,      "官制",             1,    0,      "office_tags"),   // vip tag.
     array(3,      "出处",             1,    0,      "source_tags"),
@@ -259,6 +259,12 @@ function is_city()
 function is_person()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 4);
+}
+
+// 判断当前是否是 key_thing 页面
+function is_key_thing()
+{
+    return (get_tag_id_from_index(get_current_list_id()) == 11);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -838,6 +844,16 @@ function vip_tag_search_to_db()
         {
             $tag_name = get_person_name($ii, $jj);
             tag_search_to_db($tag_name, 4);
+        }
+    }
+    
+    // key_thing_tags
+    for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
+    {
+        for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
+        {
+            $tag_name = get_key_thing_name($ii, $jj);
+            tag_search_to_db($tag_name, 11);
         }
     }
     

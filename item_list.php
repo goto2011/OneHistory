@@ -202,13 +202,37 @@ window.onload = function()
     }
     
     // add, 2015-5-8
-    // 打印 主题 person 链接
+    // 打印 person 链接
     function create_person_link($index, &$tags_db)
     {
         $result = "";
         for ($ii = get_small_person_begin($index); $ii <= get_small_person_end($index); $ii++)
         {
             $my_name = get_person_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
+        return $result;
+    }
+    
+    // add, 2015-5-20
+    // 打印 key_thing 链接
+    function create_key_thing_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_key_thing_begin($index); $ii <= get_small_key_thing_end($index); $ii++)
+        {
+            $my_name = get_key_thing_name($index, $ii);
             $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
             
             if ($my_uuid != "")
@@ -352,6 +376,21 @@ window.onload = function()
             
             // 最后打印其它
             echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
+        else if(is_key_thing())
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
+            {
+                echo get_big_key_thing_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_key_thing_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_key_thing_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
     

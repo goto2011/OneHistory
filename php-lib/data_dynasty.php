@@ -87,7 +87,7 @@ $dynasty = array
         array("谯蜀"),
         array("桓楚"),
         array("翟魏"),
-        array("代"),
+        array("代国"),
         array("西燕"),
         array("宇文部"),
         array("段部"),

@@ -67,13 +67,13 @@ $key_thing = array
         // 中国近现代
         array("利玛窦规矩"),
         array("鸦片战争"),
-        太平天国
-        湘军
-        甲午战争
-        百日维新
-        义和团
-        东南自保
-        清末新政
+        array("太平天国"),
+        array("湘军"),
+        array("甲午战争"),
+        array("百日维新"),
+        array("义和团"),
+        array("东南自保"),
+        array("清末新政"),
         array("辛亥革命"),
         array("二次革命"),
         array("北伐"),
@@ -184,7 +184,7 @@ function get_small_key_thing_end($big_id)
     return count($key_thing[$big_id - 1]);
 }
 
-// 获取朝代名称
+// 获取名称
 function get_key_thing_name($big_id, $small_id)
 {
     global $key_thing;
