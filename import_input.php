@@ -173,7 +173,7 @@ function ajax_do(operate_type)
         data:{
             'operate_type'  :operate_type,
             'originator'    :document.getElementById("originator").value,
-            'context'       :document.getElementById("context").value,
+            'context'       :remove_blank(remove_html_code(document.getElementById("context").value)),
             
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
@@ -185,7 +185,9 @@ function ajax_do(operate_type)
             'dynasty_tags'  :document.getElementById("dynasty_tags").value,
             'topic_tags'    :document.getElementById("topic_tags").value,
             'office_tags'   :document.getElementById("office_tags").value,
-            'key_tags'      :document.getElementById("key_tags").value
+            'key_tags'      :document.getElementById("key_tags").value,
+            'source_tags'   :document.getElementById("source_tags").value,
+            'source_detail' :document.getElementById("source_detail").value
         },
         async:false,
         method:'POST',
@@ -280,7 +282,12 @@ function ajax_do(operate_type)
             }
             $my_index++;
         }
-    } 
+    }
+    
+    echo "<td width='400'>";
+    echo "<p class='thick'>出处细节:";
+    echo "<textarea rows='2' cols='52' id='source_detail' ></textarea>";
+    echo "</p></tr>";
 ?>
 
 </table>
@@ -290,7 +297,12 @@ function ajax_do(operate_type)
 <td>
 <p class="thick">标签使用说明：</p>
 <p style="font-size:15px" style="text-align:left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a></p>
+    <ol style="font-size:15px">
+        <li>总体说明（内容较多，请移步）
+            <p><a href="../bbs/viewtopic.php?id=20" >如何添加和使用标签？</a></li>
+        <li>"事件开始"和"事件结束"标签会在时间轴显示中起标签作用，在主界面上不显示。</li>
+        <li>"出处"往往需要很多细节，都放在标签中不太合适，所以请在标签区输入对应的书名等少数内容，细节放在后面的输入框中。</li>
+            
 </td>
 </tr>
 </table>

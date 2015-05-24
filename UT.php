@@ -258,6 +258,14 @@
     assert('UT_get_time_from_native("Jan 17th, 2002", time_string_to_days("2002-1-17"), 3, 0, 1)');
     assert('UT_get_time_from_native("01/03/2009", time_string_to_days("2009-1-3"), 3, 0, 1)');
     
+    assert('UT_get_time_from_native("前五十四年",    -54, 2, 0, 1)');
+    assert('UT_get_time_from_native("一九八四",    1984, 2, 0, 1)');
+    assert('UT_get_time_from_native("一九八四年",    1984, 2, 0, 1)');
+    assert('UT_get_time_from_native("一九八四年七月十五日",    time_string_to_days("1984-7-15"), 3, 0, 1)');
+    assert('UT_get_time_from_native("一九八四年十一月十五日",    time_string_to_days("1984-11-15"), 3, 0, 1)');
+    assert('UT_get_time_from_native("一九八四年十一月",    time_string_to_days("1984-11-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("一二三四年春季", time_string_to_days("1234-4-15"), 3, 45, 2)');
+    
     echo "</br>";
     
     // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。

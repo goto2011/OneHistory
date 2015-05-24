@@ -15,7 +15,27 @@ function get_thing_db($thing_uuid)
     return $result;
 }
 
-// 将事件-时间数据写入数据库
+/**
+ * 检查当前事件内容是否已存在。
+ */
+function thing_context_is_exist($thing_content)
+{
+    $sql_string = "select uuid from thing_time where thing='$thing_content'";
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: thing_context_is_exist() -- $sql_string 。");
+        return "";
+    }
+    $row = mysql_fetch_row($result);
+    
+    return $row[0];
+}
+
+/**
+ * 将事件-时间数据写入数据库. 
+ * @return: 返回时间的uuid。
+ */
 function insert_thing_to_db($time_array, $thing)
 {
     if ($time_array['status'] != "ok")
@@ -24,11 +44,20 @@ function insert_thing_to_db($time_array, $thing)
         return "";
     }
     
+    $thing_uuid = "";
     $time = $time_array['time'];
     $time_type = $time_array['time_type'];
     $time_limit = $time_array['time_limit'];
     $time_limit_type = $time_array['time_limit_type'];
     $year_order = get_year_order($time, $time_type);
+    
+    // 检查事件内容是否已存在。
+    $thing_uuid = thing_context_is_exist($thing);
+    if ($thing_uuid != "")
+    {
+        update_thing_to_db($thing_uuid, $time_array, $thing);
+        return $thing_uuid;
+    }
 
     $thing_uuid = create_guid();
     $sql_string = "INSERT INTO thing_time(uuid, time, time_type, time_limit, time_limit_type, 
@@ -46,8 +75,10 @@ function insert_thing_to_db($time_array, $thing)
     }
 }
 
-// 将事件的更新数据写入数据库
-// 返回值: 成功返回1, 失败返回0.
+/**
+ * 将事件的更新数据写入数据库.
+ * @return: 成功返回1, 失败返回0.
+ */
 function update_thing_to_db($thing_uuid, $time_array, $thing)
 {
     if ($time_array['status'] != "ok")

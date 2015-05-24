@@ -114,7 +114,7 @@ function ajax_do()
         url:'./ajax/update_do.php',
         data:{
             'originator'    :document.getElementById("originator").value,
-            'thing'         :document.getElementById("thing").value,
+            'thing'         :remove_blank(remove_html_code(document.getElementById("thing").value)),
             'time'          :document.getElementById("time").value,
             'time_type'     :get_checkbox_value("time_type"),
             'time_limit'    :document.getElementById("time_limit").value,
@@ -125,12 +125,12 @@ function ajax_do()
             'country_tags'  :document.getElementById("country_tags").value,
             'geography_tags':document.getElementById("geography_tags").value,
             'person_tags'   :document.getElementById("person_tags").value,
-            'source_tags'   :document.getElementById("source_tags").value,
             'free_tags'     :document.getElementById("free_tags").value,
             'dynasty_tags'  :document.getElementById("dynasty_tags").value,
             'topic_tags'    :document.getElementById("topic_tags").value,
             'office_tags'   :document.getElementById("office_tags").value,
-            'key_tags'      :document.getElementById("key_tags").value
+            'key_tags'      :document.getElementById("key_tags").value,
+            'source_tags'   :document.getElementById("source_tags").value
         },
         async:false,
         method:'POST',

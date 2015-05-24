@@ -1,6 +1,33 @@
 // <!--  // created by duangan, 2015-1-11	-->
 // <!--  // support data deal function.	-->
 
+/**
+ * 过滤 html 代码。
+ */
+function remove_html_code(str)
+{
+	s = "@|#|$|^|&|*|html|body|pre|iframe|head|script|embed|meta|form|noscript";
+	var char =  s.split('|');
+	for (var i = 0; i < char.length; i++)
+	{
+		str = str.replace(char[i],' ');
+	}
+	
+	return str;
+}
+
+/**
+ *  过滤空格、空行
+ */
+function remove_blank(str)
+{
+    str = str.replace(/[ | ]*\n/g,'\n'); 		//去除行尾空白
+    //str = str.replace(/\n[\s| | ]*\r/g,'\n'); //去除多余空行
+    str=str.replace(/&nbsp;/ig,'');				//去掉&nbsp;
+    
+    return str;
+}
+
 // 获取单选框的值，都没选中，则返回0。通用。
 function get_checkbox_value(checkbox_name)
 {
@@ -162,7 +189,7 @@ $(function() {
 	});
 	
 	$('#free_tags').tagsInput({
-		width: '750px',
+		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',

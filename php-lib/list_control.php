@@ -118,7 +118,14 @@ function get_property_UUID()
 // 获取当前 tag 的 name.
 function get_property_name()
 {
-    return get_tag_name_from_UUID(get_property_UUID());
+    if (($my_array = get_tag_type_from_UUID(get_property_UUID())) != NULL)
+    {
+        return $my_array['property_name'];
+    }
+    else 
+    {
+        return "";
+    }
 }
 
 // page

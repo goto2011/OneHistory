@@ -35,15 +35,17 @@ $tag_control = array(
     array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
     array(11,     "关键事件",         1,    1,      "key_tags"),
     array(9,      "官制",             1,    0,      "office_tags"),   // vip tag.
-    array(3,      "出处",             1,    0,      "source_tags"),
     array(12,     "管理标签",         3,    0,      ""),
+    array(6,      "自由标签",         1,    0,      "free_tags"),
     array(1,      "事件开始",         2,    0,      "start_tags"),
     array(2,      "事件结束",         2,    0,      "end_tags"),
-    array(6,      "自由标签",         1,    0,      "free_tags"),
+    array(3,      "出处标签",         1,    0,      "source_tags"),
 );
 
 
-// 根据排列顺序给出tag 属性。2015-5-3.
+/**
+ * 根据排列顺序给出tag 属性。2015-5-3.
+ */
 function get_tag_list_from_index($tag_index_id)
 {
     global $tag_control;
@@ -58,7 +60,9 @@ function get_tag_list_from_index($tag_index_id)
     }
 }
 
-// 获取 tag id（数据库）。 返回-2表示非法值。
+/**
+ * 获取 tag id（数据库）。 返回-2表示非法值。
+ */
 function get_tag_id_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
@@ -72,7 +76,9 @@ function get_tag_id_from_index($tag_index_id)
     }
 }
 
-// 获取 tag 名称。 返回-2表示非法值。
+/**
+ * 获取 tag 名称。 返回-2表示非法值。
+ */
 function get_tag_list_name_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
@@ -86,7 +92,9 @@ function get_tag_list_name_from_index($tag_index_id)
     }
 }
 
-// 获取显示属性。 返回-2表示非法值。
+/**
+ * 获取显示属性。 返回-2表示非法值。
+ */
 function get_tag_show_type_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
@@ -100,7 +108,9 @@ function get_tag_show_type_from_index($tag_index_id)
     }
 }
 
-// 获取key tag属性。 返回-2表示非法值。
+/**
+ * 获取key tag属性。 返回-2表示非法值。
+ */
 function get_key_tag_type_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
@@ -114,7 +124,9 @@ function get_key_tag_type_from_index($tag_index_id)
     }
 }
 
-// 获取 tag input id 属性。 返回""表示非法值。
+/**
+ * 获取 tag input id 属性。 返回""表示非法值。
+ */
 function get_tag_input_id_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
@@ -128,7 +140,9 @@ function get_tag_input_id_from_index($tag_index_id)
     }
 }
 
-// 是否显示在tag input界面上
+/**
+ * 是否显示在tag input界面上.
+ */
 function is_show_input_tag($tag_index_id)
 {
     $tag_show = get_tag_show_type_from_index($tag_index_id);
@@ -143,7 +157,9 @@ function is_show_input_tag($tag_index_id)
     }
 }
 
-// 是否显示在list tab界面
+/**
+ * 是否显示在list tab界面.
+ */
 function is_show_list_tab($tag_index_id)
 {
     $tag_show = get_tag_show_type_from_index($tag_index_id);
@@ -158,7 +174,9 @@ function is_show_list_tab($tag_index_id)
     }
 }
 
-// 是否显示在检索、add tag等界面下
+/**
+ * 是否显示在检索、add tag等界面下.
+ */
 function is_show_search_add($tag_index_id)
 {
     $tag_show = get_tag_show_type_from_index($tag_index_id);
@@ -173,7 +191,9 @@ function is_show_search_add($tag_index_id)
     }
 }
 
-// 是否为vip用户才显示的tab界面
+/**
+ * 是否为vip用户才显示的tab界面.
+ */
 function is_vip_user_show_tab($tag_index_id)
 {
     $tag_show = get_tag_show_type_from_index($tag_index_id);
@@ -189,7 +209,9 @@ function is_vip_user_show_tab($tag_index_id)
     }
 }
 
-// 是否显示在 function-tag edit页面
+/**
+ * 是否显示在 function-tag edit页面.
+ */
 function is_tag_edit_show_tab($tag_index_id)
 {
     $tag_show = get_tag_show_type_from_index($tag_index_id);
@@ -204,7 +226,9 @@ function is_tag_edit_show_tab($tag_index_id)
     }
 }
 
-// 是否是 vip tag.
+/**
+ * 是否是 vip tag.
+ */
 function is_vip_tag_tab($tag_index_id)
 {
     $tag_show = get_key_tag_type_from_index($tag_index_id);
@@ -219,52 +243,74 @@ function is_vip_tag_tab($tag_index_id)
     }
 }
 
-// 是否是"全部"tab 页
+/**
+ * 是否是"全部"tab 页.
+ */
 function is_total()
 {
     return (get_current_list_id() == 1);
 }
 
-// 判断当前界面是否是 period
+/**
+ * 判断当前界面是否是 period.
+ */
 function is_period()
 {
     return (get_current_list_id() == 4);
 }
 
-// 判断当前是否是 中国朝代 页面
+/**
+ * 判断当前是否是 中国朝代 页面.
+ */
 function is_dynasty()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 8);
 }
 
-/* 判断当前是否是 国家民族 页面 */
+/**
+ * 判断当前是否是 国家民族 页面.
+ */
 function is_country()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 7);
 }
 
-// 判断当前是否是 专题 页面
+/**
+ * 判断当前是否是 专题 页面.
+ */
 function is_topic()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 10);
 }
 
-// 判断当前是否是 city 页面
+// 判断当前是否是 city 页面.
 function is_city()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 5);
 }
 
-// 判断当前是否是 person 页面
+/**
+ * 判断当前是否是 person 页面.
+ */
 function is_person()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 4);
 }
 
-// 判断当前是否是 key_thing 页面
+/**
+ * 判断当前是否是 key_thing 页面.
+ */
 function is_key_thing()
 {
     return (get_tag_id_from_index(get_current_list_id()) == 11);
+}
+
+/**
+ * 判断指定 tag type 是否是出处。
+ */
+function is_source($tag_type)
+{
+    return ($tag_type == 3);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -310,16 +356,27 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
+    $source_detail = html_encode($tags_array['source_detail']);
     
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if (is_show_input_tag($ii) == 1)
         {
             $tag_input_id = get_tag_input_id_from_index($ii);
-            if(!empty($tags_array[$tag_input_id]))
+            $tag_name = html_encode($tags_array[$tag_input_id]);
+            
+            if(!empty($tag_name))
             {
-                $tag_id = get_tag_id_from_index($ii);
-                $tags_insert_count += insert_tags($tags_array[$tag_input_id], $tag_id, $thing_uuid);
+                $tag_type = get_tag_id_from_index($ii);
+                
+                if (is_source($tag_type) && strlen($source_detail) > 0)
+                {
+                    $tags_insert_count += insert_tags($tag_name, $tag_type, $thing_uuid, $source_detail);
+                }
+                else 
+                {
+                    $tags_insert_count += insert_tags($tag_name, $tag_type, $thing_uuid);
+                }
             }
         }
     }
@@ -330,7 +387,7 @@ function insert_tag_from_input($tags_array, $thing_uuid)
 /**
  * 将单个 tag 插入数据库.
  */
-function insert_tag($tag_name, $tag_type, $thing_uuid)
+function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
 {
     $tag_uuid = "";
 
@@ -364,6 +421,19 @@ function insert_tag($tag_name, $tag_type, $thing_uuid)
         $row = mysql_fetch_array($result);
         $tag_uuid = $row['property_UUID'];
     }
+    
+    // 2015-5-24
+    // 保存出处细节。
+    if(is_source($tag_type) && (strlen($source_detail) > 0))
+    {
+        $sql_string = "update property set detail='$source_detail' where property_UUID = '$tag_uuid' ";
+        
+        if (mysql_query($sql_string) === FALSE)
+        {
+            $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。" . mysql_error());
+            return 0;
+        }
+    }
 
     // 插入事件-标签表. 先检查是否存在。
     $sql_string = "select property_UUID from thing_property
@@ -395,7 +465,7 @@ function insert_tag($tag_name, $tag_type, $thing_uuid)
 /**
  * 将多个 tag 插入数据库.
  */
-function insert_tags($tags, $tag_type, $thing_uuid)
+function insert_tags($tags, $tag_type, $thing_uuid, $source_detail = "")
 {
     $index = 0;
 
@@ -406,7 +476,7 @@ function insert_tags($tags, $tag_type, $thing_uuid)
         {
             if (strlen($my_array[$ii]) > 0)
             {
-                $index += insert_tag($my_array[$ii], $tag_type, $thing_uuid);
+                $index += insert_tag($my_array[$ii], $tag_type, $thing_uuid, $source_detail);
             }
         }
     }
@@ -457,12 +527,42 @@ function get_tags_name($thing_uuid, $tag_type)
 }
 
 /**
- * 根据 uuid 获取name(此函数只允许 list_control.php.)
+ * 根据tag uuid 获取 出处细节.
  */
-function get_tag_name_from_UUID($tag_UUID)
+function get_sourece_detail($my_tag_uuid)
 {
-    $property_name = "";
-    $sql_string = "select property_name from property where property_UUID='$tag_UUID' limit 0,1";
+    if (($my_array = get_tag_type_from_UUID($my_tag_uuid)) != NULL)
+    {
+        return $my_array['detail'];
+    }
+    else 
+    {
+        return "";
+    }
+}
+
+/**
+ * 根据 tag uuid 获取tag type。
+ */
+function get_tag_type($my_tag_uuid)
+{
+    if (($my_array = get_tag_type_from_UUID($my_tag_uuid)) != NULL)
+    {
+        return $my_array['property_type'];
+    }
+    else 
+    {
+        return -1;
+    }
+}
+ 
+ 
+/**
+ * 根据 uuid 获取 tag 各属性.
+ */
+function get_tag_type_from_UUID($tag_UUID)
+{
+    $sql_string = "select * from property where property_UUID='$tag_UUID' limit 0,1";
     
     $result = mysql_query($sql_string); 
     if($result == FALSE)
@@ -470,13 +570,9 @@ function get_tag_name_from_UUID($tag_UUID)
         $GLOBALS['log']->error("error: get_tag_name() -- $tag_UUID -- $sql_string 。");
         return NULL;
     }
-        
-    while($row = mysql_fetch_array($result))
-    {
-        $property_name = $row['property_name'];
-    }
     
-    return $property_name;
+    $row = mysql_fetch_array($result);
+    return $row;
 }
 
 /**

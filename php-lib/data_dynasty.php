@@ -7,7 +7,7 @@ $dynasty = array
 (
     array
     (
-        // 24个。
+        // 正朔朝代
         array("夏朝"),
         array("商朝"),
         array("周朝"),
@@ -33,7 +33,7 @@ $dynasty = array
     ),
     array
     (
-        // 22 
+        // 春秋战国列国 
         array("周国"),
         array("鲁国"),
         array("齐国"),
@@ -60,7 +60,7 @@ $dynasty = array
     ),
     array
     (
-        // 37
+        // 地方政权
         array("辽东郡"),
         array("乐浪郡"),
         array("前赵"),
@@ -122,7 +122,7 @@ $dynasty = array
     ),
     array
     (
-        // 19
+        // 周边少数民族
         array("戎"),
         array("东胡"),
         array("粛慎"),
@@ -143,15 +143,15 @@ $dynasty = array
         array("回纥"),
         array("契丹"),
         array("党项"),
-        array("高句丽"),
         array("女真"),
+        array("南越国"),
+        array("古朝鲜"),
+        array("高句丽"),
         array("准噶尔汗国"),
     ),
     array
     (
-        // 18
-        array("南越国"),
-        array("古朝鲜"),
+        // 周边地区
         array("元朝"),
         array("蒙古"),
         array("西藏"),
@@ -182,7 +182,7 @@ function get_big_dynasty_name($index)
             return "周边少数民族";
             break;
         case 5:
-            return "周边独立政权";
+            return "周边地区";
             break;
         default:
             return "其它";

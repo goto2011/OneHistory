@@ -48,7 +48,7 @@
     function handle_data_line($operate_type)
     {
     	// 按行读入输入界面传入的批量数据。
-    	$context = html_encode(one_line_flag($_POST['context']));
+    	$context = one_line_flag(html_encode($_POST['context']));
     	$token = strtok($context, "\r");
     	$index = 0;
     	

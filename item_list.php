@@ -521,9 +521,11 @@ window.onload = function()
     // 打印 tag 控制条
     function print_tag_control()
     {
+        $my_tag_uuid = get_property_UUID();
+        
         echo " -- <nobr class='thick'>当前标签: " . get_property_name();
         
-        $follower_count = get_follows_count(get_property_UUID());
+        $follower_count = get_follows_count($my_tag_uuid);
         if($follower_count == 0)
         {
             echo " (当前无人关注)";
@@ -533,21 +535,33 @@ window.onload = function()
             echo " (有 $follower_count 人关注)";
         }
         
-        if(is_followed(get_property_UUID()))
+        if(is_followed($my_tag_uuid))
         {
-            echo " -- 你已关注! --<a href='./ajax/follow_do.php?un_follow_tag=" . get_property_UUID() 
+            echo " -- 你已关注! --<a href='./ajax/follow_do.php?un_follow_tag=" . $my_tag_uuid 
                 . "'>取消关注</a></nobr>";
         }
         else 
         {
-            echo " -- <a href='./ajax/follow_do.php?follow_tag=" . get_property_UUID() . "'>关注它!</a></nobr>";
+            echo " -- <a href='./ajax/follow_do.php?follow_tag=" . $my_tag_uuid . "'>关注它!</a></nobr>";
         }
         
         // 打开删除标签的功能
         if (is_deleter())
         {
-            echo " -- <a href='./ajax/follow_do.php?delete_tag=" . get_property_UUID() . "'>删除这个标签</a></nobr>";
+            echo " -- <a href='./ajax/follow_do.php?delete_tag=" . $my_tag_uuid . "'>删除这个标签</a></nobr>";
         }
+
+        // 2015-5-24
+        // 显示出处细节。
+        if (is_source(get_tag_type($my_tag_uuid)))
+        {
+            $my_detail = get_sourece_detail($my_tag_uuid);
+            if (strlen($my_detail) > 0)
+            {
+                echo "</br> -- 出处细节: $my_detail ";
+            }
+        }
+         
         echo "</div>";
     }
     
