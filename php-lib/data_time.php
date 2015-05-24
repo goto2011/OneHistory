@@ -304,18 +304,18 @@ function get_time_limit_string($time_limit, $time_limit_type)
 // 用最野蛮的方法获取月份
 function get_month($date_string)
 {
-    if(stristr($date_string, "十二月") || stristr($date_string, "12月"))return 12;
-    if(stristr($date_string, "十一月") || stristr($date_string, "11月"))return 11;
-    if(stristr($date_string, "十月") || stristr($date_string, "10月"))return 10;
-    if(stristr($date_string, "九月") || stristr($date_string, "9月"))return 9;
-    if(stristr($date_string, "八月") || stristr($date_string, "8月"))return 8;
-    if(stristr($date_string, "七月") || stristr($date_string, "7月"))return 7;
-    if(stristr($date_string, "六月") || stristr($date_string, "6月"))return 6;
-    if(stristr($date_string, "五月") || stristr($date_string, "5月"))return 5;
-    if(stristr($date_string, "四月") || stristr($date_string, "4月"))return 4;
-    if(stristr($date_string, "三月") || stristr($date_string, "3月"))return 3;
-    if(stristr($date_string, "二月") || stristr($date_string, "2月"))return 2;
-    if(stristr($date_string, "一月") || stristr($date_string, "1月"))return 1;
+    if(stristr($date_string, "12月"))return 12;
+    if(stristr($date_string, "11月"))return 11;
+    if(stristr($date_string, "10月"))return 10;
+    if(stristr($date_string, "9月"))return 9;
+    if(stristr($date_string, "8月"))return 8;
+    if(stristr($date_string, "7月"))return 7;
+    if(stristr($date_string, "6月"))return 6;
+    if(stristr($date_string, "5月"))return 5;
+    if(stristr($date_string, "4月"))return 4;
+    if(stristr($date_string, "3月"))return 3;
+    if(stristr($date_string, "2月"))return 2;
+    if(stristr($date_string, "1月"))return 1;
     
     return 0;
 }
@@ -328,7 +328,12 @@ function get_time_from_native($native_string)
     $time_array = array("status"=>"init", "time"=>0, "time_type"=>2, 
                     "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
     
-    // step 1: 搞定"距今 ... 年前"这种时间表达.
+    // step 1: 去空格, 把中文数字转化为阿拉伯数字。
+    $native_string_ori = $native_string;    // 关键数据备份.
+    $native_string = str_replace(' ', '', $native_string);
+    $native_string = chinese_to_number($native_string);
+    
+    // step 2: 搞定"距今 ... 年前"这种时间表达.
     if (stristr($native_string, "年前"))
     {
         if(stristr($native_string, "亿"))
@@ -351,7 +356,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 2: 搞定"公元"和"公元前"
+    // step 3: 搞定"公元"和"公元前"
     // 注意,这里修改了$native_string.
     if (is_bc($native_string))
     {
@@ -359,7 +364,7 @@ function get_time_from_native($native_string)
     }
     $native_string = trim_time_string($native_string);
     
-    // step 3: 搞定单个整数的情况. 单个整数指年份。
+    // step 4: 搞定单个整数的情况. 单个整数指年份。
     if(is_numeric($native_string) && !strstr($native_string, "."))
     {
         $time_array['time'] = (int)$native_string;
@@ -371,7 +376,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 4: 搞定"年-月-日", 以及"Y-M-D". 分割线也支持"/"和".".
+    // step 5: 搞定"年-月-日", 以及"Y-M-D". 分割线也支持"/"和".".
     $my_string = "";
     $my_days = 0;
     $day_is_empty = 0;
@@ -429,6 +434,7 @@ function get_time_from_native($native_string)
         
         return $time_array;
     }
+    
     // 2015-4-1, $my_days == -1表示进入了juliantojd()的流程，但识别失败，这种情况下需要退出。
     else if($my_days == -1)
     {
@@ -436,7 +442,25 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 5: 搞定只有年的情况.
+    // step 6: 处理“年初”、“月初”、“年底”、“月底”的情况
+    if (stristr($native_string, "年初"))
+    {
+        $native_string = str_replace("年初", "年1月", $native_string);
+    }
+    if (stristr($native_string, "年底"))
+    {
+        $native_string = str_replace("年底", "年12月", $native_string);
+    }
+    if (stristr($native_string, "月初"))
+    {
+        $native_string = str_replace("月初", "月上旬", $native_string);
+    }
+    if (stristr($native_string, "月底"))
+    {
+        $native_string = str_replace("月底", "月下旬", $native_string);
+    }
+    
+    // step 7: 搞定只有年的情况.
     $my_year = 0;
     $my_month = 0;
     $my_day = 0;
@@ -445,7 +469,7 @@ function get_time_from_native($native_string)
         $my_year = intval(trim_time_string($native_string));
     }
     
-    // step 6: 搞定有年-月的情况
+    // step 8: 搞定有年-月的情况
     if (stristr($native_string, "月"))
     {
         $my_month = get_month($native_string);
@@ -478,7 +502,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 7: 搞定上半年/下半年
+    // step 9: 搞定上半年/下半年
     if (stristr($native_string, "半年"))
     {
         if (stristr($native_string, "上半年"))
@@ -501,7 +525,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 8: 搞定1-4季度
+    // step 10: 搞定1-4季度
     if (stristr($native_string, "季度"))
     {
         if (stristr($native_string, "一季度") || (stristr($native_string, "1季度")))
@@ -530,7 +554,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 9: 搞定春夏秋冬四季
+    // step 11: 搞定春夏秋冬四季
     $is_season = 0;
     if (stristr($native_string, "春"))
     {
@@ -565,7 +589,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 10: 搞定只有"年"的情况(到这里还没有识别完, 肯定只有年了)
+    // step 12: 搞定只有"年"的情况(到这里还没有识别完, 肯定只有年了)
     if (stristr($native_string, "年"))
     {
         $time_array['time'] = $my_year;
@@ -577,7 +601,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 11: 搞定世纪
+    // step 13: 搞定世纪
     if (stristr($native_string, "世纪"))
     {
         $my_year = $temp1 = str_replace("世纪", "", $native_string);
@@ -621,11 +645,22 @@ function get_time_from_native($native_string)
         }
     }
     
-    // step 12: 最后保底
+    // step 14: 最后保底
     if(strtotime($native_string) == TRUE)
     {
         // 13 是两种历法的差距.
         $time_array['time'] = unixtojd(strtotime($native_string)) + 13;
+        $time_array['time_type'] = 3;    /// 年月日
+        $time_array['time_limit'] = 0;
+        $time_array['time_limit_type'] = 1;  // 年
+        $time_array['status'] = "ok";
+        
+        return $time_array;
+    }
+    else if(strtotime($native_string_ori) == TRUE)
+    {
+        // 13 是两种历法的差距.
+        $time_array['time'] = unixtojd(strtotime($native_string_ori)) + 13;
         $time_array['time_type'] = 3;    /// 年月日
         $time_array['time_limit'] = 0;
         $time_array['time_limit_type'] = 1;  // 年
