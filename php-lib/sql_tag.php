@@ -642,7 +642,8 @@ function get_tags_array($list_id)
     // 获取property数据表的数据
     $tags_array = array();
     
-    $result = get_tags_db($list_id, 200);
+    // 2015-5-28, 临时修改为10000，不是很对。
+    $result = get_tags_db($list_id, 10000);
     while($row = mysql_fetch_array($result))
     {
         $tags_array[$row['property_UUID']] = $row['property_name'];
@@ -893,6 +894,9 @@ function tag_is_vip($tag_uuid)
  */
 function vip_tag_search_to_db()
 {
+    // 本函数执行时间长，去掉php执行时间限制。
+    ini_set('max_execution_time', '0');
+
     // dynasty_tags
     for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
     {
@@ -932,7 +936,7 @@ function vip_tag_search_to_db()
             tag_search_to_db($tag_name, 5);
         }
     }
-    
+
     // person_tags
     for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
     {
@@ -952,6 +956,9 @@ function vip_tag_search_to_db()
             tag_search_to_db($tag_name, 11);
         }
     }
+    
+    // 恢复php执行时间限制。
+    ini_set('max_execution_time', '1500');
     
     return 1;
 }

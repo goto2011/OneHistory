@@ -2,7 +2,7 @@
 // created by duangan, 2015-5-8 -->
 // support person deal function.    -->
 
-// 朝代数组
+// 人物数组
 $person = array
 (
     array
