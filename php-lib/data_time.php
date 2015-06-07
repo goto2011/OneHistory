@@ -10,7 +10,7 @@ $month_days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 // 判断是否为公元前
 function is_bc($year_string)
 {
-    if (stristr($year_string, "公元前") || stristr($year_string, "前"))
+    if (stristr($year_string, "公元前") || (substr($year_string, 0, strlen("前")) == "前"))
     {
         return 1;
     }
@@ -94,12 +94,19 @@ function trim_chinese_day($day_string)
 }
 
 
-// 将时间字符串变成数字（暂时只支持年份的变化）
+/**
+ * 去掉 公元、公元前。
+ */
 function trim_time_string($time_string)
 {
     $time_string = str_replace("公元前", "-", $time_string);
     $time_string = str_replace("公元", "", $time_string);
-    $time_string = str_replace("前", "-", $time_string);
+    
+    $my_len = strlen("前");
+    if (substr($time_string, 0, $my_len) == "前")
+    {
+        $time_string = "-" . substr($time_string, $my_len, strlen($time_string) - $my_len);
+    }
 
     return $time_string;
 }
@@ -320,7 +327,9 @@ function get_month($date_string)
     return 0;
 }
 
-// 从批量数字字符串中获取时间子串
+/**
+ * 从时间字符串中获取时间子串。（main）
+ */
 function get_time_from_native($native_string)
 {
     // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
@@ -356,7 +365,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 3: 搞定"公元"和"公元前"
+    // step 3: 去掉"公元"和"公元前"
     // 注意,这里修改了$native_string.
     if (is_bc($native_string))
     {
@@ -604,7 +613,8 @@ function get_time_from_native($native_string)
     // step 13: 搞定世纪
     if (stristr($native_string, "世纪"))
     {
-        $my_year = $temp1 = str_replace("世纪", "", $native_string);
+        $my_year = str_replace("世纪", "", $native_string);
+        // 数字世纪，如：19世纪。
         if (is_numeric($my_year))
         {
             if ($time_array['is_bc'] == 1)
@@ -622,11 +632,13 @@ function get_time_from_native($native_string)
             
             return $time_array;
         }
+        // 汉字世纪，如：十九世纪。
         else
         {
 	        $my_year2 = chinese_to_number($my_year);
             if ($my_year2 != 0)
             {
+                // 公元前
                 if ($time_array['is_bc'] == 1)
                 {
                     $time_array['time'] = $my_year2 * 100 + 50;
@@ -640,12 +652,39 @@ function get_time_from_native($native_string)
                 $time_array['time_limit_type'] = 1;  // 年
                 $time_array['status'] = "ok";
                 
+                // step 14: 处理世纪的前期、中期/中叶、后期、初、末。
+                // 处理前期(0-30)、中期/中叶(31-70)、后期(71-99)、初(0-10)、末(90-99)
+                if (stristr($native_string, "前期"))
+                {
+                    $time_array['time'] -= 35;
+                    $time_array['time_limit'] = 15;
+                }
+                if (stristr($native_string, "中期") || stristr($native_string, "中叶"))
+                {
+                    $time_array['time_limit'] = 20;
+                }
+                if (stristr($native_string, "后期"))
+                {
+                    $time_array['time'] += 35;
+                    $time_array['time_limit'] = 15;
+                }
+                if (stristr($native_string, "初"))
+                {
+                    $time_array['time'] -= 45;
+                    $time_array['time_limit'] = 5;
+                }
+                if (stristr($native_string, "末"))
+                {
+                    $time_array['time'] += 45;
+                    $time_array['time_limit'] = 5;
+                }
+                
                 return $time_array;
             }
         }
     }
     
-    // step 14: 最后保底
+    // step 15: 最后保底
     if(strtotime($native_string) == TRUE)
     {
         // 13 是两种历法的差距.

@@ -117,6 +117,7 @@ $key_thing = array
         array("奥斯曼帝国"),
         array("地中海城市帝国"),
         array("英国大宪章"),
+        array("欧洲黑死病"),
         array("文艺复兴"),
         array("科技革命"),
         array("启蒙运动"),

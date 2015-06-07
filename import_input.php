@@ -168,6 +168,9 @@ function ajax_do(operate_type)
         return;
     }
     
+    // 将控件灰掉，防止用户多次点击。
+    make_button_status(operate_type, true);
+    
     var import_ajax = xhr({
         url:'./ajax/import_do.php',
         data:{
@@ -192,8 +195,6 @@ function ajax_do(operate_type)
         async:false,
         method:'POST',
         complete: function () {
-            // 将控件灰掉，防止用户多次点击。
-            make_button_status(operate_type, true);
         },
         success: function  (data) {
             succ_callback(operate_type, data);

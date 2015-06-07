@@ -5,7 +5,14 @@
 // 返回每一页的长度限制
 function get_page_size()
 {
-    $_SESSION['page_size'] = 100; // 每页的条目数，暂时写死，后续再写活。
+    if (is_adder())
+    {
+        $_SESSION['page_size'] = 60;    /// 多一些比较好。
+    }
+    else 
+    {
+        $_SESSION['page_size'] = 30;   
+    }
     return $_SESSION['page_size'];
 }
 

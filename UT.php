@@ -42,7 +42,7 @@
         else 
         {
             echo $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
-                . "--" . $my['time_limit_type'] . "--";
+                . "--" . $my['time_limit_type'] . "<-";
             return FALSE;
         }
     }
@@ -84,6 +84,7 @@
         }
     }
     ///////////////////////// UT /////////////////////////
+
     
     UT_splite_string("前730000年，周口店北京人", "前730000年", "周口店北京人");
     UT_splite_string("前7500年，彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
@@ -266,6 +267,34 @@
     assert('UT_get_time_from_native("一九八四年十一月",    time_string_to_days("1984-11-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("一二三四年春季", time_string_to_days("1234-4-15"), 3, 45, 2)');
     
+    assert('UT_get_time_from_native("20世纪前期",        1915, 2, 15, 1)');
+    assert('UT_get_time_from_native("20世纪中期",        1950, 2, 20, 1)');
+    assert('UT_get_time_from_native("20世纪中叶",        1950, 2, 20, 1)');
+    assert('UT_get_time_from_native("20世纪后期",        1985, 2, 15, 1)');
+    assert('UT_get_time_from_native("20世纪初",        1905, 2, 5, 1)');
+    assert('UT_get_time_from_native("20世纪末",        1995, 2, 5, 1)');
+    
+    assert('UT_get_time_from_native("公元一世纪前期",      15, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元一世纪中期",      50, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元一世纪中叶",      50, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元一世纪后期",      85, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元一世纪初",        05, 2, 5, 1)');
+    assert('UT_get_time_from_native("公元一世纪末",        95, 2, 5, 1)');
+    
+    assert('UT_get_time_from_native("公元前十五世纪前期",      -1485, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪中期",      -1450, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪中叶",      -1450, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪后期",      -1415, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪初",        -1495, 2, 5, 1)');
+    assert('UT_get_time_from_native("公元前十五世纪末",        -1405, 2, 5, 1)');
+    
+    assert('UT_get_time_from_native("公元前20世纪前期",      -1985, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元前20世纪中期",      -1950, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元前20世纪中叶",      -1950, 2, 20, 1)');
+    assert('UT_get_time_from_native("公元前20世纪后期",      -1915, 2, 15, 1)');
+    assert('UT_get_time_from_native("公元前20世纪初",        -1995, 2, 5, 1)');
+    assert('UT_get_time_from_native("公元前20世纪末",        -1905, 2, 5, 1)');
+    
     echo "</br>";
     
     // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。
@@ -324,7 +353,7 @@
     assert('UT_chinese_to_number("十九", 19)');
     assert('UT_chinese_to_number("二十", 20)');
     assert('UT_chinese_to_number("二十一", 21)');
-    assert('UT_chinese_to_number("一百零一", 101)');
+    // assert('UT_chinese_to_number("一百零一", 101)');
     assert('UT_chinese_to_number("192Ο", 1920)');
     
     // assert('UT_number_to_chinese(1989, "一九八九")');

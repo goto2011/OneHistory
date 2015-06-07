@@ -24,14 +24,12 @@ $topic = array
         array("空难"),
         array("交通事故"),
         array("病疫"),
-        array("欧洲黑死病"),
         array("自杀"),
     ),
     array
     (
         // 科学技术
         array("发明创造"),
-        array("诺贝尔奖"),
         array("天文"),
         array("物理"),
         array("基因"),
@@ -40,8 +38,9 @@ $topic = array
         array("数学逻辑学"),
         array("地理"),
         array("医学"),
-        array("中医"),
         array("心理学"),
+        array("诺贝尔奖"),
+        array("中医"),
     ),
     array
     (
@@ -50,11 +49,11 @@ $topic = array
         array("小说"),
         array("历史学"),
         array("电影电视剧"),
-        array("奥斯卡奖"),
         array("书法绘画"),
         array("体育"),
         array("足球"),
         array("奥运会"),
+        array("奥斯卡奖"),
     ),
     array
     (
@@ -105,19 +104,22 @@ $topic = array
     ),
     array
     (
-        // 财政税收
-        array("财政"),
-        array("税收"),
-    ),
-    array
-    (
         // 政治外交
         array("政治"),
         array("民主选举"),
         array("国家制度"),
+        array("财政"),
+        array("税收"),
         array("法律犯罪"),
         array("国际关系"),
         array("战略思想"),
+        array("殖民"),
+        array("建国"),
+        array("统一"),
+        array("分裂"),
+        array("起义"),
+        array("复辟"),
+        array("叛乱"),
     ),
     array
     (
@@ -129,17 +131,15 @@ $topic = array
         array("宗室问题"),
         array("土地问题"),
         array("奴婢问题"),
-        array("农民起义"),
         array("士族"),
         array("外戚"),
         array("权臣"),
         array("宦官"),
-        array("中兴"),
         array("大臣杀皇帝"),
         array("皇帝杀大臣"),
         array("以少胜多"),
+        array("中兴"),
         array("禅让"),
-        array("武将叛乱"),
         array("边患"),
         array("党争"),
     ),
@@ -171,10 +171,8 @@ function get_big_topic_name($index)
         case 8:
             return "工商业";
         case 9:
-            return "财政税收";
-        case 10:
             return "政治外交";
-        case 11:
+        case 10:
             return "中国政治问题";
         default:
             return "其它";
