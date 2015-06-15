@@ -161,4 +161,28 @@ function substr_for_utf8($sourcestr, $cutlength)
     return $returnstr;
 }
 
+/**
+ * 判断内容里有没有汉字.
+ */
+function check_is_chinese($s)
+{        
+    return preg_match('/[\x80-\xff]./', $s);
+}
+
+/**
+ * 获取汉字字符串长度.
+ */     
+function gb_strlen($str)
+{
+     $count = 0;
+     for($i=0; $i<strlen($str); $i++)
+     {
+         $s = substr($str, $i, 1);
+         if (preg_match("/[\x80-\xff]/", $s)) ++$i;
+         
+         ++$count;
+     }
+     return $count;
+}
+
 ?>

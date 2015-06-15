@@ -35,7 +35,8 @@ $topic = array
         array("基因"),
         array("生物"),
         array("化学"),
-        array("数学逻辑学"),
+        array("数学"),
+        array("逻辑学"),
         array("地理"),
         array("医学"),
         array("心理学"),
@@ -47,9 +48,10 @@ $topic = array
         // 艺术文化体育
         array("文学"),
         array("小说"),
-        array("历史学"),
-        array("电影电视剧"),
-        array("书法绘画"),
+        array("电影"),
+        array("电视剧"),
+        array("书法"),
+        array("美术"),
         array("体育"),
         array("足球"),
         array("奥运会"),
@@ -79,8 +81,9 @@ $topic = array
     ),
     array
     (
-        // 社会
+        // 人文社会
         array("社会"),
+        array("历史学"),
         array("社会学"),
         array("婚嫁情感"),
         array("道德伦理"),
@@ -110,10 +113,13 @@ $topic = array
         array("国家制度"),
         array("财政"),
         array("税收"),
+        array("宪法"),
         array("法律犯罪"),
         array("国际关系"),
         array("战略思想"),
+        array("条约"),
         array("殖民"),
+        array("奴隶"),
         array("建国"),
         array("统一"),
         array("分裂"),
@@ -165,7 +171,7 @@ function get_big_topic_name($index)
         case 5:
             return "思想宗教";
         case 6:
-            return "社会";
+            return "人文社会";
         case 7:
             return "农业";
         case 8:

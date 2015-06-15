@@ -141,6 +141,13 @@ $key_thing = array
         array("印度独立"),
         array("非洲独立浪潮"),
         array("登上月球"),
+        array("两伊战争"),
+        array("海湾战争"),
+        array("苏联解体"),
+        array("香港回归"),
+        array("九一一事件"),
+        array("阿富汗战争"),
+        array("伊拉克战争"),
     ),
     array
     (

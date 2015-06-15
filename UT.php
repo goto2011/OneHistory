@@ -9,10 +9,20 @@
 	require_once "data.php";
     require_once "sql.php";
     
+    
+    // debug zone.
+    // get_time_from_native("前632.4");
+    // echo Date("Y-m-d H:i:s", strtotime("2004-2-11 11:35")) . "</br>";
+    // echo time_string_to_seconds("2004-2-11 11:35:00") . "</br>";
+    // get_time_from_native("2004年2月11日11时35分");
+    // get_time_from_native("2004-2-2 16:10:00");
+
+    
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
     assert_options(ASSERT_WARNING, 0);
     assert_options(ASSERT_QUIET_EVAL, 1);
+    
     //创建处理函数
     function my_assert_handler($file, $line, $code, $desc = null)
     {
@@ -83,8 +93,7 @@
             return TRUE;
         }
     }
-    ///////////////////////// UT /////////////////////////
-
+    ///////////////////////// UT zone /////////////////////////
     
     UT_splite_string("前730000年，周口店北京人", "前730000年", "周口店北京人");
     UT_splite_string("前7500年，彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
@@ -118,9 +127,12 @@
     
     echo "</br>";
     
+    // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
+    // time_limit_type: 1:年; 2:日; 3:秒.
+    // $time_array = array("time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1);
+    
     assert('days_to_time_string(time_string_to_days("-1975-10-3")) == "10/3/-1975"');
     assert('days_to_time_string(time_string_to_days("2015-10-3")) == "10/3/2015"');
-    
     assert('UT_get_time_from_native("31000年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("310 00年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("3.5亿年前", -350000000, 1, 0, 1)');
@@ -141,6 +153,8 @@
     assert('UT_get_time_from_native("5/ 5/ 1986", time_string_to_days("1986-5-5"), 3, 0, 1)');
     assert('UT_get_time_from_native("9/14/1991", time_string_to_days("1991-9-14"), 3, 0, 1)');
     
+    assert('UT_get_time_from_native("公元前33年1月", time_string_to_days("-33-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("公元前832年12月", time_string_to_days("-832-12-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("公元前1955年7月", time_string_to_days("-1955-7-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("公元前 1955年 7月", time_string_to_days("-1955-7-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("公元前1955年7月15日", time_string_to_days("-1955-7-15"), 3, 0, 1)');
@@ -234,11 +248,15 @@
     assert('UT_get_time_from_native("-900年",    -900, 2, 0, 1)');
     assert('UT_get_time_from_native("公元前2000年",    -2000, 2, 0, 1)');
     assert('UT_get_time_from_native("前54年",    -54, 2, 0, 1)');
-    
-    assert('UT_get_time_from_native("前54年",    -54, 2, 0, 1)');
-    
     assert('UT_get_time_from_native("192Ο年", 1920, 2, 0, 1)');
     assert('UT_get_time_from_native("192Ο-1Ο-2Ο", time_string_to_days("1920-10-20"), 3, 0, 1)');
+    
+    assert('UT_get_time_from_native("前1955年一月", time_string_to_days("-1955-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("前1955年1月", time_string_to_days("-1955-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("前1955.1", time_string_to_days("-1955-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1955年一月", time_string_to_days("1955-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1955年1月", time_string_to_days("1955-1-15"), 3, 15, 2)');
+    assert('UT_get_time_from_native("1955.1", time_string_to_days("1955-1-15"), 3, 15, 2)');
     
     assert('UT_get_time_from_native("公元1955年初", time_string_to_days("1955-1-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("公元1955年底", time_string_to_days("1955-12-15"), 3, 15, 2)');
@@ -294,6 +312,23 @@
     assert('UT_get_time_from_native("公元前20世纪后期",      -1915, 2, 15, 1)');
     assert('UT_get_time_from_native("公元前20世纪初",        -1995, 2, 5, 1)');
     assert('UT_get_time_from_native("公元前20世纪末",        -1905, 2, 5, 1)');
+    
+    assert('UT_get_time_from_native("前632.4", time_string_to_days("-632-4-15"), 3, 15, 2)');
+    
+    // 年月日 时分秒
+    assert('UT_get_time_from_native("2004年2月11日11时", time_string_to_seconds("2004-2-11 11:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004年2月11日11时35分", time_string_to_seconds("2004-2-11 11:35:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004年2月23日6时10分", time_string_to_seconds("2004-2-23 6:10:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004年3月1日23时20分59秒", time_string_to_seconds("2004-3-1 23:20:59"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004年6月9日10时0分", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    
+    assert('UT_get_time_from_native("2004-2-11 11:00:00", time_string_to_seconds("2004-2-11 11:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-2-11 11:35:00", time_string_to_seconds("2004-2-11 11:35:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-2-23 6:10:00", time_string_to_seconds("2004-2-23 6:10:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-2-2 16:10:00", time_string_to_seconds("2004-2-2 16:10:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-3-1 23:20:59", time_string_to_seconds("2004-3-1 23:20:59"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-6-9 10:00:00", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    
     
     echo "</br>";
     

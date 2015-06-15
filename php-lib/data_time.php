@@ -70,7 +70,9 @@ function get_weekday($year, $month, $day)
     return ($interval % 7) + 1;
 }
 
-// 判断是否为中文"年月日".
+/**
+ * 判断是否为中文"年月日".
+ */
 function is_chinese_day($day_string)
 {
     if (stristr($day_string, "月") && stristr($day_string, "日") && stristr($day_string, "年"))
@@ -83,19 +85,77 @@ function is_chinese_day($day_string)
     }
 }
 
-// 去掉字符串中的"年月日"汉字.
+/**
+ * 去掉字符串中的"年月日"汉字.
+ */
 function trim_chinese_day($day_string)
 {
     $temp1 = str_replace("年", "-", $day_string);
     $temp2 = str_replace("月", "-", $temp1);
-    $temp3 = str_replace("日", "", $temp2);
+    $temp3 = str_replace("日", " ", $temp2);
+    
+    return $temp3;
+}
+
+/**
+ * 是否有“时分秒”字段。
+ */
+function is_time($time_string)
+{
+    if (stristr($time_string, ":"))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * 判断是否为中文"年月日 时分秒".
+ */
+function is_chinese_time($day_string)
+{
+    if (stristr($day_string, "时") || stristr($day_string, "分") || stristr($day_string, "秒"))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * 去掉字符串中的"年月日 时分秒"汉字.
+ */
+function trim_chinese_time($day_string)
+{
+    if (stristr($day_string, "时") && stristr($day_string, "分") && stristr($day_string, "秒"))
+    {
+        $temp1 = str_replace("时", ":", $day_string);
+        $temp2 = str_replace("分", ":", $temp1);
+        $temp3 = str_replace("秒", "", $temp2);
+    }
+    else if (stristr($day_string, "时") && stristr($day_string, "分"))
+    {
+        $temp1 = str_replace("时", ":", $day_string);
+        $temp2 = str_replace("分", "", $temp1);
+        $temp3 = $temp2 . ":00";
+    }
+    else if (stristr($day_string, "时"))
+    {
+        $temp1 = str_replace("时", "", $day_string);
+        $temp3 = $temp1 . ":00:00";
+    }
     
     return $temp3;
 }
 
 
 /**
- * 去掉 公元、公元前。
+ * 去掉 公元、公元前、前，以及.。
  */
 function trim_time_string($time_string)
 {
@@ -111,7 +171,7 @@ function trim_time_string($time_string)
     return $time_string;
 }
 
-// 通过时间类型和时间字符串，获取时间数字.
+// 通过时间类型和时间字符串，获取时间数字.（生成数据库中使用的时间数据）
 // 输入:用户在 update 页面输入的时间字符串(格式做了严格限制,所以很标准)
 // 输出:保存到 thing-time 表的 time 字段的数字
 function get_time_number($time_string, $time_type)
@@ -125,7 +185,8 @@ function get_time_number($time_string, $time_type)
             $my_time_number = time_string_to_days($time_string);
             break;
         case 4:
-            $my_time_number = seconds_to_time_string($time_string);
+            // 字符串转数字。
+            $my_time_number = time_string_to_seconds($time_string);
             break;
         case 1:
         case 2:
@@ -180,7 +241,7 @@ function get_year_order($time_number, $time_type)
     }
 }
 
-// 根据时间（数字）和类型，获得时间字符串的简化版
+// 根据时间（数字）和类型，获得时间字符串的简化版（显示于更新界面的显示）
 // 输入: thing-time 表的 time 字段的数字
 // 输出: 显示在 update 页面时间字段的字符串(格式很标准).
 function get_time_string_lite($time_number, $time_type)
@@ -308,6 +369,19 @@ function get_time_limit_string($time_limit, $time_limit_type)
     return $my_time_limit;
 }
 
+/**
+ * 根据年月日获取天数（儒勒历）。支持公元前7000年到现在。
+ */
+function get_day_count($year, $month, $day)
+{
+    if (!(is_numeric($year) && is_numeric($month) && is_numeric($day)))
+    {
+        return -1;
+    }
+    
+    return juliantojd($month, $day, $year);
+}
+ 
 // 用最野蛮的方法获取月份
 function get_month($date_string)
 {
@@ -337,12 +411,54 @@ function get_time_from_native($native_string)
     $time_array = array("status"=>"init", "time"=>0, "time_type"=>2, 
                     "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
     
-    // step 1: 去空格, 把中文数字转化为阿拉伯数字。
     $native_string_ori = $native_string;    // 关键数据备份.
-    $native_string = str_replace(' ', '', $native_string);
-    $native_string = chinese_to_number($native_string);
     
-    // step 2: 搞定"距今 ... 年前"这种时间表达.
+    // step 1: 搞定“年月日 时分秒”。
+    // 只支持两种格式：
+    // 1. 中文格式："****年*月*日*时*分*秒"。分、秒字段可以没有。比如：2004年2月11日11时35分。
+    // 2. 数字格式："年-月-日 时:分:秒"，时分秒字段必须完整。
+    if (is_chinese_time($native_string))
+    {
+        $my_string = trim_chinese_day($native_string);
+        $my_string = trim_chinese_time($my_string);
+    }
+    else 
+    {
+        $my_string = $native_string;
+    }
+    
+    if(is_time($my_string))
+    {
+        $time_array['time'] = strtotime($my_string);
+        $time_array['time_type'] = 4;    /// 年月日 时分秒
+        $time_array['time_limit'] = 0;
+        $time_array['time_limit_type'] = 3;
+        $time_array['status'] = "ok";
+        
+        return $time_array;
+    }
+    
+    // step 2: 字符串格式化。含如下转化:
+    // 1. 去空格；
+    // 2. 把中文数字转化为阿拉伯数字。
+    // 3. 去掉"公元"和"公元前"。
+    $native_string = str_replace(' ', '', $native_string);
+    
+    // 确定是否是公元前。
+    if (is_bc($native_string))
+    {
+        $time_array['is_bc'] = 1;
+    }
+    if (check_is_chinese($native_string))
+    {
+        // 汉字数字转阿拉伯数字。
+        $native_string = chinese_to_number($native_string);
+        
+        // 去掉"公元"和"公元前"
+        $native_string = trim_time_string($native_string);
+    }
+    
+    // step 3: 搞定"距今 ... 年前"这种时间表达.
     if (stristr($native_string, "年前"))
     {
         if(stristr($native_string, "亿"))
@@ -365,15 +481,7 @@ function get_time_from_native($native_string)
         return $time_array;
     }
     
-    // step 3: 去掉"公元"和"公元前"
-    // 注意,这里修改了$native_string.
-    if (is_bc($native_string))
-    {
-        $time_array['is_bc'] = 1;
-    }
-    $native_string = trim_time_string($native_string);
-    
-    // step 4: 搞定单个整数的情况. 单个整数指年份。
+    // step 4: 搞定单个整数的情况. 单个整数总是指年份。
     if(is_numeric($native_string) && !strstr($native_string, "."))
     {
         $time_array['time'] = (int)$native_string;
@@ -398,30 +506,56 @@ function get_time_from_native($native_string)
         $my_string = $native_string;
     }
     $my_time_array = get_time_array($my_string);
+    $my_count = count($my_time_array);
     
     // 处理公元前的年份
-    if(empty($my_time_array[0]) && count($my_time_array) == 4)
+    if($time_array['is_bc'] == 1)
     {
-        $my_year = 0 - (int)$my_time_array[1];
-        $my_days = juliantojd($my_time_array[2], $my_time_array[3], $my_year);
-        if (!(is_numeric($my_time_array[2]) && is_numeric($my_time_array[3]) && is_numeric($my_year)))
+        if ($my_count == 4)
         {
-            $my_days = -1;
+            $my_year = 0 - (int)$my_time_array[1];
+            $my_month = (int)$my_time_array[2];
+            $my_day = (int)$my_time_array[3];
+            
+            $my_days = get_day_count($my_year, $my_month, $my_day);
+        }
+        // 只有年月
+        else if($my_count == 3)
+        {
+            $my_year = 0 - (int)$my_time_array[1];
+            $my_month = (int)$my_time_array[2];
+            $my_day = 15;
+            
+            $my_days = get_day_count($my_year, $my_month, $my_day);
+            if ($my_days != -1)
+            {
+                $day_is_empty = 1;
+            }
         }
     }
-    else if(count($my_time_array) == 3)
+    else
     {
-        $my_days = juliantojd($my_time_array[1], $my_time_array[2], $my_time_array[0]);
-        if (!(is_numeric($my_time_array[0]) && is_numeric($my_time_array[1]) && $my_time_array[2]))
+        if($my_count == 3)
         {
-            $my_days = -1;
+            $my_year = (int)$my_time_array[0];
+            $my_month = (int)$my_time_array[1];
+            $my_day = (int)$my_time_array[2];
+            
+            $my_days = get_day_count($my_year, $my_month, $my_day);
         }
-    }
-    // 只有年月，没有日的情况.
-    else if (count($my_time_array) == 2 && is_numeric($my_time_array[0]) && is_numeric($my_time_array[1]))
-    {
-        $my_days = juliantojd($my_time_array[1], 15, $my_time_array[0]);
-        $day_is_empty = 1;
+        // 只有年月
+        else if ($my_count == 2)
+        {
+            $my_year = (int)$my_time_array[0];
+            $my_month = (int)$my_time_array[1];
+            $my_day = 15;
+            
+            $my_days = get_day_count($my_year, $my_month, $my_day);
+            if ($my_days != -1)
+            {
+                $day_is_empty = 1;
+            }
+        }
     }
     
     if($my_days > 0)
@@ -753,7 +887,7 @@ function days_to_time_string($days_count)
     return jdtojulian($days_count);
 }
 
-// 将“年月日 时分秒”转成秒数（只支持1970年1月1日之后。肯定不够用，等以后扩展）
+// 将“年月日 时分秒”转成秒数（只支持1901年1月1日之后。肯定不够用，等以后扩展）
 function time_string_to_seconds($time_string)
 {
     return strtotime($time_string);
@@ -762,7 +896,7 @@ function time_string_to_seconds($time_string)
 // 将秒数转成将“年月日 时分秒”
 function seconds_to_time_string($seconds_count)
 {
-    return date("Y-m-d h:i:s", $seconds_count);
+    return date("Y-m-d H:i:s", $seconds_count);
 }
 
 

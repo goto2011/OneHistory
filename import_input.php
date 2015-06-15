@@ -169,6 +169,8 @@ function ajax_do(operate_type)
     }
     
     // 将控件灰掉，防止用户多次点击。
+    document.getElementById("check_data_label").style.display = "none";
+    document.getElementById("update_data_label").style.display = "none";
     make_button_status(operate_type, true);
     
     var import_ajax = xhr({
