@@ -16,6 +16,7 @@
     // echo time_string_to_seconds("2004-2-11 11:35:00") . "</br>";
     // get_time_from_native("2004年2月11日11时35分");
     // get_time_from_native("2004-2-2 16:10:00");
+    // echo get_search_where_sub("1913-10-15") . "<br />";
 
     
     // 激活断言，并设置它为 quiet
@@ -359,6 +360,13 @@
     echo get_search_where_sub("蒋介石 or 毛泽东") . "<br />";
     echo get_search_where_sub("唐朝 and 诗人 - 李白") . "<br />";
     echo get_search_where_sub("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
+    echo get_search_where_sub("1913-10-15") . "<br />";
+    echo get_search_where_sub("1913-10") . "<br />";
+    echo get_search_where_sub("1913") . "<br />";
+    echo get_search_where_sub("公元前221") . "<br />";
+    echo get_search_where_sub("-1720") . "<br />";
+    echo get_search_where_sub("260万年前") . "<br />";
+    echo get_search_where_sub("45.56亿年前") . "<br />";
     
     echo "</br>";
     

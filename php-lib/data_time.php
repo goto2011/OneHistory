@@ -4,6 +4,160 @@
 
 require_once 'data_number.php';
 
+// time_array type:
+// array("status"=>"init", "time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
+// time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
+// time_limit_type: 1:年; 2:日; 3:秒.
+
+///////////////////////////////////// public ///////////////////////////////////
+
+// 根据时间（数字）和类型，获得时间字符串的简化版（显示于更新界面的显示）
+// 输入: thing-time 表的 time 字段的数字
+// 输出: 显示在 update 页面时间字段的字符串(格式很标准).
+function get_time_string_lite($time_number, $time_type)
+{
+    $my_time_string = "";
+
+    if(($time_type == 1) || ($time_type == 2))
+    {
+        $my_time_string = $time_number;
+    }
+    // “年月日”格式
+    else if($time_type == 3)
+    {
+        $string_array = explode("/", days_to_time_string($time_number));
+        $my_time_string = "$string_array[2]-$string_array[0]-$string_array[1]";
+    }
+    // “年月日 时分秒”格式
+    else
+    {
+        $my_time_string = seconds_to_time_string($time_number);
+    }
+
+    return $my_time_string;
+}
+
+// 根据时间（数字）和类型，获得时间字符串(目的是显示在页面上)
+// 输入: thing-time 表的 time 字段的数字
+// 输出: 显示在 item_list 界面上的时间字符串, 目的是方便使用者识别, 所以加入汉字. 格式化程度很低.
+function get_time_string($time_number, $time_type)
+{
+     $my_time_string = "";
+    
+     if($time_type == 1)
+     {
+        $my_year = abs($time_number);
+        $my_time_string = "距今" . get_chiness_unit($my_year) . "年前";
+     }
+     else if($time_type == 2)
+     {
+        if($time_number < 0)
+        {
+            $my_time_string = "公元前" . abs($time_number) . "年";
+        }
+        else
+        {
+            if ($time_number < 1000)
+            {
+                $my_time_string = "公元" . $time_number . "年";
+            }
+            else 
+            {
+                $my_time_string = $time_number . "年";
+            }
+        }
+     }
+     // “年月日”格式
+     else if($time_type == 3)
+     {
+        $string_array = explode("/", days_to_time_string($time_number));
+          
+        if($string_array[2] > 1000)
+        {
+            $my_time_string = "$string_array[2]-$string_array[0]-$string_array[1]";
+        }
+        else if(($string_array[2] < 1000) && ($string_array[2] > 0))
+        {
+            $my_time_string = "公元$string_array[2]年-$string_array[0]月-$string_array[1]日";
+        }
+        else if($string_array[2] < 0)
+        {
+            $my_time_string = "公元前" . abs($string_array[2]) . "年-$string_array[0]月-$string_array[1]日";
+        }
+     }
+     // “年月日 时分秒”格式
+     else
+     {
+        $my_time_string = seconds_to_time_string($time_number);
+     }
+    
+     return $my_time_string;
+}
+
+// 根据时间（数字）和类型，获得时间上下限字符串(目的是显示在页面上)
+function get_time_limit_string($time_limit, $time_limit_type)
+{
+    $my_time_limit = "";
+    
+    if (empty($time_limit) || ($time_limit == 0))
+    {
+        return $my_time_limit;
+    }
+    
+    $my_time_limit = "±";
+    switch ($time_limit_type)
+    {
+        case 1:
+            $my_time_limit .= get_chiness_unit($time_limit) . "年";
+            break;
+        case 2:
+            $my_time_limit .= $time_limit . "日";
+            break;
+        case 3:
+            $my_time_limit .= $time_limit . "秒";
+            break;
+        default:
+            $my_time_limit .= "";
+    }
+    return $my_time_limit;
+}
+
+// 通过时间类型和时间字符串，获取时间数字.（生成数据库中使用的时间数据）
+// 输入:用户在 update 页面输入的时间字符串(格式做了严格限制,所以很标准)
+// 输出:保存到 thing-time 表的 time 字段的数字
+function get_time_number($time_string, $time_type)
+{
+    $my_time_number = 0;
+    
+    // 年月日（单位为日）
+    switch ($time_type)
+    {
+        case 3:
+            $my_time_number = time_string_to_days($time_string);
+            break;
+        case 4:
+            // 字符串转数字。
+            $my_time_number = time_string_to_seconds($time_string);
+            break;
+        case 1:
+        case 2:
+            if(is_numeric($time_string))
+            {
+                $my_time_number = $time_string;
+            }
+            else
+            {
+                $my_time_number = intval($time_string);
+            }
+            break;
+    }
+    
+    return $my_time_number;
+}
+
+
+
+
 // 每月多少天.
 $month_days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
@@ -171,39 +325,6 @@ function trim_time_string($time_string)
     return $time_string;
 }
 
-// 通过时间类型和时间字符串，获取时间数字.（生成数据库中使用的时间数据）
-// 输入:用户在 update 页面输入的时间字符串(格式做了严格限制,所以很标准)
-// 输出:保存到 thing-time 表的 time 字段的数字
-function get_time_number($time_string, $time_type)
-{
-    $my_time_number = 0;
-    
-    // 年月日（单位为日）
-    switch ($time_type)
-    {
-        case 3:
-            $my_time_number = time_string_to_days($time_string);
-            break;
-        case 4:
-            // 字符串转数字。
-            $my_time_number = time_string_to_seconds($time_string);
-            break;
-        case 1:
-        case 2:
-            if(is_numeric($time_string))
-            {
-                $my_time_number = $time_string;
-            }
-            else
-            {
-                $my_time_number = intval($time_string);
-            }
-            break;
-    }
-    
-    return $my_time_number;
-}
-
 // 根据 time 字段的时间数字,生成 year_order.
 function get_year_order($time_number, $time_type)
 {
@@ -241,32 +362,6 @@ function get_year_order($time_number, $time_type)
     }
 }
 
-// 根据时间（数字）和类型，获得时间字符串的简化版（显示于更新界面的显示）
-// 输入: thing-time 表的 time 字段的数字
-// 输出: 显示在 update 页面时间字段的字符串(格式很标准).
-function get_time_string_lite($time_number, $time_type)
-{
-    $my_time_string = "";
-
-    if(($time_type == 1) || ($time_type == 2))
-    {
-        $my_time_string = $time_number;
-    }
-    // “年月日”格式
-    else if($time_type == 3)
-    {
-        $string_array = explode("/", days_to_time_string($time_number));
-        $my_time_string = "$string_array[2]-$string_array[0]-$string_array[1]";
-    }
-    // “年月日 时分秒”格式
-    else
-    {
-        $my_time_string = seconds_to_time_string($time_number);
-    }
-
-    return $my_time_string;
-}
-
 // 将大于1亿的数字转换成1亿多少的字符串，将大于1万的数字转化为1万多少。
 function get_chiness_unit($number)
 {
@@ -284,90 +379,6 @@ function get_chiness_unit($number)
     }
 }
 
-// 根据时间（数字）和类型，获得时间字符串(目的是显示在页面上)
-// 输入: thing-time 表的 time 字段的数字
-// 输出: 显示在 item_list 界面上的时间字符串, 目的是方便使用者识别, 所以加入汉字. 格式化程度很低.
-function get_time_string($time_number, $time_type)
-{
-     $my_time_string = "";
-    
-     if($time_type == 1)
-     {
-        $my_year = abs($time_number);
-        $my_time_string = "距今" . get_chiness_unit($my_year) . "年前";
-     }
-     else if($time_type == 2)
-     {
-        if($time_number < 0)
-        {
-            $my_time_string = "公元前" . abs($time_number) . "年";
-        }
-        else
-        {
-            if ($time_number < 1000)
-            {
-                $my_time_string = "公元" . $time_number . "年";
-            }
-            else 
-            {
-                $my_time_string = $time_number . "年";
-            }
-        }
-     }
-     // “年月日”格式
-     else if($time_type == 3)
-     {
-        $string_array = explode("/", days_to_time_string($time_number));
-          
-        if($string_array[2] > 1000)
-        {
-            $my_time_string = "$string_array[2]-$string_array[0]-$string_array[1]";
-        }
-        else if(($string_array[2] < 1000) && ($string_array[2] > 0))
-        {
-            $my_time_string = "公元$string_array[2]年-$string_array[0]月-$string_array[1]日";
-        }
-        else if($string_array[2] < 0)
-        {
-            $my_time_string = "公元前" . abs($string_array[2]) . "年-$string_array[0]月-$string_array[1]日";
-        }
-     }
-     // “年月日 时分秒”格式
-     else
-     {
-        $my_time_string = seconds_to_time_string($time_number);
-     }
-    
-     return $my_time_string;
-}
-
-// 根据时间（数字）和类型，获得时间上下限字符串(目的是显示在页面上)
-function get_time_limit_string($time_limit, $time_limit_type)
-{
-    $my_time_limit = "";
-    
-    if (empty($time_limit) || ($time_limit == 0))
-    {
-        return $my_time_limit;
-    }
-    
-    $my_time_limit = "±";
-    switch ($time_limit_type)
-    {
-        case 1:
-            $my_time_limit .= get_chiness_unit($time_limit) . "年";
-            break;
-        case 2:
-            $my_time_limit .= $time_limit . "日";
-            break;
-        case 3:
-            $my_time_limit .= $time_limit . "秒";
-            break;
-        default:
-            $my_time_limit .= "";
-    }
-    return $my_time_limit;
-}
 
 /**
  * 根据年月日获取天数（儒勒历）。支持公元前7000年到现在。
