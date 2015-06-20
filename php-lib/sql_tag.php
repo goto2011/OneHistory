@@ -20,9 +20,9 @@ function tag_list_max()
 // tag list 、tag index、tag id 对应关系。
 // [0]表示数据库中的tag type；
 // [1]表示标签名称；
-// [2]表示是标签显示特征（0-非tag tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
+// [2]表示是标签显示特征（0-非tag的tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
 // [3]表示是否为key tag (0不是，1是)。
-// [4]表示tag 输入框的id。
+// [4]表示tag 输入框的id（字符串，用于import/input页面）。
 $tag_control = array(
     array(-1,     "全部",              0,   0,      ""),
     array(-1,     "我的关注",          0,   0,      ""),
@@ -39,7 +39,8 @@ $tag_control = array(
     array(6,      "自由标签",         1,    0,      "free_tags"),
     array(1,      "事件开始",         2,    0,      "start_tags"),
     array(2,      "事件结束",         2,    0,      "end_tags"),
-    array(3,      "出处标签",         1,    0,      "source_tags"),
+    array(3,      "出处",             1,    0,      "source_tags"),
+    array(13,     "笔记",             1,    0,      "note_tags"),
 );
 
 
@@ -313,6 +314,14 @@ function is_source($tag_type)
     return ($tag_type == 3);
 }
 
+/**
+ * 判断当前是否是 笔记 页面.
+ */
+function is_note($tag_type)
+{
+    return ($tag_type == 13);
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -369,6 +378,7 @@ function insert_tag_from_input($tags_array, $thing_uuid)
             {
                 $tag_type = get_tag_id_from_index($ii);
                 
+                // 保存“出处细节”。
                 if (is_source($tag_type) && strlen($source_detail) > 0)
                 {
                     $tags_insert_count += insert_tags($tag_name, $tag_type, $thing_uuid, $source_detail);
@@ -434,6 +444,8 @@ function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
             return 0;
         }
     }
+    
+    // 保存
 
     // 插入事件-标签表. 先检查是否存在。
     $sql_string = "select property_UUID from thing_property

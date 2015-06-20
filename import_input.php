@@ -192,7 +192,9 @@ function ajax_do(operate_type)
             'office_tags'   :document.getElementById("office_tags").value,
             'key_tags'      :document.getElementById("key_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
-            'source_detail' :document.getElementById("source_detail").value
+            'source_detail' :document.getElementById("source_detail").value,
+            'note_tags'     :document.getElementById("note_tags").value,
+            'index_inside_tag':document.getElementById("index_inside_tag").checked,
         },
         async:false,
         method:'POST',
@@ -283,14 +285,31 @@ function ajax_do(operate_type)
                 echo $my_print;
                 echo "</tr>";
             }
+            
+            // 显示“出处细节”。
+            if (is_source(get_tag_id_from_index($ii)))
+            {
+                echo "<td width='400'>";
+                echo "<p class='thick'>出处细节:";
+                echo "<textarea rows='2' cols='52' id='source_detail' ></textarea>";
+                echo "</p></tr>";
+                
+                $my_index++;
+            }
+            
+            // 显示“标签内序号”，只用于笔记序号。
+            if (is_note(get_tag_id_from_index($ii)))
+            {
+                echo "<td width='400'>";
+                echo "<input type='checkbox' id='index_inside_tag' value='' />标签内保持序号";
+                echo "</p></tr>";
+                
+                $my_index++;
+            }
+    
             $my_index++;
         }
     }
-    
-    echo "<td width='400'>";
-    echo "<p class='thick'>出处细节:";
-    echo "<textarea rows='2' cols='52' id='source_detail' ></textarea>";
-    echo "</p></tr>";
 ?>
 
 </table>

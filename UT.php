@@ -299,6 +299,7 @@
     assert('UT_get_time_from_native("公元一世纪后期",      85, 2, 15, 1)');
     assert('UT_get_time_from_native("公元一世纪初",        05, 2, 5, 1)');
     assert('UT_get_time_from_native("公元一世纪末",        95, 2, 5, 1)');
+    assert('UT_get_time_from_native("公元前30世纪后期",        -2915, 2, 15, 1)');
     
     assert('UT_get_time_from_native("公元前十五世纪前期",      -1485, 2, 15, 1)');
     assert('UT_get_time_from_native("公元前十五世纪中期",      -1450, 2, 20, 1)');

@@ -219,8 +219,16 @@ $(function() {
 		defaultText:'添加标签',
 		onAddTag: onAddTag
 	});
-		
+	
 	$('#key_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#note_tags').tagsInput({
 		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,

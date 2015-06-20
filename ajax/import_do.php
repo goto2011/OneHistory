@@ -43,8 +43,27 @@
             echo "ok -- " . get_import_token(); 
         }
     }
+    
+    /**
+     * 判断是否为“标签内保持序号”。
+     */
+    function is_index_inside_tag()
+    {
+        if (($_POST['index_inside_tag'] == 1) && (strlen($_POST['note_tags']) > 0))
+        {
+            return 1;
+        }
+        else 
+        {
+            return 0;
+        }
+    }
 
-    // 按行读入数据并进行处理。返回0表示成功，其它值都表示有错误发生。
+    /**
+     * 按行读入数据并进行处理。返回0表示成功，其它值都表示有错误发生。
+     * $operate_type==1, 数据校验。
+     * $operate_type==2，数据输入。
+     */
     function handle_data_line($operate_type)
     {
     	// 按行读入输入界面传入的批量数据。
@@ -70,7 +89,14 @@
                 }
                 if ($operate_type == 2)
                 {
-                    $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']);
+                    if (is_index_inside_tag() == 1)
+                    {
+                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing'], $_POST['note_tags'], $index);
+                    }
+                    else 
+                    {
+                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']);
+                    }
         		    if ($thing_uuid != "")
                     {
                         insert_tag_from_input($_POST, $thing_uuid);

@@ -33,10 +33,19 @@ function thing_context_is_exist($thing_content)
 }
 
 /**
+ * 根据
+ */
+function get_index_inside_tag($note_tags, $index)
+{
+    
+}
+ 
+ 
+/**
  * 将事件-时间数据写入数据库. 
  * @return: 返回时间的uuid。
  */
-function insert_thing_to_db($time_array, $thing)
+function insert_thing_to_db($time_array, $thing, $note_tags = "", $index = 0)
 {
     if ($time_array['status'] != "ok")
     {
@@ -51,18 +60,27 @@ function insert_thing_to_db($time_array, $thing)
     $time_limit_type = $time_array['time_limit_type'];
     $year_order = get_year_order($time, $time_type);
     
+    if ((strlen($note_tags) > 0) && ($index > 0))
+    {
+        $my_thing_index = get_index_inside_tag($note_tags, $index);
+    }
+    else
+    {
+        $my_thing_index = 0;  
+    }
+    
     // 检查事件内容是否已存在。
     $thing_uuid = thing_context_is_exist($thing);
     if ($thing_uuid != "")
     {
-        update_thing_to_db($thing_uuid, $time_array, $thing);
+        update_thing_to_db($thing_uuid, $time_array, $thing, $my_thing_index);
         return $thing_uuid;
     }
 
     $thing_uuid = create_guid();
     $sql_string = "INSERT INTO thing_time(uuid, time, time_type, time_limit, time_limit_type, 
-       thing, add_time, public_tag, user_UUID, year_order) VALUES('$thing_uuid', '$time', $time_type, 
-       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order)";
+       thing, add_time, public_tag, user_UUID, year_order, thing_index) VALUES('$thing_uuid', '$time', $time_type, 
+       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order, $my_thing_index)";
     
     if (mysql_query($sql_string) === TRUE)
     {
@@ -79,7 +97,7 @@ function insert_thing_to_db($time_array, $thing)
  * 将事件的更新数据写入数据库.
  * @return: 成功返回1, 失败返回0.
  */
-function update_thing_to_db($thing_uuid, $time_array, $thing)
+function update_thing_to_db($thing_uuid, $time_array, $thing, $thing_index = 0)
 {
     if ($time_array['status'] != "ok")
     {
@@ -95,8 +113,8 @@ function update_thing_to_db($thing_uuid, $time_array, $thing)
     
     // 保存数据
     $sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
-        time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order 
-        where uuid = '$thing_uuid' ";
+        time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order , 
+        thing_index = $thing_index where uuid = '$thing_uuid' ";
     
     if (mysql_query($sql_string) === TRUE)
     {
