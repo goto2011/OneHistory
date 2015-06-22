@@ -19,35 +19,38 @@ function is_complex_search($search_key)
 /**
  * 生成 search 查询之条件字句.
  */
-function get_search_where_sub($search_key)
+function get_search_where_sub($search_key, $enable_time_search = TRUE)
 {
     $search_sub = " where ";
     
     // 增加检索时间的功能。
-    $time_array = get_time_from_native($search_key);
-    if ($time_array['status'] == "ok")
+    if ($enable_time_search == TRUE)
     {
-        if ($time_array['time_limit'] == 0)
+        $time_array = get_time_from_native($search_key);
+        if ($time_array['status'] == "ok")
         {
-            // 年月日 和 年月日时分秒，都要精确查询。
-            if (($time_array['time_type'] == 3) || ($time_array['time_type'] == 4))
+            if ($time_array['time_limit'] == 0)
             {
-                $search_sub .= " time = " . $time_array['time'] . " and time_type = " . $time_array['time_type'] . " ";
+                // 年月日 和 年月日时分秒，都要精确查询。
+                if (($time_array['time_type'] == 3) || ($time_array['time_type'] == 4))
+                {
+                    $search_sub .= " time = " . $time_array['time'] . " and time_type = " . $time_array['time_type'] . " ";
+                }
+                // 年份，使用范围查询条件。
+                else
+                {
+                    $search_sub .= " year_order >= " . $time_array['time'] . " and year_order < " . ($time_array['time'] + 1) . " ";
+                }
             }
-            // 年份，使用范围查询条件。
-            else
+            else 
             {
-                $search_sub .= " year_order >= " . $time_array['time'] . " and year_order < " . ($time_array['time'] + 1) . " ";
+                $search_sub .= " time >= " . ($time_array['time'] - $time_array['time_limit']) 
+                    . " and time < " . ($time_array['time'] + $time_array['time_limit']) 
+                    . " and time_type = " . $time_array['time_type'] . " ";
             }
+            
+            return $search_sub; 
         }
-        else 
-        {
-            $search_sub .= " time >= " . ($time_array['time'] - $time_array['time_limit']) 
-                . " and time < " . ($time_array['time'] + $time_array['time_limit']) 
-                . " and time_type = " . $time_array['time_type'] . " ";
-        }
-        
-        return $search_sub; 
     }
     
     $search_key = str_replace("+", " + ", $search_key);
@@ -144,9 +147,9 @@ function get_thing_item_by_search($search_key, $offset, $page_size)
 }
 
 // 根据检索条件获取 thing 表的全部数据
-function get_thing_item_by_search_total($search_key)
+function get_thing_item_by_search_total($search_key, $enable_time_search = TRUE)
 {
-    $sql_string = "select * from thing_time " . get_search_where_sub($search_key) .
+    $sql_string = "select * from thing_time " . get_search_where_sub($search_key, $enable_time_search) .
          " order by thing_time.year_order ASC ";
     
     $result = mysql_query($sql_string);

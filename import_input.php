@@ -194,7 +194,7 @@ function ajax_do(operate_type)
             'source_tags'   :document.getElementById("source_tags").value,
             'source_detail' :document.getElementById("source_detail").value,
             'note_tags'     :document.getElementById("note_tags").value,
-            'index_inside_tag':document.getElementById("index_inside_tag").checked,
+            'index_inside_tag':document.getElementById("index_inside_tag").checked
         },
         async:false,
         method:'POST',

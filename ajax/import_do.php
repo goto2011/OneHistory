@@ -49,7 +49,7 @@
      */
     function is_index_inside_tag()
     {
-        if (($_POST['index_inside_tag'] == 1) && (strlen($_POST['note_tags']) > 0))
+        if (($_POST['index_inside_tag'] == "true") && (strlen($_POST['note_tags']) > 0))
         {
             return 1;
         }
@@ -70,6 +70,13 @@
     	$context = one_line_flag(html_encode($_POST['context']));
     	$token = strtok($context, "\r");
     	$index = 0;
+        $thing_index_inside_tag = 0;
+        
+        // 获取标签内编号的基数。
+        if (($operate_type == 2) && (is_index_inside_tag() == 1))
+        {
+            $thing_index_inside_tag = get_index_base_inside_tag($_POST['note_tags']);
+        }
     	
     	while(($token != false) && (strlen($token) > 0))
     	{
@@ -91,7 +98,8 @@
                 {
                     if (is_index_inside_tag() == 1)
                     {
-                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing'], $_POST['note_tags'], $index);
+                        $thing_index_inside_tag++;
+                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing'], $thing_index_inside_tag);
                     }
                     else 
                     {

@@ -129,7 +129,6 @@
 <div class="easyui-tabs" style="" >
     
 <?php
-    $tag_array = array();
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         // 是否显示在tab list中。

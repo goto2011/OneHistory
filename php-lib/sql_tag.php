@@ -33,8 +33,8 @@ $tag_control = array(
     array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
     array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(11,     "关键事件",         1,    1,      "key_tags"),
-    array(9,      "官制",             1,    0,      "office_tags"),   // vip tag.
+    array(11,     "关键事件",         1,    1,      "key_tags"),        // vip tag.
+    array(9,      "官制",             1,    0,      "office_tags"),
     array(12,     "管理标签",         3,    0,      ""),
     array(6,      "自由标签",         1,    0,      "free_tags"),
     array(1,      "事件开始",         2,    0,      "start_tags"),
@@ -142,7 +142,7 @@ function get_tag_input_id_from_index($tag_index_id)
 }
 
 /**
- * 是否显示在tag input界面上.
+ * 是否显示在tag input界面（即import/udpate页面）上，即为真正的tag。
  */
 function is_show_input_tag($tag_index_id)
 {
@@ -159,7 +159,7 @@ function is_show_input_tag($tag_index_id)
 }
 
 /**
- * 是否显示在list tab界面.
+ * 是否显示在list tab主界面的标签栏上.
  */
 function is_show_list_tab($tag_index_id)
 {
@@ -176,7 +176,7 @@ function is_show_list_tab($tag_index_id)
 }
 
 /**
- * 是否显示在检索、add tag等界面下.
+ * 是否显示检索、add tag等界面.
  */
 function is_show_search_add($tag_index_id)
 {
@@ -201,23 +201,6 @@ function is_vip_user_show_tab($tag_index_id)
     
     // 3是管理界面
     if ($tag_show == 3)
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * 是否显示在 function-tag edit页面.
- */
-function is_tag_edit_show_tab($tag_index_id)
-{
-    $tag_show = get_tag_show_type_from_index($tag_index_id);
-    
-    if (($tag_show == 1) || ($tag_show == 2))
     {
         return 1;
     }
@@ -263,47 +246,47 @@ function is_period()
 /**
  * 判断当前是否是 中国朝代 页面.
  */
-function is_dynasty()
+function is_dynasty($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 8);
+    return ($tag_type == 8);
 }
 
 /**
  * 判断当前是否是 国家民族 页面.
  */
-function is_country()
+function is_country($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 7);
+    return ($tag_type == 7);
 }
 
 /**
  * 判断当前是否是 专题 页面.
  */
-function is_topic()
+function is_topic($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 10);
+    return ($tag_type == 10);
 }
 
 // 判断当前是否是 city 页面.
-function is_city()
+function is_city($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 5);
+    return ($tag_type == 5);
 }
 
 /**
  * 判断当前是否是 person 页面.
  */
-function is_person()
+function is_person($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 4);
+    return ($tag_type == 4);
 }
 
 /**
  * 判断当前是否是 key_thing 页面.
  */
-function is_key_thing()
+function is_key_thing($tag_type)
 {
-    return (get_tag_id_from_index(get_current_list_id()) == 11);
+    return ($tag_type == 11);
 }
 
 /**
@@ -321,6 +304,15 @@ function is_note($tag_type)
 {
     return ($tag_type == 13);
 }
+
+/**
+ * 获取 笔记 tag type 的id。
+ */
+function get_note_tag_id()
+{
+    return 13;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -361,7 +353,9 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
     return $result;
 }
 
-// 从界面获取多个类型的标签。
+/**
+ * 遍历从界面获取多个类型的标签，一个一个传给insert_tags进行存储。
+ */
 function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
@@ -654,7 +648,7 @@ function get_tags_array($list_id)
     // 获取property数据表的数据
     $tags_array = array();
     
-    // 2015-5-28, 临时修改为10000，不是很对。
+    // 2015-5-28, 临时修改为10000，当前情况已经满足。
     $result = get_tags_db($list_id, 10000);
     while($row = mysql_fetch_array($result))
     {
@@ -898,74 +892,94 @@ function tag_is_vip($tag_uuid)
 
 /**
  * 将vip tag 作为关键字自动检索。-1表示失败。
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),
-    array(7,      "国家民族",         1,    1,      "country_tags"),
-    array(10,     "专题",             1,    1,      "topic_tags"),
-    array(5,      "城市地区",         1,    1,      "geography_tags"),
-    array(4,      "人物",             1,    1,      "person_tags"),
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
+    array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
+    array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
+    array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
+    array(11,     "关键事件",         1,    1,      "key_tags"),        // vip tag.
+    array(9,      "官制",             1,    0,      "office_tags"),
  */
-function vip_tag_search_to_db()
+function vip_tag_search_to_db($tag_type = 1)
 {
     // 本函数执行时间长，去掉php执行时间限制。
     ini_set('max_execution_time', '0');
 
     // dynasty_tags
-    for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
+    if (is_dynasty($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
+        for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
         {
-            $tag_name = get_dynasty_name($ii, $jj);
-            tag_search_to_db($tag_name, 8);
+            for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
+            {
+                $tag_name = get_dynasty_name($ii, $jj);
+                tag_search_to_db($tag_name, 8);
+            }
         }
     }
     
     // country_tags
-    for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
+    if (is_country($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
+        for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
         {
-            $tag_name = get_country_name($ii, $jj);
-            tag_search_to_db($tag_name, 7);
+            for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
+            {
+                $tag_name = get_country_name($ii, $jj);
+                tag_search_to_db($tag_name, 7);
+            }
         }
     }
     
     // topic_tags
-    for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
+    if (is_topic($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
+        for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
         {
-            $tag_name = get_topic_name($ii, $jj);
-            tag_search_to_db($tag_name, 10);
+            for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
+            {
+                $tag_name = get_topic_name($ii, $jj);
+                tag_search_to_db($tag_name, 10);
+            }
         }
     }
     
-    // geography_tags
-    for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
+    // city_tags
+    if (is_city($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
+        for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
         {
-            $tag_name = get_city_name($ii, $jj);
-            tag_search_to_db($tag_name, 5);
+            for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
+            {
+                $tag_name = get_city_name($ii, $jj);
+                tag_search_to_db($tag_name, 5);
+            }
         }
     }
 
     // person_tags
-    for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
+    if (is_person($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
+        for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
         {
-            $tag_name = get_person_name($ii, $jj);
-            tag_search_to_db($tag_name, 4);
+            for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
+            {
+                $tag_name = get_person_name($ii, $jj);
+                tag_search_to_db($tag_name, 4);
+            }
         }
     }
     
     // key_thing_tags
-    for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
+    if (is_key_thing($tag_type) || ($tag_type == 1))
     {
-        for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
+        for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
         {
-            $tag_name = get_key_thing_name($ii, $jj);
-            tag_search_to_db($tag_name, 11);
+            for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
+            {
+                $tag_name = get_key_thing_name($ii, $jj);
+                tag_search_to_db($tag_name, 11);
+            }
         }
     }
     
@@ -981,8 +995,9 @@ function vip_tag_search_to_db()
  */
 function tag_search_to_db($tag_name, $tag_type)
 {
-    // 1. 生成检索条件。获取符合条件的thing 表结果集
-    $db_result = get_thing_item_by_search_total($tag_name);
+    // 1. 生成检索条件。获取符合条件的thing 表结果集.
+    // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
+    $db_result = get_thing_item_by_search_total($tag_name, FALSE);
     
     // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
     if ($db_result != NULL)
@@ -998,6 +1013,32 @@ function tag_search_to_db($tag_name, $tag_type)
             }
         }
     }
+}
+
+/**
+ * 根据tag name和 tag type 获得 tag uuid。
+ * @return: 返回""表示数据库中没有对应数据。
+ */
+function get_tag_uuid_from_name($tag_name, $tag_type)
+{
+    $sql_string = "select property_UUID from property where property_type = $tag_type 
+        and property_name = '$tag_name'";
+       
+    $result = mysql_query($sql_string);
+   
+    if($result == FALSE)
+    {
+       $GLOBALS['log']->error("error: get_tag_uuid_from_name() -- $sql_string 。");
+       return "";
+    }
+   
+    $row = mysql_fetch_row($result);    // 返回一行.
+    if ($row == NULL)
+    {
+        return "";
+    }
+    
+    return $row[0];
 }
 
 ?>

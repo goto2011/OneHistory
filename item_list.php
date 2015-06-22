@@ -280,6 +280,8 @@ window.onload = function()
         
         // add, 2015-4-19
         // 打印一般的标签区
+        $my_tag_id = get_tag_id_from_index(get_current_list_id());
+        
         if(is_vip_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据
@@ -303,7 +305,7 @@ window.onload = function()
         }
         // add, 2015-4-19
         // 是中国朝代
-        else if(is_dynasty())
+        else if(is_dynasty($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -318,7 +320,7 @@ window.onload = function()
             echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
-        else if(is_country())
+        else if(is_country($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -333,7 +335,7 @@ window.onload = function()
             echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
-        else if(is_topic())
+        else if(is_topic($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -348,7 +350,7 @@ window.onload = function()
             echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
-        else if(is_city())
+        else if(is_city($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -363,7 +365,7 @@ window.onload = function()
             echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
-        else if(is_person())
+        else if(is_person($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -378,7 +380,7 @@ window.onload = function()
             echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
-        else if(is_key_thing())
+        else if(is_key_thing($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());

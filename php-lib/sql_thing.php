@@ -33,11 +33,36 @@ function thing_context_is_exist($thing_content)
 }
 
 /**
- * 根据
+ * 根据 note tag 获取当前的index的基数。
  */
-function get_index_inside_tag($note_tags, $index)
+function get_index_base_inside_tag($note_tags)
 {
+    // 根据 $note_tags 获得对应tag的uuid。暂时不考虑多个 note tag的情况。
+    $tag_uuid = get_tag_uuid_from_name($note_tags, get_note_tag_id());
+    if ($tag_uuid == "")
+    {
+        return 0;
+    }
     
+    // 获取对应 note tag名下现存最大的 index值。如果没有，就返回零。
+    $sql_string = "select max(thing_index) from thing_time where uuid in 
+        (select thing_UUID from thing_property where property_UUID = '$tag_uuid')";
+       
+    $result = mysql_query($sql_string);
+   
+    if($result == FALSE)
+    {
+       $GLOBALS['log']->error("error: get_tag_uuid_from_name() -- $sql_string 。");
+       return 0;
+    }
+   
+    $row = mysql_fetch_row($result);    // 返回一行.
+    if ($row[0] == "")
+    {
+        return 0;
+    }
+    
+    return $row[0];
 }
  
  
@@ -45,7 +70,7 @@ function get_index_inside_tag($note_tags, $index)
  * 将事件-时间数据写入数据库. 
  * @return: 返回时间的uuid。
  */
-function insert_thing_to_db($time_array, $thing, $note_tags = "", $index = 0)
+function insert_thing_to_db($time_array, $thing, $thing_index = 0)
 {
     if ($time_array['status'] != "ok")
     {
@@ -60,27 +85,18 @@ function insert_thing_to_db($time_array, $thing, $note_tags = "", $index = 0)
     $time_limit_type = $time_array['time_limit_type'];
     $year_order = get_year_order($time, $time_type);
     
-    if ((strlen($note_tags) > 0) && ($index > 0))
-    {
-        $my_thing_index = get_index_inside_tag($note_tags, $index);
-    }
-    else
-    {
-        $my_thing_index = 0;  
-    }
-    
     // 检查事件内容是否已存在。
     $thing_uuid = thing_context_is_exist($thing);
     if ($thing_uuid != "")
     {
-        update_thing_to_db($thing_uuid, $time_array, $thing, $my_thing_index);
+        update_thing_to_db($thing_uuid, $time_array, $thing, $thing_index);
         return $thing_uuid;
     }
 
     $thing_uuid = create_guid();
     $sql_string = "INSERT INTO thing_time(uuid, time, time_type, time_limit, time_limit_type, 
        thing, add_time, public_tag, user_UUID, year_order, thing_index) VALUES('$thing_uuid', '$time', $time_type, 
-       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order, $my_thing_index)";
+       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order, $thing_index)";
     
     if (mysql_query($sql_string) === TRUE)
     {
@@ -185,7 +201,7 @@ function get_thing_count($list_type)
 // 获取 thing 表的字段
 function get_thing_item_db($list_type, $offset, $page_size)
 {
-    $order_sub = " order by thing_time.year_order ASC limit $offset, $page_size ";
+    $order_sub = " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
     
     switch ($list_type)
     {

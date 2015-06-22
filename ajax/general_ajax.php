@@ -44,7 +44,7 @@
     // 自动将事件添加vip标签
     else if($_GET['operate_type'] == "re_thing_add_vip_tag")
     {
-        if (vip_tag_search_to_db() == 1)
+        if (vip_tag_search_to_db($_GET['vip_tag_checked']) == 1)
         {
             echo "ok";
         }

@@ -39,30 +39,57 @@
  
 <script>
 // 显示调用结果。
-function manager_show_status(this_form, is_ok)
+function manager_show_status(this_form, is_ok, is_display)
 {
-    document.getElementById(this_form).style.color = "red";
-    if (is_ok == 1)
+    if (is_display == 1)
     {
-        document.getElementById(this_form).innerHTML = "更新成功!";
+        document.getElementById(this_form).style.color = "red";
+        if (is_ok == 1)
+        {
+            document.getElementById(this_form).innerHTML = "更新成功!";
+        }
+        else
+        {
+            document.getElementById(this_form).innerHTML = "更新失败!";
+        }
+        document.getElementById(this_form).style.display = "inline";
     }
     else
     {
-        document.getElementById(this_form).innerHTML = "更新失败!";
+        document.getElementById(this_form).style.display = "none";
     }
-    document.getElementById(this_form).style.display = "inline";
 }
 
 // 设置按钮的状态.
 function make_button_status(operate_type, disabled)
 {
+    // = true 表示去激活；= false 表示激活。
     document.getElementById(operate_type).disabled = disabled;
+}
+
+/**
+ * 设置状态条的状态。
+ */
+function change_status_lable(operate_type, res_status, is_display)
+{
+    if (operate_type == "re_calc_year_order")
+    {
+        manager_show_status("re_calc_year_order_label", res_status, is_display);
+    }
+    else if (operate_type == "re_calc_tag_hot_index")
+    {
+        manager_show_status("re_calc_tag_hot_index_label", res_status, is_display);
+    }
+    else if (operate_type == "re_thing_add_vip_tag")
+    {
+        manager_show_status("re_thing_add_vip_tag_label", res_status, is_display);
+    }
 }
 
 // 调用成功后的回调函数。
 function succ_callback(operate_type, data)
 {
-    make_button_status(operate_type, true);
+    make_button_status(operate_type, false);
     
     if (data == "ok")
     {
@@ -72,19 +99,7 @@ function succ_callback(operate_type, data)
     {
         res_status = 0;
     }
-    
-    if (operate_type == "re_calc_year_order")
-    {
-        manager_show_status("re_calc_year_order_label", res_status);
-    }
-    else if (operate_type == "re_calc_tag_hot_index")
-    {
-        manager_show_status("re_calc_tag_hot_index_label", res_status);
-    }
-    else if (operate_type == "re_thing_add_vip_tag")
-    {
-        manager_show_status("re_thing_add_vip_tag_label", res_status);
-    }
+    change_status_lable(operate_type, res_status, 1);
 }
 
 // 发起Ajax通讯。
@@ -92,11 +107,13 @@ function ajax_do(operate_type)
 {
     // 将控件灰掉，防止用户多次点击。
     make_button_status(operate_type, true);
+    change_status_lable(operate_type, "", 0);
             
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
-            'operate_type':operate_type
+            'operate_type'      :operate_type,
+            'vip_tag_checked'   :get_checkbox_value("tag_type")
         },
         async:false,
         method:'GET',
@@ -128,7 +145,23 @@ function ajax_do(operate_type)
 <div class="system_user">
     <input type="submit" style="font-size:18pt" value="自动将事件添加vip标签" 
         id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->
-    <div class="label" id="re_thing_add_vip_tag_label"></div>
+        
+<?php
+    echo "<input type='radio' name=tag_type value='1' checked='checked'>全部";
+    
+    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
+    {
+        if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))
+        {
+            $tag_id = get_tag_id_from_index($ii);
+            $tag_name = get_tag_list_name_from_index($ii);
+            
+            echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
+        }
+    }
+?>
+
+    </br></br><div class="label" id="re_thing_add_vip_tag_label"></div>
 </div>
 
 
