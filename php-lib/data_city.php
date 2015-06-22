@@ -64,6 +64,8 @@ $city = array
         array("首尔"),
         array("济州"),
         array("大阪"),
+        array("北海道"),
+        array("京都"),
         array("马尼拉"),
         array("渥太华"),
         array("魁北克"),
@@ -271,7 +273,6 @@ $city = array
         array("柳州"),
         array("百色"),
         array("梧州"),
-        array("北海"),
     ),
     array
     (

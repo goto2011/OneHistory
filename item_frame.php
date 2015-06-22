@@ -12,8 +12,8 @@
     require_once "list_control.php";
     require_once "list_search.php";
     
-    // 界面初始化。
-    if (get_list_control_init_status() == 0)
+    // 检查 list control对象的状态和版本号。
+    if ((get_list_control_init_status() == 0) || (list_control_version_check() == 0))
     {
         list_control_init();
         search_param_init();
@@ -111,7 +111,14 @@
 		}
         
         // 传递 item_list.
-        $tab_string .= " href='item_list.php?list_type=" . $my_list_type . "' ";
+        if (is_person(get_tag_id_from_index($my_list_type)) == 1)
+        {
+            $tab_string .= " href='person_frame.php?list_type=" . $my_list_type . "' ";
+        }
+        else
+        {
+            $tab_string .= " href='item_list.php?list_type=" . $my_list_type . "' ";
+        }
         
 	    return $tab_string;
 	}

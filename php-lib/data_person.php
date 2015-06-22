@@ -28,6 +28,9 @@ $person = array
         array("法拉第"),
         array("巴斯德"),
         array("伽俐略"),
+        array("毕达哥拉斯"),
+        array("阿那克西曼德"),
+        array("泰勒斯"),
         array("亚里士多德"),
         array("达尔文"),
         array("欧几里德"),
@@ -312,17 +315,34 @@ $person = array
         // 人文思想家
         array("柏拉图"),
         array("亚里士多德"),
+        array("阿奎那"),
+        array("奥古斯丁"),
+        array("培根"),
         array("洛克"),
         array("亚当·斯密"),
-        array("奥古斯丁"),
+        array("威廉·亚当斯"),
         array("笛卡尔"),
         array("卢梭"),
         array("马尔萨斯"),
-        array("培根"),
         array("伏尔泰"),
+        array("巴克莱"),
+        array("斯宾诺莎"),
+        array("莱布尼兹"),
+        array("费希特"),
+        array("谢林"),
+        array("席勒"),
+        array("康德"),
+        array("叔本华"),
+        array("黑格尔"),
         array("马基维利亚"),
         array("弗洛伊德"),
         array("马克思"),
+        array("尼采"),
+        array("胡塞尔"),
+        array("海德拉尔"),
+        array("萨特"),
+        array("罗素"),
+        array("维特根斯坦"),
         
         array("孔子"),
         array("老子"),
@@ -472,6 +492,8 @@ $person = array
     array
     (
         // 外国政治人物
+        array("梭伦"),
+        
         array("凯撒"),
         array("亚历山大大帝"),
         array("君士坦丁大帝"),
@@ -483,8 +505,13 @@ $person = array
         array("达·伽马"),
         array("查理曼"),
         array("塞鲁士大帝"),
+        array("丰臣秀吉"),
+        array("德川家康"),
         array("克伦威尔"),
         array("华盛顿"),
+        array("富兰克林"),
+        array("杰斐逊"),
+        
         array("玻利瓦尔"),
         array("弗朗西斯科·皮扎诺"),
         array("荷南多·科尔特斯"),
@@ -502,7 +529,6 @@ $person = array
         
         array("列宁"),
         array("斯大林"),
-        
         array("希特勒"),
         array("肯尼迪"),
         array("麦克阿瑟"),
@@ -570,6 +596,8 @@ $person = array
         array("西门豹"),
         array("公仲连"),
         array("楚悼王"),
+        array("勾践"),
+        array("夫差"),
         array("邹忌"),
         array("田忌"),
         array("孙膑"),
@@ -1868,6 +1896,7 @@ $person = array
         array("王树声"),
         array("许光达"),
         array("习仲勋"),
+        array("陈云"),
         array("薄一波"),
     ),
     array
@@ -1895,6 +1924,7 @@ $person = array
         array("习近平"),
         array("王岐山"),
         array("李克强"),
+        array("邓力群"),
     ),
     array
     (
@@ -1908,33 +1938,33 @@ function get_big_person_name($index)
     switch($index)
     {
         case 1:
-            return "科学";
+            return "科学人物";
         case 2:
-            return "文学";
+            return "文学人物";
         case 3:
             return "艺术体育";
         case 4:
             return "人文思想";
         case 5:
-            return "宗教";
+            return "宗教人物";
         case 6:
-            return "工商界";
+            return "工商人物";
         case 7:
             return "政治人物";
         case 8:
-            return "中国先秦";
+            return "先秦人物";
         case 9:
-            return "中国秦汉晋南北朝";
+            return "秦汉晋南北朝";
         case 10:
-            return "中国隋唐五代";
+            return "隋唐五代";
         case 11:
-            return "中国宋辽夏金元";
+            return "宋辽夏金元";
         case 12:
-            return "中国明清";
+            return "明清人物";
         case 13:
-            return "中国晚晴民国";
+            return "晚晴民国";
         case 14:
-            return "中国现代";
+            return "现代人物";
         default:
             return "其它";
     }

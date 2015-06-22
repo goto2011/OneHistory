@@ -21,7 +21,10 @@ function get_current_list_id()
     return $_SESSION['current_list'];
 }
 
-// 返回界面是否初始化的状态。返回1表示已经初始化；返回0表示没有初始化。
+/**
+ * 返回界面是否初始化的状态。
+ * @return: 返回1表示已经初始化；返回0表示没有初始化。
+ */
 function get_list_control_init_status()
 {
     if ($_SESSION['list_control_inited'] == 1)
@@ -34,18 +37,33 @@ function get_list_control_init_status()
     }
 }
 
-// list 界面初始化
+// list 控制对象 初始化
 function list_control_init()
 {
-    if (empty($_SESSION['list_control_inited']) || ($_SESSION['list_control_inited']) == 0)
+    set_current_list(1);
+    
+    for ($ii = 1; $ii <= get_list_count(); $ii++)
     {
-        set_current_list(1);
-        for ($ii = 1; $ii <= get_list_count(); $ii++)
-        {
-            list_param_init($ii);
-        }
-        
-        $_SESSION['list_control_inited'] = 1;
+        list_param_init($ii);
+    }
+    
+    $_SESSION['list_control_version'] = 3;
+    $_SESSION['list_control_inited'] = 1;
+}
+
+/**
+ * 检查 list 控制对象的版本号。
+ * @return: 返回1表示当前版本正确；返回0表示不正确。
+ */
+function list_control_version_check($this_verson = 3)
+{
+    if ($_SESSION['list_control_version'] == $this_verson)
+    {
+        return 1;
+    }
+    else 
+    {
+        return 0;
     }
 }
 
@@ -67,8 +85,10 @@ function &get_current_list()
 function list_param_init($list_id)
 {
     $session_name = "list_number_" . $list_id;
+    unset($_SESSION[$session_name]);   // 这是一个array，需要内存回收。
+    
     $_SESSION[$session_name] = array("property_UUID"=>"", "page"=>1, "item_index"=>1,
-        "period_big_index"=>-1, "period_small_index"=>-1);
+        "period_big_index"=>-1, "period_small_index"=>-1, "sub_list_id"=>1);
 }
 
 // 为了调试方便，打印 list控制变量
@@ -185,6 +205,19 @@ function get_period_small_index()
 {
     $list_info = get_current_list();
     return $list_info['period_small_index'];
+}
+
+// sub_list_id
+function set_sub_list_id($sub_list_id)
+{
+    $list_info = &get_current_list();
+    $list_info['sub_list_id'] = $sub_list_id;
+}
+
+function get_sub_list_id()
+{
+    $list_info = get_current_list();
+    return $list_info['sub_list_id'];
 }
 
 ?>

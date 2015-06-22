@@ -29,7 +29,7 @@ $dynasty = array
         array("清朝"),
         array("中华民国"),
         array("中华人民共和国"),
-        array("中华民国台湾"),
+        array("台湾"),
     ),
     array
     (

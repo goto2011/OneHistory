@@ -22,6 +22,7 @@ $topic = array
         array("水灾"),
         array("火灾"),
         array("空难"),
+        array("矿难"),
         array("交通事故"),
         array("病疫"),
         array("自杀"),
@@ -104,17 +105,20 @@ $topic = array
         array("IT技术"),
         array("IT行业"),
         array("私有制"),
+        array("公有制"),
     ),
     array
     (
         // 政治外交
         array("政治"),
-        array("民主选举"),
+        array("民主"),
+        array("选举"),
+        array("宪法"),
         array("国家制度"),
         array("财政"),
         array("税收"),
-        array("宪法"),
-        array("法律犯罪"),
+        array("法律"),
+        array("犯罪"),
         array("国际关系"),
         array("战略思想"),
         array("条约"),
@@ -131,12 +135,14 @@ $topic = array
     (
         // 中国政治问题
         array("皇权"),
+        array("太子"),
+        array("宰相"),
         array("中央和地方官制"),
         array("科举"),
-        array("监察制度"),
-        array("宗室问题"),
-        array("土地问题"),
-        array("奴婢问题"),
+        array("监察"),
+        array("宗室"),
+        array("土地"),
+        array("奴婢"),
         array("士族"),
         array("外戚"),
         array("权臣"),
@@ -163,7 +169,7 @@ function get_big_topic_name($index)
         case 1:
             return "武装冲突";
         case 2:
-            return "灾难事故犯罪";
+            return "灾难事故";
         case 3:
             return "科学技术";
         case 4:

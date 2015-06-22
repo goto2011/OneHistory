@@ -282,6 +282,14 @@ function is_person($tag_type)
 }
 
 /**
+ * 获取 人物 tag type 的id。
+ */
+function get_person_tag_id()
+{
+    return 4;
+}
+
+/**
  * 判断当前是否是 key_thing 页面.
  */
 function is_key_thing($tag_type)
