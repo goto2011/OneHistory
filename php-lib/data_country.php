@@ -8,9 +8,6 @@ $country = array
     array
     (
         // 古代文明
-        array("古人类遗址"),
-        array("远东文明遗址"),
-        array("西方文明遗址"),
         array("古苏美尔"),
         array("古埃及"),
         array("古赫梯"),
@@ -129,6 +126,7 @@ $country = array
         array("苏丹"),
         array("津巴布韦"),
         array("马达加斯加"),
+        array("乍得"),
     ),
     array
     (

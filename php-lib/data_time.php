@@ -496,12 +496,14 @@ function get_time_from_native($native_string)
     if(is_numeric($native_string) && !strstr($native_string, "."))
     {
         $time_array['time'] = (int)$native_string;
-        $time_array['time_type'] = 2;    /// 公元年
-        $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 1;
-        $time_array['status'] = "ok";
-        
-        return $time_array;
+        if ($time_array['time'] != 0)
+        {
+            $time_array['time_type'] = 2;    /// 公元年
+            $time_array['time_limit'] = 0;
+            $time_array['time_limit_type'] = 1;
+            $time_array['status'] = "ok";
+            return $time_array;
+        }
     }
     
     // step 5: 搞定"年-月-日", 以及"Y-M-D". 分割线也支持"/"和".".
@@ -648,12 +650,15 @@ function get_time_from_native($native_string)
             $time_array['time_limit'] = 15;
         }
         
-        $time_array['time'] = juliantojd($my_month, $my_day, $my_year);
-        $time_array['time_type'] = 3;    /// 年月日
-        $time_array['time_limit_type'] = 2;  // 日
-        $time_array['status'] = "ok";
-        
-        return $time_array;
+        if($my_year != 0)
+        {
+            $time_array['time'] = juliantojd($my_month, $my_day, $my_year);
+            $time_array['time_type'] = 3;    /// 年月日
+            $time_array['time_limit_type'] = 2;  // 日
+            $time_array['status'] = "ok";
+            
+            return $time_array;
+        }
     }
     
     // step 9: 搞定上半年/下半年
@@ -746,13 +751,16 @@ function get_time_from_native($native_string)
     // step 12: 搞定只有"年"的情况(到这里还没有识别完, 肯定只有年了)
     if (stristr($native_string, "年"))
     {
-        $time_array['time'] = $my_year;
-        $time_array['time_type'] = 2;    /// 公元年
-        $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 1;  // 年
-        $time_array['status'] = "ok";
-        
-        return $time_array;
+        if ($my_year != 0)
+        {
+            $time_array['time'] = $my_year;
+            $time_array['time_type'] = 2;    /// 公元年
+            $time_array['time_limit'] = 0;
+            $time_array['time_limit_type'] = 1;  // 年
+            $time_array['status'] = "ok";
+            
+            return $time_array;
+        }
     }
     
     // step 13: 搞定世纪

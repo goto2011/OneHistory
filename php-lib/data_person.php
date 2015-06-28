@@ -548,7 +548,7 @@ $person = array
         // 中国先秦
         array("鲧"),
         array("禹"),
-        array("启"),
+        array("夏启"),
         array("太康"),
         array("羿"),
         array("少康"),

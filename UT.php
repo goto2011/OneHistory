@@ -17,7 +17,7 @@
     // get_time_from_native("2004年2月11日11时35分");
     // get_time_from_native("2004-2-2 16:10:00");
     // echo get_search_where_sub("1913-10-15") . "<br />";
-
+    get_time_from_native("月");
     
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
@@ -52,7 +52,7 @@
         }
         else 
         {
-            echo $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
+            echo $my['status'] . "--" . $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
                 . "--" . $my['time_limit_type'] . "<-";
             return FALSE;
         }
@@ -130,7 +130,7 @@
     
     // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
     // time_limit_type: 1:年; 2:日; 3:秒.
-    // $time_array = array("time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1);
+    // array("status"=>"init", "time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
     
     assert('days_to_time_string(time_string_to_days("-1975-10-3")) == "10/3/-1975"');
     assert('days_to_time_string(time_string_to_days("2015-10-3")) == "10/3/2015"');
@@ -139,8 +139,13 @@
     assert('UT_get_time_from_native("3.5亿年前", -350000000, 1, 0, 1)');
     assert('UT_get_time_from_native("400.65万年前", -4006500, 1, 0, 1)');
     assert('UT_get_time_from_native("400. 65万年前", -4006500, 1, 0, 1)');
+    
+    assert('UT_get_time_from_native("公元前7000年", -7000, 2, 0, 1)');
+    assert('UT_get_time_from_native("7000年前", -7000, 1, 0, 1)');
+    
     assert('UT_get_time_from_native("1876年", 1876, 2, 0, 1)');
     assert('UT_get_time_from_native("1876 年", 1876, 2, 0, 1)');
+    
     assert('UT_get_time_from_native("1955年7月1日", time_string_to_days("1955-7-1"), 3, 0, 1)');
     assert('UT_get_time_from_native("195 5年7月 1日", time_string_to_days("1955-7-1"), 3, 0, 1)');
     assert('UT_get_time_from_native("1955-7-1", time_string_to_days("1955-7-1"), 3, 0, 1)');
@@ -330,6 +335,12 @@
     assert('UT_get_time_from_native("2004-2-2 16:10:00", time_string_to_seconds("2004-2-2 16:10:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004-3-1 23:20:59", time_string_to_seconds("2004-3-1 23:20:59"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004-6-9 10:00:00", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    
+    // 不应该识别成时间字符串的。
+    assert('UT_get_time_from_native("那一年", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("月", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("日", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("0", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
     
     
     echo "</br>";

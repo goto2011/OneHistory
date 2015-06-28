@@ -18,29 +18,29 @@ function tag_list_max()
 }
 
 // tag list 、tag index、tag id 对应关系。
-// [0]表示数据库中的tag type；
+// [0]表示数据库中的tag type；为负数表示不保存到数据库，只在逻辑上使用。
 // [1]表示标签名称；
 // [2]表示是标签显示特征（0-非tag的tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
 // [3]表示是否为key tag (0不是，1是)。
 // [4]表示tag 输入框的id（字符串，用于import/input页面）。
 $tag_control = array(
     array(-1,     "全部",              0,   0,      ""),
-    array(-1,     "我的关注",          0,   0,      ""),
-    array(-1,     "最新标签",          0,   0,      ""),
-    array(-1,     "时间分期",          0,   1,      ""),                // vip tag.
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
+    array(-2,     "我的关注",          0,   0,      ""),
+    array(-3,     "最新标签",          0,   0,      ""),
+    array(-4,     "时间",             0,   1,      ""),                // vip tag.
     array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
+    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
+    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
     array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
     array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
     array(11,     "关键事件",         1,    1,      "key_tags"),        // vip tag.
     array(9,      "官制",             1,    0,      "office_tags"),
-    array(12,     "管理标签",         3,    0,      ""),
     array(6,      "自由标签",         1,    0,      "free_tags"),
     array(1,      "事件开始",         2,    0,      "start_tags"),
     array(2,      "事件结束",         2,    0,      "end_tags"),
     array(3,      "出处",             1,    0,      "source_tags"),
     array(13,     "笔记",             1,    0,      "note_tags"),
+    array(12,     "标签管理",         3,    0,      ""),
 );
 
 
@@ -240,7 +240,7 @@ function is_total()
  */
 function is_period()
 {
-    return (get_current_list_id() == 4);
+    return (get_tag_id_from_index(get_current_list_id()) == -4);
 }
 
 /**

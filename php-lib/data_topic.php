@@ -7,16 +7,25 @@ $topic = array
 (
     array
     (
-        // 武装冲突
+        // 历史
+        array("历史学"),
+        array("考古"),
+        array("地质年代"),
+        array("中国年号"),
+        array("古人类遗址"),
+        array("远东文明遗址"),
+        array("西方文明遗址"),
+        array("中学历史大事年表"),
+        array("一千件历史大事"),
+        array("三万件历史大事"),
+    ),
+    array
+    (
+        // 死亡
         array("大屠杀"),
         array("战争"),
         array("国际冲突"),
         array("国内冲突"),
-        array("种族仇杀"),
-    ),
-    array
-    (
-        // 灾难事故犯罪
         array("饥荒"),
         array("地震"),
         array("水灾"),
@@ -26,6 +35,8 @@ $topic = array
         array("交通事故"),
         array("病疫"),
         array("自杀"),
+        array("谋杀"),
+        array("死刑"),
     ),
     array
     (
@@ -40,7 +51,6 @@ $topic = array
         array("逻辑学"),
         array("地理"),
         array("医学"),
-        array("心理学"),
         array("诺贝尔奖"),
         array("中医"),
     ),
@@ -49,10 +59,12 @@ $topic = array
         // 艺术文化体育
         array("文学"),
         array("小说"),
+        array("音乐"),
+        array("美术"),
+        array("雕像"),
         array("电影"),
         array("电视剧"),
         array("书法"),
-        array("美术"),
         array("体育"),
         array("足球"),
         array("奥运会"),
@@ -69,6 +81,7 @@ $topic = array
         array("印度教"),
         array("萨满教"),
         array("其它宗教"),
+        
         array("古希腊哲学"),
         array("中世纪哲学"),
         array("康德哲学"),
@@ -84,22 +97,20 @@ $topic = array
     (
         // 人文社会
         array("社会"),
-        array("历史学"),
-        array("社会学"),
         array("婚嫁情感"),
-        array("道德伦理"),
+        array("伦理学"),
+        array("心理学"),
+        array("经济学"),
+        array("社会学"),
         array("户口"),
     ),
     array
     (
-        // 农业
+        // 经济
         array("农业"),
         array("土地制度"),
         array("水利"),
-    ),
-    array
-    (
-        // 工商业
+        
         array("工业"),
         array("金融业"),
         array("IT技术"),
@@ -167,9 +178,9 @@ function get_big_topic_name($index)
     switch($index)
     {
         case 1:
-            return "武装冲突";
+            return "历史";
         case 2:
-            return "灾难事故";
+            return "死亡";
         case 3:
             return "科学技术";
         case 4:
@@ -179,12 +190,10 @@ function get_big_topic_name($index)
         case 6:
             return "人文社会";
         case 7:
-            return "农业";
+            return "经济";
         case 8:
-            return "工商业";
-        case 9:
             return "政治外交";
-        case 10:
+        case 9:
             return "中国政治问题";
         default:
             return "其它";
