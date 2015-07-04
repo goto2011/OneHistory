@@ -6,14 +6,30 @@
  */
 function remove_html_code(str)
 {
-	s = "@|#|$|^|&|*|html|body|pre|iframe|head|script|embed|meta|form|noscript";
-	var char =  s.split('|');
-	for (var i = 0; i < char.length; i++)
-	{
-		str = str.replace(char[i],' ');
-	}
+	/*
+	str = str.replace((@|#|$|^|&|*|html|body|pre|iframe|head|script|embed|meta|form|noscript)/g, ' ');
+	alert(str);
 	
 	return str;
+	*/
+	
+	s = "@|#|$|^|&|*|html|body|pre|iframe|head|script|embed|meta|form|noscript";
+	var my_char =  s.split('|');
+	for (var i = 0; i < my_char.length; i++)
+	{
+		var reg=new RegExp("\\" + my_char[i], "g"); 
+		str = str.replace(reg, ' ');
+	}
+	return str;
+	
+	/*
+	var pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*|]");
+    var rs = "";
+  	for (var i = 0; i < s.length; i++) {
+    	rs = rs + str.substr(i, 1).replace(pattern, '');
+  	}
+  	return rs;
+	*/
 }
 
 /**

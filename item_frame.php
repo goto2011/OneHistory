@@ -113,7 +113,8 @@
         // 传递 item_list.
         if (is_person(get_tag_id_from_index($my_list_type)) == 1)
         {
-            $tab_string .= " href='person_frame.php?list_type=" . $my_list_type . "' ";
+            $tab_string .= " href='person_frame.php?list_type=" . $my_list_type . "&page=" . get_page() . "' ";
+            // $tab_string .= " href='person_frame.php?list_type=" . $my_list_type . "' ";
         }
         else
         {

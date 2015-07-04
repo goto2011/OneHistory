@@ -10,14 +10,29 @@ $topic = array
         // 历史
         array("历史学"),
         array("考古"),
+        array("分子遗传学"),
         array("地质年代"),
         array("中国年号"),
+        array("中学历史年表"),
+        array("全国重点文物保护单位"),
+    ),
+    array
+    (
+        // 史前史
         array("古人类遗址"),
-        array("远东文明遗址"),
-        array("西方文明遗址"),
-        array("中学历史大事年表"),
-        array("一千件历史大事"),
-        array("三万件历史大事"),
+        array("人类文明遗址"),
+        array("石器时代"),
+        array("青铜时代"),
+        array("铁器时代"),
+        array("磁山文化"),
+        array("仰韶文化"),
+        array("红山文化"),
+        array("龙山文化"),
+        array("大汶口文化"),
+        array("二里头文化"),
+        array("河姆渡文化"),
+        array("三星堆文化"),
+        array("良渚文化"),
     ),
     array
     (
@@ -180,20 +195,22 @@ function get_big_topic_name($index)
         case 1:
             return "历史";
         case 2:
-            return "死亡";
+            return "史前史";
         case 3:
-            return "科学技术";
+            return "死亡";
         case 4:
-            return "艺术文化体育";
+            return "科学技术";
         case 5:
-            return "思想宗教";
+            return "艺术文化体育";
         case 6:
-            return "人文社会";
+            return "思想宗教";
         case 7:
-            return "经济";
+            return "人文社会";
         case 8:
-            return "政治外交";
+            return "经济";
         case 9:
+            return "政治外交";
+        case 10:
             return "中国政治问题";
         default:
             return "其它";
