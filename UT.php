@@ -21,10 +21,10 @@
     // echo get_search_where_sub("1913-10-15") . "<br />";
     // get_time_from_native("月");
     // get_time_from_native("一九三六年八月十九日五时二十五分");
-    // get_time_from_native("2004年2月11日凌晨");
-    get_time_from_native("2004年2月11日下午2点");
-    // get_time_from_native("2004年2月11日11点");
-    
+    // get_time_from_native("2004年2月11日下午14点");
+    // get_time_from_native("2004年2月11日下午2点");
+    echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
+    echo date("G", 1076461200) . "</br>";
     
     
     
@@ -75,7 +75,7 @@
         }
         else 
         {
-            echo $my['status'] . "--" . $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
+            echo $my['status'] . "--" . $my['time'] . "--" . $time . "--" . $my['time_type'] . "--" . $my['time_limit'] 
                 . "--" . $my['time_limit_type'] . "<-";
             return FALSE;
         }
@@ -404,6 +404,15 @@
     assert('UT_get_time_from_native("2004年2月11日下午14点", time_string_to_seconds("2004-2-11 14:00:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004年2月11日晚上9点", time_string_to_seconds("2004-2-11 21:00:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004年2月11日中午12点", time_string_to_seconds("2004-2-11 12:00:00"), 4, 0, 3)');
+    
+    assert('UT_get_time_from_native("1920年12月31日凌晨0点20分59秒", time_string_to_seconds("1920-12-31 0:20:59"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日早晨9点32分09秒",  time_string_to_seconds("1920-12-31 9:32:09"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日上午10点", time_string_to_seconds("1920-12-31 10:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日下午6点",  time_string_to_seconds("1920-12-31 18:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日下午1点", time_string_to_seconds("1920-12-31 13:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日晚上11点30分",  time_string_to_seconds("1920-12-31 23:30:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("1920年12月31日中午12点半", time_string_to_seconds("1920-12-31 12:30:00"), 4, 0, 3)');
+    
     
     // 不应该识别成时间字符串的。
     assert('UT_valid_time_string("那一年")');
