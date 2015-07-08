@@ -164,9 +164,9 @@ function substr_for_utf8($sourcestr, $cutlength)
 /**
  * 判断内容里有没有汉字.
  */
-function check_is_chinese($s)
+function check_is_chinese($str)
 {        
-    return preg_match('/[\x80-\xff]./', $s);
+    return preg_match('/[\x80-\xff]./', $str);
 }
 
 /**

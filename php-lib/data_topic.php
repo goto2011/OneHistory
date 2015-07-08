@@ -15,6 +15,7 @@ $topic = array
         array("中国年号"),
         array("中学历史年表"),
         array("全国重点文物保护单位"),
+        array("世界遗产名单"),
     ),
     array
     (
@@ -33,6 +34,11 @@ $topic = array
         array("河姆渡文化"),
         array("三星堆文化"),
         array("良渚文化"),
+        array("陶文化"),
+        array("玉文化"),
+        array("陶瓷文化"),
+        array("丝绸文化"),
+        array("茶文化"),
     ),
     array
     (

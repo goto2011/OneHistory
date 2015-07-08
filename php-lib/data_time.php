@@ -271,7 +271,7 @@ function is_time($time_string)
  */
 function is_chinese_time($day_string)
 {
-    if (stristr($day_string, "时") || stristr($day_string, "分") || stristr($day_string, "秒"))
+    if (stristr($day_string, "点") || stristr($day_string, "时") || stristr($day_string, "分") || stristr($day_string, "秒"))
     {
         return 1;
     }
@@ -282,10 +282,42 @@ function is_chinese_time($day_string)
 }
 
 /**
+ * 判断字符串中是否有 凌晨 早晨 上午等。
+ */
+function check_is_am($str)
+{
+    if (stristr($str, "凌晨") || stristr($str, "早晨") || stristr($str, "上午"))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * 判断字符串中是否有 中午 下午 晚上等。
+ */
+function check_is_pm($str)
+{
+    if (stristr($str, "中午") || stristr($str, "下午") || stristr($str, "晚上"))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+/**
  * 去掉字符串中的"年月日 时分秒"汉字.
  */
 function trim_chinese_time($day_string)
 {
+    // 有点的表达。
+    $day_string = str_replace("点", "时", $day_string);
+    
     if (stristr($day_string, "时") && stristr($day_string, "分") && stristr($day_string, "秒"))
     {
         $temp1 = str_replace("时", ":", $day_string);
@@ -379,7 +411,6 @@ function get_chiness_unit($number)
     }
 }
 
-
 /**
  * 根据年月日获取天数（儒勒历）。支持公元前7000年到现在。
  */
@@ -413,6 +444,19 @@ function get_month($date_string)
 }
 
 /**
+ * 过滤 上午 下午 之类。
+ */
+function trim_ampm($str)
+{
+    $str = str_replace("凌晨", " ", $str);
+    $str = str_replace("早晨", " ", $str);
+    $str = str_replace("上午", " ", $str);
+    $str = str_replace("中午", " ", $str);
+    $str = str_replace("下午", " ", $str);
+    $str = str_replace("晚上", " ", $str);
+}
+
+/**
  * 从时间字符串中获取时间子串。（main）
  */
 function get_time_from_native($native_string)
@@ -426,12 +470,24 @@ function get_time_from_native($native_string)
     
     // step 1: 搞定“年月日 时分秒”。
     // 只支持两种格式：
-    // 1. 中文格式："****年*月*日*时*分*秒"。分、秒字段可以没有。比如：2004年2月11日11时35分。
+    // 1. 中文格式："****年*月*日*时*分*秒"。分、秒字段可以没有。比如：2004年2月11日11时。
     // 2. 数字格式："年-月-日 时:分:秒"，时分秒字段必须完整。
+    $is_pm = 0;     // 是否是下午。
     if (is_chinese_time($native_string))
     {
         $my_string = trim_chinese_day($native_string);
         $my_string = trim_chinese_time($my_string);
+        if (check_is_chinese($my_string))
+        {
+            // 汉字数字转阿拉伯数字。
+            $my_string = chinese_to_number($my_string);
+        }
+        // 过滤掉上午下午。
+        if ((check_is_am($my_string) == 1) || (check_is_pm($my_string) == 1))
+        {
+            $is_pm = check_is_pm($my_string);
+            $my_string = trim_ampm($my_string);
+        }
     }
     else 
     {
@@ -441,6 +497,10 @@ function get_time_from_native($native_string)
     if(is_time($my_string))
     {
         $time_array['time'] = strtotime($my_string);
+        if($is_pm == 1)
+        {
+            // $time_array['time'] += (3600 * 12);
+        }
         $time_array['time_type'] = 4;    /// 年月日 时分秒
         $time_array['time_limit'] = 0;
         $time_array['time_limit_type'] = 3;
@@ -571,6 +631,7 @@ function get_time_from_native($native_string)
         }
     }
     
+    // 识别出 年月日
     if($my_days > 0)
     {
         $time_array['time'] = $my_days;
@@ -586,8 +647,56 @@ function get_time_from_native($native_string)
             $time_array['time_limit_type'] = 2;
         }
         
-        $time_array['status'] = "ok";
+        // 2015-7-7, 添加对 凌晨、上午、中午、下午、晚上 的支持。
+        // 0-5.59点是凌晨,6-11.59点是上午, 12点是中午, 12-18是下午,18-24是晚上
+        if (($time_array['time_type'] == 3) && ($time_array['time_limit'] == 0))
+        {
+            $my_string = days_to_time_string($time_array['time']);
+            $is_day_time = 0;
+            
+            if (stristr($native_string, "凌晨"))
+            {
+                $time_array['time'] = strtotime($my_string . " 3:00:00");
+                $time_array['time_limit'] = 3600 * 3;
+                $is_day_time = 1;
+            }
+            if (stristr($native_string, "上午"))
+            {
+                $time_array['time'] = strtotime($my_string . " 9:00:00");
+                $time_array['time_limit'] = 3600 * 3;
+                $is_day_time = 1;
+                
+            }
+            if (stristr($native_string, "中午"))
+            {
+                $time_array['time'] = strtotime($my_string . " 12:30:00");
+                $time_array['time_limit'] = 1800;
+                $is_day_time = 1;
+            }
+            if (stristr($native_string, "下午"))
+            {
+                $time_array['time'] = strtotime($my_string . " 15:00:00");
+                $time_array['time_limit'] = 3600 * 3;
+                $is_day_time = 1;
+            }
+            if (stristr($native_string, "晚上"))
+            {
+                $time_array['time'] = strtotime($my_string . " 21:00:00");
+                $time_array['time_limit'] = 3600 * 3;
+                $is_day_time = 1;
+            }
+            
+            if ($is_day_time == 1)
+            {
+                $time_array['time_type'] = 4;    /// 年月日 时分秒
+                $time_array['time_limit_type'] = 3;
+                $time_array['status'] = "ok";
+                
+                return $time_array;
+            }
+        }
         
+        $time_array['status'] = "ok";
         return $time_array;
     }
     
