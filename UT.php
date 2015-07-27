@@ -426,6 +426,14 @@
     assert('UT_valid_time_string("零")');
     assert('UT_valid_time_string("Ο")');
     assert('UT_valid_time_string("○")');
+    assert('UT_valid_time_string("夏威夷")');
+    assert('UT_valid_time_string("上半年")');
+    assert('UT_valid_time_string("世纪")');
+    assert('UT_valid_time_string("二季度")');
+    assert('UT_valid_time_string("五月份")');
+    assert('UT_valid_time_string("早晨")');
+    assert('UT_valid_time_string("五月份")');
+    assert('UT_valid_time_string("年初")');
     
     echo "</br>";
     
@@ -506,6 +514,8 @@
     
     echo "</br>";
     
+
+
 ?>
 
 </body>

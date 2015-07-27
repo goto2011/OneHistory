@@ -172,7 +172,8 @@ $tpl_main = str_replace('<pun_page>', htmlspecialchars(basename($_SERVER['PHP_SE
 
 
 // START SUBST - <pun_title>
-$tpl_main = str_replace('<pun_title>', '<h1><a href="index.php">'.pun_htmlspecialchars($pun_config['o_board_title']).'</a></h1>', $tpl_main);
+// <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255791580'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1255791580' type='text/javascript'%3E%3C/script%3E"));</script>
+$tpl_main = str_replace('<pun_title>', '<script src="https://s95.cnzz.com/z_stat.php?id=1255791580&web_id=1255791580" language="JavaScript"></script>' . '<h1><a href="index.php">'.pun_htmlspecialchars($pun_config['o_board_title']).'</a></h1>', $tpl_main);
 // END SUBST - <pun_title>
 
 

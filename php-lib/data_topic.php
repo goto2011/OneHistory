@@ -11,6 +11,7 @@ $topic = array
         array("历史学"),
         array("考古"),
         array("分子遗传学"),
+        array("语言学"),
         array("地质年代"),
         array("中国年号"),
         array("中学历史年表"),

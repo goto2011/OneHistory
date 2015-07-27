@@ -53,7 +53,7 @@ $period = array
     ),
     array
     (
-        array("21世纪", 2000, 2015),
+        array("21世纪", 2000, date("Y") + 1),
         array("未来", 2016, log(0)),
     ),
 );

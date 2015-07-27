@@ -315,8 +315,9 @@ function check_is_pm($str)
  */
 function trim_chinese_time($day_string)
 {
-    // 有点的表达。
+    // 点-》时。
     $day_string = str_replace("点", "时", $day_string);
+    $temp3 = "";
     
     if (stristr($day_string, "时") && stristr($day_string, "分") && stristr($day_string, "秒"))
     {
@@ -698,7 +699,8 @@ function get_time_from_native($native_string)
                 $is_day_time = 1;
             }
             
-            if ($is_day_time == 1)
+            // 0不是合法的时间。
+            if (($is_day_time == 1) && ($time_array['time'] != 0))
             {
                 $time_array['time_type'] = 4;    /// 年月日 时分秒
                 $time_array['time_limit_type'] = 3;
@@ -778,7 +780,10 @@ function get_time_from_native($native_string)
             $time_array['time_limit_type'] = 2;  // 日
             $time_array['status'] = "ok";
             
-            return $time_array;
+            if($time_array['time'] != 0)
+            {
+                return $time_array;
+            }
         }
     }
     
@@ -802,7 +807,10 @@ function get_time_from_native($native_string)
         $time_array['time_limit_type'] = 2;  // 日
         $time_array['status'] = "ok";
         
-        return $time_array;
+        if($time_array['time'] != 0)
+        {
+            return $time_array;
+        }
     }
     
     // step 10: 搞定1-4季度
@@ -831,7 +839,10 @@ function get_time_from_native($native_string)
         $time_array['time_limit_type'] = 2;  // 日
         $time_array['status'] = "ok";
         
-        return $time_array;
+        if($time_array['time'] != 0)
+        {
+            return $time_array;
+        }
     }
     
     // step 11: 搞定春夏秋冬四季
@@ -866,7 +877,10 @@ function get_time_from_native($native_string)
         $time_array['time_limit_type'] = 2;  // 日
         $time_array['status'] = "ok";
         
-        return $time_array;
+        if($time_array['time'] != 0)
+        {
+            return $time_array;
+        }
     }
     
     // step 12: 搞定只有"年"的情况(到这里还没有识别完, 肯定只有年了)
@@ -953,7 +967,10 @@ function get_time_from_native($native_string)
                     $time_array['time_limit'] = 5;
                 }
                 
-                return $time_array;
+                if($time_array['time'] != 0)
+                {
+                    return $time_array;
+                }
             }
         }
     }
