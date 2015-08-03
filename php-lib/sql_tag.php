@@ -599,7 +599,8 @@ function get_tags_db($list_type, $tags_show_limit)
         // 全部条目
         case 1:
             // 全部条目容许显示的 tag 数量翻倍.
-            $sql_string = "select property_UUID, property_name, property_type from property order by hot_index desc
+            // 全部中不显示“出处”标签。
+            $sql_string = "select property_UUID, property_name, property_type from property where property_type != 3 order by hot_index desc
                      limit 0, " . ($tags_show_limit * 2);
             break;
 
@@ -855,6 +856,18 @@ function get_tag_from_tag_uuid($tag_uuid)
     $row = mysql_fetch_array($result);
     
     return array($row['property_type'], $row['property_name']);
+}
+
+/**
+ * 判断当前tag 是否是出处。
+ * 2015-8-3.
+ */
+function is_source_from_id($tag_uuid)
+{
+    $tag_array = array();
+    $tag_array = get_tag_from_tag_uuid($tag_uuid);
+    
+    return is_source($tag_array[0]);
 }
 
 /**

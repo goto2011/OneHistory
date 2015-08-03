@@ -75,9 +75,13 @@
     {
         set_is_search(1);
         set_search_key(html_encode($_GET['search_key']));
-        set_search_object(html_encode($_GET['object']));
-        set_search_tag_type(html_encode($_GET['tag_type']));
-        set_property_UUID("");
+        
+        // search_object 和 tag_type 两字段价值不大，去掉。2015-8-4
+        // set_search_object(html_encode($_GET['search_object']));
+        // set_search_tag_type(html_encode($_GET['tag_type']));
+        
+        // 增加对 tag_uuid、begin_year、end_year的支持。2015-8-4
+        set_search_tag_uuid(get_property_UUID());
         
         if(check_search_param() == false)
         {

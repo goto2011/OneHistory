@@ -19,9 +19,13 @@ function is_complex_search($search_key)
 /**
  * 生成 search 查询之条件字句.
  */
-function get_search_where_sub($search_key, $enable_time_search = TRUE)
+function get_search_where_sub($search_param, $enable_time_search = TRUE)
 {
-    $search_sub = " where ";
+    $search_sub = " where (";
+    $search_key = search_key();
+    $search_tag_uuid = search_tag_uuid();
+    $begin_year = search_begin_year();
+    $end_year = search_end_year();
     
     // 增加检索时间的功能。
     if ($enable_time_search == TRUE)
@@ -111,13 +115,28 @@ function get_search_where_sub($search_key, $enable_time_search = TRUE)
         } // for
     } // else
     
+    // 增加对 tag_uuid、begin_year、end_year的支持。2015-8-4
+    // tag_uuid 优先。
+    if ($search_tag_uuid != "")
+    {
+        $search_sub .= " ) and (uuid in(select property_UUID from property where property_UUID = '$search_tag_uuid')) ";
+    }
+    else if (($begin_year != -1) && ($end_year != -1))
+    {
+        $search_sub .= " ) and ((year_order >= $begin_year) and (year_order < $end_year)) ";
+    }
+    else 
+    {
+        $search_sub .= " ) ";
+    }
+    
     return $search_sub;
 }
 
 // 根据检索条件获取满足条件的条目的数量.
-function get_thing_count_by_search($search_key)
+function get_thing_count_by_search($search_param)
 {
-    $sql_string = "select count(*) from thing_time " . get_search_where_sub($search_key);
+    $sql_string = "select count(*) from thing_time " . get_search_where_sub($search_param);
     $result = mysql_query($sql_string);
     
     if($result == FALSE)
@@ -130,10 +149,10 @@ function get_thing_count_by_search($search_key)
     return $row[0];
 }
 
-// 根据检索条件获取 thing 表的部分数据
-function get_thing_item_by_search($search_key, $offset, $page_size)
+// 根据检索条件获取 thing 表的数据
+function get_thing_item_by_search($search_param, $offset, $page_size)
 {
-    $sql_string = "select * from thing_time " . get_search_where_sub($search_key) .
+    $sql_string = "select * from thing_time " . get_search_where_sub($search_param) .
          " order by thing_time.year_order ASC limit $offset, $page_size ";
     
     $result = mysql_query($sql_string);

@@ -119,7 +119,7 @@ function check_list_param()
 function is_tag()
 {
     // tag 为空表示显示所有节点.
-    return (get_property_UUID() != "");
+    return ((get_property_UUID() != "") and (!is_search()));
 }
 
 // property_UUID

@@ -123,7 +123,7 @@ function get_begin_year($big_id, $small_id)
     return $period[$big_id - 1][$small_id - 1][1];
 }
 
-// 获取 时期begin year.
+// 获取 时期 end year.
 function get_end_year($big_id, $small_id)
 {
     global $period;

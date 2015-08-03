@@ -54,11 +54,17 @@
         // vip tag 不接受删除。
         if (tag_is_vip($tag_uuid) == 1)
         {
-            echo "vip tag can`t delete.  ";
+            echo "Vip tag can`t be deleted!  ";
+        }
+        // 出处标签禁止删除。 2015-8-3
+        else if(is_source_from_id($tag_uuid) == 1)
+        {
+            echo "Source tag can`t be deleted!  ";
         }
         else 
         {
             delete_tag_to_db($tag_uuid);
+            echo "ok";
         }
     }
 
@@ -66,6 +72,5 @@
     mysql_close($conn);
     $conn = null;
     
-    echo "ok";
     header("refresh:1; url=" . $_SERVER['HTTP_REFERER']);
 ?>

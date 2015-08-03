@@ -42,11 +42,12 @@ window.onload = function()
         return ((is_search_ex()) || (is_adder()));
     }
     
-    // 是否显示查找界面.
+    // 是否显示检索界面.
     function is_search_ex()
     {
-        // 如果是adder，则在任何界面都可以添加标签。
-        return (is_search() && is_total());
+        // 如果是adder，则在任何界面都可以检索。
+        // 普通用户只能在 全部 和 时间 两个tab中可以检索。
+        return (is_search() && (is_total() || is_period()));
     }
     
     // 打印检索区
@@ -58,7 +59,10 @@ window.onload = function()
         
         echo "<input name='search_key' type='text' width='240px' value='" . search_key() . "' />";
         echo "&nbsp;&nbsp;&nbsp;<input name='' type='submit' />";
-        echo "&nbsp;&nbsp;&nbsp;<select name='object'>";
+        
+        // search_object 和 tag_type 两字段价值不大，去掉。2015-8-4
+        /*
+        echo "&nbsp;&nbsp;&nbsp;<select name='search_object'>";
         echo "   <option value='tag_item'>标签和条目</option>";
         echo "   <option value='tag_only'>只搜标签</option>";
         echo "</select>";
@@ -76,6 +80,7 @@ window.onload = function()
                 echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
             }
         }
+        */
         
         echo "</nobr></form></div>";
     }
@@ -634,6 +639,10 @@ window.onload = function()
         {
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
+            
+            // 增加对 tag_uuid、begin_year、end_year的支持。2015-8-4
+            set_search_begin_year($begin_year);
+            set_search_end_year($end_year);
         }
         
         // 计算条目数量
@@ -647,7 +656,7 @@ window.onload = function()
         }
         else if(is_search_ex())
         {
-            $item_count = get_thing_count_by_search(search_key());
+            $item_count = get_thing_count_by_search(get_search_param());
         }
 		else
 		{
@@ -702,7 +711,7 @@ window.onload = function()
         }
         else if(is_search_ex())
         {
-            $result = get_thing_item_by_search(search_key(), $offset, $page_size);
+            $result = get_thing_item_by_search(get_search_param(), $offset, $page_size);
         }
 		else
 		{
