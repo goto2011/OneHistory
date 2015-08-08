@@ -174,7 +174,7 @@ function get_thing_count($list_type)
 
         default:
             $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id != -2)
+            if ($my_tag_id > 0)
             {
                 $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
                     where property_UUID in(select property_UUID from property
@@ -231,7 +231,7 @@ function get_thing_item_db($list_type, $offset, $page_size)
 
         default:
             $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id != -2)
+            if ($my_tag_id > 0)
             {
                 $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property
                     where property_UUID in(select property_UUID from property where property_type = $my_tag_id)) $order_sub ";

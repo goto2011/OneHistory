@@ -302,7 +302,6 @@ $city = array
         array("桂林"),
         array("柳州"),
         array("百色"),
-        array("梧州"),
     ),
     array
     (

@@ -1,8 +1,45 @@
 <?php
 // created by duangan, 2014-12-28 -->
-// 处理list 页面的位置, 包括: list_type, property_UUID, page, item_index 四个维度.    -->
+// 处理list 页面的位置, 核心控制结构。  -->
+// V4: 增加 is_search， search_key 。 
 
 require_once 'sql.php';
+
+// 字段列表：
+// property_UUID: tag uuid.
+// page: page index.
+// item_index: item index(暂时没有使用)
+// period_big_index: period big index.
+// period_small_index: period small index.
+// sub_list_id: 子页id（只在 人物 页面用）.
+// is_search: 是否是检索；
+// search_key: 检索关键字；
+// search_tag_type: 当前检索类型。
+
+// tab type 枚举量控制。
+// tab type id = list type id (list type / list id)， 即伟大的 $tag_control 的下标。
+// 而 tag type id (tag type / tag id) 是 tab type id的一部分。
+class tab_type {
+    const CONST_TOTAL       = -1;
+    const CONST_MY_FOLLOW   = -2; 
+    const CONST_NEWEST      = -3;
+    const CONST_PERIOD      = -4;
+    const CONST_TOPIC       = 10;
+    const CONST_COUNTRY     = 7;
+    const CONST_DYNASTY     = 8;
+    const CONST_LAND        = 14;
+    const CONST_CITY        = 5;
+    const CONST_PERSON      = 4;
+    const CONST_KEY_THING   = 11;
+    const CONST_OFFICE      = 9;
+    const CONST_FREE        = 6;
+    const CONST_BEGIN       = 1;
+    const CONST_END         = 2;
+    const CONST_RESURCE     = 3;
+    const CONST_NOTE        = 13;
+    const CONST_MANAGER     = 12;
+}
+
 
 // 获取 list type 的数量
 function get_list_count()
@@ -47,7 +84,7 @@ function list_control_init()
         list_param_init($ii);
     }
     
-    $_SESSION['list_control_version'] = 3;
+    $_SESSION['list_control_version'] = 4;
     $_SESSION['list_control_inited'] = 1;
 }
 
@@ -81,14 +118,15 @@ function &get_current_list()
     return $_SESSION[$session_name];
 }
 
-// 指定 list id 初始化, 系统登录时调用. 将来可做成恢复原状
+// 指定 list id 初始化, 系统登录时调用. 将来可做成恢复原状.
 function list_param_init($list_id)
 {
     $session_name = "list_number_" . $list_id;
     unset($_SESSION[$session_name]);   // 这是一个array，需要内存回收。
     
     $_SESSION[$session_name] = array("property_UUID"=>"", "page"=>1, "item_index"=>1,
-        "period_big_index"=>-1, "period_small_index"=>-1, "sub_list_id"=>1);
+        "period_big_index"=>-1, "period_small_index"=>-1, "sub_list_id"=>1, 
+        "is_search"=>0, "search_key"=>"", "search_tag_type"=>-100);
 }
 
 // 为了调试方便，打印 list控制变量
@@ -121,6 +159,8 @@ function is_tag()
     // tag 为空表示显示所有节点.
     return ((get_property_UUID() != "") and (!is_search()));
 }
+
+//////////////////// set / get /////////////////////////////////////////       
 
 // property_UUID
 function set_property_UUID($property_UUID)
@@ -175,9 +215,9 @@ function get_item_index()
 }
 
 // 判断是不是 period tag.
-function is_period_tag()
+function is_period_tag($list_id)
 {
-    return ((is_period() == 1) && (get_period_big_index() != -1) 
+    return ((is_period($list_id) == 1) && (get_period_big_index() != -1) 
         && (get_period_small_index() != -1));
 }
 
@@ -219,5 +259,184 @@ function get_sub_list_id()
     $list_info = get_current_list();
     return $list_info['sub_list_id'];
 }
+
+// is_search. 0:no; 1:yes.
+function set_is_search($is_search)
+{
+    $list_info = &get_current_list();
+    $list_info['is_search'] = $is_search;
+}
+function is_search()
+{
+    $list_info = get_current_list();
+    return ($list_info['is_search'] && ($list_info['search_key'] != ""));
+}
+
+// search_key
+function set_search_key($search_key)
+{
+    $list_info = &get_current_list();
+    $list_info['search_key'] = $search_key;
+}
+function search_key()
+{
+    if (is_search() == 1)
+    {
+        $list_info = get_current_list();
+        return $list_info['search_key'];
+    }
+    else 
+    {
+        return "";
+    }
+}
+
+// search_tag_type
+function set_search_tag_type($search_tag_type)
+{
+    $list_info = &get_current_list();
+    $list_info['search_tag_type'] = $search_tag_type;
+}
+function search_tag_type()
+{
+    if (is_search() == 1)
+    {
+        $list_info = get_current_list();
+        return $list_info['search_tag_type'];
+    }
+    else
+    {
+        return -100;
+    }
+}
+///////////////////////////////////////////////////////////////////////////  
+/////////////////////////  tab页 管理方法 /////////////////////////////////
+/**
+ * 是否是"全部"tab 页.
+ */
+function is_total($list_id)
+{
+    return (get_tag_id_from_index($list_id) == tab_type::CONST_TOTAL);
+}
+
+/**
+ * 是否是 我的关注 tab页。
+ */
+function is_my_follow($list_id)
+{
+    return (get_tag_id_from_index($list_id) == tab_type::CONST_MY_FOLLOW);
+}
+
+/**
+ * 是否是 最新 tab页.
+ */
+function is_newest($list_id)
+{
+    return (get_tag_id_from_index($list_id) == tab_type::CONST_NEWEST);
+}
+
+/**
+ * 是否是 period tab页.
+ */
+function is_period($list_id)
+{
+    return (get_tag_id_from_index($list_id) == tab_type::CONST_PERIOD);
+}
+
+
+/**
+ * 判断当前是否是 中国朝代 页面.
+ */
+function is_dynasty($tag_id)
+{
+    return ($tag_id == tab_type::CONST_DYNASTY);
+}
+
+/**
+ * 判断当前是否是 国家民族 页面.
+ */
+function is_country($tag_id)
+{
+    return ($tag_id == tab_type::CONST_COUNTRY);
+}
+
+/**
+ * 判断当前是否是 专题 页面.
+ */
+function is_topic($tag_id)
+{
+    return ($tag_id == tab_type::CONST_TOPIC);
+}
+
+// 判断当前是否是 city 页面.
+function is_city($tag_id)
+{
+    return ($tag_id == tab_type::CONST_CITY);
+}
+
+// 判断当前是否是 land 页面.
+function is_land($tag_id)
+{
+    return ($tag_id == tab_type::CONST_LAND);
+}
+
+/**
+ * 判断当前是否是 person 页面.
+ */
+function is_person($tag_id)
+{
+    return ($tag_id == tab_type::CONST_PERSON);
+}
+
+/**
+ * 获取 人物 tag type 的id。
+ */
+function get_person_tag_id()
+{
+    return tab_type::CONST_PERSON;
+}
+
+/**
+ * 判断当前是否是 key_thing 页面.
+ */
+function is_key_thing($tag_id)
+{
+    return ($tag_id == tab_type::CONST_KEY_THING);
+}
+
+/**
+ * 判断指定 tag type 是否是出处。
+ */
+function is_source($tag_id)
+{
+    return ($tag_id == tab_type::CONST_RESURCE);
+}
+
+/**
+ * 判断当前是否是 笔记 页面.
+ */
+function is_note($tag_id)
+{
+    return ($tag_id == tab_type::CONST_NOTE);
+}
+
+/**
+ * 获取 笔记 tag type 的id。
+ */
+function get_note_tag_id()
+{
+    return tab_type::CONST_NOTE;
+}
+
+
+/**
+ * 判断当前是否是 管理 页面.
+ */
+function is_manager_tab($tag_id)
+{
+    return ($tag_id == tab_type::CONST_MANAGER);
+}
+
+
 
 ?>

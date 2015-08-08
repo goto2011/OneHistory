@@ -22,7 +22,6 @@
     
     
     require_once "list_control.php";
-    require_once "list_search.php";
     require_once "sql_user.php";
     
     // 如果用户没有登陆, 则进入登录界面.
@@ -54,7 +53,5 @@
         
         // 界面参数重新初始化.
         list_control_reinit();
-        
-        search_param_init();
     }
 ?>

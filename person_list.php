@@ -7,7 +7,6 @@
     require_once "sql.php";
     require_once "data.php";
     require_once "list_control.php";
-    require_once "list_search.php";
     
     // 判断当前list table id 是否为人物页面。
     if (get_tag_id_from_index(get_current_list_id()) != get_person_tag_id())
@@ -37,45 +36,8 @@
     function is_show_add_tag()
     {
         // 普通用户在查找界面；adder在所有界面可以用这个功能。
-        return ((is_search_ex()) || (is_adder()));
-    }
-    
-    // 是否显示查找界面.
-    function is_search_ex()
-    {
-        // 如果是adder，则在任何界面都可以添加标签。
-        return (is_search() && is_total());
-    }
-    
-    // 打印检索区
-    function print_search_zone()
-    {
-        echo "<div align='left' style='font-family:微软雅黑'>";
-        echo "<form action='item_frame.php' method='get'>";
-        echo "<p style='font-family:微软雅黑;color:red;font-size:15px'>查找：";
-        
-        echo "<input name='search_key' type='text' width='240px' value='" . search_key() . "' />";
-        echo "&nbsp;&nbsp;&nbsp;<input name='' type='submit' />";
-        echo "&nbsp;&nbsp;&nbsp;<select name='object'>";
-        echo "   <option value='tag_item'>标签和条目</option>";
-        echo "   <option value='tag_only'>只搜标签</option>";
-        echo "</select>";
-        
-        echo "&nbsp;&nbsp;&nbsp;<nobr class='normal'>标签类型: ";
-        echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='1' checked='checked'>全部";
-        
-        for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
-        {
-            if ((is_show_search_add($ii) == 1) || ((is_vip_user_show_tab($ii) == 1) && (is_vip_user())))
-            {
-                $tag_id = get_tag_id_from_index($ii);
-                $tag_name = get_tag_list_name_from_index($ii);
-                
-                echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
-            }
-        }
-        
-        echo "</nobr></form></div>";
+        // 普通用户在所有界面都有此功能。
+        return 1;
     }
     
     // add, 2015-5-8
@@ -266,7 +228,7 @@
             }
 		}
         
-        if(!is_tag() && !is_period_tag() && !is_show_add_tag())
+        if(!is_tag() && !is_show_add_tag())
         {
             echo "</div>";
         }
@@ -371,10 +333,6 @@
 		{
 		    $item_count = get_thing_count_by_tag(get_property_UUID());
 		}
-        else if(is_search_ex())
-        {
-            $item_count = get_thing_count_by_search(search_key());
-        }
 		else
 		{
 			$item_count = get_thing_count(get_current_list_id());
@@ -389,11 +347,8 @@
 		//计算记录偏移量
 		$offset = $page_size * (get_page() - 1);
 		
-        // 打印搜索区
-        if(is_total())
-        {
-            print_search_zone();
-        }
+        // 打印搜索区（人物 页 暂时不显示检索）
+        // print_search_zone();
         
 		// 打印标签区
 		print_tags_zone();
@@ -418,10 +373,6 @@
 		{
 		    $result = get_thing_item_by_tag(get_property_UUID(), $offset, $page_size);
 		}
-        else if(is_search_ex())
-        {
-            $result = get_thing_item_by_search(search_key(), $offset, $page_size);
-        }
 		else
 		{
             $result = get_thing_item_db(get_current_list_id(), $offset, $page_size);

@@ -4,7 +4,6 @@
     require_once "sql.php";
     require_once "data.php";
     require_once "list_control.php";
-    require_once "list_search.php";
     
     // 唯一可设置 list_type 的位置.
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
@@ -39,15 +38,14 @@ window.onload = function()
     function is_show_add_tag()
     {
         // 普通用户在查找界面；adder在所有界面可以用这个功能。
-        return ((is_search_ex()) || (is_adder()));
+        // 普通用户在所有界面都有此功能。
+        return 1;
     }
     
-    // 是否显示检索界面.
-    function is_search_ex()
+    // 是否显示 “检索框”(只有 我的关注 没有检索。)
+    function is_show_search_box($list_id)
     {
-        // 如果是adder，则在任何界面都可以检索。
-        // 普通用户只能在 全部 和 时间 两个tab中可以检索。
-        return (is_search() && (is_total() || is_period()));
+        return (!is_my_follow($list_id) && !is_newest($list_id));
     }
     
     // 打印检索区
@@ -57,7 +55,8 @@ window.onload = function()
         echo "<form action='item_frame.php' method='get'>";
         echo "<p style='font-family:微软雅黑;color:red;font-size:15px'>查找：";
         
-        echo "<input name='search_key' type='text' width='240px' value='" . search_key() . "' />";
+        echo "<input name='search_key' type='text' width='240px' value='" . search_key() 
+                . "'  autofocus='autofocus' />";
         echo "&nbsp;&nbsp;&nbsp;<input name='' type='submit' />";
         
         // search_object 和 tag_type 两字段价值不大，去掉。2015-8-4
@@ -182,8 +181,7 @@ window.onload = function()
         return $result;
     }
     
-    // add, 2015-5-6
-    // 打印 主题 tag 链接
+    // 打印 主题 tag 链接. 2015-5-6
     function create_city_link($index, &$tags_db)
     {
         $result = "";
@@ -206,8 +204,30 @@ window.onload = function()
         return $result;
     }
     
-    // add, 2015-5-8
-    // 打印 person 链接
+    // 打印 主题 tag 链接. 2015-8-8
+    function create_land_link($index, &$tags_db)
+    {
+        $result = "";
+        for ($ii = get_small_land_begin($index); $ii <= get_small_land_end($index); $ii++)
+        {
+            $my_name = get_land_name($index, $ii);
+            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+            }
+            else 
+            {
+                $result .= $my_name . "&nbsp;&nbsp;";
+            }
+        }
+        
+        return $result;
+    }
+    
+    // 打印 person 链接. 2015-5-8
     function create_person_link($index, &$tags_db)
     {
         $result = "";
@@ -298,7 +318,7 @@ window.onload = function()
     		}
         }
         // 是时期
-        else if(is_period())
+        else if(is_period(get_current_list_id()))
         {
             echo "<br />";
             
@@ -368,6 +388,22 @@ window.onload = function()
             
             // 最后打印其它
             echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_other_link($tags_array) . "<br />";
+        }
+        // is land. 2015-8-8
+        else if(is_land($my_tag_id))
+        {
+            echo "<br />";
+            $tags_array = get_tags_array(get_current_list_id());
+            
+            for ($ii = get_big_land_begin(); $ii <= get_big_land_end() - 1; $ii++)
+            {
+                echo get_big_land_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_land_link($ii, $tags_array) . "<br />";
+            }
+            
+            // 最后打印其它
+            echo get_big_land_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
         else if(is_person($my_tag_id))
@@ -519,7 +555,7 @@ window.onload = function()
             }
 		}
         
-        if(!is_tag() && !is_period_tag() && !is_show_add_tag())
+        if(!is_tag() && !is_period_tag(get_current_list_id()) && !is_show_add_tag())
         {
             echo "</div>";
         }
@@ -635,28 +671,25 @@ window.onload = function()
         $conn = open_db();
 	    
         // 算下 period 开始/结束.
-        if(is_period_tag())
+        if(is_period_tag(get_current_list_id()))
         {
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
-            
-            // 增加对 tag_uuid、begin_year、end_year的支持。2015-8-4
-            set_search_begin_year($begin_year);
-            set_search_end_year($end_year);
         }
         
         // 计算条目数量
-		if (is_tag())
+        // search 兼容 tag 和 period。所以检索优先级最高。
+		if(is_search())
+        {
+            $item_count = get_thing_count_by_search();
+        }
+        else if (is_tag())
 		{
 		    $item_count = get_thing_count_by_tag(get_property_UUID());
 		}
-        else if(is_period_tag())
+        else if(is_period_tag(get_current_list_id()))
         {
             $item_count = get_thing_count_by_period($begin_year, $end_year);
-        }
-        else if(is_search_ex())
-        {
-            $item_count = get_thing_count_by_search(get_search_param());
         }
 		else
 		{
@@ -673,7 +706,7 @@ window.onload = function()
 		$offset = $page_size * (get_page() - 1);
 		
         // 打印搜索区
-        if(is_total())
+        if(is_show_search_box(get_current_list_id()))
         {
             print_search_zone();
         }
@@ -687,7 +720,7 @@ window.onload = function()
         {
             print_tag_control();
         }
-        else if(is_period_tag())
+        else if(is_period_tag(get_current_list_id()))
         {
             print_period_info();
         }
@@ -701,17 +734,18 @@ window.onload = function()
 		print_item_list_head();   // table head.
 		
 		// 获取thing数据表的数据
-		if (is_tag())
+        // search 兼容 tag 和 period。所以检索优先级最高。
+		if(is_search())
+        {
+            $result = get_thing_item_by_search($offset, $page_size);
+        }
+        else if (is_tag())
 		{
 		    $result = get_thing_item_by_tag(get_property_UUID(), $offset, $page_size);
 		}
-        else if(is_period_tag())
+        else if(is_period_tag(get_current_list_id()))
         {
             $result = get_thing_item_by_period($begin_year, $end_year, $offset, $page_size);
-        }
-        else if(is_search_ex())
-        {
-            $result = get_thing_item_by_search(get_search_param(), $offset, $page_size);
         }
 		else
 		{

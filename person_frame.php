@@ -7,7 +7,6 @@
     require_once "data.php";
     require_once "sql.php";
     require_once "list_control.php";
-    require_once "list_search.php";
 
     // 唯一可设置 list_type 的位置.
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
@@ -27,7 +26,8 @@
     {
         set_period_big_index(-1);
         set_period_small_index(-1);
-        search_param_init();
+        set_is_search(0);
+        set_search_key("");
         
         // all 即显示全部.
         if ($_GET['property_UUID'] == "all")
@@ -55,14 +55,12 @@
     {
         set_is_search(1);
         set_search_key(html_encode($_GET['search_key']));
-        set_search_object(html_encode($_GET['object']));
-        set_search_tag_type(html_encode($_GET['tag_type']));
-        set_property_UUID("");
         
-        if(check_search_param() == false)
-        {
-            search_param_init();
-        }
+        // search_object 和 tag_type 两字段价值不大，去掉。2015-8-4
+        // set_search_object(html_encode($_GET['search_object']));
+        // set_search_tag_type(html_encode($_GET['tag_type']));
+        
+        set_property_UUID("");
     }
     
 	// 分配令牌。

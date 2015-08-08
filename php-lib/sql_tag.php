@@ -3,6 +3,7 @@
 // tag 相关的函数。主要是和sql相关的。    -->
 
 require_once 'data.php';
+require_once 'list_control.php';
 
 // 获取tag list 最小值
 function tag_list_min()
@@ -24,23 +25,24 @@ function tag_list_max()
 // [3]表示是否为key tag (0不是，1是)。
 // [4]表示tag 输入框的id（字符串，用于import/input页面）。
 $tag_control = array(
-    array(-1,     "全部",              0,   0,      ""),
-    array(-2,     "我的关注",          0,   0,      ""),
-    array(-3,     "最新标签",          0,   0,      ""),
-    array(-4,     "时间",             0,   1,      ""),                // vip tag.
-    array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
-    array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
-    array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(11,     "关键事件",         1,    1,      "key_tags"),        // vip tag.
-    array(9,      "官制",             1,    0,      "office_tags"),
-    array(6,      "自由标签",         1,    0,      "free_tags"),
-    array(1,      "事件开始",         2,    0,      "start_tags"),
-    array(2,      "事件结束",         2,    0,      "end_tags"),
-    array(3,      "出处",             1,    0,      "source_tags"),
-    array(13,     "笔记",             1,    0,      "note_tags"),
-    array(12,     "标签管理",         3,    0,      ""),
+    array(tab_type::CONST_TOTAL,          "全部",             0,    0,      ""),
+    array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
+    array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
+    array(tab_type::CONST_PERIOD,         "时间",             0,    1,      ""),                // vip tag.
+    array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
+    array(tab_type::CONST_COUNTRY,        "国家民族",         1,    1,      "country_tags"),    // vip tag.
+    array(tab_type::CONST_DYNASTY,        "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
+    array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
+    array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
+    array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
+    array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
+    array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
+    array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
+    array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
+    array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
+    array(tab_type::CONST_RESURCE,        "出处",             1,    0,      "source_tags"),
+    array(tab_type::CONST_NOTE,           "笔记",             1,    0,      "note_tags"),
+    array(tab_type::CONST_MANAGER,        "管理页面",         3,    0,      ""),
 );
 
 
@@ -62,7 +64,8 @@ function get_tag_list_from_index($tag_index_id)
 }
 
 /**
- * 获取 tag id（数据库）。 返回-2表示非法值。
+ * 将list id 转化为 tab id。 
+ * 返回值：大于 0 表示为数据库中真实的tag type id；小于 0表示 tab id；-100 表示非法值。
  */
 function get_tag_id_from_index($tag_index_id)
 {
@@ -73,7 +76,7 @@ function get_tag_id_from_index($tag_index_id)
     }
     else 
     {
-        return -2;
+        return -100;
     }
 }
 
@@ -226,101 +229,6 @@ function is_vip_tag_tab($tag_index_id)
         return 0;
     }
 }
-
-/**
- * 是否是"全部"tab 页.
- */
-function is_total()
-{
-    return (get_current_list_id() == 1);
-}
-
-/**
- * 判断当前界面是否是 period.
- */
-function is_period()
-{
-    return (get_tag_id_from_index(get_current_list_id()) == -4);
-}
-
-/**
- * 判断当前是否是 中国朝代 页面.
- */
-function is_dynasty($tag_type)
-{
-    return ($tag_type == 8);
-}
-
-/**
- * 判断当前是否是 国家民族 页面.
- */
-function is_country($tag_type)
-{
-    return ($tag_type == 7);
-}
-
-/**
- * 判断当前是否是 专题 页面.
- */
-function is_topic($tag_type)
-{
-    return ($tag_type == 10);
-}
-
-// 判断当前是否是 city 页面.
-function is_city($tag_type)
-{
-    return ($tag_type == 5);
-}
-
-/**
- * 判断当前是否是 person 页面.
- */
-function is_person($tag_type)
-{
-    return ($tag_type == 4);
-}
-
-/**
- * 获取 人物 tag type 的id。
- */
-function get_person_tag_id()
-{
-    return 4;
-}
-
-/**
- * 判断当前是否是 key_thing 页面.
- */
-function is_key_thing($tag_type)
-{
-    return ($tag_type == 11);
-}
-
-/**
- * 判断指定 tag type 是否是出处。
- */
-function is_source($tag_type)
-{
-    return ($tag_type == 3);
-}
-
-/**
- * 判断当前是否是 笔记 页面.
- */
-function is_note($tag_type)
-{
-    return ($tag_type == 13);
-}
-
-/**
- * 获取 笔记 tag type 的id。
- */
-function get_note_tag_id()
-{
-    return 13;
-}
-
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
@@ -627,7 +535,7 @@ function get_tags_db($list_type, $tags_show_limit)
 
         default:
             $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id != -2)
+            if ($my_tag_id > 0)
             {
                 $sql_string = "select property_UUID, property_name, property_type from property where property_type = $my_tag_id 
                      order by hot_index desc limit 0, " . $tags_show_limit;
@@ -1004,6 +912,19 @@ function vip_tag_search_to_db($tag_type = 1)
         }
     }
     
+    // land_tags
+    if (is_land($tag_type) || ($tag_type == 1))
+    {
+        for ($ii = get_big_land_begin(); $ii <= get_big_land_end() - 1; $ii++)
+        {
+            for ($jj = get_small_land_begin($ii); $jj <= get_small_land_end($ii); $jj++)
+            {
+                $tag_name = get_land_name($ii, $jj);
+                tag_search_to_db($tag_name, 5);
+            }
+        }
+    }
+    
     // 恢复php执行时间限制。
     ini_set('max_execution_time', '1500');
     
@@ -1018,7 +939,7 @@ function tag_search_to_db($tag_name, $tag_type)
 {
     // 1. 生成检索条件。获取符合条件的thing 表结果集.
     // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
-    $db_result = get_thing_item_by_search_total($tag_name, FALSE);
+    $db_result = get_thing_item_by_key($tag_name);
     
     // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
     if ($db_result != NULL)
