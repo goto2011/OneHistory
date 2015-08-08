@@ -33,14 +33,10 @@ $land = array
     ),
     array
     (
-        // 大河
+        // 中国河湖
         array("长江"),
         array("黄河"),
-        array("尼罗河"),
-        array("密西西比河"),
-        array("亚马逊河"),
         
-        // 中国
         array("黑龙江"),
         array("辽河"),
         array("淮河"),
@@ -51,13 +47,19 @@ $land = array
         array("塔里木河"),
         array("雅鲁藏布江"),
         array("澜沧江"),
+        array("大凌河"),
         array("鄱阳湖"),
         array("洞庭湖"),
         array("太湖"),
         array("青海湖"),
         array("纳木错"),
-        
-        // 欧洲
+    ),
+    array
+    (
+        // 外国河湖
+        array("尼罗河"),
+        array("密西西比河"),
+        array("亚马逊河"),
         array("多瑙河"),
         array("莱茵河"),
         array("伏尔加河"),
@@ -154,16 +156,18 @@ function get_big_land_name($index)
         case 1:
             return "大海";
         case 2:
-            return "大河";
+            return "中国河湖";
         case 3:
-            return "大山";
+            return "外国河湖";
         case 4:
-            return "中国本部地理单元";
+            return "大山";
         case 5:
-            return "中国周边地理单元";
+            return "中国本部地理单元";
         case 6:
-            return "中国其它";
+            return "中国周边地理单元";
         case 7:
+            return "中国其它";
+        case 8:
             return "外国地理单元";
         default:
             return "其它";

@@ -25,6 +25,7 @@ $dynasty = array
         array("五代十国"),
         array("宋朝"),
         array("南宋"),
+        array("元朝"),
         array("明朝"),
         array("清朝"),
         array("中华民国"),
@@ -33,8 +34,7 @@ $dynasty = array
     ),
     array
     (
-        // 春秋战国列国 
-        array("周国"),
+        // 春秋战国列国
         array("鲁国"),
         array("齐国"),
         array("田齐"),
@@ -123,36 +123,67 @@ $dynasty = array
     array
     (
         // 周边少数民族
-        array("戎"),
+        // 东北
         array("东胡"),
-        array("粛慎"),
-        array("匈奴"),
-        array("鲜卑"),
-        array("大月氏"),
         array("乌桓"),
-        array("扶余"),
-        array("氐"),
-        array("羌"),
-        array("羯"),
-        array("丁零"),
-        array("柔然"),
-        array("突厥"),
-        array("吐蕃"),
+        array("鲜卑"),
         array("吐谷浑"),
-        array("鉄勒"),
-        array("回纥"),
+        array("柔然"),
         array("契丹"),
-        array("党项"),
-        array("女真"),
-        array("南越国"),
-        array("古朝鲜"),
-        array("高句丽"),
+        array("室韦"),
+        array("蒙古"),
         array("准噶尔汗国"),
+        array("女真"),
+        array("满族"),
+        
+        array("濊貊"),
+        array("扶余"),
+        array("沃沮"),
+        array("高句丽"),
+        array("百济"),
+        
+        array("粛慎"),
+        
+        // 北方
+        array("匈奴"),
+        array("羯"),
+        array("氐"),
+        array("鞑靼"),
+        
+        array("敕勒", "铁勒", "丁零", "高车"),
+        array("回纥"),
+        array("维吾尔人"),
+        
+        // 突厥民族
+        array("突厥"),
+        array("沙陀"),
+        
+        // 西方
+        array("戎"),
+        array("羌"),
+        array("党项"),
+        array("吐蕃"),
+        
+        // 南方
+        array("苗人"),
+        array("壮人"),
+        array("黎人"),
+        
+        // 西域
+        array("月氏"),
+        array("贵霜帝国"),
+        array("乌孙"),
+        array("鄯善", "楼兰"),
+        array("车师"),
+        array("高昌"),
+        array("疏勒"),
+        array("于阗"),
+        array("龟玆"),
+        array("焉耆"),
     ),
     array
     (
         // 周边地区
-        array("元朝"),
         array("蒙古"),
         array("西藏"),
         array("台湾"),
