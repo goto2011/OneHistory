@@ -147,8 +147,7 @@ function ajax_do(operate_type)
         id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->
         
 <?php
-    echo "<input type='radio' name=tag_type value='1' checked='checked'>全部";
-    
+
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))

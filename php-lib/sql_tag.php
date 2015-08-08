@@ -820,107 +820,102 @@ function tag_is_vip($tag_uuid)
 }
 
 /**
- * 将vip tag 作为关键字自动检索。-1表示失败。
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
-    array(7,      "国家民族",         1,    1,      "country_tags"),    // vip tag.
-    array(10,     "专题",             1,    1,      "topic_tags"),      // vip tag.
-    array(5,      "城市地区",         1,    1,      "geography_tags"),  // vip tag.
-    array(4,      "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(11,     "关键事件",         1,    1,      "key_tags"),        // vip tag.
-    array(9,      "官制",             1,    0,      "office_tags"),
+ * 将vip tag 作为关键字自动检索。
+ * 参数：$tag_type：tag type id。
+ * 返回值：-1表示失败。
  */
-function vip_tag_search_to_db($tag_type = 1)
+function vip_tag_search_to_db($tag_type)
 {
     // 本函数执行时间长，去掉php执行时间限制。
     ini_set('max_execution_time', '0');
 
     // dynasty_tags
-    if (is_dynasty($tag_type) || ($tag_type == 1))
+    if (is_dynasty($tag_type))
     {
         for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
         {
             for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
             {
                 $tag_name = get_dynasty_name($ii, $jj);
-                tag_search_to_db($tag_name, 8);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
     
     // country_tags
-    if (is_country($tag_type) || ($tag_type == 1))
+    if (is_country($tag_type))
     {
         for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
         {
             for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
             {
                 $tag_name = get_country_name($ii, $jj);
-                tag_search_to_db($tag_name, 7);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
     
     // topic_tags
-    if (is_topic($tag_type) || ($tag_type == 1))
+    if (is_topic($tag_type))
     {
         for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
         {
             for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
             {
                 $tag_name = get_topic_name($ii, $jj);
-                tag_search_to_db($tag_name, 10);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
     
     // city_tags
-    if (is_city($tag_type) || ($tag_type == 1))
+    if (is_city($tag_type))
     {
         for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
         {
             for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
             {
                 $tag_name = get_city_name($ii, $jj);
-                tag_search_to_db($tag_name, 5);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
 
     // person_tags
-    if (is_person($tag_type) || ($tag_type == 1))
+    if (is_person($tag_type))
     {
         for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
         {
             for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
             {
                 $tag_name = get_person_name($ii, $jj);
-                tag_search_to_db($tag_name, 4);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
     
     // key_thing_tags
-    if (is_key_thing($tag_type) || ($tag_type == 1))
+    if (is_key_thing($tag_type))
     {
         for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
         {
             for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
             {
                 $tag_name = get_key_thing_name($ii, $jj);
-                tag_search_to_db($tag_name, 11);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }
     
     // land_tags
-    if (is_land($tag_type) || ($tag_type == 1))
+    if (is_land($tag_type))
     {
         for ($ii = get_big_land_begin(); $ii <= get_big_land_end() - 1; $ii++)
         {
             for ($jj = get_small_land_begin($ii); $jj <= get_small_land_end($ii); $jj++)
             {
                 $tag_name = get_land_name($ii, $jj);
-                tag_search_to_db($tag_name, 5);
+                tag_search_to_db($tag_name, $tag_type);
             }
         }
     }

@@ -1,7 +1,6 @@
 <?php
     // created by duangan, 2015-1-27-->
     // support system_manager_do.    -->
- 
     
     require_once '../init.php';
     is_user(2);
