@@ -24,6 +24,7 @@ function get_search_where_sub_native($search_key)
 {
     $search_sub = "";
     
+    $search_key = trim($search_key);
     $search_key = str_replace("+", " + ", $search_key);
     $search_key = str_replace("-", " - ", $search_key);
     $search_key = str_replace("(", " ( ", $search_key);
@@ -86,12 +87,32 @@ function get_search_where_sub_native($search_key)
 }
  
 /**
- * 根据 关键字 生成 search 查询之条件子句.
+ * 根据 关键字 生成 查询条件子句.
  * 这个函数涉及到"自动将事件添加vip标签"，一旦出错问题太大。轻易不能改。
  */
 function get_search_where_sub_by_key($search_key)
 {
     return " where " . get_search_where_sub_native($search_key) . " ";
+}
+
+/**
+ * 根据 key-time 生成 查询条件子句。
+ */
+function get_search_where_sub_by_key_time($search_key, $begin_year, $end_year)
+{
+    return " where " . get_search_where_sub_native($search_key) . " and ((year_order >= $begin_year) and (year_order < $end_year)) ";
+}
+
+/**
+ * 根据 tag-time 生成 查询条件子句。
+ */
+function get_search_where_sub_by_tag_time($key_uuid, $begin_year, $end_year)
+{
+    if ($key_uuid != "")
+    {
+        return " where uuid in(select thing_UUID from thing_property where property_UUID = '$key_uuid') "
+            . " and ((year_order >= $begin_year) and (year_order < $end_year)) ";
+    }
 }
  
 /**
@@ -201,11 +222,10 @@ function get_thing_item_by_search($offset, $page_size)
     return $result;
 }
 
-// 根据检索条件获取 thing 表的全部数据
-function get_thing_item_by_key($search_key)
+// 根据条件检索 thing 表。
+function get_thing_item_by_key($search_sub)
 {
-    $sql_string = "select * from thing_time " . get_search_where_sub_by_key($search_key) .
-         " order by thing_time.year_order ASC ";
+    $sql_string = "select * from thing_time $search_sub order by thing_time.year_order ASC ";
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

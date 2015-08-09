@@ -3,6 +3,7 @@
     is_user(3);
     require_once "sql.php";
     require_once "data.php";
+    require_once "tag.php";
     require_once "list_control.php";
     
     // 唯一可设置 list_type 的位置.
@@ -96,31 +97,7 @@ window.onload = function()
         return $result;
     }
     
-    // add, 2015-4-20
-    // 打印 中国朝代 tag 链接
-    function create_dynasty_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_dynasty_begin($index); $ii <= get_small_dynasty_end($index); $ii++)
-        {
-            $my_name = get_dynasty_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-    
-    // 打印 朝代“其它”部分。发现可以归一。
+    // 打印其它非 vip tag。
     function create_other_link(&$tags_db)
     {
         $result = "";
@@ -133,131 +110,13 @@ window.onload = function()
         return $result;
     }
     
-    // add, 2015-4-28
-    // 打印 国家民族 tag 链接
-    function create_country_link($index, &$tags_db)
+    // 打印 tag 链接。通用化，2015-8-9.
+    function create_vip_tag_link($vip_tag_class, $index, &$tags_db)
     {
         $result = "";
-        for ($ii = get_small_country_begin($index); $ii <= get_small_country_end($index); $ii++)
+        for ($ii = $vip_tag_class->get_small_begin($index); $ii <= $vip_tag_class->get_small_end($index); $ii++)
         {
-            $my_name = get_country_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-
-    // add, 2015-5-4
-    // 打印 主题 tag 链接
-    function create_topic_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_topic_begin($index); $ii <= get_small_topic_end($index); $ii++)
-        {
-            $my_name = get_topic_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-    
-    // 打印 主题 tag 链接. 2015-5-6
-    function create_city_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_city_begin($index); $ii <= get_small_city_end($index); $ii++)
-        {
-            $my_name = get_city_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-    
-    // 打印 主题 tag 链接. 2015-8-8
-    function create_land_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_land_begin($index); $ii <= get_small_land_end($index); $ii++)
-        {
-            $my_name = get_land_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-    
-    // 打印 person 链接. 2015-5-8
-    function create_person_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_person_begin($index); $ii <= get_small_person_end($index); $ii++)
-        {
-            $my_name = get_person_name($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
-            }
-            else 
-            {
-                $result .= $my_name . "&nbsp;&nbsp;";
-            }
-        }
-        
-        return $result;
-    }
-    
-    // add, 2015-5-20
-    // 打印 key_thing 链接
-    function create_key_thing_link($index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = get_small_key_thing_begin($index); $ii <= get_small_key_thing_end($index); $ii++)
-        {
-            $my_name = get_key_thing_name($index, $ii);
+            $my_name = $vip_tag_class->get_tag_name($index, $ii);
             $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
             
             if ($my_uuid != "")
@@ -328,112 +187,22 @@ window.onload = function()
                     . create_period_link($ii) . "<br />";
             }
         }
-        // add, 2015-4-19
-        // 是中国朝代
-        else if(is_dynasty($my_tag_id))
+        else if(is_topic($my_tag_id) || is_land($my_tag_id) || is_key_thing($my_tag_id) 
+            || is_dynasty($my_tag_id) || is_city($my_tag_id) || is_country($my_tag_id))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
             
-            for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
+            $my_vip_tag = vip_tag_struct_init($my_tag_id);
+            
+            for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
             {
-                echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_dynasty_link($ii, $tags_array) . "<br />";
+                echo $my_vip_tag->get_big_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                    . create_vip_tag_link($my_vip_tag, $ii, $tags_array) . "<br />";
             }
             
             // 最后打印其它
-            echo get_big_dynasty_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        else if(is_country($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
-            {
-                echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_country_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_country_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        else if(is_topic($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
-            {
-                echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_topic_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_topic_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        else if(is_city($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
-            {
-                echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_city_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_city_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        // is land. 2015-8-8
-        else if(is_land($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_land_begin(); $ii <= get_big_land_end() - 1; $ii++)
-            {
-                echo get_big_land_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_land_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_land_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        else if(is_person($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
-            {
-                echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_person_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_person_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-        else if(is_key_thing($my_tag_id))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
-            
-            for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
-            {
-                echo get_big_key_thing_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
-                    . create_key_thing_link($ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo get_big_key_thing_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+            echo $my_vip_tag->get_big_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
                     . create_other_link($tags_array) . "<br />";
         }
     

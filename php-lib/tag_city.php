@@ -2,6 +2,19 @@
 // created by duangan, 2015-5-6 -->
 // support city deal function.    -->
 
+$city_big = array
+(
+    "全球性都市",
+    "外国一线",
+    "中国东北",
+    "中国华北",
+    "中国华东",
+    "中国中部",
+    "中国南部",
+    "中国西部",
+    "其它"
+);
+
 // 朝代数组
 $city = array
 (
@@ -308,82 +321,5 @@ $city = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_city_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "全球性都市";
-        case 2:
-            return "外国一线";
-        case 3:
-            return "中国东北";
-        case 4:
-            return "中国华北";
-        case 5:
-            return "中国华东";
-        case 6:
-            return "中国中部";
-        case 7:
-            return "中国南部";
-        case 8:
-            return "中国西部";
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_city_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_city_end()
-{
-    global $city;
-    return count($city);
-}
-
-// 获取 small id begin
-function get_small_city_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_city_end($big_id)
-{
-    global $city;
-    return count($city[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_city_name($big_id, $small_id)
-{
-    global $city;
-    return $city[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function city_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_city_begin(); $ii <= get_big_city_end(); $ii++)
-    {
-        for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
-        {
-            if(get_city_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

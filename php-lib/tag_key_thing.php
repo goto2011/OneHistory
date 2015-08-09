@@ -2,6 +2,16 @@
 // created by duangan, 2015-5-6 -->
 // support key thing deal function.    -->
 
+$key_thing_big = array
+(
+    "中国古代",
+    "中国近现代",
+    "世界古代",
+    "世界近现代",
+    "社会热点",
+    "其它"
+);
+
 // 关键事件数组
 $key_thing = array
 (
@@ -161,76 +171,5 @@ $key_thing = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_key_thing_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "中国古代";
-        case 2:
-            return "中国近现代";
-        case 3:
-            return "世界古代";
-        case 4:
-            return "世界近现代";
-        case 5:
-            return "社会热点";
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_key_thing_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_key_thing_end()
-{
-    global $key_thing;
-    return count($key_thing);
-}
-
-// 获取 small id begin
-function get_small_key_thing_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_key_thing_end($big_id)
-{
-    global $key_thing;
-    return count($key_thing[$big_id - 1]);
-}
-
-// 获取名称
-function get_key_thing_name($big_id, $small_id)
-{
-    global $key_thing;
-    return $key_thing[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function key_thing_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end(); $ii++)
-    {
-        for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
-        {
-            if(get_key_thing_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

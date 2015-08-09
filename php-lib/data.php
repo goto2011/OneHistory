@@ -7,15 +7,6 @@ require_once "data_string.php";
 require_once "data_number.php";
 // require_once 'data_chinese.php';
 
-require_once "tag_period.php";
-require_once "tag_dynasty.php";
-require_once "tag_country.php";
-require_once "tag_topic.php";
-require_once "tag_city.php";
-require_once "tag_person.php";
-require_once "tag_key_thing.php";
-require_once "tag_land.php";
-
 /////////////////////////////// 1.SYSTEM start //////////////////////////////////////
 // 系统名称
 function get_system_name()

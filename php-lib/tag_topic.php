@@ -2,16 +2,31 @@
 // created by duangan, 2015-5-4 -->
 // support topic deal function.    -->
 
-// 朝代数组
+// 朝代 big
+$topic_big = array(
+    "历史",
+    "史前史",
+    "死亡",
+    "科学技术",
+    "艺术文化体育",
+    "思想宗教",
+    "人文社会",
+    "经济",
+    "政治外交",
+    "中国政治问题",
+    "其它"
+);
+
+// 朝代 tag vip struct.
 $topic = array
 (
     array
     (
         // 历史
-        array("历史学"),
+        array("历史学", "normal", "multe-key", "历史研究"),
         array("考古"),
-        array("分子遗传学"),
-        array("语言学"),
+        array("分子遗传学", "normal", "multe-key", "历史研究"),
+        array("语言学", "normal", "multe-key", "历史研究"),
         array("地质年代"),
         array("中国年号"),
         array("中学历史年表"),
@@ -64,7 +79,7 @@ $topic = array
     (
         // 科学技术
         array("发明创造"),
-        array("天文"),
+        array("天文", "normal", "multe-key", "太阳", "月亮", "恒星", "行星", "火星", "月食", "日食"),
         array("物理"),
         array("基因"),
         array("生物"),
@@ -193,86 +208,5 @@ $topic = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_topic_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "历史";
-        case 2:
-            return "史前史";
-        case 3:
-            return "死亡";
-        case 4:
-            return "科学技术";
-        case 5:
-            return "艺术文化体育";
-        case 6:
-            return "思想宗教";
-        case 7:
-            return "人文社会";
-        case 8:
-            return "经济";
-        case 9:
-            return "政治外交";
-        case 10:
-            return "中国政治问题";
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_topic_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_topic_end()
-{
-    global $topic;
-    return count($topic);
-}
-
-// 获取 small id begin
-function get_small_topic_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_topic_end($big_id)
-{
-    global $topic;
-    return count($topic[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_topic_name($big_id, $small_id)
-{
-    global $topic;
-    return $topic[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function topic_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end(); $ii++)
-    {
-        for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
-        {
-            if(get_topic_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

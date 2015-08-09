@@ -2,6 +2,16 @@
 // created by duangan, 2015-4-19 -->
 // support dynasty deal function.    -->
 
+$dynasty_big = array
+(
+    "正朔朝代",
+    "春秋战国列国",
+    "地方政权",
+    "周边少数民族",
+    "周边地区",
+    "其它"
+);
+
 // 朝代数组
 $dynasty = array
 (
@@ -81,7 +91,6 @@ $dynasty = array
         array("北燕"),
         array("前仇池"),
         array("后仇池"),
-        array("宕昌"),
         array("邓至"),
         array("冉魏"),
         array("谯蜀"),
@@ -123,29 +132,31 @@ $dynasty = array
     array
     (
         // 周边少数民族
+        // 和中原有重大纠葛的
+        
         // 东北
         array("东胡"),
         array("乌桓"),
-        array("鲜卑"),
+        array("鲜卑", "super"),
         array("吐谷浑"),
         array("柔然"),
-        array("契丹"),
+        array("契丹", "super"),
         array("室韦"),
-        array("蒙古"),
+        array("蒙古", "super"),
         array("准噶尔汗国"),
-        array("女真"),
-        array("满族"),
+        array("女真", "super"),
+        array("满族", "super"),
         
         array("濊貊"),
         array("扶余"),
         array("沃沮"),
-        array("高句丽"),
-        array("百济"),
+        array("高句丽", "super"),
+        array("古朝鲜", "高句丽", "百济", "新罗", "高丽"),
         
         array("粛慎"),
         
         // 北方
-        array("匈奴"),
+        array("匈奴", "super"),
         array("羯"),
         array("氐"),
         array("鞑靼"),
@@ -155,14 +166,14 @@ $dynasty = array
         array("维吾尔人"),
         
         // 突厥民族
-        array("突厥"),
+        array("突厥", "super"),
         array("沙陀"),
         
         // 西方
         array("戎"),
         array("羌"),
-        array("党项"),
-        array("吐蕃"),
+        array("党项", "super"),
+        array("吐蕃", "super"),
         
         // 南方
         array("苗人"),
@@ -194,82 +205,5 @@ $dynasty = array
         
     )
 );
-
-// 返回大时期的名称
-function get_big_dynasty_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "正朔朝代";
-            break;
-        case 2:
-            return "春秋战国列国";
-            break;
-        case 3:
-            return "地方政权";
-            break;
-        case 4:
-            return "周边少数民族";
-            break;
-        case 5:
-            return "周边地区";
-            break;
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_dynasty_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_dynasty_end()
-{
-    global $dynasty;
-    return count($dynasty);
-}
-
-// 获取 small id begin
-function get_small_dynasty_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_dynasty_end($big_id)
-{
-    global $dynasty;
-    return count($dynasty[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_dynasty_name($big_id, $small_id)
-{
-    global $dynasty;
-    return $dynasty[$big_id - 1][$small_id - 1][0];
-}
-
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function dynasty_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end(); $ii++)
-    {
-        for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
-        {
-            if(get_dynasty_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

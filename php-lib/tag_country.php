@@ -2,6 +2,19 @@
 // created by duangan, 2015-4-27 -->
 // support country deal function.    -->
 
+$country_big = array
+(
+    "古代文明",
+    "中东北非中亚",
+    "亚洲",
+    "欧洲",
+    "非洲",
+    "美洲",
+    "大洋洲等",
+    "国际组织",
+    "其它"
+);
+
 // 朝代数组
 $country = array
 (
@@ -169,89 +182,5 @@ $country = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_country_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "古代文明";
-            break;
-        case 2:
-            return "中东北非中亚";
-            break;
-        case 3:
-            return "亚洲";
-            break;
-        case 4:
-            return "欧洲";
-            break;
-        case 5:
-            return "非洲";
-            break;
-        case 6:
-            return "美洲";
-            break;
-        case 7:
-            return "大洋洲等";
-        case 8:
-            return "国际组织";
-            break;
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_country_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_country_end()
-{
-    global $country;
-    return count($country);
-}
-
-// 获取 small id begin
-function get_small_country_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_country_end($big_id)
-{
-    global $country;
-    return count($country[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_country_name($big_id, $small_id)
-{
-    global $country;
-    return $country[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function country_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_country_begin(); $ii <= get_big_country_end(); $ii++)
-    {
-        for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
-        {
-            if(get_country_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

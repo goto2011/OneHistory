@@ -3,6 +3,7 @@
 // tag 相关的函数。主要是和sql相关的。    -->
 
 require_once 'data.php';
+require_once 'tag.php';
 require_once 'list_control.php';
 
 // 获取tag list 最小值
@@ -233,7 +234,6 @@ function is_vip_tag_tab($tag_index_id)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-
 
 // 根据 tag 获取 thing 条目数量
 function get_thing_count_by_tag($property_UUID)
@@ -587,6 +587,7 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
     $my_uuid = array_search($tag_name, $tags_array);
     if (($my_uuid != "") && ($is_need_delete == 1))
     {
+        // 显示一个即从数组中去掉。
         unset($tags_array[$my_uuid]);
     }
     
@@ -767,8 +768,7 @@ function get_tag_from_tag_uuid($tag_uuid)
 }
 
 /**
- * 判断当前tag 是否是出处。
- * 2015-8-3.
+ * 判断当前tag 是否是出处。2015-8-3
  */
 function is_source_from_id($tag_uuid)
 {
@@ -780,108 +780,35 @@ function is_source_from_id($tag_uuid)
 
 /**
  * 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
-    array(8,      "中国朝代",         1,    1,      "dynasty_tags"),
-    array(7,      "国家民族",         1,    1,      "country_tags"),
-    array(10,     "专题",             1,    1,      "topic_tags"),
-    array(5,      "城市地区",         1,    1,      "geography_tags"),
-    array(4,      "人物",             1,    1,      "person_tags"),
  */
 function tag_is_vip($tag_uuid)
 {
     $tag_array = array();
     $tag_array = get_tag_from_tag_uuid($tag_uuid);
     
-    if (($tag_array[0] == 8) && (dynasty_tag_is_exist($tag_array[1]) == 1))
+    if(is_vip_tag_tab($tag_array[0]))
     {
-        return 1;
-    }
-    
-    if (($tag_array[0] == 7) && (country_tag_is_exist($tag_array[1]) == 1))
-    {
-        return 1;
-    }
-    
-    if (($tag_array[0] == 10) && (topic_tag_is_exist($tag_array[1]) == 1))
-    {
-        return 1;
-    }
-    
-    if (($tag_array[0] == 5) && (city_tag_is_exist($tag_array[1]) == 1))
-    {
-        return 1;
-    }
-    
-    if (($tag_array[0] == 4) && (person_tag_is_exist($tag_array[1]) == 1))
-    {
-        return 1;
+        $my_vip_tag = vip_tag_struct_init($my_tag_id);
+        if (tag_is_exist($tag_array[1]) == 1)
+        {
+            return 1;
+        }
     }
     
     return 0;
 }
 
 /**
- * 将vip tag 作为关键字自动检索。
+ * 将vip tag 作为关键字自动检索。（最重要函数，每次修改都要慎之又慎。）
  * 参数：$tag_type：tag type id。
- * 返回值：-1表示失败。
+ * 返回值：1表示成功。
  */
 function vip_tag_search_to_db($tag_type)
 {
     // 本函数执行时间长，去掉php执行时间限制。
     ini_set('max_execution_time', '0');
 
-    // dynasty_tags
-    if (is_dynasty($tag_type))
-    {
-        for ($ii = get_big_dynasty_begin(); $ii <= get_big_dynasty_end() - 1; $ii++)
-        {
-            for ($jj = get_small_dynasty_begin($ii); $jj <= get_small_dynasty_end($ii); $jj++)
-            {
-                $tag_name = get_dynasty_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
-    
-    // country_tags
-    if (is_country($tag_type))
-    {
-        for ($ii = get_big_country_begin(); $ii <= get_big_country_end() - 1; $ii++)
-        {
-            for ($jj = get_small_country_begin($ii); $jj <= get_small_country_end($ii); $jj++)
-            {
-                $tag_name = get_country_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
-    
-    // topic_tags
-    if (is_topic($tag_type))
-    {
-        for ($ii = get_big_topic_begin(); $ii <= get_big_topic_end() - 1; $ii++)
-        {
-            for ($jj = get_small_topic_begin($ii); $jj <= get_small_topic_end($ii); $jj++)
-            {
-                $tag_name = get_topic_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
-    
-    // city_tags
-    if (is_city($tag_type))
-    {
-        for ($ii = get_big_city_begin(); $ii <= get_big_city_end() - 1; $ii++)
-        {
-            for ($jj = get_small_city_begin($ii); $jj <= get_small_city_end($ii); $jj++)
-            {
-                $tag_name = get_city_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
-
-    // person_tags
+    // person_tags.
     if (is_person($tag_type))
     {
         for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
@@ -894,28 +821,62 @@ function vip_tag_search_to_db($tag_type)
         }
     }
     
-    // key_thing_tags
-    if (is_key_thing($tag_type))
+    // other.
+    if(is_vip_tag_tab($tag_type))
     {
-        for ($ii = get_big_key_thing_begin(); $ii <= get_big_key_thing_end() - 1; $ii++)
+        $my_vip_tag = vip_tag_struct_init($tag_type);
+        
+        for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
         {
-            for ($jj = get_small_key_thing_begin($ii); $jj <= get_small_key_thing_end($ii); $jj++)
+            for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
             {
-                $tag_name = get_key_thing_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
-    
-    // land_tags
-    if (is_land($tag_type))
-    {
-        for ($ii = get_big_land_begin(); $ii <= get_big_land_end() - 1; $ii++)
-        {
-            for ($jj = get_small_land_begin($ii); $jj <= get_small_land_end($ii); $jj++)
-            {
-                $tag_name = get_land_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
+                $search_key = "";
+                $search_sub = "";
+                
+                $my_search_flag = $my_vip_tag->get_tag_search_flag($ii, $jj);
+                $my_tag_name = $my_vip_tag->get_tag_name($ii, $jj);
+                
+                if ($my_search_flag == "sigle-key")
+                {
+                    $search_key = $my_vip_tag->get_tag_single_key($ii, $jj);
+                    if ($search_key != "")
+                    {
+                        $search_sub = get_search_where_sub_by_key($search_key);
+                    }
+                }
+                else if($my_search_flag == "multe-key")
+                {
+                    $search_key = $my_vip_tag->get_tag_multe_key($ii, $jj);
+                    if ($search_key != "")
+                    {
+                        $search_sub = get_search_where_sub_by_key($search_key);
+                    }
+                }
+                else if($my_search_flag == "key-time")
+                {
+                    $search_key = $my_vip_tag->get_key_time_key($ii, $jj);
+                    $begin_year = $my_vip_tag->get_key_time_begin_year($ii, $jj);
+                    $end_year = $my_vip_tag->get_key_time_end_year($ii, $jj);
+                    if (($search_key != "") && ($begin_year != 0) && ($end_year != 0))
+                    {
+                        $search_sub = get_search_where_sub_by_key_time($search_key, $begin_year, $end_year);
+                    }
+                }
+                else if($my_search_flag == "tag-time")
+                {
+                    $search_tag = get_tag_uuid_from_name($my_vip_tag->get_tag_time_tag($ii, $jj), $tag_type);
+                    $begin_year = $my_vip_tag->get_tag_time_begin_year($ii, $jj);
+                    $end_year = $my_vip_tag->get_tag_time_end_year($ii, $jj);
+                    if (($search_tag != "") && ($begin_year != 0) && ($end_year != 0))
+                    {
+                        $search_sub = get_search_where_sub_by_tag_time($search_tag, $begin_year, $end_year);
+                    }
+                }
+                
+                if ($search_sub != "")
+                {
+                    tag_search_to_db($search_sub, $my_tag_name, $tag_type);
+                }
             }
         }
     }
@@ -930,11 +891,11 @@ function vip_tag_search_to_db($tag_type)
 /**
  * 将 tag 作为关键字自动检索。
  */
-function tag_search_to_db($tag_name, $tag_type)
+function tag_search_to_db($search_sub, $tag_name, $tag_type)
 {
     // 1. 生成检索条件。获取符合条件的thing 表结果集.
     // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
-    $db_result = get_thing_item_by_key($tag_name);
+    $db_result = get_thing_item_by_key($search_sub);
     
     // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
     if ($db_result != NULL)

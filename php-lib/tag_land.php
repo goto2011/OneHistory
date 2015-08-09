@@ -2,6 +2,19 @@
 // created by duangan, 2015-8-8 -->
 // support land deal function.    -->
 
+// 返回大时期的名称
+$land_big = array(
+    "大海",
+    "中国河湖",
+    "外国河湖",
+    "大山",
+    "中国本部地理单元",
+    "中国周边地理单元",
+    "中国其它",
+    "外国地理单元",
+    "其它"
+);
+
 // 朝代数组
 $land = array
 (
@@ -93,6 +106,7 @@ $land = array
     array
     (
         // 大山
+        // 中国
     ),
     array
     (
@@ -137,6 +151,20 @@ $land = array
         array("祁连山"),
         array("阴山"),
         array("南岭"),
+        
+        array("太行八径", "军都陉", "蒲阴陉", "飞狐陉", "井陉", "滏口陉", "白陉", "太行陉", "轵关陉"),
+        array("山海关"),
+        array("函谷关"),
+        array("潼关"),
+        array("嘉峪关"),
+        array("玉门关"),
+        array("居庸关"),
+        array("娘子关"),
+        array("平型关"),
+        array("剑门关"),
+        array("武胜关"),
+        array("紫荆关"),
+        array("友谊关"),
     ),
     array
     (
@@ -147,82 +175,5 @@ $land = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_land_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "大海";
-        case 2:
-            return "中国河湖";
-        case 3:
-            return "外国河湖";
-        case 4:
-            return "大山";
-        case 5:
-            return "中国本部地理单元";
-        case 6:
-            return "中国周边地理单元";
-        case 7:
-            return "中国其它";
-        case 8:
-            return "外国地理单元";
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_land_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_land_end()
-{
-    global $land;
-    return count($land);
-}
-
-// 获取 small id begin
-function get_small_land_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_land_end($big_id)
-{
-    global $land;
-    return count($land[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_land_name($big_id, $small_id)
-{
-    global $land;
-    return $land[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function land_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_land_begin(); $ii <= get_big_land_end(); $ii++)
-    {
-        for ($jj = get_small_land_begin($ii); $jj <= get_small_land_end($ii); $jj++)
-        {
-            if(get_land_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>
