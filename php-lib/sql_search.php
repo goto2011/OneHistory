@@ -100,7 +100,7 @@ function get_search_where_sub_by_key($search_key)
  */
 function get_search_where_sub_by_key_time($search_key, $begin_year, $end_year)
 {
-    return " where " . get_search_where_sub_native($search_key) . " and ((year_order >= $begin_year) and (year_order < $end_year)) ";
+    return " where (" . get_search_where_sub_native($search_key) . ") and ((year_order >= $begin_year) and (year_order <= $end_year)) ";
 }
 
 /**
@@ -111,7 +111,7 @@ function get_search_where_sub_by_tag_time($key_uuid, $begin_year, $end_year)
     if ($key_uuid != "")
     {
         return " where uuid in(select thing_UUID from thing_property where property_UUID = '$key_uuid') "
-            . " and ((year_order >= $begin_year) and (year_order < $end_year)) ";
+            . " and ((year_order >= $begin_year) and (year_order <= $end_year)) ";
     }
 }
  

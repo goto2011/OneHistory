@@ -18,6 +18,7 @@ $dynasty = array
     array
     (
         // 正朔朝代
+        array("中国"),
         array("夏朝"),
         array("商朝"),
         array("周朝"),

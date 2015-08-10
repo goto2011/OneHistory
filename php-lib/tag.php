@@ -21,11 +21,11 @@ require_once "tag_land.php";
  * 3. search flag: 检索属性。有四种："sigle-key"、"multe-key"、"key-time"、"tag-time".
  *      sigle-key: 单关键字。最常见，所以也可以不指定search flag。
  *      multe-key: 多关键字。需要指定。
- *      key-time:  关键字和时间区间的组合。需要指定。（目前仅用于“标签中如何划分古代文明和现代国家？”）。仅支持一个。
+ *      key-time:  关键字和时间区间的组合。需要指定。（目前仅用于“标签中如何划分古代文明和现代国家？”）。支持多个。
  *      tag-time:  tag和时间区间的组合。需要指定。（目前仅用于 中国朝代 tab页 之 正朔朝代。仅支持一个。
  * 4. 检索关键字。可能有多个。
  * 5. 时间范围字段。
- *      对于key-time是这样的：[tag name][show flag][search flag][key][begin year][end year].
+ *      对于key-time是这样的：[tag name][show flag][search flag][key1][key2][key3][begin year][end year].
  *      对于tag-time是这样的：[tag name][show flag][search flag][tag name][begin year][end year].
 **/
 class vip_tag_class{
@@ -147,8 +147,9 @@ class vip_tag_class{
     {
         if ($this->get_tag_search_flag($big_id, $small_id) == "multe-key")
         {
-            // 多关键字的情况下，tag显示名称 默认为也参与检索。
             $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+            
+            // 多关键字的情况下，tag显示名称 默认为也参与检索。
             $my_key_string = $my_vip_tag[0] . " ";
             
             for ($ii = 3; $ii < count($my_vip_tag); $ii++)
@@ -171,7 +172,20 @@ class vip_tag_class{
     {
         if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
         {
-            return $this->vip_tag_struct[$big_id - 1][$small_id - 1][3];
+            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+            
+            // tag显示名称 默认为也参与检索。
+            $my_key_string = $my_vip_tag[0] . " ";
+            
+            for ($ii = 3; $ii < count($my_vip_tag); $ii++)
+            {
+                if (!is_numeric($my_vip_tag[$ii]))
+                {
+                    $my_key_string .= $my_vip_tag[$ii] . " ";
+                }
+            }
+            
+            return $my_key_string;
         }
         else 
         {
@@ -186,7 +200,17 @@ class vip_tag_class{
     {
         if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
         {
-            return $this->vip_tag_struct[$big_id - 1][$small_id - 1][4];
+            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+            
+            for ($ii = 4; $ii < count($my_vip_tag); $ii++)
+            {
+                // 第一个数字默认为 begin year.
+                if(is_numeric($my_vip_tag[$ii]))
+                {
+                    return $my_vip_tag[$ii];
+                }
+            }
+            return 0;
         }
         else 
         {
@@ -201,14 +225,24 @@ class vip_tag_class{
     {
         if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
         {
-            return $this->vip_tag_struct[$big_id - 1][$small_id - 1][5];
+            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+            
+            // 最后一个字段为 end year。如果不是，则说明出错。
+            $my_end_year = $my_vip_tag[count($my_vip_tag) - 1];
+            if(is_numeric($my_end_year))
+            {
+                return $my_end_year;
+            }
+            else
+            {
+                return 0;
+            }
         }
         else 
         {
             return 0;
         }
     }
-    
     
     /**
      * 获取 vip tag 的 tag-time 之 tag。失败返回""。

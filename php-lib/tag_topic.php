@@ -23,10 +23,10 @@ $topic = array
     array
     (
         // 历史
-        array("历史学", "normal", "multe-key", "历史研究"),
+        array("历史学", "normal", "multe-key", "历史学", "历史研究", "史学"),
         array("考古"),
-        array("分子遗传学", "normal", "multe-key", "历史研究"),
-        array("语言学", "normal", "multe-key", "历史研究"),
+        array("分子遗传学", "normal", "multe-key", "基因"),
+        array("语言学", "normal", "multe-key", "汉藏语系", "印欧语系", "阿尔泰语系", "闪含语系", "达罗毗荼语系", "高加索语系", "乌拉尔语系"),
         array("地质年代"),
         array("中国年号"),
         array("中学历史年表"),
@@ -79,7 +79,9 @@ $topic = array
     (
         // 科学技术
         array("发明创造"),
-        array("天文", "normal", "multe-key", "太阳", "月亮", "恒星", "行星", "火星", "月食", "日食"),
+        array("天文", "normal", "multe-key", "天文", "航天", "太阳", "月亮", "恒星", "行星", "火星", "月食", 
+                "日食", "黑洞", "星图", "历法", "水星", "土星", "水星", "天王星", "海王星", "冥王星", "彗星", 
+                "星云", "银河", "宇宙", "陨石"),
         array("物理"),
         array("基因"),
         array("生物"),
@@ -117,10 +119,10 @@ $topic = array
         array("道教"),
         array("印度教"),
         array("萨满教"),
-        array("其它宗教"),
+        array("其它宗教", "normal", "multe-key", "耆那教", "拜火教", "祆教", "摩尼教"),
         
         array("古希腊哲学"),
-        array("中世纪哲学"),
+        array("经院哲学"),
         array("康德哲学"),
         array("经验主义哲学"),
         array("存在主义哲学"),
@@ -128,14 +130,13 @@ $topic = array
         array("儒家"),
         array("中国其它哲学"),
         array("马克思主义哲学"),
-        array("军事思想"),
     ),
     array
     (
         // 人文社会
         array("社会"),
-        array("婚嫁情感"),
-        array("伦理学"),
+        array("婚嫁情感", "normal", "multe-key", "爱情", "婚姻", "家庭"),
+        array("伦理学",  "normal", "multe-key", "道德"),
         array("心理学"),
         array("经济学"),
         array("社会学"),
@@ -145,7 +146,7 @@ $topic = array
     (
         // 经济
         array("农业"),
-        array("土地制度"),
+        array("土地制度", "normal", "multe-key", "土地", "初税亩"),
         array("水利"),
         
         array("工业"),
@@ -168,7 +169,7 @@ $topic = array
         array("法律"),
         array("犯罪"),
         array("国际关系"),
-        array("战略思想"),
+        array("军事思想"),
         array("条约"),
         array("殖民"),
         array("奴隶"),
@@ -185,7 +186,7 @@ $topic = array
         array("皇权"),
         array("太子"),
         array("宰相"),
-        array("中央和地方官制"),
+        array("官制"),
         array("科举"),
         array("监察"),
         array("宗室"),
