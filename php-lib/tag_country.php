@@ -39,13 +39,14 @@ $country = array
         array("班图人文明",  "normal", "multe-key", "班图尼格罗人", "班图语系", "割礼", "伊费王国", "刚果王国", 
                 "大津巴布韦", "马拉维文化", "马蓬古布韦文化", "祖鲁王国", "斯瓦希里文明", "加纳帝国", "贝宁文明", "诺克文化"),
         array("玛雅文明", "normal", "sigle-key", "玛雅"),
-        array("波利尼西亚文明", "normal", "multe-key", "波利尼西亚", "马来-波利尼西亚语", "南岛人"),
+        array("波利尼西亚文明", "normal", "multe-key", "波利尼西亚", "波利尼西亚语", "南岛人"),
     ),
     array
     (
         // 中东北非中亚
         array("犹太人"),
-        array("伊斯兰", "normal", "multe-key", "默罕默德", "伊斯兰教", "穆斯林", "逊尼派", "什叶派", "斋月"),
+        array("伊斯兰", "super", "multe-key", "默罕默德", "伊斯兰教", "穆斯林", "逊尼派", "什叶派", 
+                "斋月"),
         array("奥斯曼帝国"),
         array("土耳其"),
         array("以色列"),
@@ -67,15 +68,16 @@ $country = array
         array("塞浦路斯"),
         array("格鲁吉亚"),
         array("阿富汗"),
-        array("中亚五斯坦", "normal", "multe-key", "吉尔吉斯斯坦", "塔吉克斯坦", "乌兹别克斯坦", "土库曼斯坦", "哈萨克斯坦"),
+        array("中亚五斯坦", "normal", "multe-key", "吉尔吉斯斯坦", "塔吉克斯坦", "乌兹别克斯坦", 
+                "土库曼斯坦", "哈萨克斯坦"),
     ),
     array
     (
         // 亚洲
-        array("印度", "normal", "key-time", "印度", "孟买", "1600", "2100"),
-        array("日本"),
+        array("印度", "super", "key-time", "印度", "孟买", "1600", "2100"),
+        array("日本", "super", "multe-key", "日本", "东京"),
+        array("韩国", "super", "multe-key", "韩国", "汉城", "首尔"),
         array("朝鲜"),
-        array("韩国"),
         array("巴基斯坦"),
         array("孟加拉国"),
         array("马尔代夫"),
@@ -83,7 +85,7 @@ $country = array
         array("斯里兰卡"),
         array("蒙古"),
         
-        array("东盟", "normal", "multe-key", "东盟", "东南亚联盟"),
+        array("东盟", "super", "multe-key", "东盟", "东南亚联盟"),
         array("马来西亚"),
         array("泰国"),
         array("新加坡"),
@@ -97,14 +99,16 @@ $country = array
     array
     (
         // 欧洲
-        array("欧盟",  "super", "multe-key", "欧盟", "欧洲联盟", "欧共体", "欧洲经济共同体", "欧洲共同体", "欧元"),
+        array("欧盟",  "super", "multe-key", "欧盟", "欧洲联盟", "欧共体", "欧洲经济共同体", 
+                "欧洲共同体", "欧元"),
         array("神圣罗马帝国"),
         array("奥匈帝国"),
         array("德国", "super", "multe-key", "德国", "德意志", "普鲁士", "条顿", "柏林"),
         array("英国", "super", "multe-key", "英国", "英吉利", "伦敦"),
         array("法国", "super", "multe-key", "法国", "法兰西", "巴黎", "拿破仑"),
         array("俄罗斯", "super", "multe-key", "俄罗斯", "俄国", "莫斯科", "沙皇"),
-        array("意大利", "super", "key-time", "意大利", "罗马", "威尼斯", "佛罗伦萨", "比萨", "热那亚", "476", "2100"),
+        array("意大利", "super", "key-time", "意大利", "罗马", "威尼斯", "佛罗伦萨", "比萨", 
+                "热那亚", "476", "2100"),
         array("奥地利"),
         array("西班牙"),
         array("葡萄牙"),
@@ -177,9 +181,10 @@ $country = array
         array("巴布亚新几内亚"),
         
         // 国际组织
-        array("联合国"),
-        array("世界贸易组织"),
-        array("世界银行"),
+        array("联合国", "super", "multe-key", "联合国", "安理会"),
+        array("世界贸易组织", "normal", "multe-key", "世界贸易组织", "世贸", "关贸总协定"),
+        array("世界金融体系", "super", "multe-key", "世界银行", "世行", "亚洲开发银行", "布雷顿森林体系", 
+                "牙买加货币体系", "IMF", "国际货币基金组织", "特别提款权", "亚洲基础设施投资银行", "亚投行"),
     ),
     array
     (

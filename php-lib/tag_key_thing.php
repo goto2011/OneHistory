@@ -108,9 +108,6 @@ $key_thing = array
         array("台湾十大建设"),
         array("美丽岛事件"),
         array("辜汪会谈"),
-        array("中国国民党"),
-        array("中国共产党"),
-        array("民主进步党"),
     ),
     array
     (
@@ -136,6 +133,7 @@ $key_thing = array
         array("法国革命"),
         array("拿破仑帝国"),
         array("德国统一"),
+        array("意大利统一"),
         array("俄罗斯改革"),
         array("拉美独立浪潮"),
         array("美国南北战争"),
@@ -143,11 +141,12 @@ $key_thing = array
     array
     (
         // 世界近现代
-        array("第一次世界大战"),
+        array("第一次世界大战", "super", "key-time", "第一次世界大战", "战争", "一战", "1914", "1918"),
         array("十月革命"),
         array("斯大林大清洗"),
         array("1933年经济危机"),
-        array("第二次世界大战"),
+        array("第二次世界大战", "super", "key-time", "第二次世界大战", "战争", "二战", "抗战", "抗日战争", 
+                "1931", "1945"),
         array("印度独立"),
         array("非洲独立浪潮"),
         array("登上月球"),
@@ -155,6 +154,7 @@ $key_thing = array
         array("海湾战争"),
         array("苏联解体"),
         array("香港回归"),
+        array("南斯拉夫内战"),
         array("九一一事件"),
         array("阿富汗战争"),
         array("伊拉克战争"),

@@ -152,10 +152,11 @@ function ajax_do(operate_type)
     {
         if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))
         {
-            $tag_id = get_tag_id_from_index($ii);
+            // 此处保存下标为好.
+            // $tag_id = get_tag_id_from_index($ii);
             $tag_name = get_tag_list_name_from_index($ii);
             
-            echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$tag_id' >$tag_name";
+            echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$ii' >$tag_name";
         }
     }
 ?>

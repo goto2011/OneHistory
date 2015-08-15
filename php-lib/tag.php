@@ -308,7 +308,8 @@ class vip_tag_class{
 }
 
 /** 
- * vip_tag_init: 初始化。
+ * vip_tag_init: 根据制定 tag type id 初始化 vip_tag_struct。
+ * 
  *  array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "国家民族",         1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.

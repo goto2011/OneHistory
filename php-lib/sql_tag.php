@@ -65,7 +65,7 @@ function get_tag_list_from_index($tag_index_id)
 }
 
 /**
- * 将list id 转化为 tab id。 
+ * 将 数组下标 转化为 tab id。 
  * 返回值：大于 0 表示为数据库中真实的tag type id；小于 0表示 tab id；-100 表示非法值。
  */
 function get_tag_id_from_index($tag_index_id)
@@ -82,7 +82,7 @@ function get_tag_id_from_index($tag_index_id)
 }
 
 /**
- * 获取 tag 名称。 返回-2表示非法值。
+ * 根据数组下标 获取 tag 名称。 返回-2表示非法值。
  */
 function get_tag_list_name_from_index($tag_index_id)
 {
@@ -98,7 +98,7 @@ function get_tag_list_name_from_index($tag_index_id)
 }
 
 /**
- * 获取显示属性。 返回-2表示非法值。
+ * 根据数组下标 获取显示属性。 返回-2表示非法值。
  */
 function get_tag_show_type_from_index($tag_index_id)
 {
@@ -114,7 +114,7 @@ function get_tag_show_type_from_index($tag_index_id)
 }
 
 /**
- * 获取key tag属性。 返回-2表示非法值。
+ * 根据数组下标 获取key tag属性。 返回-2表示非法值。
  */
 function get_key_tag_type_from_index($tag_index_id)
 {
@@ -130,7 +130,7 @@ function get_key_tag_type_from_index($tag_index_id)
 }
 
 /**
- * 获取 tag input id 属性。 返回""表示非法值。
+ * 根据数组下标 获取 tag input id 属性。 返回""表示非法值。
  */
 function get_tag_input_id_from_index($tag_index_id)
 {
@@ -748,7 +748,7 @@ function delete_tag_to_db($tag_uuid)
 }
 
 /**
- * 根据tag uuid 获取tag名称和tag类型。
+ * 根据tag uuid 获取 tag类型 和 tag名称.
  * 返回值为一个数组，[0]为类型, [1]是名称。
  */
 function get_tag_from_tag_uuid($tag_uuid)
@@ -784,12 +784,14 @@ function is_source_from_id($tag_uuid)
 function tag_is_vip($tag_uuid)
 {
     $tag_array = array();
+    // 获取 tag类型 和 tag名称.
     $tag_array = get_tag_from_tag_uuid($tag_uuid);
     
+    // 通过 tag type id 判断是否为 vip type.
     if(is_vip_tag_tab($tag_array[0]))
     {
-        $my_vip_tag = vip_tag_struct_init($my_tag_id);
-        if (tag_is_exist($tag_array[1]) == 1)
+        $my_vip_tag = vip_tag_struct_init($tag_array[0]);
+        if ($my_vip_tag->tag_is_exist($tag_array[1]) == 1)
         {
             return 1;
         }
@@ -803,11 +805,13 @@ function tag_is_vip($tag_uuid)
  * 参数：$tag_type：tag type id。
  * 返回值：1表示成功。
  */
-function vip_tag_search_to_db($tag_type)
+function vip_tag_search_to_db($tag_index)
 {
     // 本函数执行时间长，去掉php执行时间限制。
     ini_set('max_execution_time', '0');
 
+    $tag_type = get_tag_id_from_index($tag_index);
+    
     // person_tags.
     if (is_person($tag_type))
     {
@@ -821,8 +825,8 @@ function vip_tag_search_to_db($tag_type)
         }
     }
     
-    // other.
-    if(is_vip_tag_tab($tag_type))
+    // 根据下标 判断是否是 vip tag.
+    if(is_vip_tag_tab($tag_index))
     {
         $my_vip_tag = vip_tag_struct_init($tag_type);
         

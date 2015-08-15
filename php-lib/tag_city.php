@@ -96,9 +96,9 @@ $city = array
     array
     (
         // 中国东北
+        array("沈阳", "super", "multe-key", "沈阳", "盛京", "奉天"),
         array("哈尔滨"),
         array("长春"),
-        array("沈阳"),
         array("大连"),
         array("黑河"),
         array("满洲里"),
@@ -125,7 +125,7 @@ $city = array
     array
     (
         // 中国华北
-        array("北京"),
+        array("北京", "super", "multe-key", "北京", "燕京", "涿郡", "幽州", "北平"), // "大都"歧义太多.
         array("天津"),
         array("石家庄"),
         array("太原"),
@@ -154,20 +154,22 @@ $city = array
     (
         // 中国华东
         array("上海"),
-        array("南京"),
-        array("杭州"),
-        array("苏州"),
-        array("扬州"),
+        array("南京", "super", "multe-key", "南京", "金陵", "建康", "江宁", "石头城"),
+        array("杭州", "normal", "multe-key", "杭州", "临安", "武林", "余杭", "杭城"),
+        array("苏州", "normal", "multe-key", "苏州", "姑苏", "吴都", "吴中", "吴郡", "平江", "吴门"),
+        array("扬州", "normal", "multe-key", "扬州", "邗江", "广陵", "江都", "维扬"),
         array("宁波"),
         array("徐州"),
         array("温州"),
         array("合肥"),
+        array("安庆"),
         array("无锡"),
         array("常州"),
         array("南通"),
         array("淮安"),
         array("盐城"),
         array("镇江"),
+        array("徽州"),
         array("嘉兴"),
         array("湖州"),
         array("绍兴"),
@@ -182,7 +184,6 @@ $city = array
         array("宿州"),
         array("阜阳"),
         array("蚌埠"),
-        array("安庆"),
         array("芜湖"),
         array("连云港"),
         array("淮阴"),
@@ -190,9 +191,9 @@ $city = array
     array
     (
         // 中国中部
-        array("西安"),
-        array("武汉"),
-        array("开封"),
+        array("西安", "super", "multe-key", "西安", "长安", "镐京", "西京", "大兴城"),
+        array("武汉", "super", "multe-key", "武汉", "武昌", "汉口", "汉阳"),
+        array("开封", "super", "multe-key", "开封", "汴梁", "汴州", "汴京", "大梁"), // "东京"歧义太多.
         array("洛阳"),
         array("长沙"),
         array("重庆"),
@@ -243,7 +244,7 @@ $city = array
     array
     (
         // 中国南部
-        array("广州"),
+        array("广州", "super", "multe-key", "广州", "番禺", "任嚣城"),
         array("深圳"),
         array("台北"),
         array("台南"),

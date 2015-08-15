@@ -146,19 +146,20 @@ function get_search_where_sub($enable_time_search = TRUE)
                 // 年月日 和 年月日时分秒，都要精确查询。
                 if (($time_array['time_type'] == 3) || ($time_array['time_type'] == 4))
                 {
-                    $search_sub .= " time = " . $time_array['time'] . " and time_type = " . $time_array['time_type'] . " ";
+                    $search_sub .= " time = " . $time_array['time'] . " and time_type = " . $time_array['time_type'] . " ) ";
                 }
                 // 年份，使用范围查询条件。
                 else
                 {
-                    $search_sub .= " year_order >= " . $time_array['time'] . " and year_order < " . ($time_array['time'] + 1) . " ";
+                    $search_sub .= " year_order >= " . $time_array['time'] . " and year_order < " . ($time_array['time'] + 1) . " ) ";
                 }
             }
+            // 如果时间有上下限.
             else 
             {
                 $search_sub .= " time >= " . ($time_array['time'] - $time_array['time_limit']) 
                     . " and time < " . ($time_array['time'] + $time_array['time_limit']) 
-                    . " and time_type = " . $time_array['time_type'] . " ";
+                    . " and time_type = " . $time_array['time_type'] . " ) ";
             }
             
             return $search_sub; 
