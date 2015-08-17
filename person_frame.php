@@ -86,9 +86,11 @@
     
     echo "<div class='easyui-tabs' style='' >";
     
-    for ($ii = get_big_person_begin(); $ii <= get_big_person_end(); $ii++)
+    $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
+
+    for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end(); $ii++)
     {
-        $tag_name = get_big_person_name($ii);
+        $tag_name = $my_vip_tag->get_big_name($ii);
         echo "<div title='$tag_name' style='padding:10px;'" . get_selected_tab($ii) . "></div>";
     }
     

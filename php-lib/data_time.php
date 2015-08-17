@@ -37,7 +37,7 @@ function get_time_string_lite($time_number, $time_type)
     return $my_time_string;
 }
 
-// 根据时间（数字）和类型，获得时间字符串(目的是显示在页面上)
+// 根据时间（数字）和类型，获得时间字符串(目的是显示在主页面表格上). 关键函数, 修改须谨慎.
 // 输入: thing-time 表的 time 字段的数字
 // 输出: 显示在 item_list 界面上的时间字符串, 目的是方便使用者识别, 所以加入汉字. 格式化程度很低.
 function get_time_string($time_number, $time_type)
@@ -57,28 +57,19 @@ function get_time_string($time_number, $time_type)
         }
         else
         {
-            if ($time_number < 1000)
-            {
-                $my_time_string = "公元" . $time_number . "年";
-            }
-            else 
-            {
-                $my_time_string = $time_number . "年";
-            }
+            // 公元后年份不显示 "公元".
+            $my_time_string = $time_number . "年";
         }
      }
      // “年月日”格式
      else if($time_type == 3)
      {
         $string_array = explode("/", days_to_time_string($time_number));
-          
-        if($string_array[2] > 1000)
+        
+        // 公元后年份不显示 "公元".
+        if($string_array[2] > 0)
         {
             $my_time_string = "$string_array[2]-$string_array[0]-$string_array[1]";
-        }
-        else if(($string_array[2] < 1000) && ($string_array[2] > 0))
-        {
-            $my_time_string = "公元$string_array[2]年-$string_array[0]月-$string_array[1]日";
         }
         else if($string_array[2] < 0)
         {
@@ -1053,7 +1044,8 @@ function time_string_to_seconds($time_string)
 // 将秒数转成将“年月日 时分秒”
 function seconds_to_time_string($seconds_count)
 {
-    return date("Y-m-d H:i:s", $seconds_count);
+    // return date("Y-m-d H:i:s", $seconds_count);
+    return date("Y-n-j H:i:s", $seconds_count);
 }
 
 

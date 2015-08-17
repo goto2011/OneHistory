@@ -275,7 +275,15 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
-    $source_detail = html_encode($tags_array['source_detail']);
+    
+    if (isset($tags_array['source_detail']))
+    {
+        $source_detail = html_encode($tags_array['source_detail']);
+    }
+    else 
+    {
+        $source_detail = "";
+    }
     
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
@@ -779,7 +787,7 @@ function is_source_from_id($tag_uuid)
 }
 
 /**
- * 检查指定tag是否为关键tag。=1 表示是，=0表示不是。
+ * 检查指定tag name是否为关键tag。=1 表示是，=0表示不是。
  */
 function tag_is_vip($tag_uuid)
 {
@@ -791,9 +799,12 @@ function tag_is_vip($tag_uuid)
     if(is_vip_tag_tab($tag_array[0]))
     {
         $my_vip_tag = vip_tag_struct_init($tag_array[0]);
-        if ($my_vip_tag->tag_is_exist($tag_array[1]) == 1)
+        if ($my_vip_tag != null)
         {
-            return 1;
+            if ($my_vip_tag->tag_is_exist($tag_array[1]) == 1)
+            {
+                return 1;
+            }
         }
     }
     
@@ -811,19 +822,6 @@ function vip_tag_search_to_db($tag_index)
     ini_set('max_execution_time', '0');
 
     $tag_type = get_tag_id_from_index($tag_index);
-    
-    // person_tags.
-    if (is_person($tag_type))
-    {
-        for ($ii = get_big_person_begin(); $ii <= get_big_person_end() - 1; $ii++)
-        {
-            for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
-            {
-                $tag_name = get_person_name($ii, $jj);
-                tag_search_to_db($tag_name, $tag_type);
-            }
-        }
-    }
     
     // 根据下标 判断是否是 vip tag.
     if(is_vip_tag_tab($tag_index))

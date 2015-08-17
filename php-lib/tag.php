@@ -354,7 +354,9 @@ function vip_tag_struct_init($vip_tag_id)
             break;
             
         case tab_type::CONST_PERSON:
-            
+            global $person;
+            global $person_big;
+            $vip_tag_struct = new vip_tag_class($person_big, $person);
             break;
             
         case tab_type::CONST_KEY_THING:

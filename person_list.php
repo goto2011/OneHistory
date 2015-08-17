@@ -46,9 +46,13 @@
     function create_person_link($index, &$tags_db)
     {
         $result = "";
-        for ($ii = get_small_person_begin($index); $ii <= get_small_person_end($index); $ii++)
+        
+        $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
+        
+        for ($ii = $my_vip_tag->get_small_begin($index); $ii <= $my_vip_tag->get_small_end($index); 
+                $ii++)
         {
-            $my_name = get_person_name($index, $ii);
+            $my_name = $my_vip_tag->get_tag_name($index, $ii);
             
             // 标签数组不删除。
             $my_uuid = search_tag_from_array($my_name, $tags_db, 0);
@@ -102,7 +106,9 @@
         echo "<br />";
         $tags_array = get_tags_array(get_current_list_id());
         
-        echo get_big_person_name($person_sub_list_id) . " :&nbsp;&nbsp;&nbsp;" 
+        $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
+        
+        echo $my_vip_tag->get_big_name($person_sub_list_id) . " :&nbsp;&nbsp;&nbsp;" 
             . create_person_link($person_sub_list_id, $tags_array) . "<br />";
         /*
         $my_tag_id = get_tag_id_from_index(get_current_list_id());

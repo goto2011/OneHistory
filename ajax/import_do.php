@@ -6,8 +6,7 @@
     
     if(empty($_POST['operate_type']) || (strlen($_POST['context']) == 0))
     {
-        echo "fail";
-        exit;
+        ajax_error_exit(error_id::ERROR_CONTEXT_EMPTY);
     }
 
 	$conn = open_db();
@@ -18,10 +17,11 @@
         $error_line = handle_data_line(1);
         if ($error_line == 0)
         {
-            echo "ok";
+            ajax_error_exit(error_id::ERROR_OK);
         }
         else
         {
+            // error line要传递给前台显示,所以不要轻易修改这一行.
             echo "fail -- " . $error_line;
         }
     }
@@ -33,12 +33,13 @@
         if((!isset($_POST['originator'])) || (user_import_token($_POST['originator']) != 1))
         {
             $GLOBALS['log']->error("import_do.php: 有人绕开正常的流程重复提交表单.");
-            echo "fail";
+            ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
         }
         else
         {
             handle_data_line(2);
-            // 更新成功
+            
+            // 更新成功. 重新分配 token. 所以不要轻易修改这两行.
             alloc_import_token();
             echo "ok -- " . get_import_token(); 
         }

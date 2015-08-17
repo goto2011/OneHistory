@@ -4,7 +4,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
-
 <?php 
     require_once 'init.php';
     is_user(1);
@@ -42,6 +41,7 @@
 
 <script type='text/javascript' src='./js/data.js'></script>
 <script type='text/javascript' src='./js/ajax.js'></script>
+<script type='text/javascript' src='./js/key_time.js'></script>
 
 <script>
 // 设置按钮的状态.
@@ -58,46 +58,18 @@ function succ_callback(data)
     if (data.substring(0, 2) == "ok")
     {
         alert("保存成功！");
+        history.go(-1);
     }
     else if (data.substring(0, 4) == "fail")
     {
-        alert("保存失败！");
+        alert(data);
     }
-    // alert("Ajax_status: " + data);
-
-    history.go(-1);
-}
-
-// tag 数据检查。=1，不合格；=0，合格。
-function tag_check(tag, tag_name)
-{
-    if(is_dot(tag_name))
-    {
-        document.getElementById(tag).focus();
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-function tags_check()
-{
-    var ret = 0;
-    ret += tag_check("start_tags", document.getElementById("start_tags").value);
-    ret += tag_check("end_tags", document.getElementById("end_tags").value);
-    ret += tag_check("country_tags", document.getElementById("country_tags").value);
-    ret += tag_check("geography_tags", document.getElementById("geography_tags").value);
-    ret += tag_check("person_tags", document.getElementById("person_tags").value);
-    ret += tag_check("source_tags", document.getElementById("source_tags").value);
-    ret += tag_check("free_tags", document.getElementById("free_tags").value);
-    ret += tag_check("dynasty_tags", document.getElementById("dynasty_tags").value);
-    ret += tag_check("topic_tags", document.getElementById("topic_tags").value);
-    ret += tag_check("office_tags", document.getElementById("office_tags").value);
-    ret += tag_check("key_tags", document.getElementById("key_tags").value);
     
-    return ret;
+    // 如果是时间格式不对, 要自动选中时间字段.
+    if (data == "fail: 时间格式不合法。")
+    {
+        time.focus();
+    }
 }
 
 // 发起Ajax通讯。
@@ -116,7 +88,7 @@ function ajax_do()
             'originator'    :document.getElementById("originator").value,
             'thing'         :remove_blank(remove_html_code(document.getElementById("thing").value)),
             'time'          :document.getElementById("time").value,
-            'time_type'     :get_checkbox_value("time_type"),
+            // 'time_type'     :get_checkbox_value("time_type"),
             'time_limit'    :document.getElementById("time_limit").value,
             'time_limit_type':get_checkbox_value("time_limit_type"),
             
@@ -130,7 +102,9 @@ function ajax_do()
             'topic_tags'    :document.getElementById("topic_tags").value,
             'office_tags'   :document.getElementById("office_tags").value,
             'key_tags'      :document.getElementById("key_tags").value,
-            'source_tags'   :document.getElementById("source_tags").value
+            'source_tags'   :document.getElementById("source_tags").value,
+            'note_tags'     :document.getElementById("note_tags").value,
+            'land_tags'     :document.getElementById("land_tags").value
         },
         async:false,
         method:'POST',
@@ -139,9 +113,11 @@ function ajax_do()
             make_button_status(true);
         },
         success: function  (data) {
+            // alert(data);
             succ_callback(data);
         },
         error: function () {
+            // alert(data);
             succ_callback("fail");
         }
     });
@@ -167,6 +143,7 @@ function ajax_do()
     $time_limit = 0;
 	$time_limit_type = 0;
 	
+	// 显示节点原始数据.
 	if($_SESSION['update_input_is_edit'] == 1)
 	{
 		$is_edit = 1;
@@ -187,11 +164,10 @@ function ajax_do()
 			$time_limit = html_encode($row['time_limit']);
             if ($time_limit == 0)$time_limit = null;
 			$time_limit_type = html_encode($row['time_limit_type']);
-			
-			// echo "$time - " . $row['time'] . "-" . $row['time_type'] . "<br />";
 		}
 	}
-	
+
+/*
 	// 刷新界面之"时间类型"
 	function flash_time_type($is_edit, $my_type, $time_type)
 	{
@@ -204,7 +180,8 @@ function ajax_do()
 			echo " checked='checked' style='color:blue' ";
 		}
 	}
-	
+*/
+
 	// 刷新界面之"时间"
 	function flash_time($is_edit, $time)
 	{
@@ -250,8 +227,9 @@ function ajax_do()
 			}
 		}
 	}
-?>
 
+/*
+ * 时间类型不再要求输入, 而是计算.
 <p class="thick">时间类型：
 <nobr class="normal"><input type="radio" id="time_type_1" name="time_type" value="1" <?php flash_time_type($is_edit, 1, $time_type); ?> />
 距今年（138.2亿年前-15000年前，单位为年） </nobr>
@@ -267,10 +245,12 @@ function ajax_do()
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <input type="radio" id="time_type_4" name="time_type" value="4" <?php flash_time_type($is_edit, 4, $time_type); ?> />
 年-月-日 时:分:秒 </nobr></p>
+ */
+?>
 
 <p class="thick" id="time_label">时间(必需)：
 <input type="text" id="time" name="time" autofocus=autofocus <?php flash_time($is_edit, $time); ?> />
-<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！
+<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！支持4种格式: 距今3.13亿年; 公元前212年; 1979-4-5; 1999-6-4 2:00:00.
 </nobr>
 
 <p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($is_edit, $time_limit); ?> ></input>
@@ -302,6 +282,7 @@ function ajax_do()
 <?php
     $my_index = 0;
     
+    // 显示 tag 输入框.
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if (is_show_input_tag($ii) == 1)
@@ -313,6 +294,12 @@ function ajax_do()
             $my_print = "<p class='thick'> $tag_name:<input id='$tag_input_id' 
                     name='$tag_input_id' type='text' class='tags' value='" 
                     . flash_tags($is_edit, $tag_id, $thing_uuid) . "'></p></td>";
+            
+            // "出处标签"需要顶格显示.
+            if (is_source(get_tag_id_from_index($ii)))
+            {
+                $my_index++;
+            }
             
             if($my_index % 2 == 0)
             {

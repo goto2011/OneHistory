@@ -120,174 +120,6 @@ function checkbox_check()
 	return false;
 }
 
-// 检查是否是标点符号。=1，是；=0，不是。通用。
-function is_dot(string)
-{
-	return (!(/^[,(\-)《》.a-zA-z0-9\u4E00-\u9FA5]*$/.test(string)));
-}
-
-// 添加标签时对标签文本做检查。
-function onAddTag(tag)
-{
-	if (is_dot(tag))
-	{
-		alert("标签名称不能带有标点符号。");
-	}
-}
-
-function onRemoveTag(tag)
-{
-	alert("Removed a tag: " + tag);
-}
-	
-function onChangeTag(input,tag)
-{
-	alert("Changed a tag: " + tag);
-}
-
-$(function() {
-	$('#start_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: function(elem, elem_tags)
-		{
-			$('.tag', elem_tags).each(function()
-			{
-				// $(this).css('background-color', 'red');
-			});
-
-			// autocomplete_url:'test/fake_plaintext_endpoint.html' //jquery.autocomplete (not jquery ui)
-			// autocomplete_url:'test/fake_json_endpoint.html' // jquery ui autocomplete requires a json endpoint
-		},
-		onAddTag: onAddTag
-	});
-
-	$('#end_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-
-	$('#country_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-
-	$('#source_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-
-	$('#person_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-
-	$('#geography_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#free_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#dynasty_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#office_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#topic_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#key_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-	
-	$('#note_tags').tagsInput({
-		width: '350px',
-		height: '35px',
-		removeWithBackspace : false,
-		defaultText:'添加标签',
-		onAddTag: onAddTag
-	});
-// Uncomment this line to see the callback functions in action
-//			$('input.tags').tagsInput({onAddTag:onAddTag,onRemoveTag:onRemoveTag,onChange: onChangeTag});		
-
-// Uncomment this line to see an input with no interface for adding new tags.
-//			$('input.tags').tagsInput({interactive:false});
-	});
-
-// 显示“时间格式不正确”
-function show_time_alert(alert_text)
-{
-	document.getElementById("time_label").style.color = "red";
-	document.getElementById("time_alert").innerHTML = alert_text;
-	document.getElementById("time_alert").style.display = "inline";
-}
-
-// 显示时间格式正确
-function show_time_ok()
-{
-	document.getElementById("time_label").style.color = "black";
-	document.getElementById("time_alert").style.display = "none";
-}
-
-// 显示“事件格式不正确”
-function show_thing_alert(alert_text)
-{
-	document.getElementById("thing_label").style.color = "red";
-	document.getElementById("thing_alert").innerHTML = alert_text;
-	document.getElementById("thing_alert").style.display = "inline";
-}
-
-// 显示事件格式正确
-function show_thing_ok()
-{
-	document.getElementById("thing_label").style.color = "black";
-	document.getElementById("thing_alert").style.display = "none";
-}
-
 // 根据name获取单选框的选择状态
 function get_radio_checked_from_name(radio_name)
 {
@@ -301,88 +133,23 @@ function get_radio_checked_from_name(radio_name)
     }
 }
 
-// 确认输入是否ok
-function validate_form(this_form)
+// 表单项输入不正确时报错.
+function alert_input_fail(form_name, alert_text)
 {
-	// 必须输入时间字段
-	with(this_form)
-	{
-		if(validate_required(time) == false)
-		{
-			show_time_alert("<-- 请填写时间。");
-			time.focus();
-			return false;
-		}
-		else
-		{
-			show_time_ok();
-		}
-	}
-	
-	// 必须输入事件字段
-	with(this_form)
-	{
-		if(validate_required(thing) == false)
-		{
-			show_thing_alert("<-- 请填写事件。");
-			thing.focus();
-			return false;
-		}
-		else
-		{
-			show_thing_ok();
-		}
-	}
-
-	// 事件字段长度必须小于约定值。
-	with(this_form)
-	{
-		if(thing.value.length > 400)
-		{
-			show_thing_alert("<-- 事件字段须小于400字，请重新输入。");
-			thing.focus();
-			return false;
-		}
-		else
-		{
-			show_thing_ok();
-		}
-	}
-	
-	// 确定时间字段的格式是否正常
-	with(this_form)
-	{
-		var time_type_index = get_radio_checked_from_name("time_type");
-		var time_value = document.getElementById("time").value;
-
-		if((time_type_index == 1) || (time_type_index == 2))
-		{
-			if(check_number(time_value) == false)
-			{
-				show_time_alert("<-- 时间格式不正确。请重新输入。");
-				return false;
-			}
-		}
-		else if(time_type_index == 3)
-		{
-			if(check_date(time_value) == false)
-			{
-				show_time_alert("<-- 时间格式不正确。请重新输入。");
-				return false;
-			}
-		}
-		else if(time_type_index == 4)
-		{
-			if(check_time(time_value) == false)
-			{
-				show_time_alert("<-- 时间格式不正确。请重新输入。");
-				return false;
-			}
-		}
-	}
+	document.getElementById(form_name).style.color = "red";
+	document.getElementById(form_name).innerHTML = alert_text;
+	document.getElementById(form_name).style.display = "inline";
 }
 
-// 表单项是否为空检查
+// 表单项输入正确时提示用户.
+function alert_input_ok(form_name, alert_text)
+{
+	document.getElementById(form_name).style.color = "black";
+	document.getElementById(form_name).innerHTML = alert_text;
+	document.getElementById(form_name).style.display = "none";
+}
+
+// 根据名称检查表单项是否为空检查
 function validate_required(field)
 {
 	with(field)
@@ -398,7 +165,7 @@ function validate_required(field)
 	} 
 }
 
-// 检查是不是数字。数字包括负号“-”，负号只能放在第一个字节。
+// 检查参数是不是数字。数字包括负号“-”，负号只能放在第一个字节。
 function check_number(value)
 {
 	var reg = "1234567890"; 	// 可输入值

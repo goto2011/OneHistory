@@ -2,6 +2,26 @@
 // created by duangan, 2015-5-8 -->
 // support person deal function.    -->
 
+$person_big = array
+(
+    "科学人物",
+    "文学人物",
+    "艺术体育",
+    "人文思想",
+    "宗教人物",
+    "工商人物",
+    "外国政治人物",
+    "先秦人物",
+    "秦汉晋南北朝",
+    "隋唐五代",
+    "宋辽夏金元",
+    "明清人物",
+    "晚晴民国",
+    "现代人物",
+    "其它"
+);
+
+
 // 人物数组
 $person = array
 (
@@ -227,9 +247,7 @@ $person = array
         array("王小波"),
         array("莫言"),
         array("贾平凹"),
-        
-    )
-,
+    ),
     array
     (
         // 艺术体育
@@ -1940,94 +1958,5 @@ $person = array
         // other
     )
 );
-
-// 返回大时期的名称
-function get_big_person_name($index)
-{
-    switch($index)
-    {
-        case 1:
-            return "科学人物";
-        case 2:
-            return "文学人物";
-        case 3:
-            return "艺术体育";
-        case 4:
-            return "人文思想";
-        case 5:
-            return "宗教人物";
-        case 6:
-            return "工商人物";
-        case 7:
-            return "政治人物";
-        case 8:
-            return "先秦人物";
-        case 9:
-            return "秦汉晋南北朝";
-        case 10:
-            return "隋唐五代";
-        case 11:
-            return "宋辽夏金元";
-        case 12:
-            return "明清人物";
-        case 13:
-            return "晚晴民国";
-        case 14:
-            return "现代人物";
-        default:
-            return "其它";
-    }
-}
-
-// 获取 big id begin
-function get_big_person_begin()
-{
-    return 1;   // 从1开始方便通过 GET 传递.
-}
-
-// 获取 big id end
-function get_big_person_end()
-{
-    global $person;
-    return count($person);
-}
-
-// 获取 small id begin
-function get_small_person_begin($big_id)
-{
-    return 1;
-}
-
-// 获取 small id end.
-function get_small_person_end($big_id)
-{
-    global $person;
-    return count($person[$big_id - 1]);
-}
-
-// 获取朝代名称
-function get_person_name($big_id, $small_id)
-{
-    global $person;
-    return $person[$big_id - 1][$small_id - 1][0];
-}
-
-// 获取是否存在. =1 表示存在； =0表示不存在。
-function person_tag_is_exist($tag_name)
-{
-    for ($ii = get_big_person_begin(); $ii <= get_big_person_end(); $ii++)
-    {
-        for ($jj = get_small_person_begin($ii); $jj <= get_small_person_end($ii); $jj++)
-        {
-            if(get_person_name($ii, $jj) == $tag_name)
-            {
-                return 1;
-            }
-        }
-    }
-    
-    return 0;
-}
-
 
 ?>

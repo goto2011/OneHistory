@@ -24,6 +24,7 @@
 
 <script type='text/javascript' src='./js/data.js'></script>
 <script type='text/javascript' src='./js/ajax.js'></script>
+<script type='text/javascript' src='./js/key_time.js'></script>
 
 <script>
 // 设置按钮的状态.
@@ -126,38 +127,6 @@ function succ_callback(operate_type, data)
     }
 }
 
-// tag 数据检查。=1，不合格；=0，合格。
-function tag_check(tag, tag_name)
-{
-    if(is_dot(tag_name))
-    {
-        document.getElementById(tag).focus();
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-function tags_check()
-{
-    var ret = 0;
-    ret += tag_check("start_tags", document.getElementById("start_tags").value);
-    ret += tag_check("end_tags", document.getElementById("end_tags").value);
-    ret += tag_check("country_tags", document.getElementById("country_tags").value);
-    ret += tag_check("geography_tags", document.getElementById("geography_tags").value);
-    ret += tag_check("person_tags", document.getElementById("person_tags").value);
-    ret += tag_check("source_tags", document.getElementById("source_tags").value);
-    ret += tag_check("free_tags", document.getElementById("free_tags").value);
-    ret += tag_check("dynasty_tags", document.getElementById("dynasty_tags").value);
-    ret += tag_check("topic_tags", document.getElementById("topic_tags").value);
-    ret += tag_check("office_tags", document.getElementById("office_tags").value);
-    ret += tag_check("key_tags", document.getElementById("key_tags").value);
-    
-    return ret;
-}
-
 // 发起Ajax通讯。
 function ajax_do(operate_type)
 {
@@ -194,6 +163,7 @@ function ajax_do(operate_type)
             'source_tags'   :document.getElementById("source_tags").value,
             'source_detail' :document.getElementById("source_detail").value,
             'note_tags'     :document.getElementById("note_tags").value,
+            'land_tags'     :document.getElementById("land_tags").value,
             'index_inside_tag':document.getElementById("index_inside_tag").checked
         },
         async:false,
@@ -249,9 +219,9 @@ function ajax_do(operate_type)
     <p class="thick">数据格式说明：</p>
     <ol style="font-size:15px">
         <li>一行一个事件。不支持跨行。</li>
-        <li>每行数据的格式如下：“时间，事件”。"，"为分隔符，分隔符之前为时间字段，之后全部是事件字段。</li>
-        <li>时间字段：时间格式多样，我们目前已支持了四五十种，基本上常见的都支持了。 
-            细节参见：<a href="../bbs/viewtopic.php?id=18" >如何完成批量数据导入？</a>第四节。</li>
+        <li>每行数据的格式如下：“时间，事件”。"，"是分隔符，分隔符之前为时间字段，之后都算事件字段。</li>
+        <li>时间字段：时间格式多样，我们已经支持了五六十种，基本上常见的都支持了。 
+            相关细节参见：<a href="../bbs/viewtopic.php?id=18" >如何完成批量数据导入？</a>第四节。</li>
         <li>分隔符支持4种：
         中文逗号“，”、英文逗号“,”、中文冒号“：”、英文冒号“:”。</li>
     </ol>
@@ -264,6 +234,7 @@ function ajax_do(operate_type)
 <?php
     $my_index = 0;
     
+    // 显示 tag 输入框.
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if (is_show_input_tag($ii) == 1)
@@ -273,6 +244,12 @@ function ajax_do(operate_type)
             
             $my_print = "<p class='thick'> $tag_name:<input id='$tag_input_id' 
                     name='$tag_input_id' type='text' class='tags' ></p></td>";
+            
+            // "出处标签"需要顶格显示.
+            if (is_source(get_tag_id_from_index($ii)))
+            {
+                $my_index++;
+            }
             
             if($my_index % 2 == 0)
             {
