@@ -91,8 +91,8 @@ window.onload = function()
         $result = "";
         for ($ii = get_small_id_begin($index); $ii <= get_small_id_end($index); $ii++)
         {
-            $result .= "<a href='item_frame.php?big=$index&small=$ii'>" 
-                . get_period_name($index, $ii) . "</a>&nbsp;&nbsp;&nbsp;&nbsp;";
+            $result .= "<a id='tag_normal' href='item_frame.php?big=$index&small=$ii'>" 
+                . get_period_name($index, $ii) . "</a>";
         }
         return $result;
     }
@@ -102,9 +102,11 @@ window.onload = function()
     {
         $result = "";
         
+        // 这行代码真帅!
         while(list($key, $value) = each($tags_db))
         {
-            $result .= "<a href='item_frame.php?property_UUID=" . $key . "'>". $value . "</a>&nbsp;&nbsp;";
+            $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . $key 
+                . "'>". $value . "</a>";
         }
         
         return $result;
@@ -117,16 +119,25 @@ window.onload = function()
         for ($ii = $vip_tag_class->get_small_begin($index); $ii <= $vip_tag_class->get_small_end($index); $ii++)
         {
             $my_name = $vip_tag_class->get_tag_name($index, $ii);
+            $is_super = $vip_tag_class->get_tag_show_flag($index, $ii);
             $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
             
             if ($my_uuid != "")
             {
-                $result .= "<a href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>". $my_name . "</a>&nbsp;&nbsp;";
+                if ($is_super == "super")
+                {
+                    $result .= "<a id='tag_super' href='item_frame.php?property_UUID=" . 
+                        $my_uuid . "'>". $my_name . "</a>";
+                }
+                else 
+                {
+                    $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
+                        $my_uuid . "'>". $my_name . "</a>";
+                }
             }
             else 
             {
-                $result .= $my_name . "&nbsp;&nbsp;";
+                $result .= "<span id='tag_nothing'>" . $my_name . "</span>";
             }
         }
         
@@ -156,14 +167,13 @@ window.onload = function()
 	// 打印标签区
 	function print_tags_zone()
 	{
-		echo "<div align='left' style='font-family:微软雅黑'>";
-		echo "<p style='font-family:微软雅黑;color:red;font-size:15px'>标签：";
+		echo "<div align='left'>";
+		echo "<p><span id='tag_type'>标签:</span>";
         
-        // 打印"全部"
-        echo "<a href='item_frame.php?property_UUID=all'>全部</a> &nbsp;&nbsp;";
+        // 打印"全部"(super tag)
+        echo "<a id='tag_super' href='item_frame.php?property_UUID=all'>全部</a>";
         
-        // add, 2015-4-19
-        // 打印一般的标签区
+        // 打印一般的标签区. 2015-4-19
         $my_tag_id = get_tag_id_from_index(get_current_list_id());
         
         if(is_vip_tag_tab(get_current_list_id()) == 0)
@@ -183,12 +193,12 @@ window.onload = function()
             
             for ($ii = get_big_id_begin(); $ii <= get_big_id_end(); $ii++)
             {
-                echo get_big_period_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                echo "<span id='tag_type'>" . get_big_period_name($ii) . ":</span>" 
                     . create_period_link($ii) . "<br />";
             }
         }
-        else if(is_topic($my_tag_id) || is_land($my_tag_id) || is_key_thing($my_tag_id) 
-            || is_dynasty($my_tag_id) || is_city($my_tag_id) || is_country($my_tag_id))
+        // 是 vip tag.
+        else if(is_vip_tag_tab(get_current_list_id()))
         {
             echo "<br />";
             $tags_array = get_tags_array(get_current_list_id());
@@ -197,12 +207,12 @@ window.onload = function()
             
             for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
             {
-                echo $my_vip_tag->get_big_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+                echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
                     . create_vip_tag_link($my_vip_tag, $ii, $tags_array) . "<br />";
             }
             
             // 最后打印其它
-            echo $my_vip_tag->get_big_name($ii) . " :&nbsp;&nbsp;&nbsp;" 
+            echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
                     . create_other_link($tags_array) . "<br />";
         }
     

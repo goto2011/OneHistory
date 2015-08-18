@@ -5,14 +5,67 @@ body {
              serif;
 }
 
-/* form {line-height: 5px;} */
-p.thick {font-size:16px; font-weight: bold}
-p.normal {font-size:14px; font-weight: normal}
-nobr.thick {font-size:13px; font-weight: bold}
-nobr.normal {font-size:12px; font-weight: normal}
+/* begin. 定义主页面各元素的样式. 2015-8-18. */
+#tag_type{
+	color: red;
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 1.5px;
+	padding-right: 10px;
+}
 
-p.context {font-weight: normal}
-p.remark {color:blue;font-style:italic}
+#tag_normal{
+	color:blue;
+	font-size: 14px;
+	letter-spacing: 0.5px;
+	padding-right: 10px;
+}
+
+#tag_nothing{
+	color: DarkSlateGray;
+	font-size: 13px;
+	letter-spacing: 0.5px;
+	padding-right: 10px;
+}
+
+#tag_super{
+	color:blue;
+	font-size: 14px;
+	font-weight: bold;
+	letter-spacing: 1px;
+	padding-right: 10px;
+}
+/* end. 定义主页面各元素的样式. 2015-8-18. */
+
+/* form {line-height: 5px;} */
+p.thick {
+	font-size:16px; 
+	font-weight: bold
+}
+
+p.normal {
+	font-size:14px; 
+	font-weight: normal
+}
+
+nobr.thick {
+	font-size:13px; 
+	font-weight: bold
+}
+
+nobr.normal {
+	font-size:12px; 
+	font-weight: normal
+}
+
+p.context {
+	font-weight: normal
+}
+
+p.remark {
+	color:blue;
+	font-style:italic
+}
 
 /* 文本带有下划线 */
 span.link{
