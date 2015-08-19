@@ -145,7 +145,7 @@
 <body>
 
 <!-- 页眉 begin -->
-<iframe name="content" src="./main_header.php" height="65px" width="100%" scrolling="auto" frameborder="0"></iframe>
+<iframe name="content" src="./main_header.php" height="48px" width="100%" scrolling="auto" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
 <!-- tab页 begin -->

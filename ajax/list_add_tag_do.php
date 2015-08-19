@@ -28,21 +28,28 @@
     
     $conn = open_db();
     
-    $ok_count = 0;
+    $add_thing_tag_number = 0;
     $tag_type = html_encode($_POST['tag_type']);
     $tag_name = html_encode($_POST['tag_name']);
+    
+    // 如果标签是新的, 则插入.
+    $tag_uuid = insert_tag($tag_name, $tag_type);
     
     for ($ii = 0; $ii < count($_POST['groupCheckbox']); $ii++)
     {
         $thing_uuid = html_encode($_POST['groupCheckbox'][$ii]);
-        $ok_count += insert_tag($tag_name, $tag_type, $thing_uuid);
+        // 一个标签一个事件.
+        $add_thing_tag_number += insert_thing_tag($tag_uuid, $thing_uuid);
     }
+    
+    // 更新 tag 的 hot 指数.
+    update_tag_hot_index($add_thing_tag_number, $tag_uuid);
     
     // exit.
     mysql_close($conn);
     $conn = null;
     
-    if ($ok_count == count($_POST['groupCheckbox']))
+    if ($add_thing_tag_number == count($_POST['groupCheckbox']))
     {
         echo "ok";
     }

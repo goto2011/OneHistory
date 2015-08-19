@@ -270,7 +270,9 @@ function get_thing_item_by_tag($property_UUID, $offset, $page_size)
 }
 
 /**
- * 遍历从界面获取多个类型的标签，一个一个传给insert_tags进行存储。
+ * 遍历从 import/update 界面获取多个类型的标签，一个一个传给insert_tags进行存储。
+ * $tags_array: tag 数组.
+ * $thing_uuid: 事件id.
  */
 function insert_tag_from_input($tags_array, $thing_uuid)
 {
@@ -313,13 +315,45 @@ function insert_tag_from_input($tags_array, $thing_uuid)
 }
 
 /**
- * 将单个 tag 插入数据库.
+ * 将 事件-标签对 插入数据库.
  */
-function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
+function insert_thing_tag($tag_uuid, $thing_uuid)
+{
+    // step4: 检查 事件-标签对 是否存在。
+    $sql_string = "select property_UUID from thing_property
+        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid'";
+
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: insert_thing_tag() -- $sql_string 。");
+        return 0;
+    }
+
+    // step5: 如果不存在则保存.
+    if (mysql_num_rows($result) == 0)
+    {
+        $sql_string = "insert into thing_property(thing_UUID, property_UUID, add_time, user_UUID)
+            VALUES('$thing_uuid', '$tag_uuid', now(), '" . get_user_id() . "')";
+            
+        if (mysql_query($sql_string) === FALSE)
+        {
+            $GLOBALS['log']->error("Error: insert_thing_tag() -- $sql_string , " . mysql_error());
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+/**
+ * 将单个 tag 和对应的 事件-标签对 插入数据库.
+ */
+function insert_tag($tag_name, $tag_type, $source_detail = "")
 {
     $tag_uuid = "";
 
-    // 先检查是不是有重复。
+    // step1: 先检查是不是有重复。
     $sql_string = "select property_UUID from property 
         where property_name='$tag_name' and property_type=$tag_type";
 
@@ -327,21 +361,21 @@ function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
     if($result == FALSE)
     {
         $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。");
-        return 0;
+        return "";
     }
 
+    // step2: 如果是新标签就插入.
     if (mysql_num_rows($result) == 0)
     {
         $tag_uuid = create_guid();
-            
-        // 如果没有就插入标签表.
+
         $sql_string = "insert into property(property_UUID, property_name, property_type, add_time, user_UUID)
             VALUES('$tag_uuid', '$tag_name', $tag_type, now(), '" . get_user_id() . "')";
             
         if (mysql_query($sql_string) === FALSE)
         {
             $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。" . mysql_error());
-            return 0;
+            return "";
         }
     }
     else
@@ -350,8 +384,7 @@ function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
         $tag_uuid = $row['property_UUID'];
     }
     
-    // 2015-5-24
-    // 保存出处细节。
+    // step3: 保存出处细节. 2015-5-24
     if(is_source($tag_type) && (strlen($source_detail) > 0))
     {
         $sql_string = "update property set detail='$source_detail' where property_UUID = '$tag_uuid' ";
@@ -359,41 +392,18 @@ function insert_tag($tag_name, $tag_type, $thing_uuid, $source_detail = "")
         if (mysql_query($sql_string) === FALSE)
         {
             $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。" . mysql_error());
-            return 0;
         }
     }
     
-    // 保存
-
-    // 插入事件-标签表. 先检查是否存在。
-    $sql_string = "select property_UUID from thing_property
-        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid'";
-
-    $result = mysql_query($sql_string);
-    if ($result == FALSE)
-    {
-        $GLOBALS['log']->error("error: insert_tag() -- $sql_string 。");
-        return 0;
-    }
-
-    if (mysql_num_rows($result) == 0)
-    {
-        $sql_string = "insert into thing_property(thing_UUID, property_UUID, add_time, user_UUID)
-            VALUES('$thing_uuid', '$tag_uuid', now(), '" . get_user_id() . "')";
-            
-        if (mysql_query($sql_string) === FALSE)
-        {
-            $GLOBALS['log']->error("Error: insert_tag() -- $sql_string , " . mysql_error());
-            return 0;
-        }
-        // 更新 tag 的 hot 指数.
-        update_tag_hot_index(1, $tag_uuid);
-    }
-    return 1;
+    return $tag_uuid;
 }
 
 /**
- * 将多个 tag 插入数据库.
+ * 将同一个类型的多个 tag 插入数据库.
+ * $tags: tag 数组.
+ * $tag_type: tag 类型.
+ * $thing_uuid: 事件id.
+ * $source_detail: 出处细节. 可选.
  */
 function insert_tags($tags, $tag_type, $thing_uuid, $source_detail = "")
 {
@@ -406,7 +416,15 @@ function insert_tags($tags, $tag_type, $thing_uuid, $source_detail = "")
         {
             if (strlen($my_array[$ii]) > 0)
             {
-                $index += insert_tag($my_array[$ii], $tag_type, $thing_uuid, $source_detail);
+                $tag_uuid = insert_tag($my_array[$ii], $tag_type, $source_detail);
+                
+                if ($tag_uuid != "")
+                {
+                    $index += insert_thing_tag($tag_uuid, $thing_uuid);
+                    
+                    // 更新 tag 的 hot 指数(这样处理是ok的, 因为当前上下文下, 是一个事件对应多个标签)
+                    update_tag_hot_index(1, $tag_uuid);
+                }
             }
         }
     }
@@ -419,12 +437,17 @@ function insert_tags($tags, $tag_type, $thing_uuid, $source_detail = "")
  */
 function update_tag_hot_index($add_hot_number, $tag_UUID)
 {
+    if ($add_hot_number == 0)
+    {
+        return false;
+    }
+    
     $sql_string = "update property set hot_index = ifNull(hot_index , 0) + " 
             . $add_hot_number . " where property_UUID = '" . $tag_UUID . "'";
     
     if (mysql_query($sql_string) === FALSE)
     {
-        $GLOBALS['log']->error("Error: $sql_string , " . mysql_error());
+        $GLOBALS['log']->error("Error: update_tag_hot_index() -- $sql_string , " . mysql_error());
         return false;
     }
     
@@ -895,24 +918,34 @@ function vip_tag_search_to_db($tag_index)
  */
 function tag_search_to_db($search_sub, $tag_name, $tag_type)
 {
-    // 1. 生成检索条件。获取符合条件的thing 表结果集.
-    // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
-    $db_result = get_thing_item_by_key($search_sub);
+    // 1. 如果标签是新的, 则插入.
+    $tag_uuid = insert_tag($tag_name, $tag_type);
     
-    // 2. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
-    if ($db_result != NULL)
+    if ($tag_uuid != "")
     {
-        while($row = mysql_fetch_array($db_result))
+        $add_thing_tag_number = 0;
+        
+        // 2. 生成检索条件。获取符合条件的thing 表结果集.
+        // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
+        $db_result = get_thing_item_by_key($search_sub, $tag_uuid);
+        
+        // 3. 如果结果集不为空，则检查该事件是否打过指定标签。如果没有，则打上。
+        if ($db_result != NULL)
         {
-            $thing_uuid = "";
-            $thing_uuid = $row['uuid'];
-            
-            if (strlen($thing_uuid) > 0)
+            while($row = mysql_fetch_array($db_result))
             {
-                insert_tag($tag_name, $tag_type, $thing_uuid);
+                $thing_uuid = $row['uuid'];
+                
+                if (strlen($thing_uuid) > 0)
+                {
+                    $add_thing_tag_number += insert_thing_tag($tag_uuid, $thing_uuid);
+                }
             }
-        }
-    }
+        }// if
+        
+        // 更新 tag 的 hot 指数(这样处理是ok的, 因为当前上下文下, 是一个标签对应多个事件)
+        update_tag_hot_index($add_thing_tag_number, $tag_uuid);
+    }// if
 }
 
 /**

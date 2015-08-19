@@ -92,7 +92,7 @@ function get_search_where_sub_native($search_key)
  */
 function get_search_where_sub_by_key($search_key)
 {
-    return " where " . get_search_where_sub_native($search_key) . " ";
+    return " where (" . get_search_where_sub_native($search_key) . ") ";
 }
 
 /**
@@ -100,7 +100,7 @@ function get_search_where_sub_by_key($search_key)
  */
 function get_search_where_sub_by_key_time($search_key, $begin_year, $end_year)
 {
-    return " where (" . get_search_where_sub_native($search_key) . ") and ((year_order >= $begin_year) and (year_order <= $end_year)) ";
+    return " where ((" . get_search_where_sub_native($search_key) . ") and ((year_order >= $begin_year) and (year_order <= $end_year))) ";
 }
 
 /**
@@ -110,8 +110,8 @@ function get_search_where_sub_by_tag_time($key_uuid, $begin_year, $end_year)
 {
     if ($key_uuid != "")
     {
-        return " where uuid in(select thing_UUID from thing_property where property_UUID = '$key_uuid') "
-            . " and ((year_order >= $begin_year) and (year_order <= $end_year)) ";
+        return " where (uuid in(select thing_UUID from thing_property where property_UUID = '$key_uuid') "
+            . " and ((year_order >= $begin_year) and (year_order <= $end_year))) ";
     }
 }
  
@@ -224,9 +224,11 @@ function get_thing_item_by_search($offset, $page_size)
 }
 
 // 根据条件检索 thing 表。
-function get_thing_item_by_key($search_sub)
+function get_thing_item_by_key($search_sub, $tag_uuid)
 {
-    $sql_string = "select * from thing_time $search_sub order by thing_time.year_order ASC ";
+    $sql_string = "select * from thing_time $search_sub and 
+        (uuid not in(select thing_UUID from thing_property where property_UUID='$tag_uuid'))
+         order by thing_time.year_order ASC ";
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

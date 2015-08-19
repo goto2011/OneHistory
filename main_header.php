@@ -25,8 +25,8 @@
 <div id="fixed_menu1" class="fixed">
 
 <div id="goal" style="float:left;">
-    为什么需要历史？
-    &nbsp;&nbsp;&nbsp; 历史，让人们学会理性；<br />
+    为什么我们需要历史？
+    &nbsp;&nbsp;&nbsp; 历史，让人们学会理性；
     &nbsp;&nbsp;&nbsp; 历史，让时光有了厚度；<br />
     &nbsp;&nbsp;&nbsp; <span id="dt" style="color:blue"><a href="./story3.php"  target="_top">
          历史，让社会远离蝴蝶的翅膀。</a></span>
