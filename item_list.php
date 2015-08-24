@@ -176,6 +176,7 @@ window.onload = function()
         // 打印一般的标签区. 2015-4-19
         $my_tag_id = get_tag_id_from_index(get_current_list_id());
         
+        // 非vip tag.
         if(is_vip_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据

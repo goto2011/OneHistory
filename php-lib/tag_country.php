@@ -20,10 +20,10 @@ $country = array
     array
     (
         // 古代文明
-        array("苏美尔文明", "normal", "sigle-key", "苏美尔"),
-        array("埃及文明", "normal", "key-time", "埃及", "-4500", "642"),
+        array("苏美尔文明", "super", "sigle-key", "苏美尔"),
+        array("埃及文明", "super", "key-time", "埃及", "-4500", "642"),
         array("赫梯文明", "normal", "sigle-key", "赫梯"),
-        array("巴比伦文明", "normal", "sigle-key", "巴比伦"),
+        array("巴比伦文明", "super", "sigle-key", "巴比伦"),
         array("腓尼基人", "normal", "sigle-key", "腓尼基"),
         array("爱琴文明", "normal", "multe-key", "爱琴文明", "克里特文明", "迈锡尼", "米诺斯"),
         array("希腊文明", "super", "key-time", "希腊", "荷马史诗", "雅典", "斯巴达", "马其顿", "-1200", "-146"),
@@ -44,7 +44,8 @@ $country = array
     array
     (
         // 中东北非中亚
-        array("犹太人"),
+        array("犹太人", "super", "multe-key", "犹太人", "希伯来语", "犹太教", "希伯来人", 
+                "犹太王国", "以色列王国"),
         array("伊斯兰", "super", "multe-key", "默罕默德", "伊斯兰教", "穆斯林", "逊尼派", "什叶派", 
                 "斋月"),
         array("奥斯曼帝国"),
@@ -129,14 +130,14 @@ $country = array
         array("罗马尼亚"),
         array("阿尔巴尼亚"),
         array("冰岛"),
-        array("南斯拉夫诸国", "normal", "multe-key", "斯洛文尼亚", "黑山", "塞尔维亚", "克罗地亚", 
+        array("南斯拉夫诸国", "normal", "multe-key", "南斯拉夫", "斯洛文尼亚", "黑山", "塞尔维亚", "克罗地亚", 
                 "科索沃", "波黑", "马其顿"),
         array("波罗的海三国", "normal", "multe-key", "立陶宛", "拉脱维亚", "爱沙尼亚"),
     ),
     array
     (
         // 非洲
-        array("非盟", "normal", "multe-key", "非盟", "非洲联盟"),
+        array("非盟", "super", "multe-key", "非盟", "非洲联盟"),
         array("南非"),
         array("阿尔及利亚"),
         array("刚果"),
@@ -158,7 +159,7 @@ $country = array
         array("美国", "super", "multe-key", "美国", "美利坚", "纽约", "华盛顿"),
         array("加拿大"),
         array("墨西哥"),
-        array("巴西"),
+        array("巴西", "super", "multe-key", "巴西"),
         array("阿根廷"),
         array("中美洲七国", "normal", "multe-key", "危地马拉", "伯利兹", "萨尔瓦多", "洪都拉斯", "尼加拉瓜", 
                 "哥斯达黎加", "巴拿马"),

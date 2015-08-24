@@ -153,7 +153,7 @@ $city = array
     array
     (
         // 中国华东
-        array("上海"),
+        array("上海", "super", "multe-key", "上海"),
         array("南京", "super", "multe-key", "南京", "金陵", "建康", "江宁", "石头城"),
         array("杭州", "normal", "multe-key", "杭州", "临安", "武林", "余杭", "杭城"),
         array("苏州", "normal", "multe-key", "苏州", "姑苏", "吴都", "吴中", "吴郡", "平江", "吴门"),
@@ -193,12 +193,12 @@ $city = array
         // 中国中部
         array("西安", "super", "multe-key", "西安", "长安", "镐京", "西京", "大兴城"),
         array("武汉", "super", "multe-key", "武汉", "武昌", "汉口", "汉阳"),
+        array("郑州", "super", "multe-key", "郑州"),
         array("开封", "super", "multe-key", "开封", "汴梁", "汴州", "汴京", "大梁"), // "东京"歧义太多.
         array("洛阳"),
-        array("长沙"),
-        array("重庆"),
-        array("成都"),
-        array("郑州"),
+        array("长沙", "super", "multe-key", "长沙"),
+        array("重庆", "super", "multe-key", "重庆"),
+        array("成都", "super", "multe-key", "成都"),
         array("安阳"),
         array("榆林"),
         array("延安"),
@@ -245,17 +245,19 @@ $city = array
     (
         // 中国南部
         array("广州", "super", "multe-key", "广州", "番禺", "任嚣城"),
-        array("深圳"),
-        array("台北"),
-        array("台南"),
-        array("高雄"),
-        array("厦门"),
-        array("福州"),
+        array("深圳", "super", "multe-key", "深圳"),
         array("澳门"),
         array("韶关"),
         array("东莞"),
         array("佛山"),
         array("南平"),
+        array("海口"),
+        array("三亚"),
+        array("台北", "super", "multe-key", "台北"),
+        array("高雄", "super", "multe-key", "高雄"),
+        array("台南"),
+        array("厦门", "super", "multe-key", "厦门"),
+        array("福州"),
         array("汕头"),
         array("茂名"),
         array("莆田"),
@@ -264,8 +266,6 @@ $city = array
         array("龙岩"),
         array("宁德"),
         array("潮州"),
-        array("海口"),
-        array("三亚"),
     ),
     array
     (
