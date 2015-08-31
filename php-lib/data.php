@@ -6,6 +6,7 @@ require_once "data_time.php";
 require_once "data_string.php";
 require_once "data_number.php";
 require_once "data_error.php";
+require_once "data_display.php";
 // require_once 'data_chinese.php';
 
 /////////////////////////////// 1.SYSTEM start //////////////////////////////////////

@@ -43,21 +43,11 @@ function get_thing_count_by_period($begin_year, $end_year)
     return $row[0];
 }
 
-
-// 根据 period 获取 thing 表的数据
-function get_thing_item_by_period($begin_year, $end_year, $offset, $page_size)
+// 获取 period 查询子句
+function get_period_substring($begin_year, $end_year, $offset, $page_size)
 {
-    $sql_string = "select * from thing_time " . get_period_where_sub($begin_year, $end_year)
+    return " from thing_time " . get_period_where_sub($begin_year, $end_year)
         . " order by thing_time.year_order ASC limit $offset, $page_size ";
-    
-    $result = mysql_query($sql_string);
-    if($result ==FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_item_by_period() -- $sql_string 。");
-       return NULL;
-    }
-    
-    return $result;
 }
 
 ?>

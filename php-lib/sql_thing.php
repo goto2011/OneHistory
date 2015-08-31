@@ -198,8 +198,8 @@ function get_thing_count($list_type)
     return $row[0];
 }
 
-// 获取 thing 表的字段
-function get_thing_item_db($list_type, $offset, $page_size)
+// 获取事件 查询子句。
+function get_thing_substring($list_type, $offset, $page_size)
 {
     $order_sub = " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
     
@@ -207,41 +207,85 @@ function get_thing_item_db($list_type, $offset, $page_size)
     {
         // 全部条目
         case 1:
-            $sql_string = "select * from thing_time $order_sub";
+            $sql_string = " from thing_time $order_sub";
             break;
     
         // 我的关注
         case 2:
-            $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
+            $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from follow
                 where user_UUID = '" . get_user_id() . "')) $order_sub ";
             break;
             
         // 最新，指7天内的
         case 3:
-            $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
+            $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from property 
                 where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time))) $order_sub ";
             break;
 
         // 分期
         case 4:
-            $sql_string = "select * from thing_time $order_sub";
+            $sql_string = " from thing_time $order_sub";
             break;
 
         default:
             $my_tag_id = get_tag_id_from_index($list_type);
             if ($my_tag_id > 0)
             {
-                $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property
+                $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property
                     where property_UUID in(select property_UUID from property where property_type = $my_tag_id)) $order_sub ";
             }
             else
             {
-                $GLOBALS['log']->error("error: get_thing_item_db() -- list_type error 。");
-                return NULL;
+                $GLOBALS['log']->error("error: get_thing_substring() -- list_type error 。");
+                return "";
             }
     }
+    return $sql_string;
+}
+
+/**
+ * 完成 事件、标签、事件-标签对的三表联合查询。
+ */
+function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_array)
+{
+    // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
+    $tag_id_result = get_tag_id_array_from_thing_substring($thing_substring);
+    while($my_tag_id_row = mysql_fetch_array($tag_id_result))
+    {
+        if (!array_key_exists($my_tag_id_row['thing_UUID'], $tag_id_array))
+        {
+            $tag_id_array[$my_tag_id_row['thing_UUID']][0] = $my_tag_id_row['property_UUID'];
+        }
+        else 
+        {
+            $array_index = count($tag_id_array[$my_tag_id_row['thing_UUID']]);
+            $tag_id_array[$my_tag_id_row['thing_UUID']][$array_index] = $my_tag_id_row['property_UUID'];
+        }
+    }
+    
+    // step2: 获取当前页的事件相关 tag 属性。(以 tag id 为key。)
+    $tag_param_result = get_tag_param_array_from_thing_substring($thing_substring);
+    while($my_tag_param_row = mysql_fetch_array($tag_param_result))
+    {
+        if (!array_key_exists($my_tag_param_row['property_UUID'], $tag_param_array))
+        {
+            $tag_param_array[$my_tag_param_row['property_UUID']][0] = $my_tag_param_row['property_type'];
+            $tag_param_array[$my_tag_param_row['property_UUID']][1] = $my_tag_param_row['property_name'];
+        }
+    }
+   
+    // step3: 获取当前页的事件。
+    $result = get_thing_item_db($thing_substring);
+    
+    return $result;
+}
+
+// 获取 thing 表的数据。
+function get_thing_item_db($thing_substring)
+{
+    $sql_string = " select * $thing_substring ";
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

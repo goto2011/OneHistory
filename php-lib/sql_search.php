@@ -207,20 +207,11 @@ function get_thing_count_by_search()
     return $row[0];
 }
 
-// 根据检索条件获取 thing 表的数据
-function get_thing_item_by_search($offset, $page_size)
+// 获得检索字符串。
+function get_search_substring($offset, $page_size)
 {
-    $sql_string = "select * from thing_time " . get_search_where_sub() .
+    return " from thing_time " . get_search_where_sub() .
          " order by thing_time.year_order ASC limit $offset, $page_size ";
-    
-    $result = mysql_query($sql_string);
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_item_by_search() -- $sql_string 。");
-       return NULL;
-    }
-    
-    return $result;
 }
 
 // 根据条件检索 thing 表。

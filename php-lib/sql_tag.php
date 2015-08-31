@@ -253,20 +253,11 @@ function get_thing_count_by_tag($property_UUID)
     return $row[0];
 }
 
-// 根据 tag 获取 thing 表的数据
-function get_thing_item_by_tag($property_UUID, $offset, $page_size)
+// 获取检索条件子句。
+function get_tag_search_substring($property_UUID, $offset, $page_size)
 {
-    $sql_string = "select * from thing_time where UUID in(select thing_UUID from thing_property 
+    return " from thing_time where UUID in(select thing_UUID from thing_property 
             where property_UUID = '$property_UUID') order by thing_time.year_order ASC limit $offset, $page_size ";
-    
-    $result = mysql_query($sql_string);
-    if($result ==FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_item_by_tag() -- $sql_string 。");
-       return NULL;
-    }
-    
-    return $result;
 }
 
 /**
@@ -623,6 +614,43 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
     }
     
     return $my_uuid;
+}
+
+/**
+ * 根据 thing 检索子句获取相关的 tag 属性。
+ */
+function get_tag_param_array_from_thing_substring($thing_substirng)
+{
+    $sql_string = "select property_UUID, property_name, property_type from property where property_UUID 
+            in(select property_UUID from thing_property where thing_UUID 
+            in(select t.uuid from (select uuid $thing_substirng) as t)) ";
+            
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: get_tag_param_array_from_thing_substring() -- $sql_string 。");
+        return NULL;
+    }
+    
+    return $result;
+}
+
+/**
+ * 根据 thing 检索子句获取相关的 tag id。
+ */
+function get_tag_id_array_from_thing_substring($thing_substirng)
+{
+    $sql_string = "select property_UUID,thing_UUID from thing_property where thing_UUID 
+            in(select t.uuid from (select uuid $thing_substirng) as t) ";
+            
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: get_tag_id_array_from_thing_substring() -- $sql_string 。");
+        return NULL;
+    }
+    
+    return $result;
 }
 
 /**
