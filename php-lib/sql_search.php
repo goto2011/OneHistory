@@ -191,22 +191,6 @@ function get_search_where_sub($enable_time_search = TRUE)
     return $search_sub;
 }
 
-// 根据检索条件获取满足条件的条目的数量.
-function get_thing_count_by_search()
-{
-    $sql_string = "select count(*) from thing_time " . get_search_where_sub();
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_count_by_search() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
-}
-
 // 获得检索字符串。
 function get_search_substring($offset, $page_size)
 {

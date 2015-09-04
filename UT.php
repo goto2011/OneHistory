@@ -23,9 +23,9 @@
     // get_time_from_native("一九三六年八月十九日五时二十五分");
     // get_time_from_native("2004年2月11日下午14点");
     // get_time_from_native("2004年2月11日下午2点");
-    echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
-    echo date("G", 1076461200) . "</br>";
-    
+    // echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
+    // echo date("G", 1076461200) . "</br>";
+    echo get_search_where_sub("中国 and 首都 and 财政") . "<br />";
     
     
     // 激活断言，并设置它为 quiet
@@ -434,6 +434,10 @@
     assert('UT_valid_time_string("早晨")');
     assert('UT_valid_time_string("五月份")');
     assert('UT_valid_time_string("年初")');
+    assert('UT_valid_time_string("时间")');
+    assert('UT_valid_time_string("时钟")');
+    assert('UT_valid_time_string("分钟")');
+    assert('UT_valid_time_string("秒钟")');
     
     echo "</br>";
     

@@ -176,35 +176,41 @@ window.onload = function()
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
         }
+
+        $thing_substring = "";
+        //计算记录偏移量
+        $page_size = get_page_size();
+        $offset = $page_size * (get_page() - 1);
         
-        // 计算条目数量. +1
+        // 获取thing数据表的数据. +1
         // search 兼容 tag 和 period。所以检索优先级最高。
-		if(is_search())
+        if(is_search())
         {
-            $item_count = get_thing_count_by_search();
+            $thing_substring = get_search_substring($offset, $page_size);
         }
         else if (is_tag())
-		{
-		    $item_count = get_thing_count_by_tag(get_property_UUID());
-		}
+        {
+            $thing_substring = get_tag_search_substring(get_property_UUID(), $offset, $page_size);
+        }
         else if(is_period_tag(get_current_list_id()))
         {
-            $item_count = get_thing_count_by_period($begin_year, $end_year);
+            $thing_substring = get_period_substring($begin_year, $end_year, $offset, $page_size);
         }
-		else
-		{
-			$item_count = get_thing_count(get_current_list_id());
-		}
+        else
+        {
+            $thing_substring = get_thing_substring(get_current_list_id(), $offset, $page_size);
+        }
         
+        // 获得条目数量.
+        $item_count = get_thing_count($thing_substring);
+        
+        // debug
         // echo "$item_count - " . get_current_list_id() . " <br />";
 		
-        $page_size = get_page_size();
-		$pages = intval($item_count / $page_size);   // 计算总页数。
+		// 计算总页数。
+		$pages = intval($item_count / $page_size);
 		if ($item_count % $page_size) $pages++;
 
-		//计算记录偏移量
-		$offset = $page_size * (get_page() - 1);
-		
         // 打印搜索区
         if(is_show_search_box(get_current_list_id()))
         {
@@ -226,65 +232,48 @@ window.onload = function()
             print_period_info();
         }
         
-        // 2015-4-21
+        // 打印“添加标签”输入框。2015-4-21
         if (is_show_add_tag())
         {
             print_add_tag_form();
         }
-            
-		print_item_list_head();   // table head.
-		
-		$thing_substring = "";
-		
-		// 获取thing数据表的数据. +1
-        // search 兼容 tag 和 period。所以检索优先级最高。
-		if(is_search())
-        {
-            $thing_substring = get_search_substring($offset, $page_size);
-        }
-        else if (is_tag())
-		{
-            $thing_substring = get_tag_search_substring(get_property_UUID(), $offset, $page_size);
-		}
-        else if(is_period_tag(get_current_list_id()))
-        {
-            $thing_substring = get_period_substring($begin_year, $end_year, $offset, $page_size);
-        }
-		else
-		{
-            $thing_substring = get_thing_substring(get_current_list_id(), $offset, $page_size);
-		}
         
-        // 完成 事件、标签、事件-标签对的三表联合查询。
-        $tag_id_array = array();
-        $tag_param_array = array();
-        $result = get_thing_tag_prompt($thing_substring, $tag_id_array, $tag_param_array);
+        // 打印表头。
+		print_item_list_head();
+		
+        if ($item_count > 0)
+        {
+            // 完成 事件、标签、事件-标签对的三表联合查询。
+            $tag_id_array = array();
+            $tag_param_array = array();
+            $result = get_thing_tag_prompt($thing_substring, $tag_id_array, $tag_param_array);
+    
+    		$index = $offset;
+    		while($row = mysql_fetch_array($result))
+    		{
+    			$index++;
+    			
+    			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
+    			
+    			echo "<tr>";
+                if(is_show_add_tag())
+                {
+                    echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
+                }
+    			echo "<td>$index</td>";
+    			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
+    			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
+    			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
+    				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
+                // +n。数据库性能优化的重点。
+    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array) . "</td>";
+    			echo "</tr>";
+    		}
+    		
+    		echo "</table>";
+            print_list_control($item_count, $page_size, $pages, get_page());   // list control.
+		}
 
-		$index = $offset;
-		while($row = mysql_fetch_array($result))
-		{
-			$index++;
-			
-			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
-			
-			echo "<tr>";
-            if(is_show_add_tag())
-            {
-                echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
-            }
-			echo "<td>$index</td>";
-			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
-			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
-			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
-				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
-            // +n。数据库性能优化的重点。
-			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array) . "</td>";
-			echo "</tr>";
-		}
-		
-		echo "</table>";
-        
-		print_list_control($item_count, $page_size, $pages, get_page());   // list control.
         if (is_tag())
         {
             print_tag_control();

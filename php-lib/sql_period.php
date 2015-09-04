@@ -24,25 +24,6 @@ function get_period_where_sub($begin_year, $end_year)
     }
 }
 
-
-// 根据 period 获取 thing 条目的数量
-function get_thing_count_by_period($begin_year, $end_year)
-{
-    $sql_string = "select count(*) from thing_time " 
-        . get_period_where_sub($begin_year, $end_year);
-        
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_count_by_period() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
-}
-
 // 获取 period 查询子句
 function get_period_substring($begin_year, $end_year, $offset, $page_size)
 {

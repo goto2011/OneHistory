@@ -496,16 +496,19 @@ function get_time_from_native($native_string)
     if(is_time($my_string))
     {
         $time_array['time'] = strtotime($my_string);
-        if(($is_pm == 1) && (date("G", $time_array['time']) < 12))
+        if ($time_array['time'] != FALSE)
         {
-            $time_array['time'] += (3600 * 12);
+            if(($is_pm == 1) && (date("G", $time_array['time']) < 12))
+            {
+                $time_array['time'] += (3600 * 12);
+            }
+            $time_array['time_type'] = 4;    /// 年月日 时分秒
+            $time_array['time_limit'] = 0;
+            $time_array['time_limit_type'] = 3;
+            $time_array['status'] = "ok";
+            
+            return $time_array;
         }
-        $time_array['time_type'] = 4;    /// 年月日 时分秒
-        $time_array['time_limit'] = 0;
-        $time_array['time_limit_type'] = 3;
-        $time_array['status'] = "ok";
-        
-        return $time_array;
     }
     
     // step 2: 字符串格式化。含如下转化:

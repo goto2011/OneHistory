@@ -235,24 +235,6 @@ function is_vip_tag_tab($tag_index_id)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-// 根据 tag 获取 thing 条目数量
-function get_thing_count_by_tag($property_UUID)
-{
-    $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property 
-            where property_UUID = '$property_UUID')";
-    
-    $result = mysql_query($sql_string);
-    
-    if($result == FALSE)
-    {
-       $GLOBALS['log']->error("error: get_thing_count_by_tag() -- $sql_string 。");
-       return -1;
-    }
-    
-    $row = mysql_fetch_row($result);    // 返回一行.
-    return $row[0];
-}
-
 // 获取检索条件子句。
 function get_tag_search_substring($property_UUID, $offset, $page_size)
 {

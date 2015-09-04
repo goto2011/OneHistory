@@ -64,6 +64,7 @@ $person = array
         array("伦琴"),
         array("欧拉"),
         array("开普勒"),
+        array("冯·布劳恩"),
         
         array("落下闳"),
         array("刘徽"),
@@ -361,6 +362,7 @@ $person = array
         array("萨特"),
         array("罗素"),
         array("维特根斯坦"),
+        array("大卫·休谟"),
         
         array("孔子"),
         array("老子"),

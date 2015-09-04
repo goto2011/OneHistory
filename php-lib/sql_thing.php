@@ -143,57 +143,20 @@ function update_thing_to_db($thing_uuid, $time_array, $thing, $thing_index = 0)
     }
 }
 
-// 根据 list type 给出符合条件的条目数量。
-function get_thing_count($list_type)
+/**
+ * 根据 substring 获取满足条件的事件数量。
+*/
+function get_thing_count($thing_substring)
 {
-    switch ($list_type)
-    {
-        // 全部条目
-        case 1:
-            $sql_string = "select count(*) from thing_time";
-            break;
-
-        // 我的关注
-        case 2:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                where property_UUID in(select property_UUID from follow
-                where user_UUID = '" . get_user_id() . "'))";
-            break;
-
-        // 最新标签，指1天内的
-        case 3:
-            $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                    where property_UUID in(select property_UUID from property
-                    where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))";
-            break;
-
-        // 事件分期
-        case 4:
-            $sql_string = "select count(*) from thing_time";
-            break;
-
-        default:
-            $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id > 0)
-            {
-                $sql_string = "select count(*) from thing_time where UUID in(select thing_UUID from thing_property
-                    where property_UUID in(select property_UUID from property
-                    where property_type = $my_tag_id))";
-            }
-            else
-            {
-                echo "string";    $GLOBALS['log']->error("error: get_thing_count() -- list_type error 。");
-                return -1;
-            }
-    }
-
+    $sql_string = "select count(*) $thing_substring";
     $result = mysql_query($sql_string);
-    if ($result == FALSE)
+    
+    if($result == FALSE)
     {
-        $GLOBALS['log']->error("error: get_thing_count() -- $sql_string 。");
-        return -1;
+       $GLOBALS['log']->error("error: get_thing_count() -- $sql_string 。");
+       return -1;
     }
-
+    
     $row = mysql_fetch_row($result);    // 返回一行.
     return $row[0];
 }
@@ -252,13 +215,18 @@ function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_arra
 {
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $tag_id_result = get_tag_id_array_from_thing_substring($thing_substring);
+    if($tag_id_result == NULL)
+    {
+        $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_id_result 。");
+        return NULL;
+    }
     while($my_tag_id_row = mysql_fetch_array($tag_id_result))
     {
         if (!array_key_exists($my_tag_id_row['thing_UUID'], $tag_id_array))
         {
             $tag_id_array[$my_tag_id_row['thing_UUID']][0] = $my_tag_id_row['property_UUID'];
         }
-        else 
+        else
         {
             $array_index = count($tag_id_array[$my_tag_id_row['thing_UUID']]);
             $tag_id_array[$my_tag_id_row['thing_UUID']][$array_index] = $my_tag_id_row['property_UUID'];
@@ -267,6 +235,11 @@ function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_arra
     
     // step2: 获取当前页的事件相关 tag 属性。(以 tag id 为key。)
     $tag_param_result = get_tag_param_array_from_thing_substring($thing_substring);
+    if($tag_param_result == NULL)
+    {
+        $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_param_result 。");
+        return NULL;
+    }
     while($my_tag_param_row = mysql_fetch_array($tag_param_result))
     {
         if (!array_key_exists($my_tag_param_row['property_UUID'], $tag_param_array))
@@ -277,9 +250,7 @@ function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_arra
     }
    
     // step3: 获取当前页的事件。
-    $result = get_thing_item_db($thing_substring);
-    
-    return $result;
+    return get_thing_item_db($thing_substring);
 }
 
 // 获取 thing 表的数据。
