@@ -186,19 +186,19 @@ window.onload = function()
         // search 兼容 tag 和 period。所以检索优先级最高。
         if(is_search())
         {
-            $thing_substring = get_search_substring($offset, $page_size);
+            $thing_substring = get_search_where_sub();
         }
         else if (is_tag())
         {
-            $thing_substring = get_tag_search_substring(get_property_UUID(), $offset, $page_size);
+            $thing_substring = get_tag_search_substring(get_property_UUID());
         }
         else if(is_period_tag(get_current_list_id()))
         {
-            $thing_substring = get_period_substring($begin_year, $end_year, $offset, $page_size);
+            $thing_substring = get_period_where_sub($begin_year, $end_year);
         }
         else
         {
-            $thing_substring = get_thing_substring(get_current_list_id(), $offset, $page_size);
+            $thing_substring = get_thing_substring(get_current_list_id());
         }
         
         // 获得条目数量.
@@ -243,6 +243,9 @@ window.onload = function()
 		
         if ($item_count > 0)
         {
+            // 查询子句增加排序、分页。
+            $thing_substring = add_order_page_substring($thing_substring, $offset, $page_size);
+            
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();

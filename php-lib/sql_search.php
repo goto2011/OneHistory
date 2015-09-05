@@ -120,7 +120,7 @@ function get_search_where_sub_by_tag_time($key_uuid, $begin_year, $end_year)
  */
 function get_search_where_sub($enable_time_search = TRUE)
 {
-    $search_sub = " where (";
+    $search_sub = " from thing_time where (";
     
     // 从 session 中获取查询子句。
     $search_key = search_key();
@@ -189,13 +189,6 @@ function get_search_where_sub($enable_time_search = TRUE)
     }
     
     return $search_sub;
-}
-
-// 获得检索字符串。
-function get_search_substring($offset, $page_size)
-{
-    return " from thing_time " . get_search_where_sub() .
-         " order by thing_time.year_order ASC limit $offset, $page_size ";
 }
 
 // 根据条件检索 thing 表。

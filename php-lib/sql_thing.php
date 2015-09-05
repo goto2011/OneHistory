@@ -144,6 +144,15 @@ function update_thing_to_db($thing_uuid, $time_array, $thing, $thing_index = 0)
 }
 
 /**
+ * 给查询子句增加排序、分页。
+ */
+function add_order_page_substring($thing_substring, $offset, $page_size)
+{
+    return $thing_substring . 
+        " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
+}
+
+/**
  * 根据 substring 获取满足条件的事件数量。
 */
 function get_thing_count($thing_substring)
@@ -162,34 +171,32 @@ function get_thing_count($thing_substring)
 }
 
 // 获取事件 查询子句。
-function get_thing_substring($list_type, $offset, $page_size)
+function get_thing_substring($list_type)
 {
-    $order_sub = " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
-    
     switch ($list_type)
     {
         // 全部条目
         case 1:
-            $sql_string = " from thing_time $order_sub";
+            $sql_string = " from thing_time ";
             break;
     
         // 我的关注
         case 2:
             $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from follow
-                where user_UUID = '" . get_user_id() . "')) $order_sub ";
+                where user_UUID = '" . get_user_id() . "'))  ";
             break;
             
         // 最新，指7天内的
         case 3:
             $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from property 
-                where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time))) $order_sub ";
+                where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))  ";
             break;
 
         // 分期
         case 4:
-            $sql_string = " from thing_time $order_sub";
+            $sql_string = " from thing_time ";
             break;
 
         default:
@@ -197,7 +204,7 @@ function get_thing_substring($list_type, $offset, $page_size)
             if ($my_tag_id > 0)
             {
                 $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property
-                    where property_UUID in(select property_UUID from property where property_type = $my_tag_id)) $order_sub ";
+                    where property_UUID in(select property_UUID from property where property_type = $my_tag_id))  ";
             }
             else
             {

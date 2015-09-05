@@ -236,10 +236,10 @@ function is_vip_tag_tab($tag_index_id)
 ///////////////////////////////////////////////////////////////////////////////
 
 // 获取检索条件子句。
-function get_tag_search_substring($property_UUID, $offset, $page_size)
+function get_tag_search_substring($property_UUID)
 {
     return " from thing_time where UUID in(select thing_UUID from thing_property 
-            where property_UUID = '$property_UUID') order by thing_time.year_order ASC limit $offset, $page_size ";
+            where property_UUID = '$property_UUID')  ";
 }
 
 /**
