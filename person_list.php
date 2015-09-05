@@ -131,11 +131,11 @@
         $thing_substring = "";
         if (is_tag())
         {
-            $thing_substring = get_tag_search_substring(get_property_UUID(), $offset, $page_size);
+            $thing_substring = get_tag_search_substring(get_property_UUID());
         }
         else
         {
-            $thing_substring = get_thing_substring(get_current_list_id(), $offset, $page_size);
+            $thing_substring = get_thing_substring(get_current_list_id());
         }
         
         // 计算条目数量
@@ -165,6 +165,9 @@
         
         if ($item_count > 0)
         {
+            // 查询子句增加排序、分页。
+            $thing_substring = add_order_page_substring($thing_substring, $offset, $page_size);
+            
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
