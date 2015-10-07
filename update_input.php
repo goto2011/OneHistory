@@ -75,11 +75,58 @@ function succ_callback(data)
 // 发起Ajax通讯。
 function ajax_do()
 {
-    // 数据检查。
+    // 数据合法性检查。
     if (tags_check() > 0)
     {
         alert("标签名称不能带有标点符号。");
         return;
+    }
+    
+    // 检查三个人数文本框的输入是否为数字。
+    var death_person_count = document.getElementById("death_person_count").value;
+    var hurt_person_count = document.getElementById("hurt_person_count").value;
+    var missing_person_count = document.getElementById("missing_person_count").value;
+    
+    // 死亡人数。
+    if (death_person_count != "")
+    {
+        if(!check_number(death_person_count))
+        {
+            alert("人数文本框请输入数字。");
+            return;
+        }
+    }
+    else
+    {
+        death_person_count = 0;
+    }
+    
+    // 受伤人数。
+    if (hurt_person_count != "")
+    {
+        if(!check_number(hurt_person_count))
+        {
+            alert("人数文本框请输入数字。");
+            return;
+        }
+    }
+    else
+    {
+        hurt_person_count = 0;
+    }
+    
+    // 失踪人数。
+    if (missing_person_count != "")
+    {
+        if(!check_number(missing_person_count))
+        {
+            alert("人数文本框请输入数字。");
+            return;
+        }
+    }
+    else
+    {
+        missing_person_count = 0;
     }
     
     var update_ajax = xhr({
@@ -104,7 +151,11 @@ function ajax_do()
             'key_tags'      :document.getElementById("key_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
             'note_tags'     :document.getElementById("note_tags").value,
-            'land_tags'     :document.getElementById("land_tags").value
+            'land_tags'     :document.getElementById("land_tags").value,
+            
+            'death_person_count'    :death_person_count,
+            'hurt_person_count'     :hurt_person_count,
+            'missing_person_count'  :missing_person_count
         },
         async:false,
         method:'POST',
@@ -137,13 +188,17 @@ function ajax_do()
 <?php 
 	$conn = open_db();
 	
+    // 初始化变量。
 	$is_edit = 0;
     $time = 0;
 	$time_type = 0;
     $time_limit = 0;
 	$time_limit_type = 0;
+    $death_person_count = "";
+    $hurt_person_count = "";
+    $missing_person_count = "";
 	
-	// 显示节点原始数据.
+	// 获取节点原始数据.
 	if($_SESSION['update_input_is_edit'] == 1)
 	{
 		$is_edit = 1;
@@ -164,6 +219,19 @@ function ajax_do()
 			$time_limit = html_encode($row['time_limit']);
             if ($time_limit == 0)$time_limit = null;
 			$time_limit_type = html_encode($row['time_limit_type']);
+            
+            if ($row['related_number1'] > 0)
+            {
+                $death_person_count = html_encode($row['related_number1']);
+            }
+            if ($row['related_number2'] > 0)
+            {
+                $hurt_person_count = html_encode($row['related_number2']);
+            }
+            if ($row['related_number3'])
+            {
+                $missing_person_count = html_encode($row['related_number3']);
+            }
 		}
 	}
 
@@ -312,10 +380,28 @@ function ajax_do()
                 echo "<td width='400'>";
                 echo $my_print;
                 echo "</tr>";
+                
                 $my_index++;
             }
         }
-    } 
+    }
+
+    // 打印 死亡人数、失踪人数、受伤人数 输入框。
+    echo "<td width='400'>";
+    echo "<p class='thick'>死亡人数:<input type='text' id='death_person_count' 
+        value='$death_person_count' pattern='[0-9]' />";
+    echo "</p></tr>";
+    
+    echo "<td width='400'>";
+    echo "<p class='thick'>受伤人数:<input type='text' id='hurt_person_count' 
+        value='$hurt_person_count' pattern='[0-9]' />";
+    echo "</p></tr>";
+    
+    echo "<td width='400'>";
+    echo "<p class='thick'>失踪人数:<input type='text' id='missing_person_count' 
+        value='$missing_person_count' pattern='[0-9]' />";
+    echo "</p></tr>";
+ 
 ?>
 
 </table>

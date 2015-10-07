@@ -278,7 +278,7 @@ function ajax_do(operate_type)
             if (is_note(get_tag_id_from_index($ii)))
             {
                 echo "<td width='400'>";
-                echo "<input type='checkbox' id='index_inside_tag' value='' />标签内保持序号";
+                echo "<input type='checkbox' id='index_inside_tag' value='' />笔记标签内保持序号";
                 echo "</p></tr>";
                 
                 $my_index++;

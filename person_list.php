@@ -191,7 +191,12 @@
     			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
     			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
     				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
-    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array) . "</td>";
+                
+                // 打印 死亡人数、受伤人数、失踪人数。
+                $person_count_string = print_person_count($row['related_number1'], 
+                        $row['related_number2'], $row['related_number3']);
+                        
+    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
     			echo "</tr>";
     		}
     		

@@ -76,6 +76,7 @@
         // 获取标签内编号的基数。
         if (($operate_type == 2) && (is_index_inside_tag() == 1))
         {
+            // 根据 笔记标签 来读取标签内编号。
             $thing_index_inside_tag = get_index_base_inside_tag($_POST['note_tags']);
         }
     	

@@ -4,7 +4,7 @@
 	require_once "data.php";
     require_once "sql.php";
     
-    // 先确认时间格式对不对.
+    // 1. 先确认时间格式对不对.
     $time_array = get_time_from_native(html_encode($_POST['time']));
     if ($time_array['status'] != "ok")
     {
@@ -29,6 +29,7 @@
             ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
     	}
     	
+        // 2. 获取 thing uuid。
     	if(isset($_SESSION['update_input_thing_uuid']))
     	{
     		$thing_uuid = html_encode($_SESSION['update_input_thing_uuid']);
@@ -52,7 +53,7 @@
     	$conn = open_db();
         $update_return = 0;
     	
-    	// 1. 读入输入界面传入的更新数据。
+    	// 3. 获取事件文本。
         $thing = html_encode($_POST['thing']);
         
     	if($is_edit == 0)
@@ -63,7 +64,8 @@
     	else
     	{
             // 更新
-    		$update_return = update_thing_to_db($thing_uuid, $time_array, $thing);
+    		$update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
+    		      $_POST['death_person_count'], $_POST['hurt_person_count'], $_POST['missing_person_count']);
     	}
     	
     	// 2.保存tags

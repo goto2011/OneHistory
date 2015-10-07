@@ -76,16 +76,19 @@
     
     /**
      * 更新每个条目的标签. 2015-9-1
+     * @$person_count_string: 打印死亡人数、受伤人数、失踪人数（为节省界面，作为标签的一部分，没有超链接）
      */
-    function print_item_tags($thing_UUID, $tag_id_array, $tag_param_array)
+    function print_item_tags($thing_UUID, $tag_id_array, $tag_param_array, $person_count_string)
     {
         $result_string = "";
         $array_has_data = false;
         
+        $result_string = "<div align='left' style='font-family:微软雅黑'>";
+        $result_string .= $person_count_string . "&nbsp;&nbsp;&nbsp;";
+            
         // 数组中存在.
         if (array_key_exists($thing_UUID, $tag_id_array))
         {
-            $result_string = "<div align='left' style='font-family:微软雅黑'>";
             for ($ii = 0; $ii < count($tag_id_array[$thing_UUID]); $ii++)
             {
                 $my_tag_id = $tag_id_array[$thing_UUID][$ii];
@@ -309,6 +312,42 @@
         echo "<td style='font-family:微软雅黑; text-align:center; width:54%' >事件</td>";
         echo "<td style='font-family:微软雅黑; text-align:center; width:30%' >标签</td>";
         echo "</tr>";
+    }
+    
+    /*
+     * 根据数据库数据在页面上显示 死亡人数、受伤人数、失踪人数。
+     */
+    function print_person_count($death_person_count, $hurt_person_count, $missing_person_count)
+    {
+        $result = "";
+        $result_index = 0;
+        
+        if ($death_person_count > 0)
+        {
+            $result .= "死-" . $death_person_count;
+            $result_index++;
+        }
+        
+        if ($hurt_person_count > 0)
+        {
+            if ($result_index > 0)
+            {
+                $result .= ";";
+            }
+            $result .= "伤-" . $hurt_person_count;
+            $result_index++;
+        }
+        
+        if($missing_person_count > 0)
+        {
+            if ($result_index > 0)
+            {
+                $result .= ";";
+            }
+            $result .= "失踪-" . $missing_person_count;
+        }
+        
+        return $result;
     }
     
     

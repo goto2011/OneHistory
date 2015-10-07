@@ -64,7 +64,7 @@ function get_current_list_id()
  */
 function get_list_control_init_status()
 {
-    if ($_SESSION['list_control_inited'] == 1)
+    if (isset($_SESSION['list_control_inited'])  && $_SESSION['list_control_inited'] == 1)
     {
         return 1;
     }

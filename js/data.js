@@ -177,7 +177,7 @@ function check_number(value)
 	for( i = 1; i < value.length; i ++ )
 	{
 		c = value.charAt( i );
-		if (reg.indexOf( c ) < 0)return false;
+		if (reg.indexOf( c ) < 0) return false;
 	}
 	return true;
 }
