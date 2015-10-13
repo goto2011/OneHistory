@@ -350,6 +350,22 @@ function ajax_do()
 <?php
     $my_index = 0;
     
+    // 打印 死亡人数、失踪人数、受伤人数 输入框。
+    echo "<tr class='tag_normal'>";
+    echo "<td width='400'>";
+    echo "<p class='thick'>死亡人数:<input type='text' id='death_person_count' 
+        value='$death_person_count' pattern='[0-9]' />";
+    
+    echo "<td width='400'>";
+    echo "<p class='thick'>受伤人数:<input type='text' id='hurt_person_count' 
+        value='$hurt_person_count' pattern='[0-9]' />";
+    echo "</p></td>";
+    
+    echo "<tr class='tag_normal'><td width='400'>";
+    echo "<p class='thick'>失踪人数:<input type='text' id='missing_person_count' 
+        value='$missing_person_count' pattern='[0-9]' />";
+    echo "</p></tr>";
+    
     // 显示 tag 输入框.
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
@@ -385,22 +401,6 @@ function ajax_do()
             }
         }
     }
-
-    // 打印 死亡人数、失踪人数、受伤人数 输入框。
-    echo "<td width='400'>";
-    echo "<p class='thick'>死亡人数:<input type='text' id='death_person_count' 
-        value='$death_person_count' pattern='[0-9]' />";
-    echo "</p></tr>";
-    
-    echo "<td width='400'>";
-    echo "<p class='thick'>受伤人数:<input type='text' id='hurt_person_count' 
-        value='$hurt_person_count' pattern='[0-9]' />";
-    echo "</p></tr>";
-    
-    echo "<td width='400'>";
-    echo "<p class='thick'>失踪人数:<input type='text' id='missing_person_count' 
-        value='$missing_person_count' pattern='[0-9]' />";
-    echo "</p></tr>";
  
 ?>
 
@@ -418,8 +418,10 @@ function ajax_do()
 <input type="hidden" id="thing_length" name="thing_length" value="<?php echo get_thing_length(); ?>">
 
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<input type="reset" style="font-size:25pt" value="恢复到最初状态">  <!-- 提交 -->
+<!--  公开范围（暂时删除）：
+<input type="reset" style="font-size:25pt" value="恢复到最初状态">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+-->
 <input type="submit" style="font-size:22pt; color:red" id="update_data" onclick="ajax_do()" /> <!-- 提交 -->
 
 <?php

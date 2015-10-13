@@ -67,6 +67,11 @@
             return "<a href='item_frame.php?property_UUID=" . 
                 $property_UUID . "'>". $property_name . "}</a>&nbsp;&nbsp;";
         }
+        else if ($property_type == 3)
+        {
+            return "<a href='item_frame.php?property_UUID=" . 
+                $property_UUID . "'>[". $property_name . "]</a>&nbsp;&nbsp;";
+        }
         else
         {
             return "<a href='item_frame.php?property_UUID=" . 
