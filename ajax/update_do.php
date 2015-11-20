@@ -65,7 +65,8 @@
     	{
             // 更新
     		$update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
-    		      $_POST['death_person_count'], $_POST['hurt_person_count'], $_POST['missing_person_count']);
+    		      $_POST['death_person_count'], $_POST['hurt_person_count'], 
+    		      $_POST['missing_person_count'], $_POST['word_count']);
     	}
     	
     	// 2.保存tags

@@ -86,6 +86,7 @@ function ajax_do()
     var death_person_count = document.getElementById("death_person_count").value;
     var hurt_person_count = document.getElementById("hurt_person_count").value;
     var missing_person_count = document.getElementById("missing_person_count").value;
+    var word_count = document.getElementById("word_count").value;
     
     // 死亡人数。
     if (death_person_count != "")
@@ -129,6 +130,20 @@ function ajax_do()
         missing_person_count = 0;
     }
     
+    // 字数。
+    if (word_count != "")
+    {
+        if(!check_number(word_count))
+        {
+            alert("字数文本框请输入数字。");
+            return;
+        }
+    }
+    else
+    {
+        word_count = 0;
+    }
+    
     var update_ajax = xhr({
         url:'./ajax/update_do.php',
         data:{
@@ -155,7 +170,9 @@ function ajax_do()
             
             'death_person_count'    :death_person_count,
             'hurt_person_count'     :hurt_person_count,
-            'missing_person_count'  :missing_person_count
+            'missing_person_count'  :missing_person_count,
+            'word_count'            :word_count
+            
         },
         async:false,
         method:'POST',
@@ -197,6 +214,7 @@ function ajax_do()
     $death_person_count = "";
     $hurt_person_count = "";
     $missing_person_count = "";
+	$word_count = "";
 	
 	// 获取节点原始数据.
 	if($_SESSION['update_input_is_edit'] == 1)
@@ -249,7 +267,6 @@ function ajax_do()
 		}
 	}
 */
-
 	// 刷新界面之"时间"
 	function flash_time($is_edit, $time)
 	{
@@ -317,7 +334,7 @@ function ajax_do()
 ?>
 
 <p class="thick" id="time_label">时间(必需)：
-<input type="text" id="time" name="time" autofocus=autofocus <?php flash_time($is_edit, $time); ?> />
+<input type="text" id="time" name="time" <?php flash_time($is_edit, $time); ?> />
 <nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！支持4种格式: 距今3.13亿年; 公元前212年; 1979-4-5; 1999-6-4 2:00:00.
 </nobr>
 
@@ -351,19 +368,23 @@ function ajax_do()
     $my_index = 0;
     
     // 打印 死亡人数、失踪人数、受伤人数 输入框。
-    echo "<tr class='tag_normal'>";
-    echo "<td width='400'>";
-    echo "<p class='thick'>死亡人数:<input type='text' id='death_person_count' 
+    echo "<tr class='tag_normal'><td width='400'>";
+    echo "<p class='thick'>死亡人数:<input type='number' autofocus=autofocus id='death_person_count' 
         value='$death_person_count' pattern='[0-9]' />";
     
-    echo "<td width='400'>";
-    echo "<p class='thick'>受伤人数:<input type='text' id='hurt_person_count' 
+    echo "<tr class='tag_normal'><td width='400'>";
+    echo "<p class='thick'>受伤人数:<input type='number' id='hurt_person_count' 
         value='$hurt_person_count' pattern='[0-9]' />";
     echo "</p></td>";
     
     echo "<tr class='tag_normal'><td width='400'>";
-    echo "<p class='thick'>失踪人数:<input type='text' id='missing_person_count' 
+    echo "<p class='thick'>失踪人数:<input type='number' id='missing_person_count' 
         value='$missing_person_count' pattern='[0-9]' />";
+    echo "</p></tr>";
+    
+    echo "<tr class='tag_normal'><td width='400'>";
+    echo "<p class='thick'>字   数:<input type='number' id='word_count' 
+        value='$word_count' pattern='[0-9]' />";
     echo "</p></tr>";
     
     // 显示 tag 输入框.
@@ -422,7 +443,7 @@ function ajax_do()
 <input type="reset" style="font-size:25pt" value="恢复到最初状态">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 -->
-<input type="submit" style="font-size:22pt; color:red" id="update_data" onclick="ajax_do()" /> <!-- 提交 -->
+<input type="submit" style="font-size:22pt; color:red" id="update_data" value='保存' onclick="ajax_do()" /> <!-- 提交 -->
 
 <?php
     // exit

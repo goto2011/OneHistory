@@ -194,7 +194,9 @@
                 
                 // 打印 死亡人数、受伤人数、失踪人数。
                 $person_count_string = print_person_count($row['related_number1'], 
-                        $row['related_number2'], $row['related_number3']);
+                        $row['related_number2'], 
+                        $row['related_number3'],
+                        $row['related_number4']);
                         
     			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
     			echo "</tr>";

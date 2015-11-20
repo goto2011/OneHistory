@@ -115,7 +115,8 @@ function insert_thing_to_db($time_array, $thing, $thing_index = 0)
  * @return: 成功返回1, 失败返回0.
  */
 function update_thing_to_db($thing_uuid, $time_array, $thing, 
-    $thing_index = 0, $death_person_count = 0, $hurt_person_count = 0, $missing_person_count = 0)
+    $thing_index = 0, $death_person_count = 0, $hurt_person_count = 0, 
+    $missing_person_count = 0, $word_count = 0)
 {
     if ($time_array['status'] != "ok")
     {
@@ -134,16 +135,22 @@ function update_thing_to_db($thing_uuid, $time_array, $thing,
     {
         $sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
             time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order , 
-            thing_index = $thing_index , related_number1 = $death_person_count , 
-            related_number2 = $hurt_person_count , related_number3 = $missing_person_count 
+            thing_index = $thing_index , 
+            related_number1 = $death_person_count , 
+            related_number2 = $hurt_person_count , 
+            related_number3 = $missing_person_count , 
+            related_number4 = $word_count
             where uuid = '$thing_uuid' ";
     }
     else 
     {
         $sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
             time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order , 
-            related_number1 = $death_person_count , related_number2 = $hurt_person_count , 
-            related_number3 = $missing_person_count where uuid = '$thing_uuid' ";
+            related_number1 = $death_person_count , 
+            related_number2 = $hurt_person_count , 
+            related_number3 = $missing_person_count , 
+            related_number4 = $word_count 
+            where uuid = '$thing_uuid' ";
     }
     
     if (mysql_query($sql_string) === TRUE)

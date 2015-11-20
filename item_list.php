@@ -269,9 +269,11 @@ window.onload = function()
     			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
     				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
                 
-                // 打印 死亡人数、受伤人数、失踪人数。
+                // 打印 死亡人数、受伤人数、失踪人数、字数。
                 $person_count_string = print_person_count($row['related_number1'], 
-                        $row['related_number2'], $row['related_number3']);
+                        $row['related_number2'], 
+                        $row['related_number3'],
+                        $row['related_number4']);
                 
                 // +n。数据库性能优化的重点。
     			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";

@@ -322,7 +322,8 @@
     /*
      * 根据数据库数据在页面上显示 死亡人数、受伤人数、失踪人数。
      */
-    function print_person_count($death_person_count, $hurt_person_count, $missing_person_count)
+    function print_person_count($death_person_count, $hurt_person_count, 
+        $missing_person_count, $word_count)
     {
         $result = "";
         $result_index = 0;
@@ -350,6 +351,11 @@
                 $result .= ";";
             }
             $result .= "失踪-" . $missing_person_count;
+        }
+        
+        if($word_count > 0)
+        {
+            $result .= "字数-" . $word_count;
         }
         
         return $result;
