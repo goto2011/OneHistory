@@ -167,21 +167,25 @@ window.onload = function()
 	// 打印表格(main)
 	function flash_item_list()
 	{
+	    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step1");
         // 打开数据库
         $conn = open_db();
 	    
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step2");
         // 算下 period 开始/结束.
         if(is_period_tag(get_current_list_id()))
         {
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
         }
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
         $thing_substring = "";
         //计算记录偏移量
         $page_size = get_page_size();
         $offset = $page_size * (get_page() - 1);
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step4");
         // 获取thing数据表的数据. +1
         // search 兼容 tag 和 period。所以检索优先级最高。
         if(is_search())
@@ -201,25 +205,27 @@ window.onload = function()
             $thing_substring = get_thing_substring(get_current_list_id());
         }
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
         // 获得条目数量.
         $item_count = get_thing_count($thing_substring);
         
-        // debug
-        // echo "$item_count - " . get_current_list_id() . " <br />";
-		
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step6");
 		// 计算总页数。
 		$pages = intval($item_count / $page_size);
 		if ($item_count % $page_size) $pages++;
 
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step7");
         // 打印搜索区
         if(is_show_search_box(get_current_list_id()))
         {
             print_search_zone();
         }
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
 		// 打印标签区. +1
 		print_tags_zone();
 		
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
         // 打印表格控制条.
 		print_list_control($item_count, $page_size, $pages, get_page());
 		if (is_tag())
@@ -232,25 +238,31 @@ window.onload = function()
             print_period_info();
         }
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
         // 打印“添加标签”输入框。2015-4-21
         if (is_show_add_tag())
         {
             print_add_tag_form();
         }
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
         // 打印表头。
 		print_item_list_head();
 		
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
         if ($item_count > 0)
         {
             // 查询子句增加排序、分页。
             $thing_substring = add_order_page_substring($thing_substring, $offset, $page_size);
             
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
             $result = get_thing_tag_prompt($thing_substring, $tag_id_array, $tag_param_array);
     
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            
     		$index = $offset;
     		while($row = mysql_fetch_array($result))
     		{
@@ -269,6 +281,7 @@ window.onload = function()
     			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
     				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
                 
+                $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step14");
                 // 打印 死亡人数、受伤人数、失踪人数、字数。
                 $person_count_string = print_person_count($row['related_number1'], 
                         $row['related_number2'], 
@@ -278,6 +291,7 @@ window.onload = function()
                 // +n。数据库性能优化的重点。
     			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
     			echo "</tr>";
+                $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step15");
     		}
     		
     		echo "</table>";
@@ -293,6 +307,8 @@ window.onload = function()
             echo "</form>";
         }
         
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step16");
+            
         // exit
         mysql_close($conn);
         $conn = null;

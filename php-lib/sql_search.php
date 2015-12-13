@@ -120,7 +120,7 @@ function get_search_where_sub_by_tag_time($key_uuid, $begin_year, $end_year)
  */
 function get_search_where_sub($enable_time_search = TRUE)
 {
-    $search_sub = " from thing_time where (";
+    $search_sub = " from thing_time a where (";
     
     // 从 session 中获取查询子句。
     $search_key = search_key();

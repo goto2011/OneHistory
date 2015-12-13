@@ -235,11 +235,15 @@ function is_vip_tag_tab($tag_index_id)
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
 
-// 获取检索条件子句。
+/**
+ * 获取tag的检索条件子句。
+ */
 function get_tag_search_substring($property_UUID)
 {
-    return " from thing_time where UUID in(select thing_UUID from thing_property 
-            where property_UUID = '$property_UUID')  ";
+    // return " from thing_time where UUID in(select thing_UUID from thing_property 
+    //         where property_UUID = '$property_UUID')  ";
+    return " from thing_time a INNER JOIN thing_property b ON a.UUID=b.thing_UUID
+            where b.property_UUID = '$property_UUID'  ";
 }
 
 /**
@@ -600,12 +604,17 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
 
 /**
  * 根据 thing 检索子句获取相关的 tag 属性。
+ * 这个语句要5秒。
  */
 function get_tag_param_array_from_thing_substring($thing_substirng)
 {
     $sql_string = "select property_UUID, property_name, property_type from property where property_UUID 
-            in(select property_UUID from thing_property where thing_UUID 
-            in(select t.uuid from (select uuid $thing_substirng) as t)) ";
+           in(select property_UUID from thing_property where thing_UUID 
+           in(select t.uuid from (select uuid $thing_substirng) as t)) ";
+            
+    // $sql_string = "select property_UUID, property_name, property_type from property where property_UUID 
+    //         in(select property_UUID from thing_property where thing_UUID 
+    //         exists(select t.uuid from (select uuid $thing_substirng) as t where t.uuid=thing_property.thing_UUID)) ";
             
     $result = mysql_query($sql_string);
     if($result == FALSE)
@@ -613,24 +622,30 @@ function get_tag_param_array_from_thing_substring($thing_substirng)
         $GLOBALS['log']->error("error: get_tag_param_array_from_thing_substring() -- $sql_string 。");
         return NULL;
     }
+    $GLOBALS['log']->error("test: get_tag_param_array_from_thing_substring() -- $sql_string 。");
     
     return $result;
 }
 
 /**
  * 根据 thing 检索子句获取相关的 tag id。
+ * 这个语句要3秒。
  */
 function get_tag_id_array_from_thing_substring($thing_substirng)
 {
-    $sql_string = "select property_UUID,thing_UUID from thing_property where thing_UUID 
-            in(select t.uuid from (select uuid $thing_substirng) as t) ";
-            
+    $sql_string = "select property_UUID,thing_UUID from thing_property b where thing_UUID 
+           in(select t.uuid from (select uuid $thing_substirng) as t) ";
+           
+    // $sql_string = "select property_UUID,thing_UUID from thing_property where thing_UUID 
+    //       exists(select t.uuid from (select uuid $thing_substirng) as t where t.uuid=thing_property.thing_UUID) ";
+                
     $result = mysql_query($sql_string);
     if($result == FALSE)
     {
         $GLOBALS['log']->error("error: get_tag_id_array_from_thing_substring() -- $sql_string 。");
         return NULL;
     }
+    $GLOBALS['log']->error("test: get_tag_id_array_from_thing_substring() -- $sql_string 。");
     
     return $result;
 }

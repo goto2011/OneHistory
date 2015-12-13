@@ -169,8 +169,10 @@ function update_thing_to_db($thing_uuid, $time_array, $thing,
  */
 function add_order_page_substring($thing_substring, $offset, $page_size)
 {
+    // return $thing_substring . 
+    //     " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
     return $thing_substring . 
-        " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
+        " order by a.year_order ASC, a.thing_index ASC limit $offset, $page_size ";
 }
 
 /**
@@ -198,33 +200,37 @@ function get_thing_substring($list_type)
     {
         // 全部条目
         case 1:
-            $sql_string = " from thing_time ";
+            $sql_string = " from thing_time a ";
             break;
     
         // 我的关注
         case 2:
-            $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
-                where property_UUID in(select property_UUID from follow
-                where user_UUID = '" . get_user_id() . "'))  ";
+            // $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
+            //     where property_UUID in(select property_UUID from follow
+            //     where user_UUID = '" . get_user_id() . "'))  ";
+            $sql_string = " from thing_time a 
+                inner join thing_property b on a.UUID=b.thing_UUID 
+                inner join (select property_UUID from follow
+                where user_UUID = '" . get_user_id() . "') t on t.property_UUID=b.property_UUID ";
             break;
             
         // 最新，指7天内的
         case 3:
-            $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
+            $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property 
                 where property_UUID in(select property_UUID from property 
                 where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))  ";
             break;
 
         // 分期
         case 4:
-            $sql_string = " from thing_time ";
+            $sql_string = " from thing_time a ";
             break;
 
         default:
             $my_tag_id = get_tag_id_from_index($list_type);
             if ($my_tag_id > 0)
             {
-                $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property
+                $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property
                     where property_UUID in(select property_UUID from property where property_type = $my_tag_id))  ";
             }
             else
@@ -241,8 +247,11 @@ function get_thing_substring($list_type)
  */
 function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_array)
 {
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step21");
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $tag_id_result = get_tag_id_array_from_thing_substring($thing_substring);
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step22");
+    
     if($tag_id_result == NULL)
     {
         $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_id_result 。");
@@ -261,8 +270,13 @@ function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_arra
         }
     }
     
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step23");
+    
     // step2: 获取当前页的事件相关 tag 属性。(以 tag id 为key。)
     $tag_param_result = get_tag_param_array_from_thing_substring($thing_substring);
+    
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step24");
+    
     if($tag_param_result == NULL)
     {
         $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_param_result 。");
@@ -276,7 +290,8 @@ function get_thing_tag_prompt($thing_substring, &$tag_id_array, &$tag_param_arra
             $tag_param_array[$my_tag_param_row['property_UUID']][1] = $my_tag_param_row['property_name'];
         }
     }
-   
+    
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step25");
     // step3: 获取当前页的事件。
     return get_thing_item_db($thing_substring);
 }
@@ -292,6 +307,8 @@ function get_thing_item_db($thing_substring)
         $GLOBALS['log']->error("error: get_thing_item_db() -- $sql_string 。");
         return NULL;
     }
+    
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step26");
     
     return $result;
 }
