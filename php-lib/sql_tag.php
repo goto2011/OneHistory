@@ -242,8 +242,12 @@ function get_tag_search_substring($property_UUID)
 {
     // return " from thing_time where UUID in(select thing_UUID from thing_property 
     //         where property_UUID = '$property_UUID')  ";
-    return " from thing_time a INNER JOIN thing_property b ON a.UUID=b.thing_UUID
-            where b.property_UUID = '$property_UUID'  ";
+    $thing_string = " from thing_time a 
+            INNER JOIN thing_property b ON a.UUID=b.thing_UUID and b.property_UUID = '$property_UUID' ";
+    $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid 
+            INNER JOIN thing_property b ON a.UUID=b.thing_UUID and b.property_UUID = '$property_UUID' ";
+    
+    return array($thing_string, $join_substring);
 }
 
 /**
@@ -606,16 +610,12 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
  * 根据 thing 检索子句获取相关的 tag 属性。
  * 这个语句要5秒。
  */
-function get_tag_param_array_from_thing_substring($thing_substirng)
+function get_tag_param_array_from_thing_substring($thing_substirng, $order_substirng)
 {
-    $sql_string = "select property_UUID, property_name, property_type from property where property_UUID 
-           in(select property_UUID from thing_property where thing_UUID 
-           in(select t.uuid from (select uuid $thing_substirng) as t)) ";
-            
-    // $sql_string = "select property_UUID, property_name, property_type from property where property_UUID 
-    //         in(select property_UUID from thing_property where thing_UUID 
-    //         exists(select t.uuid from (select uuid $thing_substirng) as t where t.uuid=thing_property.thing_UUID)) ";
-            
+    $sql_string = "select b.property_UUID, b.property_name, b.property_type from property b
+            inner join thing_property c on b.property_UUID=c.property_UUID 
+            $thing_substirng $order_substirng ";
+           
     $result = mysql_query($sql_string);
     if($result == FALSE)
     {
@@ -631,14 +631,11 @@ function get_tag_param_array_from_thing_substring($thing_substirng)
  * 根据 thing 检索子句获取相关的 tag id。
  * 这个语句要3秒。
  */
-function get_tag_id_array_from_thing_substring($thing_substirng)
+function get_tag_id_array_from_thing_substring($thing_substirng, $order_substirng)
 {
-    $sql_string = "select property_UUID,thing_UUID from thing_property b where thing_UUID 
-           in(select t.uuid from (select uuid $thing_substirng) as t) ";
+    $sql_string = "select c.property_UUID, c.thing_UUID from thing_property c 
+        $thing_substirng $order_substirng";
            
-    // $sql_string = "select property_UUID,thing_UUID from thing_property where thing_UUID 
-    //       exists(select t.uuid from (select uuid $thing_substirng) as t where t.uuid=thing_property.thing_UUID) ";
-                
     $result = mysql_query($sql_string);
     if($result == FALSE)
     {
