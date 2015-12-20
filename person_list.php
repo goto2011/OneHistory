@@ -120,33 +120,37 @@
 	// 打印表格(main)
 	function flash_item_list()
 	{
+        $thing_substring = "";
+        $join_substring = "";
+        
         // 打开数据库
         $conn = open_db();
-	    
-        //计算记录偏移量
-        $page_size = get_page_size();
-        $offset = $page_size * (get_page() - 1);
         
         // 获取thing数据表的数据
-        $thing_substring = "";
         if (is_tag())
         {
-            $thing_substring = get_tag_search_substring(get_property_UUID());
+            $my_array = get_tag_search_substring(get_property_UUID());
         }
         else
         {
-            $thing_substring = get_thing_substring(get_current_list_id());
+            $my_array = get_thing_substring(get_current_list_id());
         }
+        $thing_substring = $my_array[0];
+        $join_substring = $my_array[1];
         
-        // 计算条目数量
+        // 获得条目数量.
         $item_count = get_thing_count($thing_substring);
         
-        // 计算总页数。
+        // 人物列表暂不支持检索。
+        
+        // 打印标签区. +1
+        print_tags_zone();
+        
+        // 计算总页数和当前页偏移量.
+        $page_size = get_page_size();
+        $offset = $page_size * (get_page() - 1);
 		$pages = intval($item_count / $page_size);
 		if ($item_count % $page_size) $pages++;
-
-		// 打印标签区
-		print_tags_zone();
 		
         // 打印表格控制条.
 		print_list_control($item_count, $page_size, $pages, get_page());
@@ -160,25 +164,27 @@
         {
             print_add_tag_form();
         }
-            
+        
+        // 打印表头。
 		print_item_list_head();   // table head.
         
         if ($item_count > 0)
         {
             // 查询子句增加排序、分页。
-            $thing_substring = add_order_page_substring($thing_substring, $offset, $page_size);
+            $order_substring = add_order_page_substring($offset, $page_size);
+            $thing_substring .= $order_substring;
             
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
-            $result = get_thing_tag_prompt($thing_substring, $tag_id_array, $tag_param_array);
+            get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
+            $result = get_thing_item_db($thing_substring);
             
     		$index = $offset;
     		
     		while($row = mysql_fetch_array($result))
     		{
     			$index++;
-    			
     			// echo "$index. " . $row['time'] . "年，" . $row['thing'] . "<br />";
     			
     			echo "<tr>";
@@ -186,18 +192,23 @@
                 {
                     echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
                 }
+                // 序号
     			echo "<td>$index</td>";
+                // 时间字段
     			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
+                // 时间范围字段
     			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
+                // 事件字段
     			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
     				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
                 
-                // 打印 死亡人数、受伤人数、失踪人数。
+                // 死亡人数、受伤人数、失踪人数、字数。
                 $person_count_string = print_person_count($row['related_number1'], 
                         $row['related_number2'], 
                         $row['related_number3'],
                         $row['related_number4']);
                         
+                // +n。数据库性能优化的重点。
     			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
     			echo "</tr>";
     		}

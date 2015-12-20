@@ -227,9 +227,8 @@ function get_thing_substring($list_type)
                 inner join property b on b.property_UUID = c.property_UUID 
                 and DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(b.add_time) ";
                 
-            $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid 
-                inner join property b on b.property_UUID = c.property_UUID 
-                and DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(b.add_time) ";
+            $join_substring = " and DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(b.add_time)
+                inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
 
         // 分期
@@ -250,9 +249,8 @@ function get_thing_substring($list_type)
                         inner join property b on b.property_UUID = c.property_UUID 
                         and b.property_type = $my_tag_id ";
                 
-                $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid 
-                        inner join property b on b.property_UUID = c.property_UUID 
-                        and b.property_type = $my_tag_id ";
+                $join_substring = " and b.property_type = $my_tag_id 
+                        inner join thing_time a on c.thing_UUID = a.uuid ";
             }
             else
             {
@@ -267,20 +265,23 @@ function get_thing_substring($list_type)
 /**
  * 完成 事件、标签、事件-标签对的三表联合查询。
  */
-function get_thing_tag_prompt($join_substring, $order_substirng, &$tag_id_array, &$tag_param_array)
+function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array, &$tag_param_array)
 {
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step21");
+    
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
-    $tag_id_result = get_tag_id_array_from_thing_substring($join_substring, $order_substirng);
+    $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring);
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step22");
     
     if($tag_id_result == NULL)
     {
-        $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_id_result 。");
+        $GLOBALS['log']->error("error: get_tag_param_array_from_thing() -- $tag_id_result 。");
         return NULL;
     }
+    
     while($my_tag_id_row = mysql_fetch_array($tag_id_result))
     {
+        // 保存 thing uuid 和 tag uuid 的对应关系。
         if (!array_key_exists($my_tag_id_row['thing_UUID'], $tag_id_array))
         {
             $tag_id_array[$my_tag_id_row['thing_UUID']][0] = $my_tag_id_row['property_UUID'];
@@ -290,30 +291,16 @@ function get_thing_tag_prompt($join_substring, $order_substirng, &$tag_id_array,
             $array_index = count($tag_id_array[$my_tag_id_row['thing_UUID']]);
             $tag_id_array[$my_tag_id_row['thing_UUID']][$array_index] = $my_tag_id_row['property_UUID'];
         }
-    }
-    
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step23");
-    
-    // step2: 获取当前页的事件相关 tag 属性。(以 tag id 为key。)
-    $tag_param_result = get_tag_param_array_from_thing_substring($join_substring, $order_substirng);
-    
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step24");
-    
-    if($tag_param_result == NULL)
-    {
-        $GLOBALS['log']->error("error: get_thing_tag_prompt() -- $tag_param_result 。");
-        return NULL;
-    }
-    while($my_tag_param_row = mysql_fetch_array($tag_param_result))
-    {
-        if (!array_key_exists($my_tag_param_row['property_UUID'], $tag_param_array))
+        
+        // 保存 tag uuid 和 tag type 的对应关系。
+        if (!array_key_exists($my_tag_id_row['property_UUID'], $tag_param_array))
         {
-            $tag_param_array[$my_tag_param_row['property_UUID']][0] = $my_tag_param_row['property_type'];
-            $tag_param_array[$my_tag_param_row['property_UUID']][1] = $my_tag_param_row['property_name'];
+            $tag_param_array[$tag_id_array['property_UUID']][0] = $tag_id_array['property_type'];
+            $tag_param_array[$tag_id_array['property_UUID']][1] = $tag_id_array['property_name'];
         }
     }
     
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step25");
+    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step25");
 }
 
 // 获取 thing 表的数据。

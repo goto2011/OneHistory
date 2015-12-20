@@ -25,7 +25,7 @@
     // get_time_from_native("2004年2月11日下午2点");
     // echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
     // echo date("G", 1076461200) . "</br>";
-    echo get_search_where_sub("中国 and 首都 and 财政") . "<br />";
+    echo get_search_where_sub_native("中国 and 首都 and 财政") . "<br />";
     
     
     // 激活断言，并设置它为 quiet
@@ -462,19 +462,31 @@
     
     echo "</br>";
     
-    assert("is_infinite(log(0))");
-    
-    echo get_search_where_sub("中国 and 首都 and 财政") . "<br />";
-    echo get_search_where_sub("蒋介石 or 毛泽东") . "<br />";
-    echo get_search_where_sub("唐朝 and 诗人 - 李白") . "<br />";
-    echo get_search_where_sub("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
-    echo get_search_where_sub("1913-10-15") . "<br />";
-    echo get_search_where_sub("1913-10") . "<br />";
-    echo get_search_where_sub("1913") . "<br />";
-    echo get_search_where_sub("公元前221") . "<br />";
-    echo get_search_where_sub("-1720") . "<br />";
-    echo get_search_where_sub("260万年前") . "<br />";
-    echo get_search_where_sub("45.56亿年前") . "<br />";
+    echo get_search_where_sub_native("中国 首都 财政") . " <br />";
+    echo get_search_where_sub_native("中国 and 首都 and 财政") . " <br />";
+    echo get_search_where_sub_native("蒋介石 or 毛泽东") . "<br />";
+    echo get_search_where_sub_native("唐朝 and 诗人 - 李白") . "<br />";
+    echo get_search_where_sub_native("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
+    echo get_search_where_sub_native("1913-10-15") . "<br />";
+    echo get_search_where_sub_native("2013-10-15 12:01:35") . "<br />";
+    echo get_search_where_sub_native("1913年春天") . "<br />";
+    echo get_search_where_sub_native("1913年夏天") . "<br />";
+    echo get_search_where_sub_native("1913年秋天") . "<br />";
+    echo get_search_where_sub_native("1913年冬天") . "<br />";
+    echo get_search_where_sub_native("1913年上半年") . "<br />";
+    echo get_search_where_sub_native("1913年下半年") . "<br />";
+    echo get_search_where_sub_native("公元前476年春天") . "<br />";
+    echo get_search_where_sub_native("公元前476年夏天") . "<br />";
+    echo get_search_where_sub_native("公元前476年秋天") . "<br />";
+    echo get_search_where_sub_native("公元前476年冬天") . "<br />";
+    echo get_search_where_sub_native("公元前476年上半年") . "<br />";
+    echo get_search_where_sub_native("公元前476年下半年") . "<br />";
+    echo get_search_where_sub_native("1913-10") . "<br />";
+    echo get_search_where_sub_native("1913") . "<br />";
+    echo get_search_where_sub_native("公元前221") . "<br />";
+    echo get_search_where_sub_native("-1720") . "<br />";
+    echo get_search_where_sub_native("260万年前") . "<br />";
+    echo get_search_where_sub_native("45.56亿年前") . "<br />";
     
     echo "</br>";
     

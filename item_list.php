@@ -170,7 +170,6 @@ window.onload = function()
 	    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step1");
         $thing_substring = "";
         $join_substring = "";
-        $order_substirng = "";
         
         // 打开数据库
         $conn = open_db();
@@ -249,20 +248,19 @@ window.onload = function()
         // 打印表头。
 		print_item_list_head();
 		
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
         if ($item_count > 0)
         {
             // 查询子句增加排序、分页。
-            $order_substirng = add_order_page_substring($offset, $page_size);
-            $thing_substring .= $order_substirng;
+            $order_substring = add_order_page_substring($offset, $page_size);
+            $thing_substring .= $order_substring;
             
-            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
+            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
-            get_thing_tag_prompt($join_substring, $order_substirng, $tag_id_array, $tag_param_array);
+            get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
             $result = get_thing_item_db($thing_substring);
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             
     		$index = $offset;
     		while($row = mysql_fetch_array($result))
