@@ -167,7 +167,7 @@ window.onload = function()
 	// 打印表格(main)
 	function flash_item_list()
 	{
-	    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step1");
+	    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Begin.");
         $thing_substring = "";
         $join_substring = "";
         
@@ -198,7 +198,7 @@ window.onload = function()
         }
         else
         {
-            $my_array = get_thing_substring(get_current_list_id());   // 类型检索
+            $my_array = get_thing_substring(get_current_list_id());     // 类型检索
         }
         $thing_substring = $my_array[0];
         $join_substring = $my_array[1];
@@ -260,7 +260,7 @@ window.onload = function()
             $tag_param_array = array();
             get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
             $result = get_thing_item_db($thing_substring);
-            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             
     		$index = $offset;
     		while($row = mysql_fetch_array($result))
@@ -313,7 +313,7 @@ window.onload = function()
         mysql_close($conn);
         $conn = null;
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step16");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). End.");
 	}
 ?>
 

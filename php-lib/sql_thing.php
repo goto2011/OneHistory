@@ -267,8 +267,6 @@ function get_thing_substring($list_type)
  */
 function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array, &$tag_param_array)
 {
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step21");
-    
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring);
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step22");
@@ -299,8 +297,6 @@ function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array,
             $tag_param_array[$tag_id_array['property_UUID']][1] = $tag_id_array['property_name'];
         }
     }
-    
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step25");
 }
 
 // 获取 thing 表的数据。

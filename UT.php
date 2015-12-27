@@ -9,9 +9,6 @@
 	require_once "data.php";
     require_once "sql.php";
     
-    
-    
-    
     // debug zone.
     // get_time_from_native("前632.4");
     // echo Date("Y-m-d H:i:s", strtotime("2004-2-11 11:35")) . "</br>";
@@ -25,6 +22,7 @@
     // get_time_from_native("2004年2月11日下午2点");
     // echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
     // echo date("G", 1076461200) . "</br>";
+    // print_r(get_time_from_native("２０１０年"));
     echo get_search_where_sub_native("中国 and 首都 and 财政") . "<br />";
     
     
@@ -314,6 +312,27 @@
     assert('UT_get_time_from_native("一九八四年十一月",    time_string_to_days("1984-11-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("一二三四年春季", time_string_to_days("1234-4-15"), 3, 45, 2)');
     
+    assert('UT_get_time_from_native("２０１０年１０月２８日",  time_string_to_days("2010-10-28"), 3, 0, 1)');
+    assert('UT_get_time_from_native("２０１０年２月１１日",   time_string_to_days("2010-2-11"), 3, 0, 1)');
+    assert('UT_get_time_from_native("２０１０年９月２5日",    time_string_to_days("2010-9-25"), 3, 0, 1)');
+    assert('UT_get_time_from_native("一",    1, 2, 0, 1)');
+    assert('UT_get_time_from_native("二",    2, 2, 0, 1)');
+    assert('UT_get_time_from_native("三",    3, 2, 0, 1)');
+    assert('UT_get_time_from_native("四",    4, 2, 0, 1)');
+    assert('UT_get_time_from_native("一百",    100, 2, 0, 1)');
+    assert('UT_get_time_from_native("九十九",    99, 2, 0, 1)');
+    assert('UT_get_time_from_native("九十八",    98, 2, 0, 1)');
+    assert('UT_get_time_from_native("九十七",    97, 2, 0, 1)');
+    assert('UT_get_time_from_native("１",    1, 2, 0, 1)');
+    assert('UT_get_time_from_native("２",    2, 2, 0, 1)');
+    assert('UT_get_time_from_native("３",    3, 2, 0, 1)');
+    assert('UT_get_time_from_native("４",    4, 2, 0, 1)');
+    assert('UT_get_time_from_native("５",    5, 2, 0, 1)');
+    assert('UT_get_time_from_native("６",    6, 2, 0, 1)');
+    assert('UT_get_time_from_native("７",    7, 2, 0, 1)');
+    assert('UT_get_time_from_native("８",    8, 2, 0, 1)');
+    assert('UT_get_time_from_native("９",    9, 2, 0, 1)');
+    
     assert('UT_get_time_from_native("一九○○年",    1900, 2, 0, 1)');
     assert('UT_get_time_from_native("一九○四",    1904, 2, 0, 1)');
     assert('UT_get_time_from_native("一九三○年",    1930, 2, 0, 1)');
@@ -462,7 +481,7 @@
     
     echo "</br>";
     
-    echo get_search_where_sub_native("中国 首都 财政") . " <br />";
+    echo get_search_where_sub_native("中国 首都 财政") . " <br />aaa";
     echo get_search_where_sub_native("中国 and 首都 and 财政") . " <br />";
     echo get_search_where_sub_native("蒋介石 or 毛泽东") . "<br />";
     echo get_search_where_sub_native("唐朝 and 诗人 - 李白") . "<br />";
@@ -512,11 +531,12 @@
     
     assert('UT_chinese_to_number("一九八九", 1989)');
     assert('UT_chinese_to_number("一二三四五六七八九", 123456789)');
+    assert('UT_chinese_to_number("１２３４５６７８９", 123456789)');
     assert('UT_chinese_to_number("一二三四五六七八九零Ο", 12345678900)');
     assert('UT_chinese_to_number("十九", 19)');
     assert('UT_chinese_to_number("二十", 20)');
     assert('UT_chinese_to_number("二十一", 21)');
-    // assert('UT_chinese_to_number("一百零一", 101)');
+    assert('UT_chinese_to_number("一百", 100)');
     assert('UT_chinese_to_number("192Ο", 1920)');
     
     // assert('UT_number_to_chinese(1989, "一九八九")');

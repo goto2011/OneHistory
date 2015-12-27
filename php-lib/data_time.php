@@ -474,8 +474,8 @@ function get_time_from_native($native_string)
     $is_pm = 0;     // 是否是下午。
     if (is_chinese_time($native_string))
     {
-        $my_string = trim_chinese_day($native_string);
-        $my_string = trim_chinese_time($my_string);
+        $my_string = trim_chinese_day($native_string);  // 去掉年月日
+        $my_string = trim_chinese_time($my_string);     // 去掉时分秒
         if (check_is_chinese($my_string))
         {
             // 汉字数字转阿拉伯数字。
@@ -529,6 +529,8 @@ function get_time_from_native($native_string)
         
         // 去掉"公元"和"公元前"
         $native_string = trim_time_string($native_string);
+        
+        // print_r($native_string) . "<br>";
     }
     
     // step 3: 搞定"距今 ... 年前"这种时间表达.
