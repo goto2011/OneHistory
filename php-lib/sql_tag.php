@@ -532,10 +532,10 @@ function get_tags_db($list_type, $tags_show_limit)
                     limit 0, " . $tags_show_limit;
             break;
 
-        // 最新，指1天内的
+        // 最新，指1周内的
         case 3:
             $sql_string = "select property_UUID, property_name, property_type from property 
-                    where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time) order by add_time DESC 
+                    where DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(add_time) order by add_time DESC 
                     limit 0, " . $tags_show_limit;
             break;
 
@@ -621,6 +621,8 @@ function get_tag_param_array_from_thing($thing_substirng, $order_substring)
         $GLOBALS['log']->error("error: get_tag_param_array_from_thing() -- $sql_string 。");
         return NULL;
     }
+    $GLOBALS['log']->error("test: get_tag_param_array_from_thing() -- $sql_string 。");
+    
     return $result;
 }
 

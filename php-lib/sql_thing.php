@@ -214,8 +214,8 @@ function get_thing_substring($list_type)
                 and e.user_UUID = '" . get_user_id() . "' ";
                 
             $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid 
-                inner join follow e where on e.property_UUID = b.property_UUID 
-                and user_UUID = '" . get_user_id() . "' ";
+                inner join follow e on e.property_UUID = b.property_UUID 
+                and e.user_UUID = '" . get_user_id() . "' ";
             break;
             
         // 最新，指7天内新建的标签
@@ -225,9 +225,9 @@ function get_thing_substring($list_type)
             //     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))  ";
             $thing_string = " from thing_time a join thing_property c on a.UUID = c.thing_UUID  
                 inner join property b on b.property_UUID = c.property_UUID 
-                and DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(b.add_time) ";
+                and DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(b.add_time) ";
                 
-            $join_substring = " and DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(b.add_time)
+            $join_substring = " and DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(b.add_time)
                 inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
 
@@ -269,11 +269,11 @@ function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array,
 {
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring);
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step22");
+    // $GLOBALS['log']->error(date('H:i:s') . "-" . "Step22");
     
     if($tag_id_result == NULL)
     {
-        $GLOBALS['log']->error("error: get_tag_param_array_from_thing() -- $tag_id_result 。");
+        $GLOBALS['log']->error("error: get_tag_param_array_from_thing().");
         return NULL;
     }
     
@@ -311,7 +311,7 @@ function get_thing_item_db($thing_substring)
         return NULL;
     }
     
-    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step26");
+    // $GLOBALS['log']->error(date('H:i:s') . "-" . "Step26");
     
     return $result;
 }

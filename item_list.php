@@ -167,7 +167,9 @@ window.onload = function()
 	// 打印表格(main)
 	function flash_item_list()
 	{
-	    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Begin.");
+	    $GLOBALS['log']->error(date('H:i:s') . "-" . "Thing_List_Begin.");
+        $thing_list_begin = strtotime("now");
+        
         $thing_substring = "";
         $join_substring = "";
         
@@ -313,7 +315,11 @@ window.onload = function()
         mysql_close($conn);
         $conn = null;
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). End.");
+        $time_diff = strtotime("now") - $thing_list_begin; 
+        if ($time_diff >= 0)
+        {
+            $GLOBALS['log']->error(date('H:i:s') . "-" . $time_diff . "-" . "Thing_List_End.");
+        }
 	}
 ?>
 
