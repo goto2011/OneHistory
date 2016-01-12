@@ -193,19 +193,19 @@ function get_thing_count($thing_substring)
 }
 
 // 获取事件 查询子句。
-function get_thing_substring($list_type)
+function get_thing_substring($tag_id)
 {
-    switch ($list_type)
+    switch ($tag_id)
     {
         // 全部条目
-        case 1:
+        case tab_type::CONST_TOTAL:
             // $sql_string = " from thing_time a ";
             $thing_string = " from thing_time a ";
             $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
     
         // 我的关注
-        case 2:
+        case tab_type::CONST_MY_FOLLOW:
             // $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
             //     where property_UUID in(select property_UUID from follow
             //     where user_UUID = '" . get_user_id() . "'))  ";
@@ -219,7 +219,7 @@ function get_thing_substring($list_type)
             break;
             
         // 最新，指7天内新建的标签
-        case 3:
+        case tab_type::CONST_NEWEST:
             // $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property 
             //     where property_UUID in(select property_UUID from property 
             //     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))  ";
@@ -232,29 +232,28 @@ function get_thing_substring($list_type)
             break;
 
         // 分期
-        case 4:
+        case tab_type::CONST_PERIOD:
             // $sql_string = " from thing_time a ";
             $thing_string = " from thing_time a ";
             $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
 
         default:
-            $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id > 0)
+            if ($tag_id > 0)
             {
                 // $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property
                 //    where property_UUID in(select property_UUID from property where 
                 //    property_type = $my_tag_id))  ";
                 $thing_string = " from thing_time a inner join thing_property c on c.thing_UUID = a.UUID
                         inner join property b on b.property_UUID = c.property_UUID 
-                        and b.property_type = $my_tag_id ";
+                        and b.property_type = $tag_id ";
                 
-                $join_substring = " and b.property_type = $my_tag_id 
+                $join_substring = " and b.property_type = $tag_id 
                         inner join thing_time a on c.thing_UUID = a.uuid ";
             }
             else
             {
-                $GLOBALS['log']->error("error: get_thing_substring() -- list_type error 。");
+                $GLOBALS['log']->error("error: get_thing_substring() -- tag_id error 。");
                 return "";
             }
     }

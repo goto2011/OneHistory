@@ -10,6 +10,7 @@ require_once "tag_city.php";
 require_once "tag_person.php";
 require_once "tag_key_thing.php";
 require_once "tag_land.php";
+require_once "tag_die.php";
 
 // 变量列表：
 // 1. big name: 即分类名称。
@@ -323,6 +324,19 @@ function vip_tag_struct_init($vip_tag_id)
     $vip_tag_struct;
     
     switch ($vip_tag_id) {
+        // add, 2016-01-10
+        case tab_type::CONST_DIE:
+            global $die_big;
+            global $die;
+            $vip_tag_struct = new vip_tag_class($die_big, $die);
+            break;
+        /*
+        case tab_type::CONST_SOLUTION:
+            global $solution_big;
+            global $solution;
+            $vip_tag_struct = new vip_tag_class($solution_big, $solution);
+            break;
+        */
         case tab_type::CONST_TOPIC:
             global $topic_big;
             global $topic;

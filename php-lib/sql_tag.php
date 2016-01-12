@@ -22,14 +22,20 @@ function tag_list_max()
 // tag list 、tag index、tag id 对应关系。
 // [0]表示数据库中的tag type；为负数表示不保存到数据库，只在逻辑上使用。
 // [1]表示标签名称；
-// [2]表示是标签显示特征（0-非tag的tab页；1-tag tab；2-tag 非tab；3-vip用户才显示的）。
+// [2]表示是标签显示特征：
+//      0-tab，非tag；
+//      1-tag tab；
+//      2-tag，非tab；
+//      3-vip用户才显示的。
 // [3]表示是否为key tag (0不是，1是)。
 // [4]表示tag 输入框的id（字符串，用于import/input页面）。
 $tag_control = array(
     array(tab_type::CONST_TOTAL,          "全部",             0,    0,      ""),
     array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
-    array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
+    // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
     array(tab_type::CONST_PERIOD,         "时间",             0,    1,      ""),                // vip tag.
+    array(tab_type::CONST_DIE,            "非正常死亡",        1,    1,      "die_tags"),       // vip tag.
+    // array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "国家民族",         1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
@@ -37,7 +43,7 @@ $tag_control = array(
     array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
     array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
-    array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
+    // array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
     array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
     array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
     array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
@@ -65,7 +71,7 @@ function get_tag_list_from_index($tag_index_id)
 }
 
 /**
- * 将 数组下标 转化为 tab id。 
+ * 将 数组下标 转化为 tag id。 
  * 返回值：大于 0 表示为数据库中真实的tag type id；小于 0表示 tab id；-100 表示非法值。
  */
 function get_tag_id_from_index($tag_index_id)
@@ -163,7 +169,7 @@ function is_show_input_tag($tag_index_id)
 }
 
 /**
- * 是否显示在list tab主界面的标签栏上.
+ * 是否显示在主界面的标签栏上. tag id + tab id.
  */
 function is_show_list_tab($tag_index_id)
 {
@@ -512,12 +518,12 @@ function get_tag_type_from_UUID($tag_UUID)
 /**
  * 获取符合条件的tags.
  */
-function get_tags_db($list_type, $tags_show_limit)
+function get_tags_db($tag_id, $tags_show_limit)
 {
-    switch ($list_type)
+    switch ($tag_id)
     {
         // 全部条目
-        case 1:
+        case tab_type::CONST_TOTAL:
             // 全部条目容许显示的 tag 数量翻倍.
             // 全部中不显示“出处”标签。
             $sql_string = "select property_UUID, property_name, property_type from property where property_type != 3 order by hot_index desc
@@ -525,7 +531,7 @@ function get_tags_db($list_type, $tags_show_limit)
             break;
 
         // 我的关注
-        case 2:
+        case tab_type::CONST_MY_FOLLOW:
             $sql_string = "select property_UUID, property_name, property_type from property 
                     where property_UUID in(select property_UUID from follow
                     where user_UUID = '" . get_user_id() . "') order by hot_index desc
@@ -533,28 +539,27 @@ function get_tags_db($list_type, $tags_show_limit)
             break;
 
         // 最新，指1周内的
-        case 3:
+        case tab_type::CONST_NEWEST:
             $sql_string = "select property_UUID, property_name, property_type from property 
                     where DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(add_time) order by add_time DESC 
                     limit 0, " . $tags_show_limit;
             break;
 
         // 分期
-        case 4:
+        case tab_type::CONST_PERIOD:
             $sql_string = "select property_UUID, property_name, property_type from property
                      limit 0, " . $tags_show_limit;
             break;
 
         default:
-            $my_tag_id = get_tag_id_from_index($list_type);
-            if ($my_tag_id > 0)
+            if ($tag_id > 0)
             {
-                $sql_string = "select property_UUID, property_name, property_type from property where property_type = $my_tag_id 
-                     order by hot_index desc limit 0, " . $tags_show_limit;
+                $sql_string = "select property_UUID, property_name, property_type from property 
+                    where property_type = $tag_id order by hot_index desc limit 0, " . $tags_show_limit;
             }
             else 
             {
-                $GLOBALS['log']->error("error: get_tags_db() -- list_type error 。");
+                $GLOBALS['log']->error("error: get_tags_db() -- tag_type error 。");
                 return NULL;
             }
     }
@@ -621,7 +626,7 @@ function get_tag_param_array_from_thing($thing_substirng, $order_substring)
         $GLOBALS['log']->error("error: get_tag_param_array_from_thing() -- $sql_string 。");
         return NULL;
     }
-    $GLOBALS['log']->error("test: get_tag_param_array_from_thing() -- $sql_string 。");
+    // $GLOBALS['log']->error("test: get_tag_param_array_from_thing() -- $sql_string 。");
     
     return $result;
 }

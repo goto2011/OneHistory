@@ -17,6 +17,8 @@
         list_control_init();
     }
     
+    print_list_param();
+        
     /**
      * 清除检索条件相关字段。
      */
@@ -35,7 +37,7 @@
         if ($_GET['search_key'] != "")
         {
             set_is_search(1);
-            set_search_tag_type(get_tag_id_from_index(get_current_list_id()));
+            set_search_tag_type(get_current_tag_id());
         }
         set_search_key(html_encode($_GET['search_key']));
         

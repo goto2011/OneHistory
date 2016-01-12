@@ -10,7 +10,7 @@
     require_once "list_control.php";
     
     // 判断当前list table id 是否为人物页面。
-    if (get_tag_id_from_index(get_current_list_id()) != get_person_tag_id())
+    if (!is_person(get_current_tag_id()))
     {
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
@@ -99,7 +99,7 @@
         
         // 打印标签
         echo "<br />";
-        $tags_array = get_tags_array(get_current_list_id());
+        $tags_array = get_tags_array(get_current_tag_id());
         
         $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
         
@@ -133,7 +133,7 @@
         }
         else
         {
-            $my_array = get_thing_substring(get_current_list_id());
+            $my_array = get_thing_substring(get_current_tag_id());
         }
         $thing_substring = $my_array[0];
         $join_substring = $my_array[1];

@@ -10,6 +10,7 @@
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
     {
         set_current_list($_GET['list_type']);
+        print_list_param();
     }
     
     if (check_list_param() == false)
@@ -102,22 +103,19 @@ window.onload = function()
         // 打印"全部"(super tag)
         echo "<a id='tag_super' href='item_frame.php?property_UUID=all'>全部</a>";
         
-        // 打印一般的标签区. 2015-4-19
-        $my_tag_id = get_tag_id_from_index(get_current_list_id());
-        
         // 非vip tag.
         if(is_vip_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据
-            $result = get_tags_db(get_current_list_id(), get_page_tags_size());
+            $result = get_tags_db(get_current_tag_id(), get_page_tags_size());
             
     		while($row = mysql_fetch_array($result))
     		{
     			echo create_tag_link($row['property_type'], $row['property_UUID'], $row['property_name']);
     		}
         }
-        // 是时期
-        else if(is_period(get_current_list_id()))
+        // 是时期tag。
+        else if(is_period(get_current_tag_id()))
         {
             echo "<br />";
             
@@ -131,9 +129,9 @@ window.onload = function()
         else if(is_vip_tag_tab(get_current_list_id()))
         {
             echo "<br />";
-            $tags_array = get_tags_array(get_current_list_id());
+            $tags_array = get_tags_array(get_current_tag_id());
             
-            $my_vip_tag = vip_tag_struct_init($my_tag_id);
+            $my_vip_tag = vip_tag_struct_init(get_current_tag_id());
             
             for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
             {
@@ -177,12 +175,12 @@ window.onload = function()
         $conn = open_db();
 	    
         // 算下 period 开始/结束.
-        if(is_period_tag(get_current_list_id()))
+        if(is_period_tag(get_current_tag_id()))
         {
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
         }
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
         // 获取thing数据表的数据. +1
         if(is_search())
@@ -194,33 +192,34 @@ window.onload = function()
         {
             $my_array = get_tag_search_substring(get_property_UUID());   // tag检索
         }
-        else if(is_period_tag(get_current_list_id()))
+        else if(is_period_tag(get_current_tag_id()))
         {
             $my_array = get_period_where_sub($begin_year, $end_year);   // 时期检索
         }
         else
         {
-            $my_array = get_thing_substring(get_current_list_id());     // 类型检索
+            $my_array = get_thing_substring(get_current_tag_id());     // 类型检索
         }
         $thing_substring = $my_array[0];
         $join_substring = $my_array[1];
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
         // 获得条目数量.
         $item_count = get_thing_count($thing_substring);
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step7");
+        $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
         // 打印搜索区
-        if(is_show_search_box(get_current_list_id()))
+        if(is_show_search_box(get_current_tag_id()))
         {
             print_search_zone();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
 		// 打印标签区. +1
 		print_tags_zone();
 		
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
+        
         // 计算总页数和当前页偏移量.
         $page_size = get_page_size();
         $offset = $page_size * (get_page() - 1);
@@ -234,19 +233,21 @@ window.onload = function()
             // +2
             print_tag_control();
         }
-        else if(is_period_tag(get_current_list_id()))
+        else if(is_period_tag(get_current_tag_id()))
         {
             print_period_info();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
+        
         // 打印“添加标签”输入框。2015-4-21
         if (is_show_add_tag())
         {
             print_add_tag_form();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
+        
         // 打印表头。
 		print_item_list_head();
 		
@@ -256,13 +257,13 @@ window.onload = function()
             $order_substring = add_order_page_substring($offset, $page_size);
             $thing_substring .= $order_substring;
             
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
             get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
             $result = get_thing_item_db($thing_substring);
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             
     		$index = $offset;
     		while($row = mysql_fetch_array($result))

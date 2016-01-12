@@ -18,20 +18,22 @@ require_once 'sql.php';
 
 // tab type 枚举量控制。
 // tab type id = list type id (list type / list id)， 即伟大的 $tag_control 的下标。
-// 而 tag type id (tag type / tag id) 是 tab type id的一部分。
+// 而 tag type id (tag type / tag id) 是 tab type id 的一部分。
 class tab_type {
     const CONST_TOTAL       = -1;
     const CONST_MY_FOLLOW   = -2; 
-    const CONST_NEWEST      = -3;
+    const CONST_NEWEST      = -3;  // deleted, 2016-01-10
     const CONST_PERIOD      = -4;
+    const CONST_DIE         = 15;  // add, 2016-01-10
+    const CONST_SOLUTION    = 16;  // add，2016-01-10
     const CONST_TOPIC       = 10;
     const CONST_COUNTRY     = 7;
     const CONST_DYNASTY     = 8;
     const CONST_LAND        = 14;
     const CONST_CITY        = 5;
     const CONST_PERSON      = 4;
-    const CONST_KEY_THING   = 11;
-    const CONST_OFFICE      = 9;
+    const CONST_KEY_THING   = 11;  // deleted, 2016-01-10
+    const CONST_OFFICE      = 9;   // deleted, 2016-01-10
     const CONST_FREE        = 6;
     const CONST_BEGIN       = 1;
     const CONST_END         = 2;
@@ -40,22 +42,21 @@ class tab_type {
     const CONST_MANAGER     = 12;
 }
 
-
-// 获取 list type 的数量
-function get_list_count()
-{
-    return tag_list_max();
-}
-
 // current list
 function set_current_list($cur_list)
 {
     $_SESSION['current_list'] = $cur_list;
+    $_SESSION['current_tag'] = get_tag_id_from_index($cur_list);
 }
 
 function get_current_list_id()
 {
     return $_SESSION['current_list'];
+}
+
+function get_current_tag_id()
+{
+    return $_SESSION['current_tag'];
 }
 
 /**
@@ -79,12 +80,12 @@ function list_control_init()
 {
     set_current_list(1);
     
-    for ($ii = 1; $ii <= get_list_count(); $ii++)
+    for ($ii = 1; $ii <= tag_list_max(); $ii++)
     {
         list_param_init($ii);
     }
     
-    $_SESSION['list_control_version'] = 4;
+    $_SESSION['list_control_version'] = 5;
     $_SESSION['list_control_inited'] = 1;
 }
 
@@ -133,14 +134,14 @@ function list_param_init($list_id)
 function print_list_param()
 {
     $list_info = get_current_list();
-    echo get_current_list_id() . " - " . get_list_count() . " - " . $list_info['page'] 
-        . " - " . $list_info['item_index'] . "<br/>";
+    return get_current_list_id() . " - " . get_current_tag_id() . " - " . tag_list_max() . " - " 
+        . $list_info['page'] . " - " . $list_info['item_index'] . "<br/>";
 }
 
 // 判断传入的参数是否 ok 
 function check_list_param()
 {
-    if((get_current_list_id() > get_list_count()) || (get_current_list_id() <= 0))
+    if((get_current_list_id() > tag_list_max()) || (get_current_list_id() <= 0))
     {
         return false;
     }
@@ -215,9 +216,9 @@ function get_item_index()
 }
 
 // 判断是不是 period tag.
-function is_period_tag($list_id)
+function is_period_tag($tag_id)
 {
-    return ((is_period($list_id) == 1) && (get_period_big_index() != -1) 
+    return ((is_period($tag_id) == 1) && (get_period_big_index() != -1) 
         && (get_period_small_index() != -1));
 }
 
@@ -311,38 +312,30 @@ function search_tag_type()
 }
 ///////////////////////////////////////////////////////////////////////////  
 /////////////////////////  tab页 管理方法 /////////////////////////////////
-/**
- * 是否是"全部"tab 页.
- */
-function is_total($list_id)
-{
-    return (get_tag_id_from_index($list_id) == tab_type::CONST_TOTAL);
-}
 
 /**
  * 是否是 我的关注 tab页。
  */
-function is_my_follow($list_id)
+function is_my_follow($tag_id)
 {
-    return (get_tag_id_from_index($list_id) == tab_type::CONST_MY_FOLLOW);
+    return ($tag_id == tab_type::CONST_MY_FOLLOW);
 }
 
 /**
  * 是否是 最新 tab页.
  */
-function is_newest($list_id)
+function is_newest($tag_id)
 {
-    return (get_tag_id_from_index($list_id) == tab_type::CONST_NEWEST);
+    return ($tag_id == tab_type::CONST_NEWEST);
 }
 
 /**
  * 是否是 period tab页.
  */
-function is_period($list_id)
+function is_period($tag_id)
 {
-    return (get_tag_id_from_index($list_id) == tab_type::CONST_PERIOD);
+    return ($tag_id == tab_type::CONST_PERIOD);
 }
-
 
 /**
  * 判断当前是否是 中国朝代 页面.
@@ -389,14 +382,6 @@ function is_person($tag_id)
 }
 
 /**
- * 获取 人物 tag type 的id。
- */
-function get_person_tag_id()
-{
-    return tab_type::CONST_PERSON;
-}
-
-/**
  * 判断当前是否是 key_thing 页面.
  */
 function is_key_thing($tag_id)
@@ -427,7 +412,6 @@ function get_note_tag_id()
 {
     return tab_type::CONST_NOTE;
 }
-
 
 /**
  * 判断当前是否是 管理 页面.

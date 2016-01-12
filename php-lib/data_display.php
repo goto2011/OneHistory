@@ -11,9 +11,9 @@
     }
     
     // 是否显示 “检索框”(只有 我的关注 没有检索。)
-    function is_show_search_box($list_id)
+    function is_show_search_box($tag_id)
     {
-        return (!is_my_follow($list_id) && !is_newest($list_id));
+        return (!is_my_follow($tag_id) && !is_newest($tag_id));
     }
     
     // 打印检索区
@@ -225,7 +225,7 @@
             }
         }
         
-        if(!is_tag() && !is_period_tag(get_current_list_id()) && !is_show_add_tag())
+        if(!is_tag() && !is_period_tag(get_current_tag_id()) && !is_show_add_tag())
         {
             echo "</div>";
         }

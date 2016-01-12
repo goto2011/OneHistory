@@ -15,6 +15,7 @@ $topic_big = array(
     "经济",
     "政治外交",
     "中国政治",
+    "变法",
     "其它"
 );
 
@@ -139,6 +140,8 @@ $topic = array
         array("经验主义哲学"),
         array("存在主义哲学"),
         array("后现代哲学"),
+        array("文艺复兴"),
+        array("启蒙运动"),
         
         array("儒家", "super", "multe-key", "儒家", "孔子", "孟子", "四书五经", "论语", "尚书", "中庸", 
                 "周易", "荀子", "董仲舒", "程颐", "朱熹", "陆九渊", "王阳明", "朱程理学", "心学"),
@@ -152,6 +155,7 @@ $topic = array
                 "吴起", "尉缭", "魏无忌", "白起", "司马法", "-500", "200"),
         array("马克思主义哲学", "normal", "multe-key", "马克思主义", "马列主义", "马克思", "恩格斯", 
                 "列宁", "斯大林"),
+        array("焚书坑儒"),
     ),
     array
     (
@@ -179,6 +183,8 @@ $topic = array
         array("IT行业"),
         array("私有制"),
         array("公有制"),
+        array("经济危机", "normal", "multe-key", "经济危机", "金融危机"),
+        array("1933年经济危机"),
     ),
     array
     (
@@ -214,18 +220,31 @@ $topic = array
         array("科举"),
         array("监察"),
         array("宗室"),
-        array("奴婢"),
-        array("士族"),
         array("外戚"),
-        array("权臣"),
         array("宦官"),
-        array("大臣杀皇帝"),
-        array("皇帝杀大臣"),
-        array("以少胜多"),
+        array("权臣"),
+        array("士族"),
+        array("奴婢"),
         array("中兴"),
         array("禅让"),
         array("边患"),
         array("党争"),
+        array("重庆谈判"),
+        array("延安整风运动"),
+        array("制宪国民大会"),
+    ),
+    array
+    (
+        // 变法
+        array("变法"),
+        array("商鞅变法"),
+        array("王安石变法"),
+        array("庆历新政"),
+        array("张居正变法"),
+        array("清末新政"),
+        array("改革开放"),
+        array("台湾十大建设"),
+        array("台湾民主转型"),
     ),
     array
     (
