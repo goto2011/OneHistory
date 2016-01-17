@@ -12,12 +12,12 @@
     require_once "list_control.php";
     
     // 检查 list control对象的状态和版本号。
-    if ((get_list_control_init_status() == 0) || (list_control_version_check(4) == 0))
+    // list_control 的版本号修改，需要两处修改。这是其中一处。
+    if ((get_list_control_init_status() == 0) || (list_control_version_check(5) == 0))
     {
         list_control_init();
+        $GLOBALS['log']->error("test1 - " . print_list_param());
     }
-    
-    print_list_param();
         
     /**
      * 清除检索条件相关字段。

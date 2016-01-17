@@ -816,7 +816,8 @@ function is_source_from_id($tag_uuid)
 }
 
 /**
- * 检查指定tag name是否为关键tag。=1 表示是，=0表示不是。
+ * 检查指定tag id是否为关键tag。
+ * 返回值：=1 表示是，=0表示不是。
  */
 function tag_is_vip($tag_uuid)
 {
@@ -855,6 +856,7 @@ function vip_tag_search_to_db($tag_index)
     // 根据下标 判断是否是 vip tag.
     if(is_vip_tag_tab($tag_index))
     {
+        $GLOBALS['log']->error("test1");
         $my_vip_tag = vip_tag_struct_init($tag_type);
         
         for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
@@ -926,6 +928,7 @@ function tag_search_to_db($search_sub, $tag_name, $tag_type)
 {
     // 1. 如果标签是新的, 则插入.
     $tag_uuid = insert_tag($tag_name, $tag_type);
+    // $GLOBALS['log']->error("test2 - " . $search_sub);
     
     if ($tag_uuid != "")
     {

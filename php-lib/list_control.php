@@ -24,22 +24,22 @@ class tab_type {
     const CONST_MY_FOLLOW   = -2; 
     const CONST_NEWEST      = -3;  // deleted, 2016-01-10
     const CONST_PERIOD      = -4;
-    const CONST_DIE         = 15;  // add, 2016-01-10
-    const CONST_SOLUTION    = 16;  // add，2016-01-10
-    const CONST_TOPIC       = 10;
-    const CONST_COUNTRY     = 7;
-    const CONST_DYNASTY     = 8;
-    const CONST_LAND        = 14;
-    const CONST_CITY        = 5;
-    const CONST_PERSON      = 4;
-    const CONST_KEY_THING   = 11;  // deleted, 2016-01-10
-    const CONST_OFFICE      = 9;   // deleted, 2016-01-10
-    const CONST_FREE        = 6;
     const CONST_BEGIN       = 1;
     const CONST_END         = 2;
     const CONST_RESURCE     = 3;
-    const CONST_NOTE        = 13;
+    const CONST_PERSON      = 4;
+    const CONST_CITY        = 5;
+    const CONST_FREE        = 6;
+    const CONST_COUNTRY     = 7;
+    const CONST_DYNASTY     = 8;
+    const CONST_OFFICE      = 9;   // deleted, 2016-01-10
+    const CONST_TOPIC       = 10;
+    const CONST_KEY_THING   = 11;  // deleted, 2016-01-10
     const CONST_MANAGER     = 12;
+    const CONST_NOTE        = 13;
+    const CONST_LAND        = 14;
+    const CONST_DIE         = 15;  // add, 2016-01-10
+    const CONST_SOLUTION    = 16;  // add，2016-01-10
 }
 
 // current list
@@ -85,6 +85,7 @@ function list_control_init()
         list_param_init($ii);
     }
     
+    // list_control 的版本号修改，需要两处修改。这是其中一处。
     $_SESSION['list_control_version'] = 5;
     $_SESSION['list_control_inited'] = 1;
 }

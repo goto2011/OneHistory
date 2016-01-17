@@ -232,6 +232,7 @@ $topic = array
         array("重庆谈判"),
         array("延安整风运动"),
         array("制宪国民大会"),
+        array("中国官员"),
     ),
     array
     (

@@ -213,9 +213,9 @@ function get_search_where_sub()
 // 根据条件检索 thing 表。
 function get_thing_item_by_key($search_sub, $tag_uuid)
 {
-    $sql_string = "select * from thing_time $search_sub and 
-        (uuid not in(select thing_UUID from thing_property where property_UUID='$tag_uuid'))
-        order by thing_time.year_order ASC ";
+    $sql_string = "select * from thing_time a $search_sub and 
+        (a.uuid not in(select thing_UUID from thing_property where property_UUID='$tag_uuid'))
+        order by a.year_order ASC ";
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

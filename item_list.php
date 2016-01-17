@@ -10,13 +10,12 @@
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))
     {
         set_current_list($_GET['list_type']);
-        print_list_param();
     }
     
     if (check_list_param() == false)
     {
         // debug.
-        print_list_param();
+        $GLOBALS['log']->error(print_list_param());
         error_exit("请按照正常流程访问本网站。谢谢。");
     }
 ?>
