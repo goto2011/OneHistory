@@ -15,6 +15,7 @@ $key_thing_big = array
 // 关键事件数组
 $key_thing = array
 (
+/*
     array
     (
         // 中国古代
@@ -162,14 +163,13 @@ $key_thing = array
     array
     (
         // 社会热点
-        array(""),
-        array(""),
-        array(""),
     ),
     array
     (
         // other
     )
+ * 
+ */
 );
 
 ?>

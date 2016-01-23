@@ -154,6 +154,7 @@ function ajax_do()
             'time_limit'    :document.getElementById("time_limit").value,
             'time_limit_type':get_checkbox_value("time_limit_type"),
             
+            'die_tags'      :document.getElementById("die_tags").value,
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,
@@ -162,8 +163,8 @@ function ajax_do()
             'free_tags'     :document.getElementById("free_tags").value,
             'dynasty_tags'  :document.getElementById("dynasty_tags").value,
             'topic_tags'    :document.getElementById("topic_tags").value,
-            'office_tags'   :document.getElementById("office_tags").value,
-            'key_tags'      :document.getElementById("key_tags").value,
+            // 'office_tags'   :document.getElementById("office_tags").value,
+            // 'key_tags'      :document.getElementById("key_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
             'note_tags'     :document.getElementById("note_tags").value,
             'land_tags'     :document.getElementById("land_tags").value,
@@ -335,7 +336,8 @@ function ajax_do()
 
 <p class="thick" id="time_label">时间(必需)：
 <input type="text" id="time" name="time" <?php flash_time($is_edit, $time); ?> />
-<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！支持4种格式: 距今3.13亿年; 公元前212年; 1979-4-5; 1999-6-4 2:00:00.
+<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！
+    支持4种格式: 距今3.13亿年;&nbsp;&nbsp;公元前212年;&nbsp;&nbsp;1979-4-5;&nbsp;&nbsp;1999-6-4 2:00:00.
 </nobr>
 
 <p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($is_edit, $time_limit); ?> ></input>
@@ -394,10 +396,10 @@ function ajax_do()
         {
             $tag_id = get_tag_id_from_index($ii);
             $tag_name = get_tag_list_name_from_index($ii);
-            $tag_input_id = get_tag_input_id_from_index($ii);
+            $tag_key = get_tag_key_from_index($ii);
             
-            $my_print = "<p class='thick'> $tag_name:<input id='$tag_input_id' 
-                    name='$tag_input_id' type='text' class='tags' value='" 
+            $my_print = "<p class='thick'> $tag_name:<input id='$tag_key' 
+                    name='$tag_key' type='text' class='tags' value='" 
                     . flash_tags($is_edit, $tag_id, $thing_uuid) . "'></p></td>";
             
             // "出处标签"需要顶格显示.
@@ -438,7 +440,14 @@ function ajax_do()
 <input type="hidden" id="originator" name="originator" value="<?php echo html_encode($_GET['update_once']); ?>">
 <input type="hidden" id="thing_length" name="thing_length" value="<?php echo get_thing_length(); ?>">
 
-<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<p>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <!--  公开范围（暂时删除）：
 <input type="reset" style="font-size:25pt" value="恢复到最初状态">
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

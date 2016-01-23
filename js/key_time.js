@@ -25,6 +25,7 @@ function tag_check(tag, tag_name)
 function tags_check()
 {
     var ret = 0;
+    ret += tag_check("die_tags", document.getElementById("die_tags").value);
     ret += tag_check("start_tags", document.getElementById("start_tags").value);
     ret += tag_check("end_tags", document.getElementById("end_tags").value);
     ret += tag_check("country_tags", document.getElementById("country_tags").value);
@@ -34,9 +35,9 @@ function tags_check()
     ret += tag_check("free_tags", document.getElementById("free_tags").value);
     ret += tag_check("dynasty_tags", document.getElementById("dynasty_tags").value);
     ret += tag_check("topic_tags", document.getElementById("topic_tags").value);
-    ret += tag_check("office_tags", document.getElementById("office_tags").value);
-    ret += tag_check("key_tags", document.getElementById("key_tags").value);
-    ret += tag_check("key_tags", document.getElementById("land_tags").value);
+    // ret += tag_check("office_tags", document.getElementById("office_tags").value);
+    // ret += tag_check("key_tags", document.getElementById("key_tags").value);
+    ret += tag_check("land_tags", document.getElementById("land_tags").value);
     
     return ret;
 }
@@ -84,6 +85,14 @@ $(function() {
 	});
 
 	$('#end_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#die_tags').tagsInput({
 		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,

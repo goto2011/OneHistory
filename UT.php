@@ -396,7 +396,8 @@
     assert('UT_get_time_from_native("2004年6月9日10点0分", time_string_to_seconds("2004-6-9 10:00:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("一九三六年八月十九日五点二十五分", time_string_to_seconds("1936-8-19 5:25:00"), 4, 0, 3)');
     
-    assert('UT_get_time_from_native("2004-2-11 11:00:00", time_string_to_seconds("2004-2-11 11:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2016-01-16 19:00:00", time_string_to_seconds("2016-01-16 19:00:00"), 4, 0, 3)');
+    assert('UT_get_time_from_native("2004-02-11 11:00:00", time_string_to_seconds("2004-02-11 11:00:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004-2-11 11:35:00", time_string_to_seconds("2004-2-11 11:35:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004-2-23 6:10:00", time_string_to_seconds("2004-2-23 6:10:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("2004-2-2 16:10:00", time_string_to_seconds("2004-2-2 16:10:00"), 4, 0, 3)');

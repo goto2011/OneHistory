@@ -34,7 +34,7 @@ $tag_control = array(
     array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
     // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
     array(tab_type::CONST_PERIOD,         "时间",             0,    1,      ""),                // vip tag.
-    array(tab_type::CONST_DIE,            "非正常死亡",        1,    1,      "die_tags"),       // vip tag.
+    array(tab_type::CONST_DIE,            "非正常死亡",       1,    1,      "die_tags"),       // vip tag.
     // array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "国家民族",         1,    1,      "country_tags"),    // vip tag.
@@ -42,7 +42,7 @@ $tag_control = array(
     array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
     array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
+    // array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
     // array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
     array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
     array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
@@ -138,7 +138,7 @@ function get_key_tag_type_from_index($tag_index_id)
 /**
  * 根据数组下标 获取 tag input id 属性。 返回""表示非法值。
  */
-function get_tag_input_id_from_index($tag_index_id)
+function get_tag_key_from_index($tag_index_id)
 {
     $my_tag_list = get_tag_list_from_index($tag_index_id); 
     if ($my_tag_list != -1)
@@ -265,6 +265,7 @@ function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
     
+    // 处理出处细节。
     if (isset($tags_array['source_detail']))
     {
         $source_detail = html_encode($tags_array['source_detail']);
@@ -278,8 +279,8 @@ function insert_tag_from_input($tags_array, $thing_uuid)
     {
         if (is_show_input_tag($ii) == 1)
         {
-            $tag_input_id = get_tag_input_id_from_index($ii);
-            $tag_name = html_encode($tags_array[$tag_input_id]);
+            $tag_key = get_tag_key_from_index($ii);
+            $tag_name = html_encode($tags_array[$tag_key]);
             
             if(!empty($tag_name))
             {
@@ -821,6 +822,8 @@ function is_source_from_id($tag_uuid)
  */
 function tag_is_vip($tag_uuid)
 {
+    $GLOBALS['log']->error("tag_is_vip(): " . $tag_uuid);
+    
     $tag_array = array();
     // 获取 tag类型 和 tag名称.
     $tag_array = get_tag_from_tag_uuid($tag_uuid);

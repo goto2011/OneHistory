@@ -8,7 +8,6 @@
     {
         ajax_error_exit(error_id::ERROR_CONTEXT_EMPTY);
     }
-
 	$conn = open_db();
     
     // 检查输入数据的正确性。
@@ -90,6 +89,7 @@
                 if ($operate_type == 1)
                 {
                     @$time_array = get_time_from_native($my_array['time']);
+                    
                     // 如果当前时间字段无法识别，则返回所在行数。
                     if($time_array['status'] != "ok")
                     {
@@ -98,17 +98,21 @@
                 }
                 if ($operate_type == 2)
                 {
+                    // 是否保持序号。
                     if (is_index_inside_tag() == 1)
                     {
                         $thing_index_inside_tag++;
+                        // 保存内容
                         $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing'], $thing_index_inside_tag);
                     }
                     else 
                     {
+                        // 保存内容。
                         $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']);
                     }
         		    if ($thing_uuid != "")
                     {
+                        // 保存标签
                         insert_tag_from_input($_POST, $thing_uuid);
                     }
                     else 

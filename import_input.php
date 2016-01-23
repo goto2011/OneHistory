@@ -149,6 +149,7 @@ function ajax_do(operate_type)
             'originator'    :document.getElementById("originator").value,
             'context'       :remove_blank(remove_html_code(document.getElementById("context").value)),
             
+            'die_tags'      :document.getElementById("die_tags").value,
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,
@@ -158,8 +159,8 @@ function ajax_do(operate_type)
             'free_tags'     :document.getElementById("free_tags").value,
             'dynasty_tags'  :document.getElementById("dynasty_tags").value,
             'topic_tags'    :document.getElementById("topic_tags").value,
-            'office_tags'   :document.getElementById("office_tags").value,
-            'key_tags'      :document.getElementById("key_tags").value,
+            // 'office_tags'   :document.getElementById("office_tags").value,
+            // 'key_tags'      :document.getElementById("key_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
             'source_detail' :document.getElementById("source_detail").value,
             'note_tags'     :document.getElementById("note_tags").value,
@@ -189,14 +190,14 @@ function ajax_do(operate_type)
 <iframe src="./main_header.php" height="65px" width="100%" scrolling="no" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
-<font size="5" color="red" >批量数据录入</font><br>
+<font size="5" color="red" >数据导入</font><br>
 
 <table width="100%" border="0">
 <tr>
 <td width="50%">
 
 <!-- 事件内容输入 begin -->
-<p class="thick">导入内容：<textarea class="context" rows="10" cols="100" id="context" 
+<p class="thick">导入内容：<textarea class="context" rows="10" cols="80" id="context" 
     required=required autofocus="autofocus"></textarea></p>
 <div>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -205,8 +206,10 @@ function ajax_do(operate_type)
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     
-    <input type="submit" style="font-size:22pt; color:red" value="确认数据合法性" 
+    <input type="submit" style="font-size:22pt; color:red" value="检查数据" 
         id="check_data" onclick="ajax_do('check_data')" /> <!-- 提交 -->
     
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -222,8 +225,8 @@ function ajax_do(operate_type)
         <li>每行数据的格式如下：“时间，事件”。"，"是分隔符，分隔符之前为时间字段，之后都算事件字段。</li>
         <li>时间字段：时间格式多样，我们已经支持了五六十种，基本上常见的都支持了。 
             相关细节参见：<a href="../bbs/viewtopic.php?id=18" >如何完成批量数据导入？</a>第四节。</li>
-        <li>分隔符支持4种：
-        中文逗号“，”、英文逗号“,”、中文冒号“：”、英文冒号“:”。</li>
+        <li>分隔符支持2种：
+        中文逗号“，”、英文逗号“,”。</li>
     </ol>
 </td></tr>
   
@@ -240,10 +243,10 @@ function ajax_do(operate_type)
         if (is_show_input_tag($ii) == 1)
         {
             $tag_name = get_tag_list_name_from_index($ii);
-            $tag_input_id = get_tag_input_id_from_index($ii);
+            $tag_key = get_tag_key_from_index($ii);
             
-            $my_print = "<p class='thick'> $tag_name:<input id='$tag_input_id' 
-                    name='$tag_input_id' type='text' class='tags' ></p></td>";
+            $my_print = "<p class='thick'> $tag_name:<input id='$tag_key' 
+                    name='$tag_key' type='text' class='tags' ></p></td>";
             
             // "出处标签"需要顶格显示.
             if (is_source(get_tag_id_from_index($ii)))
@@ -306,15 +309,17 @@ function ajax_do(operate_type)
 </tr>
 </table>
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <input type="hidden" id="originator" value="<?php echo html_encode(get_import_token()) ?>">
-<input type="submit" style="font-size:22pt; color:red" id="update_data" onclick="ajax_do('update_data')" /> <!-- 提交 -->
+<input type="submit" style="font-size:22pt; color:red" value="数据导入" id="update_data" onclick="ajax_do('update_data')" /> <!-- 提交 -->
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <class="label" style="display:none; color: red;" id="update_data_label">
 
