@@ -179,7 +179,7 @@ function add_order_page_substring($offset, $page_size)
 */
 function get_thing_count($thing_substring)
 {
-    $sql_string = "select count(*) $thing_substring";
+    $sql_string = "select count(distinct a.uuid) $thing_substring";
     $result = mysql_query($sql_string);
     
     if($result == FALSE)
@@ -301,7 +301,7 @@ function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array,
 // 获取 thing 表的数据。
 function get_thing_item_db($thing_substring)
 {
-    $sql_string = " select * $thing_substring ";
+    $sql_string = " select distinct a.* $thing_substring ";
     
     $result = mysql_query($sql_string);
     if($result == FALSE)
@@ -309,8 +309,7 @@ function get_thing_item_db($thing_substring)
         $GLOBALS['log']->error("error: get_thing_item_db() -- $sql_string 。");
         return NULL;
     }
-    
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "Step26");
+    // $GLOBALS['log']->error("error: test -- $sql_string 。");
     
     return $result;
 }

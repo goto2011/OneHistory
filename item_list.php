@@ -179,7 +179,7 @@ window.onload = function()
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
         }
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
         // 获取thing数据表的数据. +1
         if(is_search())
@@ -202,22 +202,22 @@ window.onload = function()
         $thing_substring = $my_array[0];
         $join_substring = $my_array[1];
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
         // 获得条目数量.
         $item_count = get_thing_count($thing_substring);
         
-        $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
+        // $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
         // 打印搜索区
         if(is_show_search_box(get_current_tag_id()))
         {
             print_search_zone();
         }
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
 		// 打印标签区. +1
 		print_tags_zone();
 		
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
         
         // 计算总页数和当前页偏移量.
         $page_size = get_page_size();
@@ -237,7 +237,7 @@ window.onload = function()
             print_period_info();
         }
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
         
         // 打印“添加标签”输入框。2015-4-21
         if (is_show_add_tag())
@@ -245,7 +245,7 @@ window.onload = function()
             print_add_tag_form();
         }
         
-        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
+        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
         
         // 打印表头。
 		print_item_list_head();
@@ -256,13 +256,13 @@ window.onload = function()
             $order_substring = add_order_page_substring($offset, $page_size);
             $thing_substring .= $order_substring;
             
-            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
+            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
             get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
             $result = get_thing_item_db($thing_substring);
-            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             
     		$index = $offset;
     		while($row = mysql_fetch_array($result))

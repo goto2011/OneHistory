@@ -7,7 +7,7 @@ function get_page_size()
 {
     if (is_adder())
     {
-        $_SESSION['page_size'] = 80;    /// 多一些比较好。
+        $_SESSION['page_size'] = 120;    /// 多一些比较好。
     }
     else 
     {

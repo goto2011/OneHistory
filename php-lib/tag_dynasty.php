@@ -8,6 +8,9 @@ $dynasty_big = array
     "春秋战国列国",
     "地方政权",
     "周边少数民族",
+    "历史",
+    "现状",
+    "变法",
     "组织",
     "其它"
 );
@@ -199,6 +202,57 @@ $dynasty = array
         // 周边地区
         array("西藏", "super", "multe-key", "西藏", "藏传佛教", "达赖", "班禅"),
         array("新疆", "super", "multe-key", "新疆"),
+        array("台湾", "super", "multe-key", "台湾"),
+    ),
+    array
+    (
+        // 历史
+        array("皇权"),
+        array("太子"),
+        array("宰相"),
+        array("官制"),
+        array("科举"),
+        array("监察"),
+        array("宗室"),
+        array("外戚"),
+        array("宦官"),
+        array("权臣"),
+        array("士族"),
+        array("奴婢"),
+        array("中兴"),
+        array("禅让"),
+        array("边患"),
+        array("党争"),
+    ),
+    array
+    (
+        // 现状
+        array("重庆谈判"),
+        array("延安整风运动"),
+        array("制宪国民大会"),
+        array("土地制度", "super", "multe-key", "平分土地",  "均分土地",  "分配土地", "土地面积", 
+                "井田制", "初税亩", "摊丁入亩", "一条鞭法", "两税法", "租庸调制", "均田制", "土改", 
+                "土地改革", "土地承包", "土地权", "圈地", "土地法", "土地问题", "土地征收",
+                "地权", "拆迁", "强拆", "血拆"),
+        array("拆迁", "super", "multe-key", "拆迁", "强拆", "血拆", "土地征收"),
+        array("村民自治", "super", "multe-key", "村民自治", "村民选举", "村民直选", "村长", "村支书"),
+        array("司法独立", "super", "multe-key", "司法独立", "司法改革", "律师"),
+        array("言论自由", "super", "multe-key", "言论自由"),
+        array("出版自由", "super", "multe-key", "出版自由"),
+        array("中国官员", "super", "multe-key", "中国官员"),
+    ),
+    array
+    (
+        // 变法
+        array("变法"),
+        array("商鞅变法"),
+        array("王安石变法"),
+        array("庆历新政"),
+        array("张居正变法"),
+        array("清末新政"),
+        array("改革开放"),
+        array("台湾十大建设"),
+        array("台湾民主转型"),
     ),
     array
     (
@@ -206,7 +260,8 @@ $dynasty = array
         array("中国共产党", "super", "multe-key", "中国共产党", "中共"),
         array("中国国民党", "super", "multe-key", "国民党", "孙中山", "蒋介石"),
         array("民主进步党", "normal", "multe-key", "民主进步党", "民进党"),
-        array("人民解放军", "normal", "multe-key", "人民解放军", "解放军", "红军", "八路军", "新四军"),
+        array("人民解放军", "normal", "multe-key", "人民解放军", "解放军", "红军", "八路军", "新四军", 
+            "中央军委", "政委"),
     ),
     array
     (

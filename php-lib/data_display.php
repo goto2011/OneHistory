@@ -291,7 +291,14 @@
             {
                 $tag_id = get_tag_id_from_index($ii);
                 $tag_name = get_tag_list_name_from_index($ii);
-                echo "  <option value='$tag_id'>$tag_name</option>";
+                if (get_tag_id_from_index($ii) == get_current_tag_id())
+                {
+                    echo "  <option selected='selected' value='$tag_id'>$tag_name</option>";
+                }
+                else 
+                {
+                    echo "  <option value='$tag_id'>$tag_name</option>";
+                }
             }
         }
         
