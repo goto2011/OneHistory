@@ -615,7 +615,7 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
 /**
  * 根据 thing 检索子句获取相关的 tag 属性。
  */
-function get_tag_param_array_from_thing($thing_substirng, $order_substring)
+function get_tag_param_array_from_thing($thing_substirng, $order_substring, &$sql_string)
 {
     $sql_string = "select b.property_UUID, b.property_name, b.property_type, c.property_UUID, c.thing_UUID
             from property b inner join thing_property c on b.property_UUID=c.property_UUID 

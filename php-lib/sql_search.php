@@ -16,13 +16,51 @@ function is_complex_search($search_key)
     }
 }
 
+/*
+ *  去掉待检索字符串数组中的运算符。目的是提供给高亮检索关键字使用。2016-01-27
+ * 输入：待检索字符串。
+ * 输出：待检索字符串数组（只含关键字，不含运算符）。
+*/
+function get_highline_key_string($search_key)
+{
+    $key_array = trim_search_string($search_key);
+    
+    for ($ii = 0; $ii < count($key_array); $ii++)
+    {
+        if ((strlen(trim($key_array[$ii])) == 0) || ($key_array[$ii] == "(") || $key_array[$ii] == ")"
+            || ($key_array[$ii] == "and") || ($key_array[$ii] == "or") || ($key_array[$ii] == "+")
+            || ($key_array[$ii] == "-"))
+        {
+            array_splice($key_array, $ii, 1); 
+        }
+    }
+    return $key_array;
+}
+
+/*
+ * 对待检索字符串进行处理。2016-01-27
+ * 输入：待检索字符串。
+ * 输出：待检索字符串数组（按关键字和运算符进行分解）。
+*/
+function trim_search_string($search_key)
+{
+    $search_key = trim($search_key);
+    $search_key = str_replace("+", " + ", $search_key);
+    $search_key = str_replace("-", " - ", $search_key);
+    $search_key = str_replace("(", " ( ", $search_key);
+    $search_key = str_replace(")", " ) ", $search_key);
+    
+    return explode(" ", $search_key);
+}
+
+
 /**
  * 根据关键字生成 search 查询之条件子句.
  * 这个函数涉及到"自动将事件添加vip标签"，一旦出错，问题太大。轻易不能改。
  */
 function get_search_where_sub_native($search_key)
 {
-    $search_sub = "";
+    $search_sub = " ";
     
     // 增加检索时间的功能。
     $time_array = get_time_from_native($search_key);
@@ -31,13 +69,8 @@ function get_search_where_sub_native($search_key)
         return get_time_search_substring($time_array);
     }
     
-    $search_key = trim($search_key);
-    $search_key = str_replace("+", " + ", $search_key);
-    $search_key = str_replace("-", " - ", $search_key);
-    $search_key = str_replace("(", " ( ", $search_key);
-    $search_key = str_replace(")", " ) ", $search_key);
+    $key_array = trim_search_string($search_key);
     
-    $key_array = explode(" ", $search_key);
     // 这个正则表达式是对的, 但不合乎需求.
     // $key_array = preg_split("/\s+-\(\)/", $search_key);
     
@@ -133,12 +166,12 @@ function get_time_search_substring($time_array)
         // 年月日 和 年月日时分秒，都要精确查询。
         if (($time_array['time_type'] == 3) || ($time_array['time_type'] == 4))
         {
-            return " a.time = " . $time_array['time'] . " and a.time_type = " . $time_array['time_type'] . " ) ";
+            return " ( a.time = " . $time_array['time'] . " and a.time_type = " . $time_array['time_type'] . " ) ";
         }
         // 年份，使用范围查询条件。
         else
         {
-            return " a.year_order >= " . $time_array['time'] . " and a.year_order < " . ($time_array['time'] + 1) . " ) ";
+            return " ( a.year_order >= " . $time_array['time'] . " and a.year_order < " . ($time_array['time'] + 1) . " ) ";
         }
     }
     // 如果时间有上下限。对时间做模糊查询，因为模糊点好。
@@ -147,7 +180,7 @@ function get_time_search_substring($time_array)
         $year_order_min = get_year_order($time_array['time'] - $time_array['time_limit'], $time_array['time_type']);
         $year_order_max = get_year_order($time_array['time'] + $time_array['time_limit'], $time_array['time_type']);
         
-        return " a.year_order >= " . $year_order_min . " and a.time <= " . $year_order_max . " ) ";
+        return " ( a.year_order >= " . $year_order_min . " and a.time <= " . $year_order_max . " ) ";
     }
 }
  
@@ -161,6 +194,7 @@ function get_search_where_sub()
     
     // 从 session 中获取查询子句。
     $search_key = search_key();
+    
     // 获取当前所在的 tag。
     $search_tag_uuid = get_property_UUID();
     $search_tag_type = search_tag_type();

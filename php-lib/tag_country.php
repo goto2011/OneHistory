@@ -121,7 +121,7 @@ $country = array
         array("比利时"),
         array("挪威"),
         array("瑞典"),
-        array("乌克兰"),
+        array("乌克兰", "super", "multe-key", "乌克兰", "基辅", "克里米亚"),
         array("捷克"),
         array("丹麦"),
         array("芬兰"),

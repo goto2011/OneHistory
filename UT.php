@@ -9,31 +9,21 @@
 	require_once "data.php";
     require_once "sql.php";
     
-    // debug zone.
-    // get_time_from_native("前632.4");
-    // echo Date("Y-m-d H:i:s", strtotime("2004-2-11 11:35")) . "</br>";
-    // echo time_string_to_seconds("2004-2-11 11:35:00") . "</br>";
-    // get_time_from_native("2004年2月11日11时35分");
-    // get_time_from_native("2004-2-2 16:10:00");
-    // echo get_search_where_sub("1913-10-15") . "<br />";
-    // get_time_from_native("月");
-    // get_time_from_native("一九三六年八月十九日五时二十五分");
-    // get_time_from_native("2004年2月11日下午14点");
-    // get_time_from_native("2004年2月11日下午2点");
-    // echo time_string_to_seconds("2004-2-11 9:00:00") . "</br>";
-    // echo date("G", 1076461200) . "</br>";
-    // print_r(get_time_from_native("２０１０年"));
-    echo get_search_where_sub_native("中国 and 首都 and 财政") . "<br />";
-    
-    
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
     assert_options(ASSERT_WARNING, 0);
     assert_options(ASSERT_QUIET_EVAL, 1);
     
+    $error_case_count = 0;
+    
+    echo get_current_year() . "</br>";
+    
     //创建处理函数
     function my_assert_handler($file, $line, $code, $desc = null)
     {
+        global $error_case_count;
+        $error_case_count++;
+        
         echo "$file --- $line --- '' $code ''";
         if ($desc) {
             echo "<nobr style='color:red; '>:  $desc</nobr>";
@@ -45,22 +35,65 @@
     // 设置回调函数
     assert_options(ASSERT_CALLBACK, 'my_assert_handler');
     
-    ///////////////////////// UT begin /////////////////////////
-    ///////////////////////// dock /////////////////////////////
-    function UT_valid_time_string($time_string)
+    // debug zone.
+    // ok--0---18500--1--0--1
+    assert('UT_get_time_from_native("距今1.85万年前", -18500, 1, 0, 1)');
+    
+    ///////////////////////// UT begin /////////////////////////////////////
+    //////////////////////// 1.字符串分割 ///////////////////////////////////
+    echo "1.字符串分割</br>";
+    
+    function UT_string_compare($ori, $check)
     {
-        $my = get_time_from_native($time_string);
-        if ($my['status'] == "fail")
-        {
-            return TRUE;
-        }
-        else 
-        {
-            echo $my['status'] . "--" . $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
-                . "--" . $my['time_limit_type'] . "<-";
-            return FALSE;
-        }
+        return (trim($ori) === trim($check));
     }
+    $context = "1840年1月5日，道光二十年，前湖广总督林则徐正式就任两广总督。
+1838年12月31日，林则徐奉命为钦差大臣，赴广州查办海口禁烟事务，节制广东水师。
+1841年7月，道光二十一年，汉口、江夏水灾，灾民10余万，仕商设粥场救济。";
+
+    $context_array = array
+    (
+        "1840年1月5日，道光二十年，前湖广总督林则徐正式就任两广总督。",
+        "1838年12月31日，林则徐奉命为钦差大臣，赴广州查办海口禁烟事务，节制广东水师。",
+        "1841年7月，道光二十一年，汉口、江夏水灾，灾民10余万，仕商设粥场救济。",
+    );
+    
+    static $context_index = 0;
+    $token = strtok(html_encode(one_line_flag($context)), "\r");
+    while(($token != false) && (strlen($token) > 0))
+    {
+        assert('UT_string_compare($token, $context_array[$context_index++])');
+        $token = strtok("\r");
+    }
+    
+    function UT_splite_string($token, $time, $thing)
+    {
+        $my_array = splite_string($token);
+        return (($my_array['time'] == $time) && ($my_array['thing'] == $thing));
+    }
+    assert('UT_splite_string("2016-01-16 19:00:00，周口店北京人", "2016-01-16 19:00:00", "周口店北京人")');
+    assert('UT_splite_string("2016-01-16 19:00:00, 周口店北京人", "2016-01-16 19:00:00", " 周口店北京人")');
+    
+    assert('UT_splite_string("前730000年，周口店北京人", "前730000年", "周口店北京人")');
+    assert('UT_splite_string("前2100，禹建立,夏朝。", "前2100", "禹建立,夏朝。")');
+    assert('UT_splite_string("前730000年,周口店，北京人", "前730000年", "周口店，北京人")');
+    assert('UT_splite_string("前2100,禹建立，夏朝。", "前2100", "禹建立，夏朝。")');
+    assert('UT_splite_string("距今1.25万年前，在北极留下石器痕迹的巨兽猎人是最早进入北极圈的人类。这些能够适应寒冷气候的猎人显然至少在距今1.5万年前穿越了西伯利亚和白令海峡。"
+        , "距今1.25万年前", "在北极留下石器痕迹的巨兽猎人是最早进入北极圈的人类。这些能够适应寒冷气候的猎人显然至少在距今1.5万年前穿越了西伯利亚和白令海峡。")');
+    assert('UT_splite_string("距今1.85万年前，人类可能第一次到达了美洲。", "距今1.85万年前", "人类可能第一次到达了美洲。")');
+        
+    // assert('UT_splite_string("前2100：禹建立夏朝；夏朝。", "前2100", "禹建立夏朝；夏朝。")');
+    // assert('UT_splite_string("前730000年:周口店,北京人", "前730000年", "周口店,北京人")');
+    // assert('UT_splite_string("前2100:禹建立夏朝，夏朝。", "前2100", "禹建立夏朝，夏朝。")');
+    
+    //////////////////////// 2.时间识别 ///////////////////////////////////
+    // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
+    // time_limit_type: 1:年; 2:日; 3:秒.
+    // array("status"=>"init", "time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
+    echo "2.时间识别</br>";
+    
+    assert('days_to_time_string(time_string_to_days("-1975-10-3")) == "10/3/-1975"');
+    assert('days_to_time_string(time_string_to_days("2015-10-3")) == "10/3/2015"');
     
     function UT_get_time_from_native($time_string, $time, $time_type, 
                                 $time_limit, $time_limit_type)
@@ -73,100 +106,36 @@
         }
         else 
         {
-            echo $my['status'] . "--" . $my['time'] . "--" . $time . "--" . $my['time_type'] . "--" . $my['time_limit'] 
-                . "--" . $my['time_limit_type'] . "<-";
+            echo "Status-" . $my['status'] . "; Time-" . $my['time'] . "; Time_type-" . $my['time_type'] 
+                . "; Time_limit-" . $my['time_limit'] . "; Time_limit_type-" . $my['time_limit_type'] 
+                . " --- ";
             return FALSE;
         }
     }
-    
-    function UT_splite_string($token, $time, $thing)
-    {
-        $my_array = splite_string($token);
-        return (($my_array['time'] == $time) && ($my_array['thing'] == $thing));
-    }
-    
-    function UT_get_year_order($date_string, $year_order)
-    {
-        return float_cmp(get_year_order(get_time_number($date_string, 3), 3), $year_order, 8);
-    }
-    
-    function UT_chinese_to_number($chinese_str, $number)
-    {
-        if ($number != chinese_to_number($chinese_str))
-        {
-            echo chinese_to_number($chinese_str) . " -- ";
-            return FALSE;
-        }
-        else
-        {
-            return TRUE;
-        }
-    }
-    
-    function UT_number_to_chinese($number, $chinese_str)
-    {
-        if ($chinese_str != number_to_chinese($number))
-        {
-            echo number_to_chinese($number) . " -- ";
-            return FALSE;
-        }
-        else
-        {
-            return TRUE;
-        }
-    }
-    ///////////////////////// UT zone /////////////////////////
-    
-    UT_splite_string("前730000年，周口店北京人", "前730000年", "周口店北京人");
-    UT_splite_string("前7500年，彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
-    UT_splite_string("前7000年，裴李岗文化", "前7000年", "裴李岗文化");
-    UT_splite_string("前6000年，磁山文化", "前6000年", "磁山文化");
-    UT_splite_string("前3000年，龙山文化", "前3000年", "龙山文化");
-    UT_splite_string("前2100，禹建立夏朝。", "前2100", "禹建立夏朝。");
-    
-    UT_splite_string("前730000年,周口店北京人", "前730000年", "周口店北京人");
-    UT_splite_string("前7500年,彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
-    UT_splite_string("前7000年,裴李岗文化", "前7000年", "裴李岗文化");
-    UT_splite_string("前6000年,磁山文化", "前6000年", "磁山文化");
-    UT_splite_string("前3000年,龙山文化", "前3000年", "龙山文化");
-    UT_splite_string("前2100,禹建立夏朝。", "前2100", "禹建立夏朝。");
-    
-    UT_splite_string("前730000年：周口店,北京人", "前730000年", "周口店,北京人");
-    UT_splite_string("前7500年：彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
-    UT_splite_string("前7000年：裴李岗文化", "前7000年", "裴李岗文化");
-    UT_splite_string("前6000年：磁山文化：是个好文化", "前6000年", "磁山文化：是个好文化");
-    UT_splite_string("前3000年：龙山文化", "前3000年", "龙山文化");
-    UT_splite_string("前2100：禹建立夏朝，夏朝。", "前2100", "禹建立夏朝，夏朝。");
-    
-    UT_splite_string("前730000年:周口店,北京人", "前730000年", "周口店,北京人");
-    UT_splite_string("前7500年:彭头山文化，最早出现稻谷的中国史前文化", "前7500年", "彭头山文化，最早出现稻谷的中国史前文化");
-    UT_splite_string("前7000年:裴李岗文化", "前7000年", "裴李岗文化");
-    UT_splite_string("前6000年:磁山文化：是个好文化", "前6000年", "磁山文化：是个好文化");
-    UT_splite_string("前3000年:龙山文化", "前3000年", "龙山文化");
-    UT_splite_string("前2100:禹建立夏朝，夏朝。", "前2100", "禹建立夏朝，夏朝。");
-    
-    UT_splite_string("前900年：凯尔特人出现在英格兰；爱尔兰文明出现。", "前900年", "凯尔特人出现在英格兰；爱尔兰文明出现。");
-    
-    echo "</br>";
-    
-    // time_type: 1:距今年; 2:公元年; 3:年月日; 4:年月日 时分秒.
-    // time_limit_type: 1:年; 2:日; 3:秒.
-    // array("status"=>"init", "time"=>0, "time_type"=>2, "time_limit"=>0, "time_limit_type"=>1, "is_bc"=>0);
-    
-    assert('days_to_time_string(time_string_to_days("-1975-10-3")) == "10/3/-1975"');
-    assert('days_to_time_string(time_string_to_days("2015-10-3")) == "10/3/2015"');
     assert('UT_get_time_from_native("31000年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("310 00年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("3.5亿年前", -350000000, 1, 0, 1)');
     assert('UT_get_time_from_native("400.65万年前", -4006500, 1, 0, 1)');
     assert('UT_get_time_from_native("400. 65万年前", -4006500, 1, 0, 1)');
+    assert('UT_get_time_from_native("1.85万年前", -18500, 1, 0, 1)');
+    assert('UT_get_time_from_native("1.25万年前", -12500, 1, 0, 1)');
+    assert('UT_get_time_from_native("12500年前", -12500, 1, 0, 1)');
     
-    assert('UT_get_time_from_native("公元前7000年", -7000, 2, 0, 1)');
+    assert('UT_get_time_from_native("距今31000年前", -31000, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今310 00年前", -31000, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今3.5亿年前", -350000000, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今400.65万年前", -4006500, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今400. 65万年前", -4006500, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今1.85万年前", -18500, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今1.25万年前", -12500, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今12500年前", -12500, 1, 0, 1)');
+    assert('UT_get_time_from_native("距今7000年前", -7000, 1, 0, 1)');
+    
     assert('UT_get_time_from_native("7000年前", -7000, 1, 0, 1)');
+    assert('UT_get_time_from_native("公元前7000年", -7000, 2, 0, 1)');
     
     assert('UT_get_time_from_native("1876年", 1876, 2, 0, 1)');
     assert('UT_get_time_from_native("1876 年", 1876, 2, 0, 1)');
-    
     assert('UT_get_time_from_native("1955年7月1日", time_string_to_days("1955-7-1"), 3, 0, 1)');
     assert('UT_get_time_from_native("195 5年7月 1日", time_string_to_days("1955-7-1"), 3, 0, 1)');
     assert('UT_get_time_from_native("1955-7-1", time_string_to_days("1955-7-1"), 3, 0, 1)');
@@ -433,8 +402,25 @@
     assert('UT_get_time_from_native("1920年12月31日晚上11点30分",  time_string_to_seconds("1920-12-31 23:30:00"), 4, 0, 3)');
     assert('UT_get_time_from_native("1920年12月31日中午12点半", time_string_to_seconds("1920-12-31 12:30:00"), 4, 0, 3)');
     
+    // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。
     
-    // 不应该识别成时间字符串的。
+    //////////////////////// 3.不应该识别成时间的字符串 ///////////////////////////////////
+    echo "3.不应该识别成时间的字符串</br>";
+    
+    function UT_valid_time_string($time_string)
+    {
+        $my = get_time_from_native($time_string);
+        if ($my['status'] == "fail")
+        {
+            return TRUE;
+        }
+        else 
+        {
+            echo $my['status'] . "--" . $my['time'] . "--" . $my['time_type'] . "--" . $my['time_limit'] 
+                . "--" . $my['time_limit_type'] . " --- ";
+            return FALSE;
+        }
+    }
     assert('UT_valid_time_string("那一年")');
     assert('UT_valid_time_string("月")');
     assert('UT_valid_time_string("日")');
@@ -459,9 +445,9 @@
     assert('UT_valid_time_string("分钟")');
     assert('UT_valid_time_string("秒钟")');
     
-    echo "</br>";
     
-    // assert('UT_get_time_from_native("19390901",      time_string_to_days("19390901"), 3, 0, 1)'); // 不支持。
+    //////////////////////// 4.闰年识别 ///////////////////////////////////
+    echo "4.闰年识别</br>";
     
     assert('is_leap_year(1980)');
     assert('!is_leap_year(1981)');
@@ -469,67 +455,144 @@
     assert('is_leap_year(2000)');
     assert('is_leap_year(2016)');
     
+    //////////////////////// 5.星期识别 ///////////////////////////////////
+    echo "5.星期识别</br>";
     assert('get_weekday(2015, 1, 24) == 6');
+    assert('get_weekday(2016, 1, 28) == 4');
+    assert('get_weekday(1997, 6, 2) == 1');
     
+    //////////////////////// 6.模式识别. 太少！ ///////////////////////////////////
+    echo "6.模式识别</br>";
     assert('preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", "likecat@gmail.com")');
     assert('preg_match("/^[\w\-\.]+@[\w\-\.]+(\.\w+)+$/", "451877089@qq.com")');
     
-    assert('UT_get_year_order("2015-1-2", 2015.002739726)');
-    assert('UT_get_year_order("2015-6-31", 2015.495890411)');
-    assert('UT_get_year_order("2015-11-31", 2015.9150684932)');
-    assert('UT_get_year_order("2015-12-31", 2015.997260274)');
-    // echo get_year_order(get_time_number("-581-1-15", 3), 3);
+    //////////////////////// 7.时间顺序数识别. ///////////////////////////////////
+    echo "7.时间顺序数识别</br>";
     
-    echo "</br>";
-    
-    echo get_search_where_sub_native("中国 首都 财政") . " <br />aaa";
-    echo get_search_where_sub_native("中国 and 首都 and 财政") . " <br />";
-    echo get_search_where_sub_native("蒋介石 or 毛泽东") . "<br />";
-    echo get_search_where_sub_native("唐朝 and 诗人 - 李白") . "<br />";
-    echo get_search_where_sub_native("唐朝 and ( 诗人 - ( 李白 or 杜甫 ) )") . "<br />";
-    echo get_search_where_sub_native("1913-10-15") . "<br />";
-    echo get_search_where_sub_native("2013-10-15 12:01:35") . "<br />";
-    echo get_search_where_sub_native("1913年春天") . "<br />";
-    echo get_search_where_sub_native("1913年夏天") . "<br />";
-    echo get_search_where_sub_native("1913年秋天") . "<br />";
-    echo get_search_where_sub_native("1913年冬天") . "<br />";
-    echo get_search_where_sub_native("1913年上半年") . "<br />";
-    echo get_search_where_sub_native("1913年下半年") . "<br />";
-    echo get_search_where_sub_native("公元前476年春天") . "<br />";
-    echo get_search_where_sub_native("公元前476年夏天") . "<br />";
-    echo get_search_where_sub_native("公元前476年秋天") . "<br />";
-    echo get_search_where_sub_native("公元前476年冬天") . "<br />";
-    echo get_search_where_sub_native("公元前476年上半年") . "<br />";
-    echo get_search_where_sub_native("公元前476年下半年") . "<br />";
-    echo get_search_where_sub_native("1913-10") . "<br />";
-    echo get_search_where_sub_native("1913") . "<br />";
-    echo get_search_where_sub_native("公元前221") . "<br />";
-    echo get_search_where_sub_native("-1720") . "<br />";
-    echo get_search_where_sub_native("260万年前") . "<br />";
-    echo get_search_where_sub_native("45.56亿年前") . "<br />";
-    
-    echo "</br>";
-    
-    $context = "1840年1月5日，道光二十年，前湖广总督林则徐正式就任两广总督。
-1838年12月31日，林则徐奉命为钦差大臣，赴广州查办海口禁烟事务，节制广东水师。
-1841年7月，道光二十一年，汉口、江夏水灾，灾民10余万，仕商设粥场救济。";
-    $token = strtok(html_encode(one_line_flag($context)), "\r");
-    while(($token != false) && (strlen($token) > 0))
+    function UT_get_year_order($time_number, $time_type, $check)
     {
-        echo $token . " -- <br />";
-        $token = strtok("\r");
+        if (float_cmp(get_year_order($time_number, $time_type), $check, 8) == FALSE)
+        {
+            echo get_year_order($time_number, $time_type) . "</br>";
+            return FALSE;
+        }
+        return TRUE;
     }
     
-    echo "</br>";
+    assert('UT_get_year_order(-5000, 1, "-2984")');
+    assert('UT_get_year_order(-85000, 1, "-82984")');
+    assert('UT_get_year_order(-85000000, 1, "-84997984")');
+    assert('UT_get_year_order(-18220000000, 1, "-18219997984")');
+    assert('UT_get_year_order(-18220000000, 2, "-18220000000")');
+    assert('UT_get_year_order(-1822, 2, "-1822")');
+    assert('UT_get_year_order(654, 2, "654")');
+    assert('UT_get_year_order(654, 3, "-4712.7917808219")');
+    assert('UT_get_year_order(1132240, 3, "-1614.904109589")');
+    assert('UT_get_year_order(1732240, 3, "30.613698630137")');
+    assert('UT_get_year_order(2222654, 3, "1373.2931506849")');
+    assert('UT_get_year_order(2451654, 3, "2000.2630136986")');
+    assert('UT_get_year_order(2457585, 3, "2016.501369863")');
+    assert('UT_get_year_order(3222654, 3, "4111.1452054795")');
+    assert('UT_get_year_order(-1822, 4, "1970")');
+    assert('UT_get_year_order(654, 4, "1970")');
+    assert('UT_get_year_order(1132240, 4, "1970.0356164384")');
+    assert('UT_get_year_order(17322400, 4, "1970.5479452055")');
+    assert('UT_get_year_order(222265400, 4, "1977.0410958904")');
+    assert('UT_get_year_order(245165400, 4, "1977.7671232877")');
+    assert('UT_get_year_order(1457554000, 4, "2016.1890410959")');
+    assert('UT_get_year_order(322265400000, 4, "12182.180821918")');
     
-    print_r(explode(",", "123, 456"));
-    print_r(explode(",", "123 456"));
-    print_r(explode(",", ""));
-    print_r(explode(",", "123 , "));
-    echo "</br>";
+    // assert('UT_get_year_order("2015-1-2", 2015.002739726)');
+    // assert('UT_get_year_order("2015-6-31", 2015.495890411)');
+    // assert('UT_get_year_order("2015-11-31", 2015.9150684932)');
+    // assert('UT_get_year_order("2015-12-31", 2015.997260274)');
     
-    echo "</br>";
+    //////////////////////// 8.检索条件生成. 太少！ ///////////////////////////////////
+    echo "8.检索条件生成</br>";
     
+    function UT_get_search_where_sub_native($ori, $check)
+    {
+        $search_where = trim(str_replace("  ", " ", get_search_where_sub_native($ori)));
+        return ($search_where === trim($check));
+    }
+    // echo get_search_where_sub_native("蒋介石 or 毛泽东") . "<br />";
+    
+    $check_string = "( a.thing like '%中国%' ) or ( a.thing like '%首都%' ) or ( a.thing like '%财政%' ) ";
+    assert('UT_get_search_where_sub_native("中国 首都 财政", $check_string)');
+    
+    $check_string = "( a.thing like '%中国%' ) and ( a.thing like '%首都%' ) and ( a.thing like '%财政%' ) ";
+    assert('UT_get_search_where_sub_native("中国 and 首都 and 财政", $check_string)');
+    
+    $check_string = "( a.thing like '%蒋介石%' ) or ( a.thing like '%毛泽东%' ) ";
+    assert('UT_get_search_where_sub_native("蒋介石 or 毛泽东", $check_string)');
+    
+    $check_string = "( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) ";
+    assert('UT_get_search_where_sub_native("唐朝 and 诗人 - 李白", $check_string)');
+    
+    $check_string = "( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) ";
+    assert('UT_get_search_where_sub_native("唐朝 and 诗人 - 李白", $check_string)');
+    
+    $check_string = "( a.thing like '%唐朝%' ) or ( a.thing like '%诗人%' ) or ( a.thing like '%李白%' ) ";
+    assert('UT_get_search_where_sub_native("唐朝 + 诗人 + 李白", $check_string)');
+    
+    $check_string = "( a.time = 2420069 and a.time_type = 3 ) ";
+    assert('UT_get_search_where_sub_native("1913-10-15", $check_string)');
+    
+    $check_string = "( a.time = 1381809695 and a.time_type = 4 ) ";
+    assert('UT_get_search_where_sub_native("2013-10-15 12:01:35", $check_string)');
+    
+    $check_string = "( a.year_order >= 1913.1616438356 and a.time <= 1913.4082191781 ) ";
+    assert('UT_get_search_where_sub_native("1913年春天", $check_string)');
+    $check_string = "( a.year_order >= 1913.4109589041 and a.time <= 1913.6575342466 ) ";
+    assert('UT_get_search_where_sub_native("1913年夏天", $check_string)');
+    $check_string = "( a.year_order >= 1913.6630136986 and a.time <= 1913.9095890411 ) ";
+    assert('UT_get_search_where_sub_native("1913年秋天", $check_string)');
+    $check_string = "( a.year_order >= 1913.9150684932 and a.time <= 1914.1616438356 ) ";
+    assert('UT_get_search_where_sub_native("1913年冬天", $check_string)');
+    $check_string = "( a.year_order >= 1913 and a.time <= 1913.4904109589 ) ";
+    assert('UT_get_search_where_sub_native("1913年上半年", $check_string)');
+    $check_string = "( a.year_order >= 1913.498630137 and a.time <= 1913.9917808219 ) ";
+    assert('UT_get_search_where_sub_native("1913年下半年", $check_string)');
+    $check_string = "( a.year_order >= -476.16438356164 and a.time <= -476.41095890411 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年春天", $check_string)');
+    $check_string = "( a.year_order >= -476.41369863014 and a.time <= -476.6602739726 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年夏天", $check_string)');
+    $check_string = "( a.year_order >= -476.66575342466 and a.time <= -476.91232876712 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年秋天", $check_string)');
+    $check_string = "( a.year_order >= -476.91780821918 and a.time <= -475.16164383562 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年冬天", $check_string)');
+    $check_string = "( a.year_order >= -477.99726027397 and a.time <= -476.49315068493 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年上半年", $check_string)');
+    $check_string = "( a.year_order >= -476.50136986301 and a.time <= -476.99452054795 ) ";
+    assert('UT_get_search_where_sub_native("公元前476年下半年", $check_string)');
+    $check_string = "( a.year_order >= 1913.7452054795 and a.time <= 1913.8273972603 ) ";
+    assert('UT_get_search_where_sub_native("1913-10", $check_string)');
+    $check_string = "( a.year_order >= 1913 and a.year_order < 1914 ) ";
+    assert('UT_get_search_where_sub_native("1913", $check_string)');
+    $check_string = "( a.year_order >= -221 and a.year_order < -220 ) ";
+    assert('UT_get_search_where_sub_native("公元前221", $check_string)');
+    $check_string = "( a.year_order >= -1720 and a.year_order < -1719 ) ";
+    assert('UT_get_search_where_sub_native("-1720", $check_string)');
+    $check_string = "( a.year_order >= -2600000 and a.year_order < -2599999 ) ";
+    assert('UT_get_search_where_sub_native("260万年前", $check_string)');
+    $check_string = "( a.year_order >= -4556000000 and a.year_order < -4555999999 ) ";
+    assert('UT_get_search_where_sub_native("45.56亿年前", $check_string)');
+
+    //////////////////////// 9.中文数字互转 ///////////////////////////////////
+    echo "9.中文数字互转</br>";
+    
+    function UT_chinese_to_number($chinese_str, $number)
+    {
+        if ($number != chinese_to_number($chinese_str))
+        {
+            echo chinese_to_number($chinese_str) . " -- ";
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
     assert('UT_chinese_to_number("一九八九", 1989)');
     assert('UT_chinese_to_number("一二三四五六七八九", 123456789)');
     assert('UT_chinese_to_number("１２３４５６７８９", 123456789)');
@@ -540,17 +603,67 @@
     assert('UT_chinese_to_number("一百", 100)');
     assert('UT_chinese_to_number("192Ο", 1920)');
     
+    function UT_number_to_chinese($number, $chinese_str)
+    {
+        if ($chinese_str != number_to_chinese($number))
+        {
+            echo number_to_chinese($number) . " -- ";
+            return FALSE;
+        }
+        else
+        {
+            return TRUE;
+        }
+    }
     // assert('UT_number_to_chinese(1989, "一九八九")');
     // assert('UT_number_to_chinese(123456789, "一二三四五六七八九")');
     // assert('UT_number_to_chinese(12345678900, "一二三四五六七八九ΟΟ")');
+    assert('UT_number_to_chinese(1, "一")');
+    assert('UT_number_to_chinese(10, "十")');
     assert('UT_number_to_chinese(19, "十九")');
     assert('UT_number_to_chinese(20, "二十")');
     assert('UT_number_to_chinese(21, "二十一")');
     // assert('UT_number_to_chinese(101, "一百零一")');
     
+    //////////////////////// 10.显示在 item_list 中的时间格式 ///////////////////////////////////
+    echo "10.显示在 item_list 中的时间格式</br>";
+    
+    function UT_get_time_string($time_number, $time_type, $check)
+    {
+        if (get_time_string($time_number, $time_type) != $check)
+        {
+            echo get_time_string($time_number, $time_type) . " - " . $check . "</br>";
+            return FALSE;
+        }
+        return TRUE;
+    }
+    assert('UT_get_time_string(-5000, 1, "距今5000年前")');
+    assert('UT_get_time_string(-85000, 1, "距今8.5万年前")');
+    assert('UT_get_time_string(-85000000, 1, "距今8500万年前")');
+    assert('UT_get_time_string(-18220000000, 1, "距今182.2亿年前")');
+    assert('UT_get_time_string(-18220000000, 2, "公元前18220000000年")');
+    assert('UT_get_time_string(-1822, 2, "公元前1822年")');
+    assert('UT_get_time_string(654, 2, "654年")');
+    assert('UT_get_time_string(654, 3, "公元前4712年-10月-16日")');
+    assert('UT_get_time_string(1132240, 3, "公元前1614年-11月-27日")');
+    assert('UT_get_time_string(1732240, 3, "30-8-13")');
+    assert('UT_get_time_string(2222654, 3, "1373-4-18")');
+    assert('UT_get_time_string(2451654, 3, "2000-4-6")');
+    assert('UT_get_time_string(2457554, 3, "2016-6-1")');
+    assert('UT_get_time_string(3222654, 3, "4111-2-23")');
+    assert('UT_get_time_string(-1822, 4, "1970-1-1 07:29:38")');
+    assert('UT_get_time_string(654, 4, "1970-1-1 08:10:54")');
+    assert('UT_get_time_string(1132240, 4, "1970-1-14 10:30:40")');
+    assert('UT_get_time_string(17322400, 4, "1970-7-20 19:46:40")');
+    assert('UT_get_time_string(222265400, 4, "1977-1-16 20:23:20")');
+    assert('UT_get_time_string(245165400, 4, "1977-10-8 21:30:00")');
+    assert('UT_get_time_string(1457554000, 4, "2016-3-10 04:06:40")');
+    assert('UT_get_time_string(322265400000, 4, "12182-3-8 22:40:00")');
+    assert('UT_get_time_string(1436319000, 4, "2015-7-8 09:30:00")');
+    
     
     echo "</br>";
-    
+    echo "<nobr style='color:red; '>Error case count: " . $error_case_count . "!</nobr>";
 
 
 ?>

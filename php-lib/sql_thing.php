@@ -267,13 +267,14 @@ function get_thing_substring($tag_id)
 function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array, &$tag_param_array)
 {
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
-    $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring);
+    $sql_string = "";
+    $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring, $sql_string);
     // $GLOBALS['log']->error(date('H:i:s') . "-" . "Step22");
     
     if($tag_id_result == NULL)
     {
         $GLOBALS['log']->error("error: get_tag_param_array_from_thing().");
-        return NULL;
+        return $sql_string;
     }
     
     while($my_tag_id_row = mysql_fetch_array($tag_id_result))
@@ -296,6 +297,8 @@ function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array,
             $tag_param_array[$tag_id_array['property_UUID']][1] = $tag_id_array['property_name'];
         }
     }
+    
+    return $sql_string;
 }
 
 // 获取 thing 表的数据。

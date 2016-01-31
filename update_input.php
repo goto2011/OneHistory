@@ -234,7 +234,10 @@ function ajax_do()
 		{
 			$thing = html_encode($row['thing']);
 			$time_type = html_encode($row['time_type']);
-			$time = get_time_string_lite(html_encode($row['time']), $time_type);
+            
+            // 2016-01-31：修改bug：公元前日期显示不正常。
+			$time = get_time_string(html_encode($row['time']), $time_type);
+			
 			$time_limit = html_encode($row['time_limit']);
             if ($time_limit == 0)$time_limit = null;
 			$time_limit_type = html_encode($row['time_limit_type']);
@@ -273,7 +276,7 @@ function ajax_do()
 	{
 		if($is_edit == 1)
 		{
-			echo " style='color:blue; font-weight:bold' value=$time ";
+			echo " style='color:blue; font-weight:bold' value='$time' ";
 		}
 	}
 	

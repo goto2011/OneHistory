@@ -40,7 +40,7 @@ function splite_string($token)
         // 不支持时间格式: “2016-01-16 19:00:00”(时间含冒号)。
         // array("length"=>strpos($token, "："), "token"=>"："),
         // array("length"=>strpos($token, ":"), "token"=>":"),
-       );
+    );
     
     $time_index = 0;
     $char_len = 0;

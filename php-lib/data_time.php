@@ -361,6 +361,7 @@ function get_year_order($time_number, $time_type)
     {
         $my_year_order = 0.0;
         $my_string = get_time_string_lite($time_number, $time_type);
+        // $my_string = get_time_string($time_number, $time_type);
         $my_array = explode("-", $my_string);
         
         if (count($my_array) == 3)
@@ -385,10 +386,17 @@ function get_year_order($time_number, $time_type)
     {
         return $time_number;
     }
+    // 针对“距今**年”。
     else 
     {
-        return $time_number + 2015; // this year is 2015.
+        return $time_number + get_current_year();
     }
+}
+
+// 返回当前年份
+function get_current_year()
+{
+    return date("Y",time());
 }
 
 // 将大于1亿的数字转换成1亿多少的字符串，将大于1万的数字转化为1万多少。
@@ -493,6 +501,7 @@ function get_time_from_native($native_string)
         $my_string = $native_string;
     }
     
+    // 是否有 hh:mm:ss，即时间。
     if(is_time($my_string))
     {
         $time_array['time'] = strtotime($my_string);
@@ -536,23 +545,25 @@ function get_time_from_native($native_string)
     // step 3: 搞定"距今 ... 年前"这种时间表达.
     if (stristr($native_string, "年前"))
     {
+        $my_number = floatval(str_replace("距今", "", $native_string));
+        
         if(stristr($native_string, "亿"))
         {
-            $time_array['time'] = 0 - 100000000 * floatval($native_string);
+            $time_array['time'] = 0 - 100000000 * $my_number;
         }
         else if(stristr($native_string, "万"))
         {
-            $time_array['time'] = 0 - 10000 * floatval($native_string);
+            $time_array['time'] = 0 - 10000 * $my_number;
         }
         else 
         {
-            $time_array['time'] = 0 - floatval($native_string);
+            $time_array['time'] = 0 - $my_number;
         }
         $time_array['time_type'] = 1;    /// 距今年
         $time_array['time_limit'] = 0;
         $time_array['time_limit_type'] = 1;
         $time_array['status'] = "ok";
-        
+
         return $time_array;
     }
     

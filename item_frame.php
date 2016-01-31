@@ -16,7 +16,7 @@
     if ((get_list_control_init_status() == 0) || (list_control_version_check(5) == 0))
     {
         list_control_init();
-        $GLOBALS['log']->error("test1 - " . print_list_param());
+        // $GLOBALS['log']->error("test1 - " . print_list_param());
     }
         
     /**

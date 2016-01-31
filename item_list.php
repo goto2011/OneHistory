@@ -164,7 +164,7 @@ window.onload = function()
 	// 打印表格(main)
 	function flash_item_list()
 	{
-	    $GLOBALS['log']->error(date('H:i:s') . "-" . "Thing_List_Begin.");
+	    // $GLOBALS['log']->error(date('H:i:s') . "-" . "Thing_List_Begin.");
         $thing_list_begin = strtotime("now");
         
         $thing_substring = "";
@@ -260,7 +260,8 @@ window.onload = function()
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
-            get_thing_tag_prompt($join_substring, $order_substring, $tag_id_array, $tag_param_array);
+            $my_sql_thing = get_thing_tag_prompt($join_substring, $order_substring, 
+                $tag_id_array, $tag_param_array);
             $result = get_thing_item_db($thing_substring);
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             
@@ -280,15 +281,30 @@ window.onload = function()
     			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
                 // 时间范围字段
     			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
-                // 事件字段
-    			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
-    				get_update_token() . "&item_index=" . $index . "'>" . $row['thing'] . "</a></td>";
-                
+    			
                 // 死亡人数、受伤人数、失踪人数、字数。
                 $person_count_string = print_person_count($row['related_number1'], 
                         $row['related_number2'], 
                         $row['related_number3'],
                         $row['related_number4']);
+                        
+                // 高亮 检索关键字。 2016-01-27
+                $thing_context = $row['thing'];
+                        
+    			if(is_search())
+                {
+                    $search_key = search_key();
+                    $key_array = get_highline_key_string($search_key);
+                    for ($ii = 0; $ii < count($key_array); $ii++)
+                    {
+                        $thing_context = preg_replace("/($key_array[$ii])/i", "<b style=\"color:red\">\\1</b>", 
+                            $thing_context);
+                    }
+                }
+                
+                // 事件字段
+    			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
+    				get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
                 
                 // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step14");
                 
@@ -300,6 +316,14 @@ window.onload = function()
     		
     		echo "</table>";
             print_list_control($item_count, $page_size, $pages, get_page());   // list control.
+            
+            // log print.
+            $time_diff = strtotime("now") - $thing_list_begin; 
+            if ($time_diff >= 0)
+            {
+                $GLOBALS['log']->error(date('H:i:s') . " - " . $time_diff . " - Thing_list_too_long! ");
+                $GLOBALS['log']->error("SQL string is: " . $my_sql_thing);
+            }
 		}
 
         if (is_tag())
@@ -314,12 +338,6 @@ window.onload = function()
         // exit
         mysql_close($conn);
         $conn = null;
-        
-        $time_diff = strtotime("now") - $thing_list_begin; 
-        if ($time_diff >= 0)
-        {
-            $GLOBALS['log']->error(date('H:i:s') . "-" . $time_diff . "-" . "Thing_List_End.");
-        }
 	}
 ?>
 

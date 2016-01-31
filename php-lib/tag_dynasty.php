@@ -237,7 +237,7 @@ $dynasty = array
         array("拆迁", "super", "multe-key", "拆迁", "强拆", "血拆", "土地征收"),
         array("村民自治", "super", "multe-key", "村民自治", "村民选举", "村民直选", "村长", "村支书"),
         array("司法独立", "super", "multe-key", "司法独立", "司法改革", "律师"),
-        array("言论自由", "super", "multe-key", "言论自由"),
+        array("言论自由", "super", "multe-key", "言论自由", "新闻自由"),
         array("出版自由", "super", "multe-key", "出版自由"),
         array("中国官员", "super", "multe-key", "中国官员"),
     ),
