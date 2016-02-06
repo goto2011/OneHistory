@@ -90,7 +90,7 @@
         
         $result_string = "<div align='left' style='font-family:微软雅黑'>";
         $result_string .= $person_count_string . "&nbsp;&nbsp;&nbsp;";
-            
+        
         // 数组中存在.
         if (array_key_exists($thing_UUID, $tag_id_array))
         {
@@ -110,12 +110,11 @@
         // 数组中不存在，则获取数据库的数据。
         if ($array_has_data == false)
         {
-            $result_string = "";
             $result = get_tags_from_thing_UUID($thing_UUID);
             
             if (mysql_num_rows($result) > 0)
             {
-                $result_string = "<div align='left' style='font-family:微软雅黑'>";
+                $result_string .= "<align='left' style='font-family:微软雅黑'>";
                 
                 while($row = mysql_fetch_array($result))
                 {

@@ -40,7 +40,7 @@
 </div>
 
 <div>
-    <a href="./item_frame.php?property_UUID=all" class="red_black_underline" target="_top">回到首页</a> |
+    <a href="./item_frame.php?property_UUID=main_all" class="red_black_underline" target="_top">回到首页</a> |
 <!--
 // 新增单个事件和批量事件合一。
     <a href="./update_input.php?update_once=<?php echo get_update_token(); ?>" class="red_black_underline"  target="_top">新增事件</a> |

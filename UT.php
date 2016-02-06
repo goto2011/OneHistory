@@ -512,70 +512,80 @@
     
     function UT_get_search_where_sub_native($ori, $check)
     {
-        $search_where = trim(str_replace("  ", " ", get_search_where_sub_native($ori)));
-        return ($search_where === trim($check));
+        $search_where = trim(get_search_where_sub_native($ori));
+        $search_where = str_replace("  ", " ", $search_where);
+        $search_where = str_replace("  ", " ", $search_where);
+        if ($search_where !== trim($check))
+        {
+            echo $search_where . "</br>";
+            return FALSE;
+        }
+        else 
+        {
+            return TRUE;
+        }
     }
     // echo get_search_where_sub_native("蒋介石 or 毛泽东") . "<br />";
     
-    $check_string = "( a.thing like '%中国%' ) or ( a.thing like '%首都%' ) or ( a.thing like '%财政%' ) ";
+    $check_string = "( ( a.thing like '%中国%' ) or ( a.thing like '%首都%' ) or ( a.thing like '%财政%' ) )";
     assert('UT_get_search_where_sub_native("中国 首都 财政", $check_string)');
     
-    $check_string = "( a.thing like '%中国%' ) and ( a.thing like '%首都%' ) and ( a.thing like '%财政%' ) ";
+    $check_string = "( ( a.thing like '%中国%' ) and ( a.thing like '%首都%' ) and ( a.thing like '%财政%' ) )";
     assert('UT_get_search_where_sub_native("中国 and 首都 and 财政", $check_string)');
     
-    $check_string = "( a.thing like '%蒋介石%' ) or ( a.thing like '%毛泽东%' ) ";
+    $check_string = "( ( a.thing like '%蒋介石%' ) or ( a.thing like '%毛泽东%' ) )";
     assert('UT_get_search_where_sub_native("蒋介石 or 毛泽东", $check_string)');
     
-    $check_string = "( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) ";
+    $check_string = "( ( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) )";
     assert('UT_get_search_where_sub_native("唐朝 and 诗人 - 李白", $check_string)');
     
-    $check_string = "( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) ";
+    $check_string = "( ( a.thing like '%唐朝%' ) and ( a.thing like '%诗人%' ) and not ( a.thing like '%李白%' ) )";
     assert('UT_get_search_where_sub_native("唐朝 and 诗人 - 李白", $check_string)');
     
-    $check_string = "( a.thing like '%唐朝%' ) or ( a.thing like '%诗人%' ) or ( a.thing like '%李白%' ) ";
+    $check_string = "( ( a.thing like '%唐朝%' ) or ( a.thing like '%诗人%' ) or ( a.thing like '%李白%' ) )";
     assert('UT_get_search_where_sub_native("唐朝 + 诗人 + 李白", $check_string)');
     
-    $check_string = "( a.time = 2420069 and a.time_type = 3 ) ";
+    $check_string = "( a.time = 2420069 and a.time_type = 3 )";
     assert('UT_get_search_where_sub_native("1913-10-15", $check_string)');
     
-    $check_string = "( a.time = 1381809695 and a.time_type = 4 ) ";
+    $check_string = "( a.time = 1381809695 and a.time_type = 4 )";
     assert('UT_get_search_where_sub_native("2013-10-15 12:01:35", $check_string)');
     
-    $check_string = "( a.year_order >= 1913.1616438356 and a.time <= 1913.4082191781 ) ";
+    $check_string = "( a.year_order >= 1913.1616438356 and a.time <= 1913.4082191781 )";
     assert('UT_get_search_where_sub_native("1913年春天", $check_string)');
-    $check_string = "( a.year_order >= 1913.4109589041 and a.time <= 1913.6575342466 ) ";
+    $check_string = "( a.year_order >= 1913.4109589041 and a.time <= 1913.6575342466 )";
     assert('UT_get_search_where_sub_native("1913年夏天", $check_string)');
-    $check_string = "( a.year_order >= 1913.6630136986 and a.time <= 1913.9095890411 ) ";
+    $check_string = "( a.year_order >= 1913.6630136986 and a.time <= 1913.9095890411 )";
     assert('UT_get_search_where_sub_native("1913年秋天", $check_string)');
-    $check_string = "( a.year_order >= 1913.9150684932 and a.time <= 1914.1616438356 ) ";
+    $check_string = "( a.year_order >= 1913.9150684932 and a.time <= 1914.1616438356 )";
     assert('UT_get_search_where_sub_native("1913年冬天", $check_string)');
-    $check_string = "( a.year_order >= 1913 and a.time <= 1913.4904109589 ) ";
+    $check_string = "( a.year_order >= 1913 and a.time <= 1913.4904109589 )";
     assert('UT_get_search_where_sub_native("1913年上半年", $check_string)');
-    $check_string = "( a.year_order >= 1913.498630137 and a.time <= 1913.9917808219 ) ";
+    $check_string = "( a.year_order >= 1913.498630137 and a.time <= 1913.9917808219 )";
     assert('UT_get_search_where_sub_native("1913年下半年", $check_string)');
-    $check_string = "( a.year_order >= -476.16438356164 and a.time <= -476.41095890411 ) ";
+    $check_string = "( a.year_order >= -476.16438356164 and a.time <= -476.41095890411 )";
     assert('UT_get_search_where_sub_native("公元前476年春天", $check_string)');
-    $check_string = "( a.year_order >= -476.41369863014 and a.time <= -476.6602739726 ) ";
+    $check_string = "( a.year_order >= -476.41369863014 and a.time <= -476.6602739726 )";
     assert('UT_get_search_where_sub_native("公元前476年夏天", $check_string)');
-    $check_string = "( a.year_order >= -476.66575342466 and a.time <= -476.91232876712 ) ";
+    $check_string = "( a.year_order >= -476.66575342466 and a.time <= -476.91232876712 )";
     assert('UT_get_search_where_sub_native("公元前476年秋天", $check_string)');
-    $check_string = "( a.year_order >= -476.91780821918 and a.time <= -475.16164383562 ) ";
+    $check_string = "( a.year_order >= -476.91780821918 and a.time <= -475.16164383562 )";
     assert('UT_get_search_where_sub_native("公元前476年冬天", $check_string)');
-    $check_string = "( a.year_order >= -477.99726027397 and a.time <= -476.49315068493 ) ";
+    $check_string = "( a.year_order >= -477.99726027397 and a.time <= -476.49315068493 )";
     assert('UT_get_search_where_sub_native("公元前476年上半年", $check_string)');
-    $check_string = "( a.year_order >= -476.50136986301 and a.time <= -476.99452054795 ) ";
+    $check_string = "( a.year_order >= -476.50136986301 and a.time <= -476.99452054795 )";
     assert('UT_get_search_where_sub_native("公元前476年下半年", $check_string)');
-    $check_string = "( a.year_order >= 1913.7452054795 and a.time <= 1913.8273972603 ) ";
+    $check_string = "( a.year_order >= 1913.7452054795 and a.time <= 1913.8273972603 )";
     assert('UT_get_search_where_sub_native("1913-10", $check_string)');
-    $check_string = "( a.year_order >= 1913 and a.year_order < 1914 ) ";
+    $check_string = "( a.year_order >= 1913 and a.year_order < 1914 )";
     assert('UT_get_search_where_sub_native("1913", $check_string)');
-    $check_string = "( a.year_order >= -221 and a.year_order < -220 ) ";
+    $check_string = "( a.year_order >= -221 and a.year_order < -220 )";
     assert('UT_get_search_where_sub_native("公元前221", $check_string)');
-    $check_string = "( a.year_order >= -1720 and a.year_order < -1719 ) ";
+    $check_string = "( a.year_order >= -1720 and a.year_order < -1719 )";
     assert('UT_get_search_where_sub_native("-1720", $check_string)');
-    $check_string = "( a.year_order >= -2600000 and a.year_order < -2599999 ) ";
+    $check_string = "( a.year_order >= -2600000 and a.year_order < -2599999 )";
     assert('UT_get_search_where_sub_native("260万年前", $check_string)');
-    $check_string = "( a.year_order >= -4556000000 and a.year_order < -4555999999 ) ";
+    $check_string = "( a.year_order >= -4556000000 and a.year_order < -4555999999 )";
     assert('UT_get_search_where_sub_native("45.56亿年前", $check_string)');
 
     //////////////////////// 9.中文数字互转 ///////////////////////////////////
@@ -660,6 +670,37 @@
     assert('UT_get_time_string(1457554000, 4, "2016-3-10 04:06:40")');
     assert('UT_get_time_string(322265400000, 4, "12182-3-8 22:40:00")');
     assert('UT_get_time_string(1436319000, 4, "2015-7-8 09:30:00")');
+    
+    
+    //////////////////////// 11.死伤人数 ///////////////////////////////////
+    echo "11.死伤、失踪人数；字数</br>";
+    
+    function UT_print_person_count($death_person_count, $hurt_person_count, 
+        $missing_person_count, $word_count, $check)
+    {
+        if (print_person_count($death_person_count, $hurt_person_count, $missing_person_count, $word_count)
+            != $check)
+        {
+            echo print_person_count($death_person_count, $hurt_person_count, $missing_person_count, $word_count)
+                . " --- " . $check . "</br>";
+            return FALSE;
+        }
+        return TRUE;
+    }
+    assert('UT_print_person_count(1, 0, 0, 0, "死-1")');
+    assert('UT_print_person_count(1, 2, 3, 0, "死-1;伤-2;失踪-3")');
+    assert('UT_print_person_count(0, 2, 3, 0, "伤-2;失踪-3")');
+    assert('UT_print_person_count(1, 0, 3, 0, "死-1;失踪-3")');
+    assert('UT_print_person_count(1, 2, 0, 0, "死-1;伤-2")');
+    assert('UT_print_person_count(1, 2, 3, 0, "死-1;伤-2;失踪-3")');
+    assert('UT_print_person_count(0, 0, 3, 0, "失踪-3")');
+    assert('UT_print_person_count(0, 0, 0, 4, "字数-4")');
+    
+    
+    //////////////////////// 12.VIP tag ///////////////////////////////////
+    echo "12.VIP tag</br>";
+    
+    
     
     
     echo "</br>";

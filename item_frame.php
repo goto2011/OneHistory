@@ -30,6 +30,18 @@
     }
     
     // 统一在 item_frame.php 中处理list的各种过滤器。规则如下：
+    // 0.控制栏点击“回到首页”，则清空所有条件
+    if ($_GET['property_UUID'] == "main_all")
+    {
+        set_period_big_index(-1);
+        set_period_small_index(-1);
+        
+        empty_search_params();
+        set_property_UUID("");
+        // 返回“全部”tab 页。
+        set_current_list(1);
+    }
+    
     // 1.search要和 tag、period 配合，所以第一优先。
     // 检索条件为空，或者用户点击 全部，或者某个tag，则清空检索。
     if (!empty($_GET['search_key']))
@@ -60,7 +72,7 @@
         empty_search_params();
         
         // all 即显示全部.
-        if ($_GET['property_UUID'] == "all")
+        if (($_GET['property_UUID'] == "all") || ($_GET['property_UUID'] == "main_all"))
         {
             set_property_UUID("");
         }

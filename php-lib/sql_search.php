@@ -124,7 +124,7 @@ function get_search_where_sub_native($search_key)
         } // for
     } // else
     
-    return $search_sub;
+    return " ( $search_sub ) ";
 }
  
 /**

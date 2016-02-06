@@ -319,7 +319,7 @@ window.onload = function()
             
             // log print.
             $time_diff = strtotime("now") - $thing_list_begin; 
-            if ($time_diff >= 0)
+            if ($time_diff >= 3)
             {
                 $GLOBALS['log']->error(date('H:i:s') . " - " . $time_diff . " - Thing_list_too_long! ");
                 $GLOBALS['log']->error("SQL string is: " . $my_sql_thing);
