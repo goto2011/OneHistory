@@ -199,16 +199,12 @@ function get_thing_substring($tag_id)
     {
         // 全部条目
         case tab_type::CONST_TOTAL:
-            // $sql_string = " from thing_time a ";
             $thing_string = " from thing_time a ";
             $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
     
         // 我的关注
         case tab_type::CONST_MY_FOLLOW:
-            // $sql_string = " from thing_time where UUID in(select thing_UUID from thing_property 
-            //     where property_UUID in(select property_UUID from follow
-            //     where user_UUID = '" . get_user_id() . "'))  ";
             $thing_string = " from thing_time a inner join thing_property c on a.UUID = c.thing_UUID 
                 inner join follow e on e.property_UUID = c.property_UUID 
                 and e.user_UUID = '" . get_user_id() . "' ";
@@ -218,11 +214,8 @@ function get_thing_substring($tag_id)
                 and e.user_UUID = '" . get_user_id() . "' ";
             break;
             
-        // 最新，指7天内新建的标签
+        // 最新，指7天内新建的标签(暂时删除)
         case tab_type::CONST_NEWEST:
-            // $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property 
-            //     where property_UUID in(select property_UUID from property 
-            //     where DATE_SUB(CURDATE(), INTERVAL 1 DAY) <= date(add_time)))  ";
             $thing_string = " from thing_time a join thing_property c on a.UUID = c.thing_UUID  
                 inner join property b on b.property_UUID = c.property_UUID 
                 and DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(b.add_time) ";
@@ -233,7 +226,6 @@ function get_thing_substring($tag_id)
 
         // 分期
         case tab_type::CONST_PERIOD:
-            // $sql_string = " from thing_time a ";
             $thing_string = " from thing_time a ";
             $join_substring = " inner join thing_time a on c.thing_UUID = a.uuid ";
             break;
@@ -241,9 +233,6 @@ function get_thing_substring($tag_id)
         default:
             if ($tag_id > 0)
             {
-                // $sql_string = " from thing_time a where UUID in(select thing_UUID from thing_property
-                //    where property_UUID in(select property_UUID from property where 
-                //    property_type = $my_tag_id))  ";
                 $thing_string = " from thing_time a inner join thing_property c on c.thing_UUID = a.UUID
                         inner join property b on b.property_UUID = c.property_UUID 
                         and b.property_type = $tag_id ";
@@ -263,6 +252,7 @@ function get_thing_substring($tag_id)
 
 /**
  * 完成 事件、标签、事件-标签对的三表联合查询。
+ * 返回 sql 语句是为了打印log，因为这个函数是整个系统的瓶颈。
  */
 function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array, &$tag_param_array)
 {

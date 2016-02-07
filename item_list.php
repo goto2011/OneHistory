@@ -290,7 +290,6 @@ window.onload = function()
                         
                 // 高亮 检索关键字。 2016-01-27
                 $thing_context = $row['thing'];
-                        
     			if(is_search())
                 {
                     $search_key = search_key();

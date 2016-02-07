@@ -194,7 +194,7 @@ function get_search_where_sub()
     
     // 从 session 中获取查询子句。
     $search_key = search_key();
-    
+
     // 获取当前所在的 tag。
     $search_tag_uuid = get_property_UUID();
     $search_tag_type = search_tag_type();
