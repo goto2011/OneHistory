@@ -177,9 +177,9 @@ function add_order_page_substring($offset, $page_size)
 /**
  * 根据 substring 获取满足条件的事件数量。
 */
-function get_thing_count($thing_substring)
+function get_thing_count($sql_object, $sql_param)
 {
-    $sql_string = "select count(distinct a.uuid) $thing_substring";
+    $sql_string = get_sql_qurey($sql_object, sql_type::CONST_GET_THING_COUNT, $sql_param);
     $result = mysql_query($sql_string);
     
     if($result == FALSE)
@@ -254,11 +254,11 @@ function get_thing_substring($tag_id)
  * 完成 事件、标签、事件-标签对的三表联合查询。
  * 返回 sql 语句是为了打印log，因为这个函数是整个系统的瓶颈。
  */
-function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array, &$tag_param_array)
+function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_id_array, &$tag_param_array)
 {
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $sql_string = "";
-    $tag_id_result = get_tag_param_array_from_thing($join_substring, $order_substring, $sql_string);
+    $tag_id_result = get_tag_param_array_from_thing($sql_object, $sql_param, $order_substring, $sql_string);
     // $GLOBALS['log']->error(date('H:i:s') . "-" . "Step22");
     
     if($tag_id_result == NULL)
@@ -292,9 +292,10 @@ function get_thing_tag_prompt($join_substring, $order_substring, &$tag_id_array,
 }
 
 // 获取 thing 表的数据。
-function get_thing_item_db($thing_substring)
+function get_thing_item_db($sql_object, $sql_param, $order_substring)
 {
-    $sql_string = " select distinct a.* $thing_substring ";
+    $sql_string = get_sql_qurey($sql_object, sql_type::CONST_GET_THING_ITEMS, $sql_param) 
+        . " " . $order_substring;
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

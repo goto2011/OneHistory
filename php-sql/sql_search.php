@@ -192,23 +192,6 @@ function get_search_where_sub()
 {
     $where_sub = "";
     
-    // 从 session 中获取查询子句。
-    $search_key = search_key();
-
-    // 获取当前所在的 tag。
-    $search_tag_uuid = get_property_UUID();
-    $search_tag_type = search_tag_type();
-    // 获取当前所在的时期。
-    $my_big = get_period_big_index();
-    $my_small =  get_period_small_index();
-    if (($my_big != -1) && ($my_small != -1))
-    {
-        $begin_year = get_begin_year($my_big, $my_small);
-        $end_year = get_end_year($my_big, $my_small);
-    }
-    
-    // 基于检索字符串获取查询子句。
-    $where_sub = get_search_where_sub_native($search_key) . " ";
     
     // 增加对 tag_uuid、begin_year、end_year的支持。2015-8-4
     // tag_uuid 优先。

@@ -12,6 +12,7 @@ require_once "sql_search.php";
 require_once "sql_user.php";
 require_once "sql_period.php";
 require_once "sql_follow.php";
+require_once "sql_factory.php";
 
 ////////////////////////////////// 1.数据库管理 begin //////////////////////////
 // 打开数据库

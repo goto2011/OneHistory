@@ -5,7 +5,7 @@
     @session_start();
 
     set_include_path('.'.PATH_SEPARATOR.dirname(__FILE__).'/'  
-        .PATH_SEPARATOR.dirname(__FILE__).'/php-lib/' 
+        .PATH_SEPARATOR.dirname(__FILE__).'/php-lib/'  
         .PATH_SEPARATOR.dirname(__FILE__).'/php-sql/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/ajax/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/plog/'  
