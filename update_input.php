@@ -13,14 +13,11 @@
 
 	// 判断是新增，还是编辑
 	$thing_uuid = "";
+    $_SESSION['update_input_thing_uuid'] = "";
 	if(!empty($_GET['thing_uuid']))
 	{
 		$thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
         $_SESSION['update_input_thing_uuid'] = $thing_uuid;
-	}
-	else
-	{
-		$_SESSION['update_input_thing_uuid'] = "";
 	}
 ?>
 
@@ -356,8 +353,8 @@ function ajax_do()
 <?php
     if(is_adder())
     {
-        echo "<input type='submit' style='font-size:22pt; color:red' value='重构数据' 
-                id='check_data' onclick='./import_input.php?thing_uuid=$thing_uuid' />";
+        echo "<input type='button' style='font-size:22pt; color:red' value='重构数据' id='splite_data' 
+            onclick=\"window.location='import_input.php?thing_uuid=" . $thing_uuid . "'\" />";
     }
 ?>
 <table class="normal">

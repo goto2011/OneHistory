@@ -5,6 +5,7 @@
     require_once "data.php";
     require_once "tag.php";
     require_once "list_control.php";
+    require_once "view_list.php";
     
     // 唯一可设置 list_type 的位置.
     if (!empty($_GET['list_type']) && is_numeric($_GET['list_type']))

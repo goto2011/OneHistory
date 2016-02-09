@@ -8,6 +8,7 @@
     require_once "data.php";
     require_once "tag.php";
     require_once "list_control.php";
+    require_once "view_list.php";
     
     // 判断当前list table id 是否为人物页面。
     if (!is_person(get_current_tag_id()))

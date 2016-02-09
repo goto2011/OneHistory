@@ -30,6 +30,7 @@
     	}
     	
         // 2. 获取 thing uuid。
+        $thing_uuid = "";
     	if(isset($_SESSION['update_input_thing_uuid']))
     	{
     		$thing_uuid = html_encode($_SESSION['update_input_thing_uuid']);

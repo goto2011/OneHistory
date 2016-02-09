@@ -11,6 +11,14 @@
     require_once "sql.php";
     
     alloc_import_token();
+    
+    $thing_uuid = "";
+    $_SESSION['import_input_thing_uuid'] = "";
+    if(!empty($_GET['thing_uuid']))
+    {
+        $thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
+        $_SESSION['import_input_thing_uuid'] = $thing_uuid;
+    }
 ?>
 
 <link rel="stylesheet" type="text/css" href="./style/jquery-ui.css" />
@@ -189,6 +197,64 @@ function ajax_do(operate_type)
 <!-- 页眉 begin -->
 <iframe src="./main_header.php" height="65px" width="100%" scrolling="no" frameborder="0"></iframe>
 <!-- 页眉 end -->
+
+<?php 
+    $conn = open_db();
+    
+    // 初始化变量。
+    $time = 0;
+    $time_type = 0;
+    $time_limit = 0;
+    $time_limit_type = 0;
+    
+    $result = get_thing_db($thing_uuid);
+    
+    while($row = mysql_fetch_array($result))
+    {
+        $thing = html_encode($row['thing']);
+        $time_type = html_encode($row['time_type']);
+        
+        // 2016-01-31：修改bug：公元前日期显示不正常。
+        $time = get_time_string(html_encode($row['time']), $time_type);
+        
+        $time_limit = html_encode($row['time_limit']);
+        if ($time_limit == 0)$time_limit = null;
+        $time_limit_type = html_encode($row['time_limit_type']);
+    }
+    
+    // 刷新界面之"时间"
+    function flash_time($is_edit, $time)
+    {
+        echo " style='color:blue; font-weight:bold' value='$time' ";
+    }
+    
+    // 刷新界面之"时间上下限"
+    function flash_time_limit($is_edit, $time_limit)
+    {
+        echo " style='color:blue; font-weight:bold' value=$time_limit ";
+    }
+    
+    // 刷新界面之"时间上下限类型"
+    function flash_time_limit_type($is_edit, $my_time_limit_type, $time_limit_type)
+    {
+        if(($time_limit_type != null) && ($my_time_limit_type == $time_limit_type))
+        {
+            echo " checked='checked' style='color:blue' ";
+        }
+    }
+    
+    // 刷新界面之"标签"
+    function flash_tags($is_edit, $tag_type, $thing_uuid)
+    {
+        $property_name_array = get_tags_name($thing_uuid, $tag_type);
+        // var_dump($property_name_array);
+        
+        if(!empty($property_name_array))
+        {
+            return get_string_from_array($property_name_array);
+        }
+    }
+?>
 
 <font size="5" color="red" >数据导入</font><br>
 
