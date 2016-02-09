@@ -381,7 +381,7 @@ function vip_tag_struct_init($vip_tag_id)
             
         default:
             $GLOBALS['log']->error("error: vip_tag_struct_init() -- $vip_tag_id 。");
-            $vip_tag_struct = null;
+            $vip_tag_struct = NULL;
             break;
     }
     

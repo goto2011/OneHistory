@@ -17,17 +17,11 @@
 	{
 		$thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
         $_SESSION['update_input_thing_uuid'] = $thing_uuid;
-		$_SESSION['update_input_is_edit'] = 1;                /// is edit.
 	}
 	else
 	{
 		$_SESSION['update_input_thing_uuid'] = "";
-		$_SESSION['update_input_is_edit'] = 0;				 /// is create.
 	}
-	
-	$_SESSION['update_input_data_changed'] = 0;				 /// data changed.
-	
-	// echo $_SESSION['update_once'];
 ?>
 
 <link rel="stylesheet" type="text/css" href="./style/jquery-ui.css" />
@@ -207,7 +201,6 @@ function ajax_do()
 	$conn = open_db();
 	
     // 初始化变量。
-	$is_edit = 0;
     $time = 0;
 	$time_type = 0;
     $time_limit = 0;
@@ -217,44 +210,40 @@ function ajax_do()
     $missing_person_count = "";
 	$word_count = "";
 	
-	// 获取节点原始数据.
-	if($_SESSION['update_input_is_edit'] == 1)
+	$is_edit = 1;
+    
+    // 更新 item_index, 暂时无用.
+    if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
+    {
+        set_item_index(html_encode($_GET['item_index']));
+    }
+    
+	$result = get_thing_db($thing_uuid);
+	
+	while($row = mysql_fetch_array($result))
 	{
-		$is_edit = 1;
+		$thing = html_encode($row['thing']);
+		$time_type = html_encode($row['time_type']);
         
-        // 更新 item_index.
-        if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
-        {
-            set_item_index(html_encode($_GET['item_index']));
-        }
-        
-		$result = get_thing_db($thing_uuid);
+        // 2016-01-31：修改bug：公元前日期显示不正常。
+		$time = get_time_string(html_encode($row['time']), $time_type);
 		
-		while($row = mysql_fetch_array($result))
-		{
-			$thing = html_encode($row['thing']);
-			$time_type = html_encode($row['time_type']);
-            
-            // 2016-01-31：修改bug：公元前日期显示不正常。
-			$time = get_time_string(html_encode($row['time']), $time_type);
-			
-			$time_limit = html_encode($row['time_limit']);
-            if ($time_limit == 0)$time_limit = null;
-			$time_limit_type = html_encode($row['time_limit_type']);
-            
-            if ($row['related_number1'] > 0)
-            {
-                $death_person_count = html_encode($row['related_number1']);
-            }
-            if ($row['related_number2'] > 0)
-            {
-                $hurt_person_count = html_encode($row['related_number2']);
-            }
-            if ($row['related_number3'])
-            {
-                $missing_person_count = html_encode($row['related_number3']);
-            }
-		}
+		$time_limit = html_encode($row['time_limit']);
+        if ($time_limit == 0)$time_limit = null;
+		$time_limit_type = html_encode($row['time_limit_type']);
+        
+        if ($row['related_number1'] > 0)
+        {
+            $death_person_count = html_encode($row['related_number1']);
+        }
+        if ($row['related_number2'] > 0)
+        {
+            $hurt_person_count = html_encode($row['related_number2']);
+        }
+        if ($row['related_number3'])
+        {
+            $missing_person_count = html_encode($row['related_number3']);
+        }
 	}
 
 /*
@@ -339,9 +328,8 @@ function ajax_do()
 
 <p class="thick" id="time_label">时间(必需)：
 <input type="text" id="time" name="time" <?php flash_time($is_edit, $time); ?> />
-<nobr class="alert" id="time_alert">&nbsp;&nbsp;&nbsp;<-- 请输入时间！
-    支持4种格式: 距今3.13亿年;&nbsp;&nbsp;公元前212年;&nbsp;&nbsp;1979-4-5;&nbsp;&nbsp;1999-6-4 2:00:00.
-</nobr>
+&nbsp;&nbsp;&nbsp; 支持4种格式: 
+    距今3.13亿年;&nbsp;&nbsp;公元前212年;&nbsp;&nbsp;1979-4-5;&nbsp;&nbsp;1999-6-4 2:00:00.
 
 <p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($is_edit, $time_limit); ?> ></input>
 &nbsp;&nbsp;&nbsp;&nbsp;单位：
@@ -364,9 +352,14 @@ function ajax_do()
 	}
 ?>
 </textarea>
-<nobr class="alert" id="thing_alert">&nbsp;&nbsp;&nbsp;<-- 请输入事件!
-</nobr>
 
+<?php
+    if(is_adder())
+    {
+        echo "<input type='submit' style='font-size:22pt; color:red' value='重构数据' 
+                id='check_data' onclick='./import_input.php?thing_uuid=$thing_uuid' />";
+    }
+?>
 <table class="normal">
 
 <?php

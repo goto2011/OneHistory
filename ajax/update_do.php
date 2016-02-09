@@ -40,34 +40,16 @@
             ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
     	}
     	
-    	if(isset($_SESSION['update_input_is_edit']))
-    	{
-    		$is_edit = html_encode($_SESSION['update_input_is_edit']);
-    		unset($_SESSION['update_input_is_edit']);
-    	}
-    	else
-    	{
-            ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
-    	}
-    
-    	$conn = open_db();
+        $conn = open_db();
         $update_return = 0;
     	
     	// 3. 获取事件文本。
         $thing = html_encode($_POST['thing']);
         
-    	if($is_edit == 0)
-    	{
-            // 新增(不再提供该功能)
-    		// $thing_uuid = insert_thing_to_db($time_array, $thing);
-    	}
-    	else
-    	{
-            // 更新
-    		$update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
-    		      $_POST['death_person_count'], $_POST['hurt_person_count'], 
-    		      $_POST['missing_person_count'], $_POST['word_count']);
-    	}
+	    // 更新
+        $update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
+              $_POST['death_person_count'], $_POST['hurt_person_count'], 
+              $_POST['missing_person_count'], $_POST['word_count']);
     	
     	// 2.保存tags
     	if(strlen($thing_uuid) > 0)
@@ -80,11 +62,7 @@
     	$conn = null;
     	
     	// 保存成功
-    	if (($is_edit == 0) && (strlen($thing_uuid) > 0))
-    	{
-            ajax_error_exit(error_id::ERROR_OK);
-    	}
-    	else if(($is_edit == 1) && ($update_return == 1))
+    	if($update_return == 1)
     	{
             ajax_error_exit(error_id::ERROR_OK);
     	}

@@ -13,7 +13,8 @@ require_once "data_display.php";
 // 系统名称
 function get_system_name()
 {
-	return "时间";
+    // return "时间";
+	return "众生";    // 2016-02-07
 }
 
 // 系统版本号

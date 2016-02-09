@@ -226,13 +226,15 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
-                                return "select count(distinct a.uuid) from thing_time a inner join thing_property c on a.UUID = c.thing_UUID 
+                                return "select count(distinct a.uuid) from thing_time a 
+                                    inner join thing_property c on a.UUID = c.thing_UUID 
                                     inner join follow e on e.property_UUID = c.property_UUID 
                                     and e.user_UUID = '" . get_user_id() . "' ";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
                             case tab_type::CONST_NEWEST:
-                                return "select count(distinct a.uuid) from thing_time a join thing_property c on a.UUID = c.thing_UUID  
+                                return "select count(distinct a.uuid) from thing_time a 
+                                    inner join thing_property c on a.UUID = c.thing_UUID  
                                     inner join property b on b.property_UUID = c.property_UUID 
                                     and DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(b.add_time) ";
                                 break;
@@ -243,9 +245,9 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    return "select count(distinct a.uuid) from thing_time a inner join thing_property c on c.thing_UUID = a.UUID
-                                            inner join property b on b.property_UUID = c.property_UUID 
-                                            and b.property_type = $tag_type ";
+                                    return "select count(distinct a.uuid) from thing_time a 
+                                        inner join thing_property c on c.thing_UUID = a.UUID
+                                        inner join property b on b.property_UUID = c.property_UUID and b.property_type = $tag_type ";
                                 }
                                 else
                                 {
@@ -287,10 +289,9 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
-                                            inner join thing_property c on b.property_UUID=c.property_UUID 
-                                            and b.property_type = $tag_type 
-                                            inner join thing_time a on c.thing_UUID = a.uuid ";
+                                    return "SELECT b.property_UUID, b.property_name, b.property_type, c.thing_UUID
+                                        FROM property b, thing_property c, thing_time a 
+                                        where b.property_type=$tag_type and b.property_UUID = c.property_UUID AND c.thing_UUID = a.uuid ";
                                 }
                                 else
                                 {

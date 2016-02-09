@@ -37,8 +37,8 @@ $tag_control = array(
     array(tab_type::CONST_DIE,            "非正常死亡",       1,    1,      "die_tags"),       // vip tag.
     // array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
-    array(tab_type::CONST_COUNTRY,        "世界",         1,    1,      "country_tags"),    // vip tag.
-    array(tab_type::CONST_DYNASTY,        "中国",         1,    1,      "dynasty_tags"),    // vip tag.
+    array(tab_type::CONST_COUNTRY,        "世界",             1,    1,      "country_tags"),    // vip tag.
+    array(tab_type::CONST_DYNASTY,        "中国",             1,    1,      "dynasty_tags"),    // vip tag.
     array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
     array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
@@ -49,7 +49,7 @@ $tag_control = array(
     array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
     array(tab_type::CONST_RESURCE,        "出处",             1,    0,      "source_tags"),
     array(tab_type::CONST_NOTE,           "笔记",             1,    0,      "note_tags"),
-    array(tab_type::CONST_MANAGER,        "管理页面",         3,    0,      ""),
+    array(tab_type::CONST_MANAGER,        "管理",             3,    0,      ""),
 );
 
 
@@ -844,75 +844,47 @@ function tag_is_vip($tag_uuid)
 
 /**
  * 将vip tag 作为关键字自动检索。（最重要函数，每次修改都要慎之又慎。）
- * 参数：$tag_type：tag type id。
+ * 参数：$tag_index：tag index，即下标。
  * 返回值：1表示成功。
  */
 function vip_tag_search_to_db($tag_index)
 {
     // 本函数执行时间长，去掉php执行时间限制。
     ini_set('max_execution_time', '0');
-
-    $tag_type = get_tag_id_from_index($tag_index);
     
     // 根据下标 判断是否是 vip tag.
     if(is_vip_tag_tab($tag_index))
     {
-        $GLOBALS['log']->error("test1");
+        $tag_type = get_tag_id_from_index($tag_index);
+        if ($tag_type < 0)
+        {
+            $GLOBALS['log']->error("error: vip_tag_search_to_db() -- $tag_type 。");
+            return 0;
+        }
         $my_vip_tag = vip_tag_struct_init($tag_type);
+        if ($my_vip_tag == NULL)
+        {
+            $GLOBALS['log']->error("error: vip_tag_search_to_db() -- vip_tag_struct_init NULL 。");
+            return 0;
+        }
         
         for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
         {
             for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
             {
-                $search_key = "";
-                $search_sub = "";
-                
-                $my_search_flag = $my_vip_tag->get_tag_search_flag($ii, $jj);
-                $my_tag_name = $my_vip_tag->get_tag_name($ii, $jj);
-                
-                if ($my_search_flag == "sigle-key")
-                {
-                    $search_key = $my_vip_tag->get_tag_single_key($ii, $jj);
-                    if ($search_key != "")
-                    {
-                        $search_sub = get_search_where_sub_by_key($search_key);
-                    }
-                }
-                else if($my_search_flag == "multe-key")
-                {
-                    $search_key = $my_vip_tag->get_tag_multe_key($ii, $jj);
-                    if ($search_key != "")
-                    {
-                        $search_sub = get_search_where_sub_by_key($search_key);
-                    }
-                }
-                else if($my_search_flag == "key-time")
-                {
-                    $search_key = $my_vip_tag->get_key_time_key($ii, $jj);
-                    $begin_year = $my_vip_tag->get_key_time_begin_year($ii, $jj);
-                    $end_year = $my_vip_tag->get_key_time_end_year($ii, $jj);
-                    if (($search_key != "") && ($begin_year != 0) && ($end_year != 0))
-                    {
-                        $search_sub = get_search_where_sub_by_key_time($search_key, $begin_year, $end_year);
-                    }
-                }
-                else if($my_search_flag == "tag-time")
-                {
-                    $search_tag = get_tag_uuid_from_name($my_vip_tag->get_tag_time_tag($ii, $jj), $tag_type);
-                    $begin_year = $my_vip_tag->get_tag_time_begin_year($ii, $jj);
-                    $end_year = $my_vip_tag->get_tag_time_end_year($ii, $jj);
-                    if (($search_tag != "") && ($begin_year != 0) && ($end_year != 0))
-                    {
-                        $search_sub = get_search_where_sub_by_tag_time($search_tag, $begin_year, $end_year);
-                    }
-                }
-                
+                $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj);
                 if ($search_sub != "")
                 {
+                    $my_tag_name = $my_vip_tag->get_tag_name($index_big, $index_small);
                     tag_search_to_db($search_sub, $my_tag_name, $tag_type);
                 }
             }
         }
+    }
+    else 
+    {
+        $GLOBALS['log']->error("error: vip_tag_search_to_db() -- $tag_index 。");
+        return 0;
     }
     
     // 恢复php执行时间限制。
@@ -921,6 +893,68 @@ function vip_tag_search_to_db($tag_index)
     return 1;
 }
 
+/**
+ * 获取 vip tag 名称。
+ * 参数：$tag_index：下标。
+ */
+function get_vip_tag_name($vip_tag_struct, $index_big, $index_small)
+{
+    if($vip_tag_struct != NULL)
+    {
+        return $vip_tag_struct->get_tag_name($index_big, $index_small);
+    }
+    return "";
+}
+ 
+ 
+/**
+ * 跟踪vip tag 生成查询子句
+ */
+function get_vip_tag_substring($vip_tag_struct, $index_big, $index_small)
+{
+    $search_sub = "";
+    $my_search_flag = $vip_tag_struct->get_tag_search_flag($index_big, $index_small);
+    
+    if ($my_search_flag == "sigle-key")
+    {
+        $search_key = $vip_tag_struct->get_tag_single_key($index_big, $index_small);
+        if ($search_key != "")
+        {
+            $search_sub = get_search_where_sub_by_key($search_key);
+        }
+    }
+    else if($my_search_flag == "multe-key")
+    {
+        $search_key = $vip_tag_struct->get_tag_multe_key($index_big, $index_small);
+        if ($search_key != "")
+        {
+            $search_sub = get_search_where_sub_by_key($search_key);
+        }
+    }
+    else if($my_search_flag == "key-time")
+    {
+        $search_key = $vip_tag_struct->get_key_time_key($index_big, $index_small);
+        $begin_year = $vip_tag_struct->get_key_time_begin_year($index_big, $index_small);
+        $end_year = $vip_tag_struct->get_key_time_end_year($index_big, $index_small);
+        if (($search_key != "") && ($begin_year != 0) && ($end_year != 0))
+        {
+            $search_sub = get_search_where_sub_by_key_time($search_key, $begin_year, $end_year);
+        }
+    }
+    // 目前只有“中国”标签符合。
+    else if($my_search_flag == "tag-time")
+    {
+        $search_tag = get_tag_uuid_from_name($vip_tag_struct->get_tag_time_tag($index_big, $index_small), $tag_type);
+        $begin_year = $vip_tag_struct->get_tag_time_begin_year($index_big, $index_small);
+        $end_year = $vip_tag_struct->get_tag_time_end_year($index_big, $index_small);
+        if (($search_tag != "") && ($begin_year != 0) && ($end_year != 0))
+        {
+            $search_sub = get_search_where_sub_by_tag_time($search_tag, $begin_year, $end_year);
+        }
+    }
+    
+    return $search_sub;
+}
 
 /**
  * 将 tag 作为关键字自动检索。
