@@ -637,7 +637,7 @@ function get_tag_param_array_from_thing($sql_object, $sql_param, $order_substrin
  */
 function get_tags_from_thing_UUID($thing_UUID)
 {
-    $sql_string = "select property_UUID, property_name, property_type from property where property_UUID in(
+    $sql_string = "select property_UUID, property_name, property_type, hot_index from property where property_UUID in(
             select property_UUID from thing_property where thing_UUID = '$thing_UUID')";
     $result = mysql_query($sql_string);
     if($result == FALSE)

@@ -103,7 +103,7 @@
                 if (array_key_exists($my_tag_id, $tag_param_array))
                 {
                     $result_string .= create_tag_link($tag_param_array[$my_tag_id][0], $my_tag_id, 
-                            $tag_param_array[$my_tag_id][1]);
+                            $tag_param_array[$my_tag_id][1], $tag_param_array[$my_tag_id][2]);
                     $array_has_data = true;
                 }
             }
@@ -121,7 +121,8 @@
                 
                 while($row = mysql_fetch_array($result))
                 {
-                    $result_string .= create_tag_link($row['property_type'], $row['property_UUID'], $row['property_name']);
+                    $result_string .= create_tag_link($row['property_type'], $row['property_UUID'], 
+                        $row['property_name'], $row['hot_index']);
                 }
                 $result_string .= "</div>";
             }
@@ -402,7 +403,34 @@
         return $result;
     }
     
-    // 打印 tag 链接。通用化，2015-8-9.
+    // 打印其它非 vip 的 person tag。
+    function create_other_person_link(&$tags_db)
+    {
+        $result = "";
+        
+        $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
+        
+        for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end(); $ii++)
+        {
+            for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
+            {
+                $my_name = $my_vip_tag->get_tag_name($ii, $jj);
+                search_tag_from_array($my_name, $tags_db[0], 1);
+            }
+        }
+        
+        while(list($key, $value) = each($tags_db[0]))
+        {
+            $my_hot_index = $tags_db[1][$key];
+            $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . $key 
+                . "'>". $value . "($my_hot_index)</a>";
+        }
+        
+        return $result;
+    }
+    /**
+     * 打印 tag 链接。通用化。2015-8-9。
+     */
     function create_vip_tag_link($vip_tag_class, $index, &$tags_db)
     {
         $result = "";
@@ -427,6 +455,35 @@
                 }
             }
             // vip tag在数据库中没有。
+            else 
+            {
+                $result .= "<span id='tag_nothing'>" . $my_name . "(0)</span>";
+            }
+        }
+        
+        return $result;
+    }
+    
+    // 打印 person 链接. 2015-5-8
+    function create_person_link($index, &$tags_db)
+    {
+        $result = "";
+        
+        $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
+        
+        for ($ii = $my_vip_tag->get_small_begin($index); $ii <= $my_vip_tag->get_small_end($index); $ii++)
+        {
+            $my_name = $my_vip_tag->get_tag_name($index, $ii);
+            
+            // 标签数组不删除。
+            $my_uuid = search_tag_from_array($my_name, $tags_db[0], 0);
+            $my_hot_index = $tags_db[1][$my_uuid];
+            
+            if ($my_uuid != "")
+            {
+                $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
+                    $my_uuid . "'>$my_name($my_hot_index)</a>";
+            }
             else 
             {
                 $result .= "<span id='tag_nothing'>" . $my_name . "(0)</span>";
@@ -477,20 +534,37 @@
             
             $my_vip_tag = vip_tag_struct_init(get_current_tag_id());
             
-            for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
+            if (is_person(get_current_tag_id()))
             {
-                echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
-                    . create_vip_tag_link($my_vip_tag, $ii, $tags_array) . "<br />";
+                global $person_sub_list_id;
+                // 处理 人物 之 其它 子页面.
+                if ($person_sub_list_id != $my_vip_tag->get_big_end())
+                {
+                    echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($person_sub_list_id) . ":</span>" 
+                        . create_person_link($person_sub_list_id, $tags_array) . "<br />";
+                }
+                else
+                {
+                    echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($person_sub_list_id) . ":</span>" 
+                        . create_other_person_link($tags_array) . "<br />";
+                }
             }
-            
-            // 最后打印其它
-            echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
-                    . create_other_link($tags_array) . "<br />";
+            else 
+            {
+                for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
+                {
+                    echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
+                        . create_vip_tag_link($my_vip_tag, $ii, $tags_array) . "<br />";
+                }
+                // 最后打印其它
+                echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
+                        . create_other_link($tags_array) . "<br />";
+            }
         }
     
         echo "</div>";
     }
-    
+
     // 打印 period 控制条
     function print_period_info()
     {

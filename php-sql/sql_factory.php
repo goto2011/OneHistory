@@ -61,25 +61,25 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                     // tag_uuid 优先。
                     if ($search_tag_uuid != "")
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID and c.property_UUID = '$search_tag_uuid' 
                             inner join thing_time a on $where_sub and c.thing_UUID = a.uuid ";
                     }
                     else if ($search_tag_type > 0)
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID and b.property_type = $search_tag_type 
                             inner join thing_time a on $where_sub and c.thing_UUID = a.uuid ";
                     }
                     else if ($sql_param['has_period'] == TRUE)
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID
                             inner join thing_time a on ( $where_sub ) and a.year_order >= $begin_year and a.year_order < $end_year and c.thing_UUID = a.uuid ";
                     }
                     else
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID 
                             inner join thing_time a on $where_sub and c.thing_UUID = a.uuid ";;
                     }
@@ -141,24 +141,24 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                 case sql_type::CONST_GET_TAGS:
                     if(!is_infinite($begin_year) && !is_infinite($end_year))
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID 
                             inner join thing_time a on c.thing_UUID = a.uuid and ((a.year_order >= $begin_year) and (a.year_order <= $end_year)) ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                                 inner join thing_property c on b.property_UUID=c.property_UUID ";
                     }
                     else if(is_infinite($begin_year))
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID
                             inner join thing_time a on c.thing_UUID = a.uuid and a.year_order <= $end_year";
                     }
                     else if(is_infinite($end_year))
                     {
-                        return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                        return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID
                             inner join thing_time a on c.thing_UUID = a.uuid and a.year_order >= $begin_year ";
                     }
@@ -198,7 +198,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                             inner join thing_property b ON a.UUID=b.thing_UUID and b.property_UUID = '$property_UUID' ";
                     break;
                 case sql_type::CONST_GET_TAGS:
-                    return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                    return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                             inner join thing_property c on b.property_UUID=c.property_UUID and c.property_UUID = '$property_UUID'
                             inner join thing_time a on c.thing_UUID = a.uuid ";
                     break;
@@ -262,34 +262,34 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                         {
                             // 全部条目
                             case tab_type::CONST_TOTAL:
-                                return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                                         inner join thing_property c on b.property_UUID=c.property_UUID 
                                         inner join thing_time a on c.thing_UUID = a.uuid ";
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
-                                return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                                         inner join thing_property c on b.property_UUID=c.property_UUID 
                                         inner join thing_time a on c.thing_UUID = a.uuid 
                                         inner join follow e on e.property_UUID = b.property_UUID and e.user_UUID = '" . get_user_id() . "' ";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
                             case tab_type::CONST_NEWEST:
-                                return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                                         inner join thing_property c on b.property_UUID=c.property_UUID 
                                         and DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(b.add_time)
                                         inner join thing_time a on c.thing_UUID = a.uuid ";
                                 break;
                             // 分期
                             case tab_type::CONST_PERIOD:
-                                return "select b.property_UUID, b.property_name, b.property_type, c.thing_UUID from property b 
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
                                         inner join thing_property c on b.property_UUID=c.property_UUID 
                                         inner join thing_time a on c.thing_UUID = a.uuid ";
                                 break;
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    return "SELECT b.property_UUID, b.property_name, b.property_type, c.thing_UUID
+                                    return "SELECT b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID
                                         FROM property b, thing_property c, thing_time a 
                                         where b.property_type=$tag_type and b.property_UUID = c.property_UUID AND c.thing_UUID = a.uuid ";
                                 }

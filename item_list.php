@@ -209,7 +209,7 @@ window.onload = function()
                 
                 // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step14");
                 
-                // +n。数据库性能优化的重点。
+                // 标签
     			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
     			echo "</tr>";
                 // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step15");

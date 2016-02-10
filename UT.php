@@ -8,15 +8,17 @@
     is_user(1);
 	require_once "data.php";
     require_once "sql.php";
+    require_once 'view_list.php';
+    require_once 'view_update.php';
     
     // 激活断言，并设置它为 quiet
     assert_options(ASSERT_ACTIVE, 1);
     assert_options(ASSERT_WARNING, 0);
     assert_options(ASSERT_QUIET_EVAL, 1);
     
-    $error_case_count = 0;
+    echo date("Y-m-d G:i:s") . "</br></br>";
     
-    echo get_current_year() . "</br>";
+    $error_case_count = 0;
     
     //创建处理函数
     function my_assert_handler($file, $line, $code, $desc = null)
@@ -112,6 +114,21 @@
             return FALSE;
         }
     }
+    
+    function UT_get_current_year($check)
+    {
+        if (get_current_year() == $check)
+        {
+            return TRUE;
+        }
+        else 
+        {
+            echo get_current_year() . "</br>";
+            return FALSE;
+        }
+    }
+    
+    assert('UT_get_current_year(2016)');
     assert('UT_get_time_from_native("31000年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("310 00年前", -31000, 1, 0, 1)');
     assert('UT_get_time_from_native("3.5亿年前", -350000000, 1, 0, 1)');
