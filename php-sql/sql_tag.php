@@ -527,13 +527,13 @@ function get_tags_db($tag_id, $tags_show_limit)
         case tab_type::CONST_TOTAL:
             // 全部条目容许显示的 tag 数量翻倍.
             // 全部中不显示“出处”标签。
-            $sql_string = "select property_UUID, property_name, property_type from property where property_type != 3 order by hot_index desc
+            $sql_string = "select property_UUID, property_name, property_type, hot_index from property where property_type != 3 order by hot_index desc
                      limit 0, " . ($tags_show_limit * 2);
             break;
 
         // 我的关注
         case tab_type::CONST_MY_FOLLOW:
-            $sql_string = "select property_UUID, property_name, property_type from property 
+            $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
                     where property_UUID in(select property_UUID from follow
                     where user_UUID = '" . get_user_id() . "') order by hot_index desc
                     limit 0, " . $tags_show_limit;
@@ -541,21 +541,21 @@ function get_tags_db($tag_id, $tags_show_limit)
 
         // 最新，指1周内的
         case tab_type::CONST_NEWEST:
-            $sql_string = "select property_UUID, property_name, property_type from property 
+            $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
                     where DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(add_time) order by add_time DESC 
                     limit 0, " . $tags_show_limit;
             break;
 
         // 分期
         case tab_type::CONST_PERIOD:
-            $sql_string = "select property_UUID, property_name, property_type from property
+            $sql_string = "select property_UUID, property_name, property_type, hot_index from property
                      limit 0, " . $tags_show_limit;
             break;
 
         default:
             if ($tag_id > 0)
             {
-                $sql_string = "select property_UUID, property_name, property_type from property 
+                $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
                     where property_type = $tag_id order by hot_index desc limit 0, " . $tags_show_limit;
             }
             else 
@@ -581,21 +581,23 @@ function get_tags_db($tag_id, $tags_show_limit)
 function get_tags_array($list_id)
 {
     // 获取property数据表的数据
-    $tags_array = array();
+    $tags_name = array();
+    $tags_hot = array();
     
     // 2015-5-28, 临时修改为10000，当前情况已经满足。
     $result = get_tags_db($list_id, 10000);
     while($row = mysql_fetch_array($result))
     {
-        $tags_array[$row['property_UUID']] = $row['property_name'];
+        $tags_name[$row['property_UUID']] = $row['property_name'];
+        $tags_hot[$row['property_UUID']] = $row['hot_index'];
     }
     
-    return $tags_array;
+    return array($tags_name, $tags_hot);
 }
 
 /**
- * 检查tag array中是否有指定name的key。
- * 参数 is_need_delete 表示知道后是否删除, =1删除，=0不删除。
+ * 从 vip tag name 找对应的 tag UUID。
+ * 参数：is_need_delete：表示知道后是否删除, =1删除，=0不删除。
  * 返回空串表示没找到。
  */
 function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)

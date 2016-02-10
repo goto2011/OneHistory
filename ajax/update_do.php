@@ -25,7 +25,6 @@
     	// 避免重复提交
     	if((!isset($_POST['originator'])) || (user_update_token($_POST['originator']) != 1))
     	{
-            $GLOBALS['log']->error("update_do.php: 有人绕开正常的流程重复提交表单.");
             ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
     	}
     	
@@ -69,7 +68,7 @@
     	}
     	else
     	{
-            ajax_error_exit(error_id::ERROR_FAIL);
+            ajax_error_exit(error_id::ERROR_UPDATE_FAIL);
     	}
 	}
 ?>

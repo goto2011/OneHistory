@@ -33,7 +33,8 @@
     
     // main().
 	flash_item_list();
-    
+
+/*
     // 打印其它非 vip tag。
     function create_other_link(&$tags_db)
     {
@@ -118,6 +119,7 @@
         }
 		echo "</div>";
 	}
+*/
 
 	// 打印表格(main)
 	function flash_item_list()

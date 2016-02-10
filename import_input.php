@@ -9,12 +9,14 @@
     is_user(1);
     require_once "data.php";
     require_once "sql.php";
+    require_once "view_update.php";
     
+    // 为了能够连续导入事件，import的token自行分配。
     alloc_import_token();
     
     $thing_uuid = "";
     $_SESSION['import_input_thing_uuid'] = "";
-    if(!empty($_GET['thing_uuid']))
+    if(!empty($_GET['thing_uuid']) && (is_adder()))
     {
         $thing_uuid = html_encode($_GET['thing_uuid']);   /// thing uuid.
         $_SESSION['import_input_thing_uuid'] = $thing_uuid;
@@ -198,73 +200,50 @@ function ajax_do(operate_type)
 <iframe src="./main_header.php" height="65px" width="100%" scrolling="no" frameborder="0"></iframe>
 <!-- 页眉 end -->
 
-<?php 
+<?php
+
     $conn = open_db();
-    
-    // 初始化变量。
-    $time = 0;
-    $time_type = 0;
-    $time_limit = 0;
-    $time_limit_type = 0;
-    
-    $result = get_thing_db($thing_uuid);
-    
-    while($row = mysql_fetch_array($result))
-    {
-        $thing = html_encode($row['thing']);
-        $time_type = html_encode($row['time_type']);
         
-        // 2016-01-31：修改bug：公元前日期显示不正常。
-        $time = get_time_string(html_encode($row['time']), $time_type);
-        
-        $time_limit = html_encode($row['time_limit']);
-        if ($time_limit == 0)$time_limit = null;
-        $time_limit_type = html_encode($row['time_limit_type']);
-    }
-    
-    // 刷新界面之"时间"
-    function flash_time($is_edit, $time)
+    if ($thing_uuid != "")
     {
-        echo " style='color:blue; font-weight:bold' value='$time' ";
-    }
-    
-    // 刷新界面之"时间上下限"
-    function flash_time_limit($is_edit, $time_limit)
-    {
-        echo " style='color:blue; font-weight:bold' value=$time_limit ";
-    }
-    
-    // 刷新界面之"时间上下限类型"
-    function flash_time_limit_type($is_edit, $my_time_limit_type, $time_limit_type)
-    {
-        if(($time_limit_type != null) && ($my_time_limit_type == $time_limit_type))
+        // 初始化变量。
+        $time_thing = "";
+        $result = get_thing_db($thing_uuid);
+        while($row = mysql_fetch_array($result))
         {
-            echo " checked='checked' style='color:blue' ";
-        }
-    }
-    
-    // 刷新界面之"标签"
-    function flash_tags($is_edit, $tag_type, $thing_uuid)
-    {
-        $property_name_array = get_tags_name($thing_uuid, $tag_type);
-        // var_dump($property_name_array);
-        
-        if(!empty($property_name_array))
-        {
-            return get_string_from_array($property_name_array);
+            $thing = html_encode($row['thing']);
+            $time = get_time_string(html_encode($row['time']), html_encode($row['time_type']));
+            $time_limit = get_time_limit_string(html_encode($row['time_limit']), html_encode($row['time_limit_type']));
+            
+            if ($time_limit != "")
+            {
+                $time_thing = $time . "，" . $time_limit . "，" . $thing;
+            }
+            else 
+            {
+                $time_thing = $time . "，" . $thing;
+            }
         }
     }
 ?>
 
-<font size="5" color="red" >数据导入</font><br>
-
+<font size="5" color="red" >导入事件</font><br>
 <table width="100%" border="0">
 <tr>
 <td width="50%">
 
 <!-- 事件内容输入 begin -->
 <p class="thick">导入内容：<textarea class="context" rows="10" cols="80" id="context" 
-    required=required autofocus="autofocus"></textarea></p>
+    required=required autofocus="autofocus">
+
+<?php
+    if ($thing_uuid != "")
+    {
+        echo $time_thing;
+    }
+?>
+</textarea></p>
+
 <div>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -301,61 +280,8 @@ function ajax_do(operate_type)
 <table class="normal">
 
 <?php
-    $my_index = 0;
-    
     // 显示 tag 输入框.
-    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
-    {
-        if (is_show_input_tag($ii) == 1)
-        {
-            $tag_name = get_tag_list_name_from_index($ii);
-            $tag_key = get_tag_key_from_index($ii);
-            
-            $my_print = "<p class='thick'> $tag_name:<input id='$tag_key' 
-                    name='$tag_key' type='text' class='tags' ></p></td>";
-            
-            // "出处标签"需要顶格显示.
-            if (is_source(get_tag_id_from_index($ii)))
-            {
-                $my_index++;
-            }
-            
-            if($my_index % 2 == 0)
-            {
-                echo "<tr class='tag_normal'><td width='400'>";
-                echo $my_print;
-            }
-            else 
-            {
-                echo "<td width='400'>";
-                echo $my_print;
-                echo "</tr>";
-            }
-            
-            // 显示“出处细节”。
-            if (is_source(get_tag_id_from_index($ii)))
-            {
-                echo "<td width='400'>";
-                echo "<p class='thick'>出处细节:";
-                echo "<textarea rows='2' cols='52' id='source_detail' ></textarea>";
-                echo "</p></tr>";
-                
-                $my_index++;
-            }
-            
-            // 显示“标签内序号”，只用于笔记序号。
-            if (is_note(get_tag_id_from_index($ii)))
-            {
-                echo "<td width='400'>";
-                echo "<input type='checkbox' id='index_inside_tag' value='' />笔记标签内保持序号";
-                echo "</p></tr>";
-                
-                $my_index++;
-            }
-    
-            $my_index++;
-        }
-    }
+    show_tag_input_view(2, $thing_uuid);
 ?>
 
 </table>
@@ -385,9 +311,15 @@ function ajax_do(operate_type)
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
 <input type="hidden" id="originator" value="<?php echo html_encode(get_import_token()) ?>">
-<input type="submit" style="font-size:22pt; color:red" value="数据导入" id="update_data" onclick="ajax_do('update_data')" /> <!-- 提交 -->
+<input type="submit" style="font-size:22pt; color:red" value="导入事件" id="update_data" onclick="ajax_do('update_data')" /> <!-- 提交 -->
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <class="label" style="display:none; color: red;" id="update_data_label">
+
+<?php
+    // exit
+    mysql_close($conn);
+    $conn = null;
+?>
 
 </body>
 </html>

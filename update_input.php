@@ -10,6 +10,7 @@
     require_once "data.php";
     require_once "sql.php";
     require_once "list_control.php";
+    require_once "view_update.php";
 
 	// 判断是新增，还是编辑
 	$thing_uuid = "";
@@ -183,7 +184,6 @@ function ajax_do()
     });
     // system_manager_ajax.send();
 }
-
 </script>
 
 <title>编辑事件</title>
@@ -207,8 +207,6 @@ function ajax_do()
     $missing_person_count = "";
 	$word_count = "";
 	
-	$is_edit = 1;
-    
     // 更新 item_index, 暂时无用.
     if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
     {
@@ -244,66 +242,6 @@ function ajax_do()
 	}
 
 /*
-	// 刷新界面之"时间类型"
-	function flash_time_type($is_edit, $my_type, $time_type)
-	{
-		if((($is_edit == 0) || (($is_edit == 1) && ($time_type == null))) && ($my_type == 2))
-		{
-			echo " checked='checked' ";
-		}
-		if(($is_edit == 1) && ($time_type != null) && ($my_type == $time_type))
-		{
-			echo " checked='checked' style='color:blue' ";
-		}
-	}
-*/
-	// 刷新界面之"时间"
-	function flash_time($is_edit, $time)
-	{
-		if($is_edit == 1)
-		{
-			echo " style='color:blue; font-weight:bold' value='$time' ";
-		}
-	}
-	
-	// 刷新界面之"时间上下限"
-	function flash_time_limit($is_edit, $time_limit)
-	{
-		if($is_edit == 1)
-		{
-			echo " style='color:blue; font-weight:bold' value=$time_limit ";
-		}
-	}
-	
-	// 刷新界面之"时间上下限类型"
-	function flash_time_limit_type($is_edit, $my_time_limit_type, $time_limit_type)
-	{
-		if((($is_edit == 0) || (($is_edit == 1) && ($time_limit_type == null))) && ($my_time_limit_type == 1))
-		{
-			echo " checked='checked' ";
-		}
-		if(($is_edit == 1) && ($time_limit_type != null) && ($my_time_limit_type == $time_limit_type))
-		{
-			echo " checked='checked' style='color:blue' ";
-		}
-	}
-	
-	// 刷新界面之"标签"
-	function flash_tags($is_edit, $tag_type, $thing_uuid)
-	{
-		if($is_edit == 1)
-		{
-			$property_name_array = get_tags_name($thing_uuid, $tag_type);
-			// var_dump($property_name_array);
-			
-			if(!empty($property_name_array))
-			{
-				return get_string_from_array($property_name_array);
-			}
-		}
-	}
-
-/*
  * 时间类型不再要求输入, 而是计算.
 <p class="thick">时间类型：
 <nobr class="normal"><input type="radio" id="time_type_1" name="time_type" value="1" <?php flash_time_type($is_edit, 1, $time_type); ?> />
@@ -323,30 +261,24 @@ function ajax_do()
  */
 ?>
 
+<font size="5" color="red" >编辑事件</font><br>
+
 <p class="thick" id="time_label">时间(必需)：
-<input type="text" id="time" name="time" <?php flash_time($is_edit, $time); ?> />
+<input type="text" id="time" name="time" <?php flash_time($time); ?> />
 &nbsp;&nbsp;&nbsp; 支持4种格式: 
     距今3.13亿年;&nbsp;&nbsp;公元前212年;&nbsp;&nbsp;1979-4-5;&nbsp;&nbsp;1999-6-4 2:00:00.
 
-<p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($is_edit, $time_limit); ?> ></input>
+<p class="thick">时间上下限(仅限数字)：<input type="text" id="time_limit" name="time_limit" <?php flash_time_limit($time_limit); ?> ></input>
 &nbsp;&nbsp;&nbsp;&nbsp;单位：
-<nobr class="normal"><input type="radio" name=time_limit_type value="1" <?php flash_time_limit_type($is_edit, 1, $time_limit_type); ?> >年
-<input type="radio" name=time_limit_type value="2" <?php flash_time_limit_type($is_edit, 2, $time_limit_type); ?> >日
-<input type="radio" name=time_limit_type value="3" <?php flash_time_limit_type($is_edit, 3, $time_limit_type); ?> >秒
+<nobr class="normal"><input type="radio" name=time_limit_type value="1" <?php flash_time_limit_type(1, $time_limit_type); ?> >年
+<input type="radio" name=time_limit_type value="2" <?php flash_time_limit_type(2, $time_limit_type); ?> >日
+<input type="radio" name=time_limit_type value="3" <?php flash_time_limit_type(3, $time_limit_type); ?> >秒
 </nobr></p>
 
 <p class="thick" id="thing_label">事件(必需，最长400字)：</nobr>
-<textarea name='thing' id='thing' 
+<textarea name='thing' id='thing' class='has_text' >
 <?php 
-	if($is_edit == 1)
-	{
-		// echo "$thing <br/>";
-		echo " class='has_text' >$thing";
-	}
-	else
-	{
-		echo " class='no_text' >";
-	}
+    echo $thing;
 ?>
 </textarea>
 
@@ -383,40 +315,7 @@ function ajax_do()
     echo "</p></tr>";
     
     // 显示 tag 输入框.
-    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
-    {
-        if (is_show_input_tag($ii) == 1)
-        {
-            $tag_id = get_tag_id_from_index($ii);
-            $tag_name = get_tag_list_name_from_index($ii);
-            $tag_key = get_tag_key_from_index($ii);
-            
-            $my_print = "<p class='thick'> $tag_name:<input id='$tag_key' 
-                    name='$tag_key' type='text' class='tags' value='" 
-                    . flash_tags($is_edit, $tag_id, $thing_uuid) . "'></p></td>";
-            
-            // "出处标签"需要顶格显示.
-            if (is_source(get_tag_id_from_index($ii)))
-            {
-                $my_index++;
-            }
-            
-            if($my_index % 2 == 0)
-            {
-                echo "<tr class='tag_normal'><td width='400'>";
-                echo $my_print;
-                $my_index++;
-            }
-            else 
-            {
-                echo "<td width='400'>";
-                echo $my_print;
-                echo "</tr>";
-                
-                $my_index++;
-            }
-        }
-    }
+    show_tag_input_view(1, $thing_uuid);
  
 ?>
 

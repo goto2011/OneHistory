@@ -11,6 +11,8 @@ class error_id {
     const ERROR_PROGRASS_FAIL       = 4;
     const ERROR_TIME_FAIL           = 5;
     const ERROR_CONTEXT_EMPTY       = 6;
+    const ERROR_INSERT_FAIL         = 7;
+    const ERROR_UPDATE_FAIL         = 8;
     
 }
 
@@ -21,7 +23,9 @@ $error_total = array(
     "fail: 不要重复保存数据。",               // 3
     "fail: 请按照正常流程访问本网站。",        // 4
     "fail: 时间格式不合法。",                 // 5. 这个内容不要做修改. 因为 update_input.php succ_callback() 中将其写死.
-    "fail: 内容为空。"                        // 6.
+    "fail: 内容为空。",                      // 6.
+    "fail：数据库插入失败。",                  // 7.
+    "fail：数据库更新失败。",                  // 8.
     
 );
 
@@ -49,8 +53,16 @@ function error_exit($exit_string)
 /**
  * ajax页面异常退出返回值.
  */
-function ajax_error_exit($exit_id)
+function ajax_error_exit($exit_id, $error_message = "")
 {
+    if ($error_message != "")
+    {
+        $GLOBALS['log']->error(get_error_string_from_id($exit_id) . " -- " . $error_message);
+    }
+    else 
+    {
+        $GLOBALS['log']->error(get_error_string_from_id($exit_id));
+    }
     echo (get_error_string_from_id($exit_id));
     exit($exit_id);
 }

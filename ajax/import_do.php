@@ -8,9 +8,16 @@
     {
         ajax_error_exit(error_id::ERROR_CONTEXT_EMPTY);
     }
+    
 	$conn = open_db();
     
-    // 检查输入数据的正确性。
+    $ori_thing_uuid = "";
+    if(is_adder() && ($_SESSION['import_input_thing_uuid'] != ""))
+    {
+        $ori_thing_uuid = $_SESSION['import_input_thing_uuid'];
+    }
+    
+    // 检验数据。
     if($_POST['operate_type'] == "check_data")
     {
         $error_line = handle_data_line(1);
@@ -25,13 +32,12 @@
         }
     }
     
-    // 将数据插入数据库.
+    // 导入事件。
     if($_POST['operate_type'] == "update_data")
     {
         // 避免重复提交。
         if((!isset($_POST['originator'])) || (user_import_token($_POST['originator']) != 1))
         {
-            $GLOBALS['log']->error("import_do.php: 有人绕开正常的流程重复提交表单.");
             ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
         }
         else
@@ -66,11 +72,14 @@
      */
     function handle_data_line($operate_type)
     {
+        global $ori_thing_uuid;
+        
     	// 按行读入输入界面传入的批量数据。
     	$context = one_line_flag(html_encode($_POST['context']));
     	$token = strtok($context, "\r");
-    	$index = 0;
-        $thing_index_inside_tag = 0;
+    	$line_index = 0;               // 行号，含空行。
+        $thing_index = 0;              // 事件串号，一行一条，不含空行。
+        $thing_index_inside_tag = 0;   //  笔记编号。
         
         // 获取标签内编号的基数。
         if (($operate_type == 2) && (is_index_inside_tag() == 1))
@@ -81,7 +90,8 @@
     	
     	while(($token != false) && (strlen($token) > 0))
     	{
-    		$index++;
+    		$line_index++;
+            // 切割当前行。
             $my_array = splite_string($token);
             if($my_array != FALSE)
             {
@@ -93,32 +103,49 @@
                     // 如果当前时间字段无法识别，则返回所在行数。
                     if($time_array['status'] != "ok")
                     {
-                        return $index;
+                        return $line_index;
                     }
                 }
+                // 导入事件
                 if ($operate_type == 2)
                 {
-                    // 是否保持序号。
-                    if (is_index_inside_tag() == 1)
+                    $thing_index++;
+                    
+                    // 从 update_input.php “重构数据”来的事件，会持有 $ori_thing_uuid。
+                    if(($thing_index == 1) && ($ori_thing_uuid != ""))
                     {
-                        $thing_index_inside_tag++;
-                        // 保存内容
-                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing'], $thing_index_inside_tag);
+                        if (update_thing_to_db($ori_thing_uuid, 
+                            get_time_from_native($my_array['time']), $my_array['thing']) != 1)
+                        {
+                            ajax_error_exit(error_id::ERROR_UPDATE_FAIL);
+                        }
+                        insert_tag_from_input($_POST, $ori_thing_uuid);
                     }
                     else 
                     {
-                        // 保存内容。
-                        $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), $my_array['thing']);
-                    }
-        		    if ($thing_uuid != "")
-                    {
-                        // 保存标签
-                        insert_tag_from_input($_POST, $thing_uuid);
-                    }
-                    else 
-                    {
-                        $GLOBALS['log']->error("import_do.php: 数据插入失败. -- " . $my_array['time'] 
-                            . " -- " . $my_array['thing']);
+                        // 是否同时保存序号。
+                        if (is_index_inside_tag() == 1)
+                        {
+                            $thing_index_inside_tag++;
+                            $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), 
+                                $my_array['thing'], $thing_index_inside_tag);
+                        }
+                        else 
+                        {
+                            $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), 
+                                $my_array['thing']);
+                        }
+                        
+                        if ($thing_uuid != "")
+                        {
+                            // 保存标签
+                            insert_tag_from_input($_POST, $thing_uuid);
+                        }
+                        else 
+                        {
+                            ajax_error_exit(error_id::ERROR_INSERT_FAIL, $my_array['time'] . " -- " 
+                                . $my_array['thing']);
+                        }
                     }
                 }
             }
@@ -127,11 +154,11 @@
                 // 校验数据时，发现错误即返回。
                 if ($operate_type == 1)
                 {
-                    return $index;
+                    return $line_index;
                 }
                 if ($operate_type == 2)
                 {
-                   $GLOBALS['log']->error("import_do.php: 时间格式错误. -- " . $token);
+                    ajax_error_exit(error_id::ERROR_TIME_FAIL, $token);
                 }
             }
     		

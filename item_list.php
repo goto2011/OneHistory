@@ -35,133 +35,6 @@ window.onload = function()
     // main().
 	flash_item_list();
     
-    // 打印 分期 tag 链接
-    function create_period_link($index)
-    {
-        $result = "";
-        for ($ii = get_small_id_begin($index); $ii <= get_small_id_end($index); $ii++)
-        {
-            $result .= "<a id='tag_normal' href='item_frame.php?big=$index&small=$ii'>" 
-                . get_period_name($index, $ii) . "</a>";
-        }
-        return $result;
-    }
-    
-    // 打印其它非 vip tag。
-    function create_other_link(&$tags_db)
-    {
-        $result = "";
-        
-        // 这行代码真帅!
-        while(list($key, $value) = each($tags_db))
-        {
-            $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . $key 
-                . "'>". $value . "</a>";
-        }
-        
-        return $result;
-    }
-    
-    // 打印 tag 链接。通用化，2015-8-9.
-    function create_vip_tag_link($vip_tag_class, $index, &$tags_db)
-    {
-        $result = "";
-        for ($ii = $vip_tag_class->get_small_begin($index); $ii <= $vip_tag_class->get_small_end($index); $ii++)
-        {
-            $my_name = $vip_tag_class->get_tag_name($index, $ii);
-            $is_super = $vip_tag_class->get_tag_show_flag($index, $ii);
-            $my_uuid = search_tag_from_array($my_name, $tags_db, 1);
-            
-            if ($my_uuid != "")
-            {
-                if ($is_super == "super")
-                {
-                    $result .= "<a id='tag_super' href='item_frame.php?property_UUID=" . 
-                        $my_uuid . "'>". $my_name . "</a>";
-                }
-                else 
-                {
-                    $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
-                        $my_uuid . "'>". $my_name . "</a>";
-                }
-            }
-            else 
-            {
-                $result .= "<span id='tag_nothing'>" . $my_name . "</span>";
-            }
-        }
-        
-        return $result;
-    }
-    
-	// 打印标签区
-	function print_tags_zone()
-	{
-		echo "<div align='left'>";
-		echo "<p><span id='tag_type'>标签:</span>";
-        
-        // 打印"全部"(super tag)
-        echo "<a id='tag_super' href='item_frame.php?property_UUID=all'>全部</a>";
-        
-        // 非vip tag.
-        if(is_vip_tag_tab(get_current_list_id()) == 0)
-        {
-            // 获取property数据表的数据
-            $result = get_tags_db(get_current_tag_id(), get_page_tags_size());
-            
-    		while($row = mysql_fetch_array($result))
-    		{
-    			echo create_tag_link($row['property_type'], $row['property_UUID'], $row['property_name']);
-    		}
-        }
-        // 是时期tag。
-        else if(is_period(get_current_tag_id()))
-        {
-            echo "<br />";
-            
-            for ($ii = get_big_id_begin(); $ii <= get_big_id_end(); $ii++)
-            {
-                echo "<span id='tag_type'>" . get_big_period_name($ii) . ":</span>" 
-                    . create_period_link($ii) . "<br />";
-            }
-        }
-        // 是 vip tag.
-        else if(is_vip_tag_tab(get_current_list_id()))
-        {
-            echo "<br />";
-            $tags_array = get_tags_array(get_current_tag_id());
-            
-            $my_vip_tag = vip_tag_struct_init(get_current_tag_id());
-            
-            for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
-            {
-                echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
-                    . create_vip_tag_link($my_vip_tag, $ii, $tags_array) . "<br />";
-            }
-            
-            // 最后打印其它
-            echo "<span id='tag_type'>" . $my_vip_tag->get_big_name($ii) . ":</span>" 
-                    . create_other_link($tags_array) . "<br />";
-        }
-    
-		echo "</div>";
-	}
-	
-    // 打印 period 控制条
-    function print_period_info()
-    {
-        $big_id = get_period_big_index();
-        $small_id = get_period_small_index();
-        
-        $name = get_period_name($big_id, $small_id);
-        $begin = is_infinite(get_begin_year($big_id, $small_id)) ? "无穷远" 
-            : get_time_string(get_begin_year($big_id, $small_id), 2);
-        $end = is_infinite(get_end_year($big_id, $small_id)) ? "无穷远" 
-            : get_time_string(get_end_year($big_id, $small_id), 2);
-            
-        echo " -- <nobr class='thick'>当前时间: $name ( $begin - $end ) </nobr></div>";
-    }
-    
 	// 打印表格(main)
 	function flash_item_list()
 	{
@@ -244,7 +117,8 @@ window.onload = function()
         }
         
         // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
-		// 打印标签区. +1
+        
+		// 打印标签区. ***
 		print_tags_zone();
 		
         // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
@@ -259,7 +133,6 @@ window.onload = function()
 		print_list_control($item_count, $page_size, $pages, get_page());
 		if (is_tag())
         {
-            // +2
             print_tag_control();
         }
         else if(is_period_tag(get_current_tag_id()))
@@ -284,9 +157,9 @@ window.onload = function()
         {
             // 查询子句增加排序、分页。
             $order_substring = add_order_page_substring($offset, $page_size);
-            
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
-            // 完成 事件、标签、事件-标签对的三表联合查询。
+            
+            // 完成 事件、标签、事件-标签对的三表联合查询。****
             $tag_id_array = array();
             $tag_param_array = array();
             $my_sql_thing = get_thing_tag_prompt($sql_object, $sql_param, $order_substring, 

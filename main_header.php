@@ -40,17 +40,23 @@
 </div>
 
 <div>
+    <!-- 1. 回到首页 -->
     <a href="./item_frame.php?property_UUID=main_all" class="red_black_underline" target="_top">回到首页</a> |
 <!--
-// 新增单个事件和批量事件合一。
+// 新增单个事件和批量导入事件合一。
     <a href="./update_input.php?update_once=<?php echo get_update_token(); ?>" class="red_black_underline"  target="_top">新增事件</a> |
 -->
+    <!-- 2. 导入事件 -->
     <a href="./import_input.php" class="red_black_underline"  target="_top">
-        外部数据导入</a> |
+       导入事件</a> |
 <!--
 // 小组功能的需求暂时不确定, 所以暂时不提供.
     <a href="./group.php" class="red_black_underline"  target="_top">小组管理</a> |
 -->
+    <!-- 3. 前往论坛 -->
+    <a href="./bbs/index.php" class="red_black_underline"  target="_top">前往论坛</a> |
+    
+    <!-- 4. 系统设置 -->
 <?php
     if(is_vip_user())
     {
@@ -59,8 +65,8 @@
 <?php
     }
 ?>
-    <a href="./bbs/index.php" class="red_black_underline"  target="_top">前往论坛</a> |
 
+    <!-- 5. 登陆/退出 -->
 <?php
     if(user_is_login() == 1)
     {
