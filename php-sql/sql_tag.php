@@ -619,7 +619,7 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
  */
 function get_tag_param_array_from_thing($sql_object, $sql_param, $order_substring, &$sql_string)
 {
-    $sql_string = get_sql_qurey($sql_object, sql_type::CONST_GET_TAGS, $sql_param) . " " . $order_substring;
+    $sql_string = get_sql_qurey($sql_object, sql_type::CONST_GET_TAGS, $sql_param, $order_substring);
     
     $result = mysql_query($sql_string);
     if($result == FALSE)

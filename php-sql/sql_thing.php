@@ -282,12 +282,12 @@ function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_i
         }
         
         // 保存 tag uuid 和 tag type 的对应关系。
-        // 下标是 tag uuid。一个 tag type 对应多个 tag id。
+        // 下标是 tag uuid。一个 tag uuid 对应一个 tag type。
         if (!array_key_exists($my_tag_id_row['property_UUID'], $tag_param_array))
         {
-            $tag_param_array[$tag_id_array['property_UUID']][0] = $tag_id_array['property_type'];
-            $tag_param_array[$tag_id_array['property_UUID']][1] = $tag_id_array['property_name'];
-            $tag_param_array[$tag_id_array['property_UUID']][2] = $tag_id_array['hot_index'];
+            $tag_param_array[$my_tag_id_row['property_UUID']][0] = $my_tag_id_row['property_type'];
+            $tag_param_array[$my_tag_id_row['property_UUID']][1] = $my_tag_id_row['property_name'];
+            $tag_param_array[$my_tag_id_row['property_UUID']][2] = $my_tag_id_row['hot_index'];
         }
     }
     

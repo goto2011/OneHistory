@@ -38,7 +38,7 @@ window.onload = function()
 	// 打印表格(main)
 	function flash_item_list()
 	{
-	    // $GLOBALS['log']->error(date('H:i:s') . "-" . "Thing_List_Begin.");
+	    $GLOBALS['log']->error(date('H:i:s') . "-" . "Thing_List_Begin.");
         $thing_list_begin = strtotime("now");
         
         $begin_year = 0;
@@ -54,7 +54,7 @@ window.onload = function()
             $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
             $end_year = get_end_year(get_period_big_index(), get_period_small_index());
         }
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
         // 生成sql语句的查询子句。**
         // search 要兼顾 tag 和 period。所以检索优先级最高。
@@ -105,32 +105,28 @@ window.onload = function()
             // $my_array = get_thing_substring(get_current_tag_id());     // 类型检索
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step5");
-        // 获得条目数量.
-        $item_count = get_thing_count($sql_object, $sql_param);
-        
-        // $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
+        $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
         // 打印搜索区
         if(is_show_search_box(get_current_tag_id()))
         {
             print_search_zone();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
-        
-		// 打印标签区. ***
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
+		// 打印标签区。
 		print_tags_zone();
 		
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
-        
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
         // 计算总页数和当前页偏移量.
         $page_size = get_page_size();
         $offset = $page_size * (get_page() - 1);
-        $pages = intval($item_count / $page_size);
-        if ($item_count % $page_size) $pages++;
-        
-        // 打印表格控制条.
-		print_list_control($item_count, $page_size, $pages, get_page());
+        // 获得条目数量. ***
+        // echo "=" . is_total(get_current_tag_id()) . "=" . is_search() . "=" . is_tag() 
+        //    . "=" . is_period_tag(get_current_tag_id()) . "=</br>";
+        $item_count = get_thing_count($sql_object, $sql_param);
+        // 打印表格遍历条.
+        print_list_control($item_count, $page_size, get_page());
+		
 		if (is_tag())
         {
             print_tag_control();
@@ -140,16 +136,14 @@ window.onload = function()
             print_period_info();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
-        
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
         // 打印“添加标签”输入框。2015-4-21
         if (is_show_add_tag())
         {
             print_add_tag_form();
         }
         
-        // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
-        
+        $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
         // 打印表头。
 		print_item_list_head();
 		
@@ -157,15 +151,21 @@ window.onload = function()
         {
             // 查询子句增加排序、分页。
             $order_substring = add_order_page_substring($offset, $page_size);
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step12");
             // 完成 事件、标签、事件-标签对的三表联合查询。****
             $tag_id_array = array();
             $tag_param_array = array();
             $my_sql_thing = get_thing_tag_prompt($sql_object, $sql_param, $order_substring, 
-                    $tag_id_array, $tag_param_array);
+                $tag_id_array, $tag_param_array);
+                
+            // echo print_r($tag_param_array);
+            
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            // 获取 thing 数据。***
             $result = get_thing_item_db($sql_object, $sql_param, $order_substring);
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
+            
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step14");
             
     		$index = $offset;
     		while($row = mysql_fetch_array($result))
@@ -207,16 +207,16 @@ window.onload = function()
     			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
     				get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
                 
-                // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step14");
-                
-                // 标签
-    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
-    			echo "</tr>";
                 // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step15");
-    		}
+                // 标签字段。 ***
+    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, 
+    			     $person_count_string) . "</td>";
+    			echo "</tr>";
+                // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step16");
+    		}// while
     		
     		echo "</table>";
-            print_list_control($item_count, $page_size, $pages, get_page());   // list control.
+            print_list_control($item_count, $page_size, get_page());;   // list control.
             
             // log print.
             $time_diff = strtotime("now") - $thing_list_begin; 

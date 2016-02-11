@@ -139,7 +139,7 @@ function print_list_param()
         . $list_info['page'] . " - " . $list_info['item_index'] . "<br/>";
 }
 
-// 判断传入的参数是否 ok 
+// 判断传入的参数是否 ok。
 function check_list_param()
 {
     if((get_current_list_id() > tag_list_max()) || (get_current_list_id() <= 0))
@@ -153,13 +153,6 @@ function check_list_param()
         return false;
     }
     return true;
-}
-
-// 是否显示指定 tag list.
-function is_tag()
-{
-    // tag 为空表示显示所有节点.
-    return ((get_property_UUID() != "") and (!is_search()));
 }
 
 //////////////////// set / get /////////////////////////////////////////       
@@ -216,13 +209,6 @@ function get_item_index()
     return $list_info['item_index'];
 }
 
-// 判断是不是 period tag.
-function is_period_tag($tag_id)
-{
-    return ((is_period($tag_id) == 1) && (get_period_big_index() != -1) 
-        && (get_period_small_index() != -1));
-}
-
 // period_big_index
 function set_period_big_index($period_big_index)
 {
@@ -268,11 +254,6 @@ function set_is_search($is_search)
     $list_info = &get_current_list();
     $list_info['is_search'] = $is_search;
 }
-function is_search()
-{
-    $list_info = get_current_list();
-    return ($list_info['is_search'] && ($list_info['search_key'] != ""));
-}
 
 // search_key
 function set_search_key($search_key)
@@ -314,6 +295,35 @@ function search_tag_type()
 ///////////////////////////////////////////////////////////////////////////  
 /////////////////////////  tab页 管理方法 /////////////////////////////////
 
+// 是否是检索。
+function is_search()
+{
+    $list_info = get_current_list();
+    return ($list_info['is_search'] && ($list_info['search_key'] != ""));
+}
+
+// 判断是不是 period tag。
+function is_period_tag($tag_id)
+{
+    return ((is_period($tag_id) == 1) && (get_period_big_index() != -1) 
+        && (get_period_small_index() != -1));
+}
+
+// 是否显示指定 tag list.
+function is_tag()
+{
+    // tag 为空表示显示所有节点.
+    return ((get_property_UUID() != "") and (!is_search()));
+}
+
+/**
+ * 是否是 "全部"。
+ */
+function is_total($tag_id)
+{
+    return ($tag_id == tab_type::CONST_TOTAL);
+}
+ 
 /**
  * 是否是 我的关注 tab页。
  */
@@ -407,19 +417,19 @@ function is_note($tag_id)
 }
 
 /**
- * 获取 笔记 tag type 的id。
- */
-function get_note_tag_id()
-{
-    return tab_type::CONST_NOTE;
-}
-
-/**
  * 判断当前是否是 管理 页面.
  */
 function is_manager_tab($tag_id)
 {
     return ($tag_id == tab_type::CONST_MANAGER);
+}
+
+/**
+ * 获取 笔记 tag type 的id。
+ */
+function get_note_tag_id()
+{
+    return tab_type::CONST_NOTE;
 }
 
 

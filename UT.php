@@ -17,6 +17,8 @@
     assert_options(ASSERT_QUIET_EVAL, 1);
     
     echo date("Y-m-d G:i:s") . "</br></br>";
+    // print_r(array)
+    // var_dump(array)  -- 更强大，还能打印每个字段的数据类型。
     
     $error_case_count = 0;
     

@@ -18,9 +18,10 @@ class sql_type {
 };
 
 // 生成SQL语句。
-function get_sql_qurey($sql_object, $sql_type, $sql_param)
+function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = "")
 {
     switch ($sql_object) {
+        //  1. =======检索=======
         case sql_object::CONST_SEARCH:
             
             // 基于检索字符串获取查询子句。
@@ -114,6 +115,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                     break;
             }
             break;
+            
+        //  2. =======时期=======
         case sql_object::CONST_PERIOD:
             $begin_year = $sql_param['begin_year'];
             $end_year = $sql_param['end_year'];
@@ -167,19 +170,19 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                 case sql_type::CONST_GET_THING_ITEMS:
                     if(!is_infinite($begin_year) && !is_infinite($end_year))
                     {
-                        return "select distinct a.* from thing_time a where ((year_order >= $begin_year) and (year_order <= $end_year)) ";
+                        return "select a.* from thing_time a where ((year_order >= $begin_year) and (year_order <= $end_year)) ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
-                        return "select distinct a.* ";
+                        return "select a.* ";
                     }
                     else if(is_infinite($begin_year))
                     {
-                        return "select distinct a.* from thing_time a where (year_order <= $end_year) ";
+                        return "select a.* from thing_time a where (year_order <= $end_year) ";
                     }
                     else if(is_infinite($end_year))
                     {
-                        return "select distinct a.* from thing_time a where (year_order >= $begin_year) ";
+                        return "select a.* from thing_time a where (year_order >= $begin_year) ";
                     }
                     break;
                 
@@ -187,8 +190,9 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                     
                     break;
             }
-            
             break;
+            
+        //  3. ======= 标签 ========
         case sql_object::CONST_TAG:
             $property_UUID = $sql_param['tag_id'];
             
@@ -198,9 +202,11 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                             inner join thing_property b ON a.UUID=b.thing_UUID and b.property_UUID = '$property_UUID' ";
                     break;
                 case sql_type::CONST_GET_TAGS:
-                    return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
-                            inner join thing_property c on b.property_UUID=c.property_UUID and c.property_UUID = '$property_UUID'
-                            inner join thing_time a on c.thing_UUID = a.uuid ";
+                    return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
+                            from property b, thing_property c where b.property_UUID = c.property_UUID 
+                            and c.thing_UUID in (select t.uuid from (select a.uuid from thing_time a 
+                            inner join thing_property b on b.property_UUID = '$property_UUID' 
+                            and a.UUID=b.thing_UUID $order_substring) as t)";
                     break;
                 case sql_type::CONST_GET_THING_ITEMS:
                     return "select distinct a.* from thing_time a
@@ -211,8 +217,9 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                     
                     break;
             }
-            
             break;
+            
+        //  4. =======标签类型/Tab页=======
         case sql_object::CONST_TAG_TYPE:
             $tag_type = $sql_param['tag_type'];
             
@@ -226,10 +233,14 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
+                                /*
                                 return "select count(distinct a.uuid) from thing_time a 
                                     inner join thing_property c on a.UUID = c.thing_UUID 
                                     inner join follow e on e.property_UUID = c.property_UUID 
                                     and e.user_UUID = '" . get_user_id() . "' ";
+                                 */
+                                return "select sum(b.hot_index) from property b, follow e 
+                                    where b.property_UUID = e.property_UUID and e.user_UUID = '" . get_user_id() . "' ";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
                             case tab_type::CONST_NEWEST:
@@ -240,14 +251,17 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 break;
                             // 分期
                             case tab_type::CONST_PERIOD:
-                                return "select count(distinct a.uuid) from thing_time a ";
+                                return "select count(a.uuid) from thing_time a ";
                                 break;
                             default:
                                 if ($tag_type > 0)
                                 {
+                                    /*
                                     return "select count(distinct a.uuid) from thing_time a 
                                         inner join thing_property c on c.thing_UUID = a.UUID
                                         inner join property b on b.property_UUID = c.property_UUID and b.property_type = $tag_type ";
+                                     */
+                                    return "select sum(b.hot_index) from property b where b.property_type = $tag_type ";
                                 }
                                 else
                                 {
@@ -262,16 +276,19 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                         {
                             // 全部条目
                             case tab_type::CONST_TOTAL:
-                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
-                                        inner join thing_property c on b.property_UUID=c.property_UUID 
-                                        inner join thing_time a on c.thing_UUID = a.uuid ";
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
+                                        from property b, thing_property c where b.property_UUID = c.property_UUID and 
+                                        c.thing_UUID in (select t.uuid from (select a.uuid 
+                                        from thing_time a $order_substring ) as t) ";
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
-                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
-                                        inner join thing_property c on b.property_UUID=c.property_UUID 
-                                        inner join thing_time a on c.thing_UUID = a.uuid 
-                                        inner join follow e on e.property_UUID = b.property_UUID and e.user_UUID = '" . get_user_id() . "' ";
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
+                                        from property b, thing_property c where b.property_UUID = c.property_UUID and 
+                                        c.thing_UUID in (select t.thing_UUID from (select c.thing_UUID 
+                                        from thing_time a, thing_property c, follow e 
+                                        where a.UUID = c.thing_UUID and e.property_UUID = c.property_UUID 
+                                        and e.user_UUID = '" . get_user_id() . "' $order_substring) as t)";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
                             case tab_type::CONST_NEWEST:
@@ -282,16 +299,25 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 break;
                             // 分期
                             case tab_type::CONST_PERIOD:
-                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID from property b 
-                                        inner join thing_property c on b.property_UUID=c.property_UUID 
-                                        inner join thing_time a on c.thing_UUID = a.uuid ";
+                                return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
+                                        from property b, thing_property c where b.property_UUID = c.property_UUID and 
+                                        c.thing_UUID in (select t.uuid from (select a.uuid 
+                                        from thing_time a $order_substring ) as t) ";
                                 break;
                             default:
                                 if ($tag_type > 0)
                                 {
+                                    /*
                                     return "SELECT b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID
                                         FROM property b, thing_property c, thing_time a 
                                         where b.property_type=$tag_type and b.property_UUID = c.property_UUID AND c.thing_UUID = a.uuid ";
+                                     */
+                                    return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
+                                        from property b, thing_property c where b.property_UUID = c.property_UUID and 
+                                        c.thing_UUID in (select t.thing_UUID from (select c.thing_UUID 
+                                        from property b, thing_property c, thing_time a 
+                                        where b.property_type=$tag_type and b.property_UUID = c.property_UUID 
+                                        and c.thing_UUID = a.uuid $order_substring ) as t)";
                                 }
                                 else
                                 {
@@ -300,18 +326,18 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 }
                          }
                     break;
+                    
                 case sql_type::CONST_GET_THING_ITEMS:
                         switch ($tag_type)
                         {
                             // 全部条目
                             case tab_type::CONST_TOTAL:
-                                return "select distinct a.* from thing_time a ";
+                                return "select a.* from thing_time a ";
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
-                                return "select distinct a.* from thing_time a 
-                                    inner join thing_property c on a.UUID = c.thing_UUID 
-                                    inner join follow e on e.property_UUID = c.property_UUID 
+                                return "select a.* from thing_time a, thing_property c, follow e 
+                                    where a.UUID = c.thing_UUID and e.property_UUID = c.property_UUID 
                                     and e.user_UUID = '" . get_user_id() . "' ";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
@@ -323,15 +349,14 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param)
                                 break;
                             // 分期
                             case tab_type::CONST_PERIOD:
-                                return "select distinct a.* from thing_time a ";
+                                return "select a.* from thing_time a ";
                                 break;
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    return "select distinct a.* from thing_time a
-                                            inner join thing_property c on c.thing_UUID = a.UUID
-                                            inner join property b on b.property_UUID = c.property_UUID 
-                                            and b.property_type = $tag_type ";
+                                    return "select a.* from property b, thing_property c, thing_time a 
+                                        where b.property_type=$tag_type and c.thing_UUID = a.uuid and
+                                        b.property_UUID = c.property_UUID ";
                                 }
                                 else
                                 {

@@ -93,10 +93,11 @@
         
         $result_string = "<div align='left' style='font-family:微软雅黑'>";
         $result_string .= $person_count_string . "&nbsp;&nbsp;&nbsp;";
-        
-        // 数组中存在.
+              
+        // 数组中存在指定 thing uuid.
         if (array_key_exists($thing_UUID, $tag_id_array))
         {
+            // $GLOBALS['log']->error(date('H:i:s') . "-" . "print_item_tags(). Tag_hit!");
             for ($ii = 0; $ii < count($tag_id_array[$thing_UUID]); $ii++)
             {
                 $my_tag_id = $tag_id_array[$thing_UUID][$ii];
@@ -113,6 +114,7 @@
         // 数组中不存在，则获取数据库的数据。
         if ($array_has_data == false)
         {
+            $GLOBALS['log']->error(date('H:i:s') . "-" . "print_item_tags(). Tag_not_hit!");
             $result = get_tags_from_thing_UUID($thing_UUID);
             
             if (mysql_num_rows($result) > 0)
@@ -159,9 +161,18 @@
     }
 
 
-    // 打印表格控制区(表格上下两条都有)
-    function print_list_control($item_count, $page_size, $pages, $curr_page)
+    /**
+     * 打印表格遍历条(表格上下两条都有)。
+     * 参数：$item_count：总数。
+     *      $page_size：每页数量。
+     *      $curr_page：当前页。
+     */
+    function print_list_control($item_count, $page_size, $curr_page)
     {
+        // 计算共计多少页。
+        $pages = intval($item_count / $page_size);
+        if ($item_count % $page_size) $pages++;
+            
         $item_start = ($curr_page - 1) * $page_size + 1;
         if ($item_start + $page_size - 1 < $item_count)
         {
