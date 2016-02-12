@@ -121,8 +121,6 @@ window.onload = function()
         $page_size = get_page_size();
         $offset = $page_size * (get_page() - 1);
         // 获得条目数量. ***
-        // echo "=" . is_total(get_current_tag_id()) . "=" . is_search() . "=" . is_tag() 
-        //    . "=" . is_period_tag(get_current_tag_id()) . "=</br>";
         $item_count = get_thing_count($sql_object, $sql_param);
         // 打印表格遍历条.
         print_list_control($item_count, $page_size, get_page());

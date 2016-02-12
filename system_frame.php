@@ -137,7 +137,7 @@ function ajax_do(operate_type)
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算tag热门指数" 
+    <input type="submit" style="font-size:18pt" value="计算Tag热门指数" 
         id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /></p> <!-- 提交 -->
     <div class="label" id="re_calc_tag_hot_index_label"></div>
 </div>

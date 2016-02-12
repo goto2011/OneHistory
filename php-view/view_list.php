@@ -381,7 +381,6 @@
         
         return $result;
     }
-    
         
     // 打印 分期 tag 链接
     function create_period_link($index)

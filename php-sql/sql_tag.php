@@ -308,8 +308,8 @@ function insert_tag_from_input($tags_array, $thing_uuid)
 function insert_thing_tag($tag_uuid, $thing_uuid)
 {
     // step4: 检查 事件-标签对 是否存在。
-    $sql_string = "select property_UUID from thing_property
-        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid'";
+    $sql_string = "select property_UUID from thing_property 
+        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid' ";
 
     $result = mysql_query($sql_string);
     if ($result == FALSE)
@@ -329,9 +329,13 @@ function insert_thing_tag($tag_uuid, $thing_uuid)
             $GLOBALS['log']->error("Error: insert_thing_tag() -- $sql_string , " . mysql_error());
             return 0;
         }
+        
+        return 1;
     }
-    
-    return 1;
+    else 
+    {
+        return 0;
+    }
 }
 
 /**
