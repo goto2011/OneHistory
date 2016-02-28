@@ -35,7 +35,7 @@ $tag_control = array(
     // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
     array(tab_type::CONST_PERIOD,         "时期",             0,    1,      ""),                // vip tag.
     array(tab_type::CONST_DIE,            "非正常死亡",       1,    1,      "die_tags"),       // vip tag.
-    // array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
+    array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "世界",             1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国",             1,    1,      "dynasty_tags"),    // vip tag.
@@ -512,7 +512,7 @@ function get_tag_type_from_UUID($tag_UUID)
     $result = mysql_query($sql_string); 
     if($result == FALSE)
     {
-        $GLOBALS['log']->error("error: get_tag_name() -- $tag_UUID -- $sql_string 。");
+        $GLOBALS['log']->error("error: get_tag_type_from_UUID() -- $tag_UUID -- $sql_string 。");
         return NULL;
     }
     
@@ -881,7 +881,8 @@ function vip_tag_search_to_db($tag_index)
                 $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj);
                 if ($search_sub != "")
                 {
-                    $my_tag_name = $my_vip_tag->get_tag_name($index_big, $index_small);
+                    $my_tag_name = $my_vip_tag->get_tag_name($ii, $jj);
+                    // $GLOBALS['log']->error(date('H:i:s') . " - " . $search_sub . " - " . $my_tag_name);
                     tag_search_to_db($search_sub, $my_tag_name, $tag_type);
                 }
             }

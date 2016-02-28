@@ -173,15 +173,6 @@ $topic = array
         array("法律犯罪", "normal", "multe-key", "法律", "犯罪"),
         array("国际关系"),
         array("军事思想"),
-        array("条约"),
-        array("殖民"),
-        array("奴隶"),
-        array("建国"),
-        array("统一"),
-        array("分裂"),
-        array("起义"),
-        array("复辟"),
-        array("叛乱"),
     ),
     array
     (

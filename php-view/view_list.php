@@ -512,7 +512,7 @@
         // 打印"全部"(super tag)
         echo "<a id='tag_super' href='item_frame.php?property_UUID=all'>全部</a>";
         
-        // 非vip tag.
+        // 非vip tag, 即 “全部”和“我的关注”。
         if(is_vip_tag_tab(get_current_list_id()) == 0)
         {
             // 获取property数据表的数据
@@ -524,7 +524,7 @@
                     $row['hot_index']);
             }
         }
-        // 是时期tag。
+        // “时期”。
         else if(is_period(get_current_tag_id()))
         {
             echo "<br />";
@@ -535,7 +535,7 @@
                     . create_period_link($ii) . "<br />";
             }
         }
-        // 是 vip tag.
+        // 是 vip tag。其它所有。
         else if(is_vip_tag_tab(get_current_list_id()))
         {
             echo "<br />";

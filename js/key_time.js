@@ -38,6 +38,8 @@ function tags_check()
     // ret += tag_check("office_tags", document.getElementById("office_tags").value);
     // ret += tag_check("key_tags", document.getElementById("key_tags").value);
     ret += tag_check("land_tags", document.getElementById("land_tags").value);
+    ret += tag_check("die_tags", document.getElementById("die_tags").value);
+    ret += tag_check("solution_tags", document.getElementById("solution_tags").value);
     
     return ret;
 }
@@ -85,6 +87,14 @@ $(function() {
 	});
 
 	$('#end_tags').tagsInput({
+		width: '350px',
+		height: '35px',
+		removeWithBackspace : false,
+		defaultText:'添加标签',
+		onAddTag: onAddTag
+	});
+	
+	$('#solution_tags').tagsInput({
 		width: '350px',
 		height: '35px',
 		removeWithBackspace : false,
