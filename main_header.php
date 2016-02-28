@@ -5,6 +5,7 @@
 
 <?php 
     require_once 'init.php';
+    require_once "waf.php";
     is_user(3);
     require_once "data.php";
     require_once "sql.php";

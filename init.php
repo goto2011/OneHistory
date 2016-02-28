@@ -10,6 +10,7 @@
         .PATH_SEPARATOR.dirname(__FILE__).'/php-view/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/ajax/' 
         .PATH_SEPARATOR.dirname(__FILE__).'/plog/'  
+        .PATH_SEPARATOR.dirname(__FILE__).'/security/'  
         .PATH_SEPARATOR.dirname(__FILE__).'/bbs/'  
         .PATH_SEPARATOR.dirname(__FILE__).'/bbs/include/' 
         .PATH_SEPARATOR.get_include_path());

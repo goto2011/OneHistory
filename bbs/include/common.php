@@ -47,6 +47,9 @@ require_once PUN_ROOT.'include/addons.php';
 // Load UTF-8 functions
 require_once PUN_ROOT.'include/utf8/utf8.php';
 
+// security
+require_once PUN_ROOT.'../security/waf.php';
+
 // Strip out "bad" UTF-8 characters
 forum_remove_bad_characters();
 
