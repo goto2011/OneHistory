@@ -67,8 +67,8 @@ $solution = array
     array
     (
         // 人与家庭的关系
-        array("夫妻关系", "super", "multe-key", "夫妻", "结婚", "婚姻", "家庭"),
-        array("情人"),
+        array("夫妻关系", "super", "multe-key", "夫妻", "结婚", "婚姻", "家庭", "爱情"),
+        array("情人",  "normal", "multe-key", "情人", "爱情"),
         array("父与子", "normal", "multe-key", "父子", "爸爸"),
         array("母与子", "normal", "multe-key", "母子", "妈妈"),
         array("兄弟与姐妹", "normal", "multe-key", "兄弟", "姐妹"),
