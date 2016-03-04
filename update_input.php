@@ -147,6 +147,7 @@ function ajax_do()
             'time_limit_type':get_checkbox_value("time_limit_type"),
             
             'die_tags'      :document.getElementById("die_tags").value,
+            'solution_tags' :document.getElementById("solution_tags").value,
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,

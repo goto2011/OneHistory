@@ -53,36 +53,6 @@
     }
 
     /**
-     * 打印tag链接. $property_type, $property_UUID, $property_name
-     */
-    function create_tag_link($property_type, $property_UUID, $property_name, $hot_index)
-    {
-        // 开始事件
-        if($property_type == 1)
-        {
-            return "<a href='item_frame.php?property_UUID=" . 
-                $property_UUID . "'>{". $property_name . "</a>&nbsp;&nbsp;";
-        }
-        // 结束事件
-        else if ($property_type == 2)
-        {
-            return "<a href='item_frame.php?property_UUID=" . 
-                $property_UUID . "'>". $property_name . "}</a>&nbsp;&nbsp;";
-        }
-        // 出处
-        else if ($property_type == 3)
-        {
-            return "<a href='item_frame.php?property_UUID=" . 
-                $property_UUID . "'>[". $property_name . "]</a>&nbsp;&nbsp;";
-        }
-        else
-        {
-            return "<a href='item_frame.php?property_UUID=" . 
-                $property_UUID . "'>". $property_name . "(" . $hot_index . ")</a>&nbsp;&nbsp;";
-        }
-    }
-    
-    /**
      * 更新每个条目的标签. 2015-9-1
      * @$person_count_string: 打印死亡人数、受伤人数、失踪人数（为节省界面，作为标签的一部分，没有超链接）
      */
@@ -390,9 +360,9 @@
         {
             $sql_param = array("begin_year"=>get_begin_year($index, $ii), "end_year"=>get_end_year($index, $ii));
             
+            $hot_index = get_thing_count(sql_object::CONST_PERIOD, $sql_param);
             $result .= "<a id='tag_normal' href='item_frame.php?big=$index&small=$ii'>" 
-                . get_period_name($index, $ii) . "(" . get_thing_count(sql_object::CONST_PERIOD, $sql_param) 
-                . ")</a>";
+                . get_period_name($index, $ii) . "(" .  $hot_index. ")</a>";
         }
         return $result;
     }
@@ -401,13 +371,25 @@
     function create_other_link(&$tags_db)
     {
         $result = "";
+        $current_tag_uuid = get_property_UUID();
         
         // 这行代码真帅!
         while(list($key, $value) = each($tags_db[0]))
         {
             $hot_index = $tags_db[1][$key];
-            $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . $key 
-                . "'>". $value . "(" . $hot_index . ")</a>";
+            
+            if ((is_tag()) && ($current_tag_uuid == $key))
+            {
+                // return "<a id='tag_selected' href='item_frame.php?property_UUID=" . $key 
+                //     . "'>". $value . "(" . $hot_index . ")</a>";
+                $result .= create_normal_tag_link($key, $value, $hot_index, "tag_selected");
+            }
+            else
+            {
+                // return "<a id='tag_normal' href='item_frame.php?property_UUID=" . $key 
+                //     . "'>". $value . "(" . $hot_index . ")</a>";
+                $result .= create_normal_tag_link($key, $value, $hot_index, "tag_normal");
+            }
         }
         
         return $result;
@@ -443,6 +425,8 @@
      */
     function create_vip_tag_link($vip_tag_class, $index, &$tags_db)
     {
+        $my_tag_uuid = get_property_UUID();
+        
         $result = "";
         for ($ii = $vip_tag_class->get_small_begin($index); $ii <= $vip_tag_class->get_small_end($index); $ii++)
         {
@@ -453,31 +437,81 @@
             
             if ($my_uuid != "")
             {
-                if ($is_super == "super")
+                // 是否为当前选中的 tag。
+                if ((is_tag()) && ($my_tag_uuid == $my_uuid))
                 {
-                    $result .= "<a id='tag_super' href='item_frame.php?property_UUID=" . 
-                        $my_uuid . "'>". $my_name . "(" . $my_hot_index . ")</a>";
+                    $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_selected");
+                }
+                else if ($is_super == "super")
+                {
+                    $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_super");
                 }
                 else 
                 {
-                    $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
-                        $my_uuid . "'>". $my_name . "(" . $my_hot_index . ")</a>";
+                    $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_normal");
                 }
             }
             // vip tag在数据库中没有。
             else 
             {
-                $result .= "<span id='tag_nothing'>" . $my_name . "(0)</span>";
+                $result .= create_normal_tag_link("", $my_name, 0, "tag_nothing");
             }
         }
         
         return $result;
+    }
+
+    /**
+     * 打印tag链接. $property_type, $property_UUID, $property_name
+     */
+    function create_tag_link($property_type, $property_UUID, $property_name, $hot_index)
+    {
+        // 开始事件
+        if($property_type == 1)
+        {
+            return "<a href='item_frame.php?property_UUID=" . 
+                $property_UUID . "'>{". $property_name . "</a>&nbsp;&nbsp;";
+        }
+        // 结束事件
+        else if ($property_type == 2)
+        {
+            return "<a href='item_frame.php?property_UUID=" . 
+                $property_UUID . "'>". $property_name . "}</a>&nbsp;&nbsp;";
+        }
+        // 出处
+        else if ($property_type == 3)
+        {
+            return "<a href='item_frame.php?property_UUID=" . 
+                $property_UUID . "'>[". $property_name . "]</a>&nbsp;&nbsp;";
+        }
+        else
+        {
+            return create_normal_tag_link($property_UUID, $property_name, $hot_index, "tag_table");
+        }
+    }
+    
+    /*
+     * 按指定格式显示 tag 链接。
+     * $show_type: 显示格式：tag_selected、tag_super、tag_normal、tag_nothing。
+     */
+    function create_normal_tag_link($tag_uuid, $tag_name, $tag_hot_index, $show_type)
+    {
+        if ($show_type != "tag_nothing")
+        {
+            return "<a id='" . $show_type . "' href='item_frame.php?property_UUID=" . 
+                $tag_uuid . "'>$tag_name($tag_hot_index)</a>";
+        }
+        else 
+        {
+            return "<span id='" . $show_type . "'>$tag_name($tag_hot_index)</span>";
+        }
     }
     
     // 打印 person 链接. 2015-5-8
     function create_person_link($index, &$tags_db)
     {
         $result = "";
+        $my_tag_uuid = get_property_UUID();
         
         $my_vip_tag = vip_tag_struct_init(tab_type::CONST_PERSON);
         
@@ -489,14 +523,20 @@
             $my_uuid = search_tag_from_array($my_name, $tags_db[0], 0);
             $my_hot_index = $tags_db[1][$my_uuid];
             
-            if ($my_uuid != "")
+            if ((is_tag()) && ($my_tag_uuid == $my_uuid))
             {
-                $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
-                    $my_uuid . "'>$my_name($my_hot_index)</a>";
+                $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_selected");
+            }
+            else if ($my_uuid != "")
+            {
+                // $result .= "<a id='tag_normal' href='item_frame.php?property_UUID=" . 
+                //     $my_uuid . "'>$my_name($my_hot_index)</a>";
+                $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_normal");
             }
             else 
             {
-                $result .= "<span id='tag_nothing'>" . $my_name . "(0)</span>";
+                // $result .= "<span id='tag_nothing'>" . $my_name . "(0)</span>";
+                create_normal_tag_link("", $my_name, 0, "tag_nothing");
             }
         }
         
@@ -508,9 +548,10 @@
     {
         echo "<div align='left'>";
         echo "<p><span id='tag_type'>标签:</span>";
-        
         // 打印"全部"(super tag)
         echo "<a id='tag_super' href='item_frame.php?property_UUID=all'>全部</a>";
+        
+        $my_tag_uuid = get_property_UUID();
         
         // 非vip tag, 即 “全部”和“我的关注”。
         if(is_vip_tag_tab(get_current_list_id()) == 0)
@@ -520,8 +561,16 @@
             
             while($row = mysql_fetch_array($result))
             {
-                echo create_tag_link($row['property_type'], $row['property_UUID'], $row['property_name'], 
-                    $row['hot_index']);
+                if ((is_tag()) && ($my_tag_uuid == $row['property_UUID']))
+                {
+                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                        $row['hot_index'], "tag_selected");
+                }
+                else 
+                {
+                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                        $row['hot_index'], "tag_normal");
+                }
             }
         }
         // “时期”。

@@ -25,10 +25,12 @@ $solution = array
         // 人与自己的关系
         array("死亡"),
         array("信仰"),
+        array("学习"),
         array("努力"),
         array("运气"),
-        array("心理治疗"),
         array("梦"),
+        array("反省"),
+        array("改进"),
         array("立志"),
         array("欲望"),
         array("拖延"),
@@ -40,6 +42,7 @@ $solution = array
     array
     (
         // 人与自然界的关系
+        array("道", "super", "multe-key", "天道", "之道", "得道"),
         array("认知"),
         array("时空", "normal", "multe-key", "时空", "时间", "空间"),
         array("天人合一"),
@@ -49,12 +52,14 @@ $solution = array
     array
     (
         // 人和他人的关系
-        array("仁"),
-        array("义"),
-        array("礼"),
-        array("智"),
-        array("信"),
+        array("仁", "super", "multe-key", "仁"),
+        array("义", "super", "multe-key", "义"),
+        array("礼", "super", "multe-key", "礼"),
+        array("智", "super", "multe-key", "智"),
+        array("信", "super", "multe-key", "信"),
+        array("君子", "super", "multe-key", "君子"),
         
+        array("理解"),
         array("朋友"),
         array("老师"),
         array("同志"),
@@ -69,8 +74,9 @@ $solution = array
         // 人与家庭的关系
         array("夫妻关系", "super", "multe-key", "夫妻", "结婚", "婚姻", "家庭", "爱情"),
         array("情人",  "normal", "multe-key", "情人", "爱情"),
-        array("父与子", "normal", "multe-key", "父子", "爸爸"),
-        array("母与子", "normal", "multe-key", "母子", "妈妈"),
+        array("孝",  "super", "multe-key", "孝", "父母", "父子", "母子", "父亲", "母亲", "爸爸", "妈妈"),
+        array("父与子", "normal", "multe-key", "父子", "爸爸", "父亲"),
+        array("母与子", "normal", "multe-key", "母子", "妈妈", "母亲"),
         array("兄弟与姐妹", "normal", "multe-key", "兄弟", "姐妹"),
         array("兄妹与姐弟", "normal", "multe-key", "兄妹", "姐弟"),
         array("祖父母"),

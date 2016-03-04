@@ -14,6 +14,11 @@ body {
 	padding-right: 10px;
 }
 
+#tag_table{
+	font-size: 13px;
+	padding-right: 10px;
+}
+
 #tag_normal{
 	color:blue;
 	font-size: 14px;
@@ -25,6 +30,14 @@ body {
 	color: DarkSlateGray;
 	font-size: 13px;
 	letter-spacing: 0.5px;
+	padding-right: 10px;
+}
+
+#tag_selected{
+	color:red;
+	font-size: 15px;
+	font-weight: bold;
+	letter-spacing: 1px;
 	padding-right: 10px;
 }
 

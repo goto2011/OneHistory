@@ -160,6 +160,7 @@ function ajax_do(operate_type)
             'context'       :remove_blank(remove_html_code(document.getElementById("context").value)),
             
             'die_tags'      :document.getElementById("die_tags").value,
+            'solution_tags' :document.getElementById("solution_tags").value,
             'start_tags'    :document.getElementById("start_tags").value,
             'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,
