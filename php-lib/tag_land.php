@@ -46,10 +46,10 @@ $land = array
     array
     (
         // 中国河湖
-        array("长江", "super", "multe-key", "长江", "大江", "扬子江"),
+        array("长江", "super", "multe-key", "大江", "扬子江"),
         array("黄河"),
         
-        array("黑龙江", "normal", "multe-key", "黑龙江", "黑水"),
+        array("黑龙江", "normal", "multe-key", "黑水"),
         array("辽河"),
         array("淮河"),
         array("桑干河"),
@@ -63,7 +63,7 @@ $land = array
         array("鄱阳湖"),
         array("洞庭湖"),
         array("太湖"),
-        array("青海湖", "normal", "multe-key", "青海湖", "西海"),
+        array("青海湖", "normal", "multe-key", "西海"),
         array("纳木错"),
     ),
     array
@@ -78,7 +78,7 @@ $land = array
         array("贝加尔湖"),
         
         // 亚洲
-        array("两河流域", "super", "multe-key", "两河流域", "幼发拉底河", "底格里斯河"),
+        array("两河流域", "super", "multe-key", "幼发拉底河", "底格里斯河"),
         array("里海"),
         array("印度河"),
         array("恒河"),
@@ -89,7 +89,7 @@ $land = array
         array("洞里萨湖"),
         
         // 美洲
-        array("五大湖区", "super", "multe-key", "苏必利尔湖", "密歇根湖", "休伦湖", "伊利湖", "安大略湖"),
+        array("五大湖区", "super", "multe-key", "五大湖", "苏必利尔湖", "密歇根湖", "休伦湖", "伊利湖", "安大略湖"),
         array("大熊湖"),
         array("的的喀喀湖"),
         
@@ -151,7 +151,7 @@ $land = array
         array("大别山"),
         array("祁连山"),
         array("阴山"),
-        array("南岭", "normal", "multe-key", "南岭", "五岭", "越城岭", "都庞岭", "萌渚岭", 
+        array("南岭", "normal", "multe-key", "五岭", "越城岭", "都庞岭", "萌渚岭", 
                 "骑田岭", "大庾岭"),
         
         array("太行八径", "super", "multe-key", "军都陉", "蒲阴陉", "飞狐陉", "井陉", "滏口陉", 

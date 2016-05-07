@@ -122,6 +122,7 @@ function succ_callback(operate_type, data)
         {
             error_line = data.substring(8);
         }
+        // 显示错误信息。
         show_check_data_status(res_status, error_line);
     }
     else if (operate_type == "update_data")
@@ -193,7 +194,7 @@ function ajax_do(operate_type)
 }
 </script>
 
-<title>数据导入</title>
+<title>导入事件</title>
 </head>
 <body>
 

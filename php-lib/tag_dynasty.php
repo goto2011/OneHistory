@@ -8,10 +8,7 @@ $dynasty_big = array
     "春秋战国列国",
     "地方政权",
     "周边少数民族",
-    "历史",
-    "现状",
-    "变法",
-    "组织",
+    "历史与现状",
     "其它"
 );
 
@@ -48,7 +45,7 @@ $dynasty = array
         
         array("中华民国台湾", "super", "multe-key", "台湾", "台北", "高雄", "台南", "台中", 
                 "蒋经国", "李登辉", "陈水扁", "马英九"),
-        array("香港", "normal", "multe-key", "香港", "九龙", "新界", "特首"),
+        array("香港", "normal", "multe-key", "九龙", "新界", "特首"),
     ),
     array
     (
@@ -107,7 +104,7 @@ $dynasty = array
         array("西燕"),
         array("宇文部"),
         array("段部"),
-        array("北魏", "normal", "key-time", "北魏", "拓跋代", "代国", "258", "534"),
+        array("北魏", "normal", "key-time", "拓跋代", "代国", "258", "534"),
         array("东魏"),
         array("西魏"),
         array("北齐"),
@@ -142,28 +139,28 @@ $dynasty = array
         // 和中原有重大纠葛的
         
         // 东北
-        array("鲜卑", "super", "multe-key", "鲜卑"),
+        array("鲜卑"),
         array("东胡"),
         array("乌桓"),
         array("吐谷浑"),
         array("柔然"),
-        array("契丹", "super", "multe-key", "契丹"),
+        array("契丹"),
         array("室韦"),
-        array("蒙古", "super", "multe-key", "蒙古"),
+        array("蒙古"),
         array("准噶尔汗国"),
-        array("女真", "super", "multe-key", "女真"),
-        array("满族", "super", "multe-key", "满族"),
+        array("女真"),
+        array("满族"),
         
         array("濊貊"),
         array("扶余"),
         array("沃沮"),
-        array("高句丽", "super", "multe-key", "高句丽"),
+        array("高句丽"),
         array("古朝鲜", "normal", "multe-key", "弁韩", "马韩", "辰韩", "百济", "新罗", "高丽"),
         
         array("粛慎"),
         
         // 北方
-        array("匈奴", "super", "multe-key", "匈奴"),
+        array("匈奴"),
         array("羯"),
         array("氐"),
         array("鞑靼"),
@@ -173,25 +170,25 @@ $dynasty = array
         array("维吾尔人"),
         
         // 突厥民族
-        array("突厥", "super", "multe-key", "突厥"),
+        array("突厥"),
         array("沙陀"),
         
         // 西方
         array("戎"),
         array("羌"),
-        array("党项", "super", "multe-key", "党项"),
-        array("吐蕃", "super", "multe-key", "吐蕃"),
+        array("党项"),
+        array("吐蕃"),
         
         // 南方
-        array("苗人", "super", "multe-key", "苗人"),
+        array("苗人"),
         array("壮人"),
         array("黎人"),
         
         // 西域
-        array("月氏", "super", "multe-key", "月氏"),
+        array("月氏"),
         array("贵霜帝国"),
         array("乌孙"),
-        array("鄯善", "normal", "multe-key", "鄯善", "楼兰"),
+        array("鄯善", "normal", "multe-key", "楼兰"),
         array("车师"),
         array("高昌"),
         array("疏勒"),
@@ -200,67 +197,33 @@ $dynasty = array
         array("焉耆"),
         
         // 周边地区
-        array("西藏", "super", "multe-key", "西藏", "藏传佛教", "达赖", "班禅"),
-        array("新疆", "super", "multe-key", "新疆"),
-        array("台湾", "super", "multe-key", "台湾"),
+        array("西藏", "super", "multe-key", "吐蕃", "藏传佛教", "达赖", "班禅", "拉萨"),
+        array("新疆"),
     ),
     array
     (
         // 历史
-        array("皇权"),
-        array("太子"),
-        array("宰相"),
-        array("官制"),
-        array("科举"),
-        array("监察"),
-        array("宗室"),
-        array("外戚"),
-        array("宦官"),
-        array("权臣"),
-        array("士族"),
-        array("奴婢"),
-        array("中兴"),
-        array("禅让"),
-        array("边患"),
-        array("党争"),
-    ),
-    array
-    (
-        // 现状
-        array("重庆谈判"),
-        array("延安整风运动"),
-        array("制宪国民大会"),
-        array("土地制度", "super", "multe-key", "平分土地",  "均分土地",  "分配土地", "土地面积", 
-                "井田制", "初税亩", "摊丁入亩", "一条鞭法", "两税法", "租庸调制", "均田制", "土改", 
-                "土地改革", "土地承包", "土地权", "圈地", "土地法", "土地问题", "土地征收",
-                "地权", "拆迁", "强拆", "血拆"),
-        array("拆迁", "super", "multe-key", "拆迁", "强拆", "血拆", "土地征收"),
-        array("村民自治", "super", "multe-key", "村民自治", "村民选举", "村民直选", "村长", "村支书"),
-        array("司法独立", "super", "multe-key", "司法独立", "司法改革", "律师"),
-        array("言论自由", "super", "multe-key", "言论自由", "新闻自由"),
-        array("出版自由", "super", "multe-key", "出版自由"),
-        array("中国官员", "super", "multe-key", "中国官员"),
-    ),
-    array
-    (
-        // 变法
-        array("变法"),
         array("商鞅变法"),
         array("王安石变法"),
         array("庆历新政"),
         array("张居正变法"),
         array("清末新政"),
+        
+        // 现状
+        array("延安整风运动"),
+        array("制宪国民大会"),
         array("改革开放"),
         array("台湾十大建设"),
         array("台湾民主转型"),
-    ),
-    array
-    (
+        array("村民自治", "super", "multe-key", "村民", "农民", "村民选举", "村民直选", "村长", "村支书"),
+        array("中国官员", "super", "multe-key", "中国官员"),
+        array("拆迁", "super", "multe-key", "强拆", "血拆", "土地征收"),
+        
         // 组织
-        array("中国共产党", "super", "multe-key", "中国共产党", "中共"),
+        array("中国共产党", "super", "multe-key", "中共"),
         array("中国国民党", "super", "multe-key", "国民党", "孙中山", "蒋介石"),
-        array("民主进步党", "normal", "multe-key", "民主进步党", "民进党"),
-        array("人民解放军", "normal", "multe-key", "人民解放军", "解放军", "红军", "八路军", "新四军", 
+        array("民主进步党", "normal", "multe-key", "民进党"),
+        array("人民解放军", "super", "multe-key", "解放军", "红军", "八路军", "新四军", 
             "中央军委", "政委"),
     ),
     array

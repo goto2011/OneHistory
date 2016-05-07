@@ -20,10 +20,10 @@ $die = array
     (
         // 战争
         // "战争" 有几个关键字, 需要手动整理: 伐/击/大败/灭.
-        array("战争", "super", "multe-key", "战争", "战役", "大战", "内战", "之战", "之役", "攻"),
+        array("战争", "super", "multe-key", "战役", "大战", "内战", "之战", "之役", "攻"),
 
-        array("第一次世界大战", "super", "key-time", "第一次世界大战", "战争", "一战", "1914", "1918"),
-        array("第二次世界大战", "super", "key-time", "第二次世界大战", "战争", "二战", "抗战", "抗日战争", 
+        array("第一次世界大战", "super", "key-time", "战争", "一战", "1914", "1918"),
+        array("第二次世界大战", "super", "key-time", "战争", "二战", "抗战", "抗日战争", 
                 "1931", "1945"),
     ),
     array
@@ -56,7 +56,7 @@ $die = array
     array
     (
         // 屠杀
-        array("屠杀", "super", "multe-key", "屠杀", "种族灭绝"),
+        array("屠杀", "super", "multe-key", "种族灭绝"),
         array("南京大屠杀"),
         array("二二八事件"),
         array("三反五反"),
@@ -86,7 +86,7 @@ $die = array
         array("交通事故"),
         array("病疫"),
         array("欧洲黑死病"),
-        array("自杀", "normal", "multe-key", "自杀", "自尽", "自缢", "自裁"),
+        array("自杀", "normal", "multe-key", "自尽", "自缢", "自裁"),
         array("谋杀"),
         array("死刑"),
     ),
