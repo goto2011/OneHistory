@@ -23,7 +23,7 @@ $solution = array
     (
         // 人与自己的关系
         array("如何面对死亡", "super", "multe-key", "死亡"),
-        array("为什么要有信仰", "super", "multe-key", "信仰"),
+        array("为什么信仰", "super", "multe-key", "信仰"),
         array("如何立志", "super", "multe-key", "立志"),
         array("要不要努力", "super", "multe-key", "努力", "奋斗", "有为", "无为", "忘我"),
         array("运气是什么", "normal", "multe-key", "运气"),
@@ -31,11 +31,11 @@ $solution = array
         array("如何读书", "super", "multe-key", "读书", "学习", "阅读"),
         array("如何独处", "super", "multe-key", "独处", "谨独", "静坐"),
         array("如何反省", "normal", "multe-key", "反省", "三省乎己"),
-        array("如何做个美人", "normal", "multe-key", "美人", "美女", "佳人", "丽人"),
-        array("为什么诚实", "normal", "multe-key", "诚实", "信用"),
-        array("如何克制欲望", "normal", "multe-key", "克制", "欲望"),
+        array("如何做美人", "normal", "multe-key", "美人", "美女", "佳人", "丽人"),
+        array("为什么诚实", "normal", "multe-key", "诚实", "信用", "信任"),
+        array("如何克制欲望", "normal", "multe-key", "克制", "欲望", "谨慎", "慎独", "欲壑难填", 
+            "淡泊", "名利", "求去", "急流勇退"),
         array("如何战胜拖延", "normal", "multe-key", "拖延"),
-        array("淡泊名利", "normal", "multe-key", "淡泊名利", "求去", "急流勇退"),
     ),
     array
     (
@@ -47,7 +47,8 @@ $solution = array
     array
     (
         // 人和他人的关系
-        array("为什么要善良", "super", "multe-key", "圣人", "君子", "大人", "贤人", "贤者", "仁", "仁义", "小人"),
+        // "仁"、"义"不适为关键字。
+        array("为什么善良", "super", "multe-key", "圣人", "君子", "大人", "贤人", "贤者", "仁义", "小人"),
         array("为何同情", "super", "multe-key", "同情", "恻隐之心", "同理心"),
         array("如何守礼", "super", "multe-key", "礼", "礼仪"),
         array("如何中庸", "normal", "multe-key", "中庸", "中道"),

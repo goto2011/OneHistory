@@ -1168,7 +1168,7 @@
     // 16.人性和解决方案
     $check = " where ( ( ( a.thing like '%如何面对死亡%' ) or ( a.thing like '%死亡%' ) ) )";
     assert('UT_vip_tag_search_to_db(16, 1, 1, $check)');
-    $check = " where ( ( ( a.thing like '%为什么要有信仰%' ) or ( a.thing like '%信仰%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%为什么信仰%' ) or ( a.thing like '%信仰%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 2, $check)');
     $check = " where ( ( ( a.thing like '%如何立志%' ) or ( a.thing like '%立志%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 3, $check)');
@@ -1184,16 +1184,14 @@
     assert('UT_vip_tag_search_to_db(16, 1, 8, $check)');
     $check = " where ( ( ( a.thing like '%如何反省%' ) or ( a.thing like '%反省%' ) or ( a.thing like '%三省乎己%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 9, $check)');
-    $check = " where ( ( ( a.thing like '%如何做个美人%' ) or ( a.thing like '%美人%' ) or ( a.thing like '%美女%' ) or ( a.thing like '%佳人%' ) or ( a.thing like '%丽人%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%如何做美人%' ) or ( a.thing like '%美人%' ) or ( a.thing like '%美女%' ) or ( a.thing like '%佳人%' ) or ( a.thing like '%丽人%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 10, $check)');
-    $check = " where ( ( ( a.thing like '%为什么诚实%' ) or ( a.thing like '%诚实%' ) or ( a.thing like '%信%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%为什么诚实%' ) or ( a.thing like '%诚实%' ) or ( a.thing like '%信用%' ) or ( a.thing like '%信任%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 11, $check)');
-    $check = " where ( ( ( a.thing like '%如何克制欲望%' ) or ( a.thing like '%克制%' ) or ( a.thing like '%欲望%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%如何克制欲望%' ) or ( a.thing like '%克制%' ) or ( a.thing like '%欲望%' ) or ( a.thing like '%谨慎%' ) or ( a.thing like '%慎独%' ) or ( a.thing like '%欲壑难填%' ) or ( a.thing like '%淡泊%' ) or ( a.thing like '%名利%' ) or ( a.thing like '%求去%' ) or ( a.thing like '%急流勇退%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 12, $check)');
     $check = " where ( ( ( a.thing like '%如何战胜拖延%' ) or ( a.thing like '%拖延%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 1, 13, $check)');
-    $check = " where ( ( ( a.thing like '%淡泊名利%' ) or ( a.thing like '%淡泊名利%' ) or ( a.thing like '%求去%' ) or ( a.thing like '%急流勇退%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(16, 1, 14, $check)');
     
     $check = " where ( ( ( a.thing like '%世界的本源是什么%' ) or ( a.thing like '%天道%' ) or ( a.thing like '%之道%' ) or ( a.thing like '%得道%' ) or ( a.thing like '%道也%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 2, 1, $check)');
@@ -1202,7 +1200,7 @@
     $check = " where ( ( ( a.thing like '%时空是什么%' ) or ( a.thing like '%时空%' ) or ( a.thing like '%时间%' ) or ( a.thing like '%空间%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 2, 3, $check)');
     
-    $check = " where ( ( ( a.thing like '%为什么要善良%' ) or ( a.thing like '%圣人%' ) or ( a.thing like '%君子%' ) or ( a.thing like '%大人%' ) or ( a.thing like '%贤人%' ) or ( a.thing like '%贤者%' ) or ( a.thing like '%仁%' ) or ( a.thing like '%义%' ) or ( a.thing like '%小人%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%为什么善良%' ) or ( a.thing like '%圣人%' ) or ( a.thing like '%君子%' ) or ( a.thing like '%大人%' ) or ( a.thing like '%贤人%' ) or ( a.thing like '%贤者%' ) or ( a.thing like '%仁义%' ) or ( a.thing like '%小人%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 3, 1, $check)');
     $check = " where ( ( ( a.thing like '%为何同情%' ) or ( a.thing like '%同情%' ) or ( a.thing like '%恻隐之心%' ) or ( a.thing like '%同理心%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(16, 3, 2, $check)');

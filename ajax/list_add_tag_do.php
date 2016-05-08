@@ -53,8 +53,10 @@
     {
         echo "ok";
     }
-    else 
+    else
     {
+        $GLOBALS['log']->error("Error: list_add_tag.php, added: " .  $add_thing_tag_number . 
+            ", total: " . count($_POST['groupCheckbox'])) . ".";
         echo "fail";
     }
     

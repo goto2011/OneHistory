@@ -21,7 +21,7 @@ function get_page_tags_size()
 {
     if (is_vip_user())
     {
-        $_SESSION['page_tags_size'] = 200;
+        $_SESSION['page_tags_size'] = 80;
     }
     else
     {

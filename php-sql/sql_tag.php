@@ -334,7 +334,8 @@ function insert_thing_tag($tag_uuid, $thing_uuid)
     }
     else 
     {
-        return 0;
+        // 已存在的算保存成功。
+        return 1;
     }
 }
 
