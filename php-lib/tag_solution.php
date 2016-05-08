@@ -32,7 +32,7 @@ $solution = array
         array("如何独处", "super", "multe-key", "独处", "谨独", "静坐"),
         array("如何反省", "normal", "multe-key", "反省", "三省乎己"),
         array("如何做个美人", "normal", "multe-key", "美人", "美女", "佳人", "丽人"),
-        array("为什么诚实", "normal", "multe-key", "诚实", "信"),
+        array("为什么诚实", "normal", "multe-key", "诚实", "信用"),
         array("如何克制欲望", "normal", "multe-key", "克制", "欲望"),
         array("如何战胜拖延", "normal", "multe-key", "拖延"),
         array("淡泊名利", "normal", "multe-key", "淡泊名利", "求去", "急流勇退"),
@@ -47,7 +47,7 @@ $solution = array
     array
     (
         // 人和他人的关系
-        array("为什么要善良", "super", "multe-key", "圣人", "君子", "大人", "贤人", "贤者", "仁", "义", "小人"),
+        array("为什么要善良", "super", "multe-key", "圣人", "君子", "大人", "贤人", "贤者", "仁", "仁义", "小人"),
         array("为何同情", "super", "multe-key", "同情", "恻隐之心", "同理心"),
         array("如何守礼", "super", "multe-key", "礼", "礼仪"),
         array("如何中庸", "normal", "multe-key", "中庸", "中道"),
@@ -84,22 +84,11 @@ $solution = array
         // 人和国家的关系
         array("如何换太子", "super", "multe-key", "废立", "立太子", "废太子", "废储", 
             "册封", "继承大统", "皇储", "立储"),
-        array("中央和地方关系", "super", "multe-key", "封建", "郡县", "集权", "分权", "共和", "分封", "行省", 
-            "推恩令", "单一制", "联邦制", "自治"),
-        array("官制", "super", "multe-key", "宰相"),
-        array("奴隶问题", "super", "multe-key", "奴隶", "奴婢", "家生子", "隶臣", "隶妾"),
-        array("宦官问题", "super", "multe-key", "宦官"),
-        array("权臣问题", "super", "multe-key", "权臣"),
-        array("外戚问题", "super", "multe-key", "外戚"),
-        array("宗室问题", "super", "multe-key", "宗室"),
-        
         array("如何争霸", "normal", "multe-key", "争霸", "霸道", "称霸", "霸王"),
-        array("如何巩固统一", "normal", "multe-key", "统一", "一统"),
+        array("如何统一", "normal", "multe-key", "统一", "一统"),
         array("如何分裂", "normal", "multe-key", "分裂"),
-        array("如何分化百官", "normal", "multe-key", "党争"),
-        array("如何巡视百官", "super", "multe-key", "巡视", "监督", "按察"),
-        array("如何告密", "normal", "multe-key", "告密"),
-        array("如何自污", "normal", "multe-key", "自污"),
+        // "监督"不宜为关键字。
+        array("如何管理百官", "normal", "multe-key", "党争", "巡视", "按察", "监军", "告密", "自污"),
         array("如何组织起义", "normal", "multe-key", "起义", "叛乱", "造反"),
         array("如何组织政变", "normal", "multe-key", "政变"),
         array("如何制订条约", "normal", "multe-key", "条约"),
@@ -112,7 +101,7 @@ $solution = array
         array("如何攻城", "super", "multe-key", "攻城"),
         array("如何守城", "super", "multe-key", "守城"),
         array("如何斩首", "normal", "multe-key", "斩首"),
-        array("如何以步制骑", "super", "multe-key", "以步制骑"),
+        array("如何以步制骑", "super", "multe-key", "以步制骑", "骑兵"),
         array("如何偷袭", "normal", "multe-key", "偷袭", "夜袭"),
         array("如何地道战", "normal", "multe-key", "地道战"),
         array("如何空袭", "normal", "multe-key", "空袭"),
