@@ -78,7 +78,7 @@ $land = array
         array("贝加尔湖"),
         
         // 亚洲
-        array("两河流域", "super", "multe-key", "幼发拉底河", "底格里斯河"),
+        array("两河流域", "super", "multe-key", "幼发拉底河", "底格里斯河", "美索不达米亚"),
         array("里海"),
         array("印度河"),
         array("恒河"),

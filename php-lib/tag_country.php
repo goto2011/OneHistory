@@ -10,7 +10,7 @@ $country_big = array
     "欧洲",
     "非洲",
     "美洲",
-    "大洋洲等",
+    "澳洲及国际组织",
     "其它"
 );
 
@@ -71,6 +71,7 @@ $country = array
         array("阿富汗"),
         array("中亚五斯坦", "normal", "multe-key", "吉尔吉斯斯坦", "塔吉克斯坦", "乌兹别克斯坦", 
                 "土库曼斯坦", "哈萨克斯坦"),
+        array("库尔德", "normal", "multe-key", "基尔库克"),       
     ),
     array
     (
@@ -86,7 +87,7 @@ $country = array
         array("斯里兰卡"),
         array("蒙古"),
         
-        array("东盟", "super", "multe-key", "东南亚联盟"),
+        array("东南亚", "super", "multe-key", "东盟", "东南亚联盟"),
         array("马来西亚"),
         array("泰国"),
         array("新加坡"),
@@ -100,7 +101,7 @@ $country = array
     array
     (
         // 欧洲
-        array("欧盟",  "super", "multe-key", "欧洲联盟", "欧共体", "欧洲经济共同体", 
+        array("欧洲",  "super", "multe-key", "欧盟", "欧洲联盟", "欧共体", "欧洲经济共同体", 
                 "欧洲共同体", "欧元"),
         array("神圣罗马帝国"),
         array("奥匈帝国"),
@@ -136,7 +137,7 @@ $country = array
     array
     (
         // 非洲
-        array("非盟", "super", "multe-key", "非洲联盟"),
+        array("非洲", "super", "multe-key", "非盟", "非洲联盟"),
         array("南非"),
         array("阿尔及利亚"),
         array("刚果"),

@@ -135,9 +135,9 @@
         }
         else 
         {
-            echo "Status-" . $my['status'] . "; Time-" . $my['time'] . "; Time_type-" . $my['time_type'] 
-                . "; Time_limit-" . $my['time_limit'] . "; Time_limit_type-" . $my['time_limit_type'] 
-                . " --- ";
+            echo "Status--" . $my['status'] . "; Time--" . $my['time'] . "; Time_type--" . $my['time_type'] 
+                . "; Time_limit--" . $my['time_limit'] . "; Time_limit_type-" . $my['time_limit_type'] 
+                . " --- </br>";
             return FALSE;
         }
     }
@@ -291,6 +291,12 @@
     assert('UT_get_time_from_native("192Ο年", 1920, 2, 0, 1)');
     assert('UT_get_time_from_native("192Ο-1Ο-2Ο", time_string_to_days("1920-10-20"), 3, 0, 1)');
     
+    // 中文时间
+    assert('UT_get_time_from_native("一八八〇年十月二十三日", time_string_to_days("1880-10-23"), 3, 0, 1)');
+    assert('UT_get_time_from_native("一九二〇", 1920, 2, 0, 1)');
+    assert('UT_get_time_from_native("一九四二年九月十一日十九时", 
+            time_string_to_seconds("1942-9-11 19:00:00"), 4, 0, 3)');
+    
     assert('UT_get_time_from_native("前1955年一月", time_string_to_days("-1955-1-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("前1955年1月", time_string_to_days("-1955-1-15"), 3, 15, 2)');
     assert('UT_get_time_from_native("前1955.1", time_string_to_days("-1955-1-15"), 3, 15, 2)');
@@ -345,6 +351,7 @@
     assert('UT_get_time_from_native("７",    7, 2, 0, 1)');
     assert('UT_get_time_from_native("８",    8, 2, 0, 1)');
     assert('UT_get_time_from_native("９",    9, 2, 0, 1)');
+    assert('UT_get_time_from_native("一〇",  10, 2, 0, 1)');
     
     assert('UT_get_time_from_native("一九○○年",    1900, 2, 0, 1)');
     assert('UT_get_time_from_native("一九○四",    1904, 2, 0, 1)');
@@ -1004,7 +1011,7 @@
     assert('UT_vip_tag_search_to_db(10, 3, 7, $check)');
     $check = " where ( ( ( a.thing like '%化学%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 3, 8, $check)');
-    $check = " where ( ( ( a.thing like '%数学/逻辑学%' ) or ( a.thing like '%数学%' ) or ( a.thing like '%逻辑学%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%数学%' ) or ( a.thing like '%代数%' ) or ( a.thing like '%几何%' ) or ( a.thing like '%逻辑学%' ) or ( a.thing like '%数论%' ) or ( a.thing like '%拓扑%' ) or ( a.thing like '%微积分%' ) or ( a.thing like '%方程%' ) or ( a.thing like '%概率论%' ) or ( a.thing like '%统计学%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 3, 9, $check)');
     $check = " where ( ( ( a.thing like '%医学%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 3, 10, $check)');
@@ -1112,7 +1119,7 @@
     
     $check = " where ( ( ( a.thing like '%农业%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 9, 1, $check)');
-    $check = " where ( ( ( a.thing like '%土地制度%' ) or ( a.thing like '%平分土地%' ) or ( a.thing like '%均分土地%' ) or ( a.thing like '%分配土地%' ) or ( a.thing like '%土地面积%' ) or ( a.thing like '%井田制%' ) or ( a.thing like '%初税亩%' ) or ( a.thing like '%摊丁入亩%' ) or ( a.thing like '%一条鞭法%' ) or ( a.thing like '%两税法%' ) or ( a.thing like '%租庸调制%' ) or ( a.thing like '%均田制%' ) or ( a.thing like '%土改%' ) or ( a.thing like '%土地改革%' ) or ( a.thing like '%土地承包%' ) or ( a.thing like '%土地权%' ) or ( a.thing like '%圈地%' ) or ( a.thing like '%土地法%' ) or ( a.thing like '%土地问题%' ) or ( a.thing like '%土地征收%' ) or ( a.thing like '%地权%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%土地制度%' ) or ( a.thing like '%平分土地%' ) or ( a.thing like '%均分土地%' ) or ( a.thing like '%分配土地%' ) or ( a.thing like '%土地面积%' ) or ( a.thing like '%井田制%' ) or ( a.thing like '%初税亩%' ) or ( a.thing like '%摊丁入亩%' ) or ( a.thing like '%一条鞭法%' ) or ( a.thing like '%两税法%' ) or ( a.thing like '%租庸调%' ) or ( a.thing like '%均田%' ) or ( a.thing like '%土改%' ) or ( a.thing like '%土地改革%' ) or ( a.thing like '%土地承包%' ) or ( a.thing like '%土地权%' ) or ( a.thing like '%圈地%' ) or ( a.thing like '%土地法%' ) or ( a.thing like '%土地问题%' ) or ( a.thing like '%土地征收%' ) or ( a.thing like '%地权%' ) ) )";
     assert('UT_vip_tag_search_to_db(10, 9, 2, $check)');
     $check = " where ( ( ( a.thing like '%水利%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 9, 3, $check)');
@@ -1139,22 +1146,22 @@
     assert('UT_vip_tag_search_to_db(10, 10, 2, $check)');
     $check = " where ( ( ( a.thing like '%财政税收%' ) or ( a.thing like '%财政%' ) or ( a.thing like '%税收%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 10, 3, $check)');
-    $check = " where ( ( ( a.thing like '%官制%' ) or ( a.thing like '%宰相%' ) or ( a.thing like '%科举%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 4, $check)');
     $check = " where ( ( ( a.thing like '%司法独立%' ) or ( a.thing like '%司法改革%' ) or ( a.thing like '%律师%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 5, $check)');
+    assert('UT_vip_tag_search_to_db(10, 10, 4, $check)');
     $check = " where ( ( ( a.thing like '%言论自由%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 6, $check)');
+    assert('UT_vip_tag_search_to_db(10, 10, 5, $check)');
     $check = " where ( ( ( a.thing like '%新闻自由%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 7, $check)');
+    assert('UT_vip_tag_search_to_db(10, 10, 6, $check)');
     $check = " where ( ( ( a.thing like '%反腐%' ) or ( a.thing like '%贪污%' ) or ( a.thing like '%腐败%' ) or ( a.thing like '%腐化%' ) or ( a.thing like '%亏空%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 8, $check)');
+    assert('UT_vip_tag_search_to_db(10, 10, 7, $check)');
     $check = " where ( ( ( a.thing like '%法律犯罪%' ) or ( a.thing like '%法律%' ) or ( a.thing like '%犯罪%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(10, 10, 9, $check)');
+    assert('UT_vip_tag_search_to_db(10, 10, 8, $check)');
     $check = " where ( ( ( a.thing like '%国际关系%' ) ) ) ";
+    assert('UT_vip_tag_search_to_db(10, 10, 9, $check)');
+    $check = " where ( ( ( a.thing like '%能源%' ) or ( a.thing like '%石油%' ) or ( a.thing like '%煤%' ) or ( a.thing like '%天然气%' ) or ( a.thing like '%太阳能%' ) or ( a.thing like '%核电%' ) or ( a.thing like '%可再生能源%' ) or ( a.thing like '%油页岩%' ) or ( a.thing like '%水电%' ) or ( a.thing like '%火电%' ) or ( a.thing like '%二氧化碳排放%' ) or ( a.thing like '%温室效应%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 10, 10, $check)');
     
-    $check = " where ( ( ( a.thing like '%军事科技%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%军事%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 11, 1, $check)');
     $check = " where ( ( ( a.thing like '%陆军%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(10, 11, 2, $check)');
@@ -1388,7 +1395,7 @@
     assert('UT_vip_tag_search_to_db(7, 3, 9, $check)');
     $check = " where ( ( ( a.thing like '%蒙古%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 3, 10, $check)');
-    $check = " where ( ( ( a.thing like '%东盟%' ) or ( a.thing like '%东南亚联盟%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%东南亚%' ) or ( a.thing like '%东盟%' ) or ( a.thing like '%东南亚联盟%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 3, 11, $check)');
     $check = " where ( ( ( a.thing like '%马来西亚%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 3, 12, $check)');
@@ -1409,7 +1416,7 @@
     $check = " where ( ( ( a.thing like '%菲律宾%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 3, 20, $check)');
     
-    $check = " where ( ( ( a.thing like '%欧盟%' ) or ( a.thing like '%欧洲联盟%' ) or ( a.thing like '%欧共体%' ) or ( a.thing like '%欧洲经济共同体%' ) or ( a.thing like '%欧洲共同体%' ) or ( a.thing like '%欧元%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%欧洲%' ) or ( a.thing like '%欧盟%' ) or ( a.thing like '%欧洲联盟%' ) or ( a.thing like '%欧共体%' ) or ( a.thing like '%欧洲经济共同体%' ) or ( a.thing like '%欧洲共同体%' ) or ( a.thing like '%欧元%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 4, 1, $check)');
     $check = " where ( ( ( a.thing like '%神圣罗马帝国%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 4, 2, $check)');
@@ -1470,7 +1477,7 @@
     $check = " where ( ( ( a.thing like '%波罗的海三国%' ) or ( a.thing like '%立陶宛%' ) or ( a.thing like '%拉脱维亚%' ) or ( a.thing like '%爱沙尼亚%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 4, 30, $check)');
     
-    $check = " where ( ( ( a.thing like '%非盟%' ) or ( a.thing like '%非洲联盟%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%非洲%' ) or ( a.thing like '%非盟%' ) or ( a.thing like '%非洲联盟%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 5, 1, $check)');
     $check = " where ( ( ( a.thing like '%南非%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(7, 5, 2, $check)');
@@ -1550,9 +1557,9 @@
     // 8.中国
     $check = " where ( ( ( a.thing like '%中国%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(8, 1, 1, $check)');
-    $check = " where ( ( ( a.thing like '%中华民国台湾%' ) or ( a.thing like '%台湾%' ) or ( a.thing like '%台北%' ) or ( a.thing like '%高雄%' ) or ( a.thing like '%台南%' ) or ( a.thing like '%台中%' ) or ( a.thing like '%蒋经国%' ) or ( a.thing like '%李登辉%' ) or ( a.thing like '%陈水扁%' ) or ( a.thing like '%马英九%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%台湾%' ) or ( a.thing like '%台北%' ) or ( a.thing like '%高雄%' ) or ( a.thing like '%台南%' ) or ( a.thing like '%台中%' ) or ( a.thing like '%蒋经国%' ) or ( a.thing like '%李登辉%' ) or ( a.thing like '%陈水扁%' ) or ( a.thing like '%马英九%' ) or ( a.thing like '%连战%' ) or ( a.thing like '%宋楚瑜%' ) or ( a.thing like '%蔡英文%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(8, 1, 24, $check)');
-    $check = " where ( ( ( a.thing like '%香港%' ) or ( a.thing like '%九龙%' ) or ( a.thing like '%新界%' ) or ( a.thing like '%特首%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%香港%' ) or ( a.thing like '%香港岛%' ) or ( a.thing like '%九龙%' ) or ( a.thing like '%新界%' ) or ( a.thing like '%特首%' ) or ( a.thing like '%行政长官%' ) or ( a.thing like '%立法会%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(8, 1, 25, $check)');
     
     $check = " where ( ( ( a.thing like '%鲁国%' ) ) ) ";
@@ -1799,7 +1806,7 @@
     assert('UT_vip_tag_search_to_db(8, 4, 43, $check)');
     $check = " where ( ( ( a.thing like '%西藏%' ) or ( a.thing like '%吐蕃%' ) or ( a.thing like '%藏传佛教%' ) or ( a.thing like '%达赖%' ) or ( a.thing like '%班禅%' ) or ( a.thing like '%拉萨%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(8, 4, 44, $check)');
-    $check = " where ( ( ( a.thing like '%新疆%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%新疆%' ) or ( a.thing like '%西域%' ) or ( a.thing like '%乌鲁木齐%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(8, 4, 45, $check)');
     
     $check = " where ( ( ( a.thing like '%中央和地方关系%' ) or ( a.thing like '%封建%' ) or ( a.thing like '%郡县%' ) or ( a.thing like '%集权%' ) or ( a.thing like '%分权%' ) or ( a.thing like '%分封%' ) or ( a.thing like '%行省%' ) or ( a.thing like '%推恩令%' ) or ( a.thing like '%单一制%' ) or ( a.thing like '%联邦制%' ) ) ) ";
@@ -1808,7 +1815,7 @@
     assert('UT_vip_tag_search_to_db(8, 5, 2, $check)');
     $check = " where (( ( ( a.thing like '%六部%' ) or ( a.thing like '%尚书%' ) or ( a.thing like '%侍郎%' ) or ( a.thing like '%吏部%' ) or ( a.thing like '%户部%' ) or ( a.thing like '%礼部%' ) or ( a.thing like '%兵部%' ) or ( a.thing like '%刑部%' ) or ( a.thing like '%工部%' ) or ( a.thing like '%台阁%' ) or ( a.thing like '%治粟内史%' ) or ( a.thing like '%太农令%' ) or ( a.thing like '%大司农%' ) or ( a.thing like '%司农寺%' ) or ( a.thing like '%运使司%' ) or ( a.thing like '%铁盐使司%' ) or ( a.thing like '%度支使司%' ) or ( a.thing like '%国子监%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 3, $check)');
-    $check = " where (( ( ( a.thing like '%司法监察%' ) or ( a.thing like '%御史大夫%' ) or ( a.thing like '%廷尉%' ) or ( a.thing like '%御史台%' ) or ( a.thing like '%大理寺%' ) or ( a.thing like '%都察院%' ) or ( a.thing like '%审刑院%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
+    $check = " where (( ( ( a.thing like '%司法监察%' ) or ( a.thing like '%御史大夫%' ) or ( a.thing like '%廷尉%' ) or ( a.thing like '%御史台%' ) or ( a.thing like '%大理寺%' ) or ( a.thing like '%都察院%' ) or ( a.thing like '%审刑院%' ) or ( a.thing like '%监察%' ) or ( a.thing like '%司法%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 4, $check)');
     $check = " where (( ( ( a.thing like '%军制%' ) or ( a.thing like '%兵制%' ) or ( a.thing like '%征兵%' ) or ( a.thing like '%募兵%' ) or ( a.thing like '%世兵%' ) or ( a.thing like '%军屯%' ) or ( a.thing like '%团练%' ) or ( a.thing like '%蕃兵%' ) or ( a.thing like '%边军%' ) or ( a.thing like '%府兵%' ) or ( a.thing like '%义从%' ) or ( a.thing like '%禁兵%' ) or ( a.thing like '%卫所%' ) or ( a.thing like '%八旗%' ) or ( a.thing like '%绿营%' ) or ( a.thing like '%虎符%' ) or ( a.thing like '%太尉%' ) or ( a.thing like '%大都督府%' ) or ( a.thing like '%五军都督府%' ) or ( a.thing like '%都指挥使%' ) or ( a.thing like '%大将军%' ) or ( a.thing like '%骠骑将军%' ) or ( a.thing like '%车骑将军%' ) or ( a.thing like '%卫将军%' ) or ( a.thing like '%前后左右将军%' ) or ( a.thing like '%上柱国%' ) or ( a.thing like '%枢密院%' ) or ( a.thing like '%都指挥司%' ) or ( a.thing like '%校尉%' ) or ( a.thing like '%执金吾%' ) or ( a.thing like '%虎贲中郎将%' ) or ( a.thing like '%羽林中郎将%' ) or ( a.thing like '%都尉%' ) or ( a.thing like '%观军容使%' ) or ( a.thing like '%折冲府%' ) or ( a.thing like '%节度使%' ) or ( a.thing like '%千户%' ) or ( a.thing like '%百户%' ) or ( a.thing like '%总兵%' ) or ( a.thing like '%参将%' ) or ( a.thing like '%游击%' ) or ( a.thing like '%都司%' ) or ( a.thing like '%守备%' ) or ( a.thing like '%牛录%' ) or ( a.thing like '%甲喇%' ) or ( a.thing like '%固山%' ) or ( a.thing like '%都统%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 5, $check)');
@@ -1818,7 +1825,7 @@
     assert('UT_vip_tag_search_to_db(8, 5, 7, $check)');
     $check = " where (( ( ( a.thing like '%边臣%' ) or ( a.thing like '%典客%' ) or ( a.thing like '%大行令%' ) or ( a.thing like '%大鸿胪%' ) or ( a.thing like '%鸿胪寺%' ) or ( a.thing like '%西域都护%' ) or ( a.thing like '%宣慰司%' ) or ( a.thing like '%土司%' ) or ( a.thing like '%理藩院%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 8, $check)');
-    $check = " where (( ( ( a.thing like '%世卿世禄制%' ) or ( a.thing like '%世卿世禄%' ) or ( a.thing like '%世袭%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
+    $check = " where (( ( ( a.thing like '%世卿世禄制%' ) or ( a.thing like '%世卿世禄%' ) or ( a.thing like '%世袭%' ) or ( a.thing like '%世职%' ) or ( a.thing like '%世官%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 9, $check)');
     $check = " where (( ( ( a.thing like '%军功爵制%' ) or ( a.thing like '%军功%' ) or ( a.thing like '%斩一首爵一级%' ) ) ) and ((year_order >= -1500) and (year_order <= 1911))) ";
     assert('UT_vip_tag_search_to_db(8, 5, 10, $check)');
@@ -1963,7 +1970,7 @@
     assert('UT_vip_tag_search_to_db(14, 3, 6, $check)');
     $check = " where ( ( ( a.thing like '%贝加尔湖%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(14, 3, 7, $check)');
-    $check = " where ( ( ( a.thing like '%两河流域%' ) or ( a.thing like '%幼发拉底河%' ) or ( a.thing like '%底格里斯河%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%两河流域%' ) or ( a.thing like '%幼发拉底河%' ) or ( a.thing like '%底格里斯河%' ) or ( a.thing like '%美索不达米亚%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(14, 3, 8, $check)');
     $check = " where ( ( ( a.thing like '%里海%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(14, 3, 9, $check)');
@@ -2111,22 +2118,20 @@
     assert('UT_vip_tag_search_to_db(5, 1, 6, $check)');
     $check = " where ( ( ( a.thing like '%莫斯科%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(5, 1, 7, $check)');
-    $check = " where ( ( ( a.thing like '%香港%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 8, $check)');
     $check = " where ( ( ( a.thing like '%新加坡%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 9, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 8, $check)');
     $check = " where ( ( ( a.thing like '%东京%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 10, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 9, $check)');
     $check = " where ( ( ( a.thing like '%悉尼%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 11, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 10, $check)');
     $check = " where ( ( ( a.thing like '%孟买%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 12, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 11, $check)');
     $check = " where ( ( ( a.thing like '%纽约%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 13, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 12, $check)');
     $check = " where ( ( ( a.thing like '%洛杉矶%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 14, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 13, $check)');
     $check = " where ( ( ( a.thing like '%芝加哥%' ) ) ) ";
-    assert('UT_vip_tag_search_to_db(5, 1, 15, $check)');
+    assert('UT_vip_tag_search_to_db(5, 1, 14, $check)');
     
     $check = " where ( ( ( a.thing like '%阿姆斯特丹%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(5, 2, 1, $check)');
@@ -2371,7 +2376,7 @@
     assert('UT_vip_tag_search_to_db(5, 5, 18, $check)');
     $check = " where ( ( ( a.thing like '%湖州%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(5, 5, 19, $check)');
-    $check = " where ( ( ( a.thing like '%绍兴%' ) ) ) ";
+    $check = " where ( ( ( a.thing like '%绍兴%' ) or ( a.thing like '%会稽%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(5, 5, 20, $check)');
     $check = " where ( ( ( a.thing like '%金华%' ) ) ) ";
     assert('UT_vip_tag_search_to_db(5, 5, 21, $check)');

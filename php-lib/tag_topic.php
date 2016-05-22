@@ -72,7 +72,8 @@ $topic = array
         array("生物"),
         array("环境保护"),
         array("化学"),
-        array("数学/逻辑学", "normal", "multe-key", "数学", "逻辑学"),
+        array("数学", "normal", "multe-key", "代数", "几何", "逻辑学", "数论", "拓扑", "微积分", 
+            "方程", "概率论", "统计学"),
         array("医学"),
         array("中医"),
         array("诺贝尔奖", "super", "sigle-key", "诺贝尔奖"),
@@ -156,7 +157,7 @@ $topic = array
         // 经济
         array("农业"),
         array("土地制度", "super", "multe-key", "平分土地",  "均分土地",  "分配土地", "土地面积", 
-                "井田制", "初税亩", "摊丁入亩", "一条鞭法", "两税法", "租庸调制", "均田制", "土改", 
+                "井田制", "初税亩", "摊丁入亩", "一条鞭法", "两税法", "租庸调", "均田", "土改", 
                 "土地改革", "土地承包", "土地权", "圈地", "土地法", "土地问题", "土地征收", "地权"),
         array("水利"),
         
@@ -176,18 +177,19 @@ $topic = array
         array("民主", "super", "multe-key", "独裁", "选举", "专制"),
         array("宪政", "normal", "multe-key", "宪政", "宪法", "制宪"),
         array("财政税收", "super", "multe-key", "财政", "税收"),
-        array("官制", "super", "multe-key", "宰相", "科举"),
         array("司法独立", "super", "multe-key", "司法改革", "律师"),
         array("言论自由", "super", "sigle-key", "言论自由"),
         array("新闻自由", "super", "sigle-key", "新闻自由"),
         array("反腐", "normal", "multe-key", "贪污", "腐败", "腐化", "亏空"),
         array("法律犯罪", "normal", "multe-key", "法律", "犯罪"),
         array("国际关系"),
+        array("能源", "super", "multe-key", "石油", "煤", "天然气", "太阳能", "核电", "可再生能源", "油页岩", 
+            "水电", "火电", "二氧化碳排放", "温室效应"),
     ),
     array
     (
         // 军事
-        array("军事科技"),
+        array("军事"),
         array("陆军"),
         array("海军"),
         array("空军"),
