@@ -666,7 +666,7 @@ function re_calc_year_order()
         return 0;
     }
     
-    $sql_string = "update thing_time set year_order=time+2015 where time_type=1";
+    $sql_string = "update thing_time set year_order=time+" . get_current_year() . " where time_type=1 ";
     if (!mysql_query($sql_string))
     {
         $GLOBALS['log']->error("error: re_calc_year_order() -- $sql_string 。");
@@ -705,7 +705,6 @@ function re_calc_tag_hot_index()
     $tag_uuids = array();
     
     $sql_string = "select property_UUID from property";
-    
     $result = mysql_query($sql_string);
     if ($result == FALSE)
     {
@@ -746,7 +745,6 @@ function re_calc_tag_hot_index()
         
         // 更新
         $sql_string = "update property set hot_index = $my_hot_index where property_UUID = '$tag_uuid'";
-        
         if (mysql_query($sql_string) === FALSE)
         {
             $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
@@ -757,7 +755,84 @@ function re_calc_tag_hot_index()
     return 1;
 }
 
+/**
+ * 计算事件-标签类型映射. 2016-07-17
+ */
+function re_add_thing_tag_map()
+{
+    $thing_uuids = array();
+	$tag_types = array();
+	$my_string = "";
+	
+	// 1.遍历所有事件
+    $sql_string = " select uuid from thing_time ";
+	$result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: re_add_thing_tag_map() -- $sql_string 。");
+        return 0;
+    }
+	
+	while($row = mysql_fetch_array($result))
+    {
+        $thing_uuids[] = $row['uuid'];
+    }
+	
+	foreach ($thing_uuids as $thing_uuid)
+	{
+		// 2.获取当前事件的所有标签的类型
+		$sql_string = "select property_type from property b where exists ( select property_UUID from 
+			thing_property c where b.property_UUID=c.property_UUID and c.thing_UUID='$thing_uuid')";
+		$result = mysql_query($sql_string);
+	    if ($result == FALSE)
+	    {
+	        $GLOBALS['log']->error("error: re_add_thing_tag_map() -- $sql_string 。");
+	        return 0;
+	    }
+		
+		// 3.拼接字符串
+		while($row = mysql_fetch_array($result))
+		{
+			$tag_types[] = $row['property_type'];
+		}
+		$my_string = tag_types_to_string($tag_types);
+		unset($tag_types);
+		
+		// 4.更新到数据库
+	    $sql_string = "update thing_time set property_types = '$my_string' where uuid = '$thing_uuid'";
+        
+        if (mysql_query($sql_string) == FALSE)
+        {
+            $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
+            return 0;
+        }
+	}
+	
+	return 1;
+}
 
+/**
+ * 输入tag 类型数组，返回tag类型字符串. 2016-07-17
+ */
+function tag_types_to_string($tag_types)
+{
+	$my_string = "";
+	
+	foreach ($tag_types as $tag_type)
+	{
+		$my_string = $my_string . "-a" . trim($tag_type);
+	}
+	return $my_string;
+}
+
+/**
+ * 输入单个tag 类型，返回tag类型字符串. 2016-07-17
+ */
+function tag_type_to_string($tag_type)
+{
+	return "a" . $tag_type;
+}
+ 
 /**
  * 删除指定标签.
  */

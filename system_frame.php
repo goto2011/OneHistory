@@ -72,18 +72,7 @@ function make_button_status(operate_type, disabled)
  */
 function change_status_lable(operate_type, res_status, is_display)
 {
-    if (operate_type == "re_calc_year_order")
-    {
-        manager_show_status("re_calc_year_order_label", res_status, is_display);
-    }
-    else if (operate_type == "re_calc_tag_hot_index")
-    {
-        manager_show_status("re_calc_tag_hot_index_label", res_status, is_display);
-    }
-    else if (operate_type == "re_thing_add_vip_tag")
-    {
-        manager_show_status("re_thing_add_vip_tag_label", res_status, is_display);
-    }
+	manager_show_status(operate_type + "_label", res_status, is_display);
 }
 
 // 调用成功后的回调函数。
@@ -144,8 +133,7 @@ function ajax_do(operate_type)
 
 <div class="system_user">
     <input type="submit" style="font-size:18pt" value="自动将事件添加vip标签" 
-        id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->
-        
+        id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->   
 <?php
 
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
@@ -160,11 +148,16 @@ function ajax_do(operate_type)
         }
     }
 ?>
-
     </br></br><div class="label" id="re_thing_add_vip_tag_label"></div>
 </div>
-
-
+    
+<div class="system_user">
+    <input type="submit" style="font-size:18pt" value="计算事件-标签类型映射" 
+        id="re_add_thing_tag_map" onclick="ajax_do('re_add_thing_tag_map')" /></p> <!-- 提交 -->
+    <div class="label" id="re_add_thing_tag_map_label"></div>
+</div>
+    
+</div>
 
  
 <!-- tab页 end -->

@@ -749,7 +749,7 @@
     
     
     
-    //////////////////////// 12.VIP tag ///////////////////////////////////
+    //////////////////////// 12.Main page tab ///////////////////////////////////
     echo "12.检查主页面各tab 页的顺序</br>";
     
     function UT_get_tag_id_from_index($tag_index, $check)
@@ -780,10 +780,25 @@
     assert('UT_get_tag_id_from_index(15, 3)');
     assert('UT_get_tag_id_from_index(16, 13)');
     assert('UT_get_tag_id_from_index(17, 12)');
+
+    //////////////////////// 13.标签类型数组 ///////////////////////////////////
+    echo "13.标签类型数组</br>";
+	$tag_types = array(3, 10, 9, 10);
+	function UT_tag_types_to_string($tag_types, $check)
+	{
+		$result = tag_types_to_string($tag_types);
+		if($result != $check)
+		{
+			echo " -- " . $result . "</br> -- " . $check . " --</br>";
+			return FALSE;
+		}
+		return TRUE;
+	}
+	assert('UT_tag_types_to_string($tag_types, "-a3-a10-a9-a10")');
+	
     
-    
-    //////////////////////// 13.VIP tag ///////////////////////////////////
-    echo "13.VIP tag</br>";
+    //////////////////////// 14.VIP tag ///////////////////////////////////
+    echo "14.VIP tag</br>";
     
     // 参数：$tag_index 为 tab id，即下标。
     function UT_vip_tag_search_to_db($tag_type, $index_big, $index_small, $check)

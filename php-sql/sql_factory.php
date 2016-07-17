@@ -18,6 +18,13 @@ class sql_type {
 };
 
 // 生成SQL语句。
+//  1. =======检索=======  // CONST_SEARCH
+//  1.1 获取事件数量 // CONST_GET_THING_COUNT
+//  1.2 获取tag // CONST_GET_TAGS
+//  1.3 获取事件 // CONST_GET_THING_ITEMS
+//  2. =======时期=======  // CONST_PERIOD
+//  3. =======标签=======  // CONST_TAG
+//  4. =======标签类型/Tab页=======  // CONST_TAG_TYPE
 function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = "")
 {
     switch ($sql_object) {
@@ -209,7 +216,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
             }
             break;
             
-        //  3. ======= 标签 ========
+        //  3. =======标签========
         case sql_object::CONST_TAG:
             $property_UUID = $sql_param['tag_id'];
             
@@ -269,8 +276,9 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    return "select count(distinct c.thing_UUID) from thing_property c, property b 
-                                        where b.property_type = $tag_type and b.property_UUID = c.property_UUID";
+								   $my_tag = tag_type_to_string($tag_type);
+                                    return "select count(a.uuid) from thing_time a where a.property_types 
+                                    		like '%$my_tag%'";
                                 }
                                 else
                                 {
@@ -316,20 +324,18 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             default:
                                 if ($tag_type > 0)
                                 {
-                                    /*
-                                    return "select b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                                        from property b, thing_property c where 
-                                        c.thing_UUID in (select t.thing_UUID from (select c.thing_UUID 
-                                        from property b, thing_property c, thing_time a 
-                                        where b.property_type=$tag_type and b.property_UUID = c.property_UUID 
-                                        and c.thing_UUID = a.uuid $order_substring ) as t)
-                                        and  b.property_UUID = c.property_UUID ";
-                                     */
+								   /*
                                     return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                                         from property b, thing_property c, (select c.thing_UUID from property b, thing_property c, 
                                         thing_time a where b.property_type=$tag_type and b.property_UUID = c.property_UUID 
                                         and c.thing_UUID = a.uuid $order_substring) t where b.property_UUID = c.property_UUID 
                                         and t.thing_UUID=c.thing_UUID";
+								    */
+								   $my_tag = tag_type_to_string($tag_type);
+                                    return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, t.uuid 
+                                        from property b, thing_property c, (select a.uuid from thing_time a where a.property_types 
+                                        like '%$my_tag%' $order_substring ) t where b.property_UUID = c.property_UUID 
+                                        and t.uuid=c.thing_UUID";
                                 }
                                 else
                                 {
@@ -366,9 +372,13 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             default:
                                 if ($tag_type > 0)
                                 {
+                                	   /*  
                                     return "select a.* from property b, thing_property c, thing_time a 
                                         where b.property_type=$tag_type and c.thing_UUID = a.uuid and
                                         b.property_UUID = c.property_UUID ";
+									 */ 
+								   $my_tag = tag_type_to_string($tag_type);
+                                    return "select a.* from thing_time a where a.property_types like '%$my_tag%' ";
                                 }
                                 else
                                 {

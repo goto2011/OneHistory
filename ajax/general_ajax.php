@@ -52,6 +52,19 @@
             echo "fail";
         }
     }
+	
+	// 计算事件-标签类型映射
+	else if($_GET['operate_type'] == "re_add_thing_tag_map")
+	{
+        if (re_add_thing_tag_map() == 1)
+        {
+            echo "ok";
+        }
+        else
+        {
+            echo "fail";
+        }
+	}
 
     // exit.
     mysql_close($conn);
