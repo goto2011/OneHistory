@@ -43,6 +43,7 @@ window.onload = function()
         
         $begin_year = 0;
         $end_year = 0;
+        $sql_object = sql_object::CONST_OBJECT_INIT;
         $sql_param = array();
         
         // 打开数据库
@@ -157,8 +158,9 @@ window.onload = function()
             $tag_param_array = array();
             $my_sql_thing = get_thing_tag_prompt($sql_object, $sql_param, $order_substring, 
                 $tag_id_array, $tag_param_array);
-                
-            // echo print_r($tag_param_array);
+            
+            // var_dump($tag_id_array) . "</br>";
+            // var_dump($tag_param_array) . "</br>";
             
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step13");
             // 获取 thing 数据。***
@@ -189,7 +191,7 @@ window.onload = function()
                         
                 $thing_context = $row['thing'];
                 // 高亮 检索关键字。 2016-01-27
-    			if(is_search())
+    			    if(is_search())
                 {
                     $search_key = search_key();
                     $key_array = get_highline_key_string($search_key);
@@ -218,10 +220,10 @@ window.onload = function()
             print_list_control($item_count, $page_size, get_page());;   // list control.
             
             // log print.
-            $time_diff = strtotime("now") - $thing_list_begin; 
+            $time_diff = strtotime("now") - $thing_list_begin;
             if ($time_diff >= 3)
             {
-                $GLOBALS['log']->error(date('H:i:s') . " - " . $time_diff . " - Thing_list_too_long! ");
+                $GLOBALS['log']->error(date('H:i:s') . " - " . $time_diff . " - List_show_too_late! ");
                 $GLOBALS['log']->error("SQL string is: " . $my_sql_thing);
             }
 		} // if

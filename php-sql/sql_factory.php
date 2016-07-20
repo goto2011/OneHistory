@@ -4,6 +4,7 @@
 
 // sql 对象类型。
 class sql_object {
+    const CONST_OBJECT_INIT =   0;
     const CONST_SEARCH      =   1;
     const CONST_PERIOD      =   2;
     const CONST_TAG         =   3;
@@ -20,8 +21,8 @@ class sql_type {
 // 生成SQL语句。
 //  1. =======检索=======  // CONST_SEARCH
 //  1.1 获取事件数量 // CONST_GET_THING_COUNT
-//  1.2 获取tag // CONST_GET_TAGS
-//  1.3 获取事件 // CONST_GET_THING_ITEMS
+//  1.2 获取当前页的所有tag // CONST_GET_TAGS
+//  1.3 获取当前页的事件 // CONST_GET_THING_ITEMS
 //  2. =======时期=======  // CONST_PERIOD
 //  3. =======标签=======  // CONST_TAG
 //  4. =======标签类型/Tab页=======  // CONST_TAG_TYPE
@@ -332,7 +333,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                         and t.thing_UUID=c.thing_UUID";
 								    */
 								   $my_tag = tag_type_to_string($tag_type);
-                                    return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, t.uuid 
+                                    return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                                         from property b, thing_property c, (select a.uuid from thing_time a where a.property_types 
                                         like '%$my_tag%' $order_substring ) t where b.property_UUID = c.property_UUID 
                                         and t.uuid=c.thing_UUID";

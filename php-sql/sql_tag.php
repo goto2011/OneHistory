@@ -257,15 +257,16 @@ function get_tag_search_substring($property_UUID)
 }
 
 /**
- * 遍历从 import/update 界面获取多个类型的标签，一个一个传给insert_tags进行存储。
+ * 遍历从 import/update 界面获取多个类型的标签，一个一个传给 insert_tags 进行存储。
  * $tags_array: tag 数组.
  * $thing_uuid: 事件id.
  */
 function insert_tag_from_input($tags_array, $thing_uuid)
 {
     $tags_insert_count = 0;
+	$tag_types = array();
     
-    // 处理出处细节。
+    // 处理“出处细节”字段
     if (isset($tags_array['source_detail']))
     {
         $source_detail = html_encode($tags_array['source_detail']);
@@ -279,24 +280,42 @@ function insert_tag_from_input($tags_array, $thing_uuid)
     {
         if (is_show_input_tag($ii) == 1)
         {
+        		// 获取tag的key值
             $tag_key = get_tag_key_from_index($ii);
             $tag_name = html_encode($tags_array[$tag_key]);
             
             if(!empty($tag_name))
             {
+            		$my_count = 0;
                 $tag_type = get_tag_id_from_index($ii);
                 
-                // 保存“出处细节”。
+                // 保存“标签”+“出处细节”
                 if (is_source($tag_type) && strlen($source_detail) > 0)
                 {
-                    $tags_insert_count += insert_tags($tag_name, $tag_type, $thing_uuid, $source_detail);
+                    $my_count = insert_tags($tag_name, $tag_type, $thing_uuid, $source_detail);
                 }
+				// 保存“标签”
                 else 
                 {
-                    $tags_insert_count += insert_tags($tag_name, $tag_type, $thing_uuid);
+                    $my_count = insert_tags($tag_name, $tag_type, $thing_uuid);
+                }
+				
+                if ($my_count > 0)
+                {
+                    $tags_insert_count += $my_count;
+                    // 保存 tag type id.
+                    $tag_types[] = get_tag_id_from_index($ii);
                 }
             }
         }
+    }// for
+    
+    // 2016-07-17
+    if ($tags_insert_count > 0)
+    {
+        $update_string = update_tag_type_string("", $tag_types);
+        // 更新出错了也要继续。
+        update_tag_types_to_db($thing_uuid, $update_string);
     }
     
     return $tags_insert_count;
@@ -393,7 +412,7 @@ function insert_tag($tag_name, $tag_type, $source_detail = "")
 
 /**
  * 将同一个类型的多个 tag 插入数据库.
- * $tags: tag 数组.
+ * $tags: tag 字符串，以 ，分割多个tag.
  * $tag_type: tag 类型.
  * $thing_uuid: 事件id.
  * $source_detail: 出处细节. 可选.
@@ -642,7 +661,8 @@ function get_tag_param_array_from_thing($sql_object, $sql_param, $order_substrin
  */
 function get_tags_from_thing_UUID($thing_UUID)
 {
-    $sql_string = "select property_UUID, property_name, property_type, hot_index from property where property_UUID in(
+    $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
+            where property_UUID in(
             select property_UUID from thing_property where thing_UUID = '$thing_UUID')";
     $result = mysql_query($sql_string);
     if($result == FALSE)
@@ -799,11 +819,8 @@ function re_add_thing_tag_map()
 		unset($tag_types);
 		
 		// 4.更新到数据库
-	    $sql_string = "update thing_time set property_types = '$my_string' where uuid = '$thing_uuid'";
-        
-        if (mysql_query($sql_string) == FALSE)
+        if (update_tag_types_to_db($thing_uuid, $my_string) == 0)
         {
-            $GLOBALS['log']->error("error: re_calc_tag_hot_index() -- $sql_string 。");
             return 0;
         }
 	}
@@ -811,6 +828,21 @@ function re_add_thing_tag_map()
 	return 1;
 }
 
+/**
+ * 将指定thing uuid 和 tag types字符串，保存到数据库中。2016-07-17
+ */
+function update_tag_types_to_db($thing_uuid, $tag_string)
+{
+   $sql_string = "update thing_time set property_types = '$tag_string' where uuid = '$thing_uuid'";
+    
+    if (mysql_query($sql_string) == FALSE)
+    {
+        $GLOBALS['log']->error("error: update_tag_types_to_db() -- $sql_string 。");
+        return 0;
+    }
+    return 1;
+}
+ 
 /**
  * 输入tag 类型数组，返回tag类型字符串. 2016-07-17
  */
@@ -820,7 +852,7 @@ function tag_types_to_string($tag_types)
 	
 	foreach ($tag_types as $tag_type)
 	{
-		$my_string = $my_string . "-a" . trim($tag_type);
+		$my_string .= "-" . tag_type_to_string($tag_type);
 	}
 	return $my_string;
 }
@@ -830,8 +862,42 @@ function tag_types_to_string($tag_types)
  */
 function tag_type_to_string($tag_type)
 {
-	return "a" . $tag_type;
+	return "a" . trim($tag_type);
 }
+
+/**
+ * 根据旧的tag类型字符串，和新的数组，生成新的tag类型字符。2016-07-17
+ * 返回 “-1”说明不需要刷新。
+ */
+ function update_tag_type_string($old_tag_string, $tag_types)
+ {
+ 	$result_stirng = "";
+ 	// 如果旧的字符串为空，则说明是新建。
+ 	if($old_tag_string == "")
+	{
+		return tag_types_to_string($tag_types);
+	}
+	else 
+	{
+		foreach ($tag_types as $tag_type)
+		{
+			$my_string = tag_type_to_string($tag_type);
+            // 如果不存在，则添加。
+			if (strstr($old_tag_string . $result_stirng, $my_string) === FALSE)
+			{
+				$result_stirng .= "-" . $my_string;
+			}
+		}
+	}
+	if ($result_stirng != "")
+	{
+		return $old_tag_string . $result_stirng;
+	}
+	else 
+	{
+		return "-1";
+	}
+ }
  
 /**
  * 删除指定标签.

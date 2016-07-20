@@ -40,21 +40,21 @@
             ajax_error_exit(error_id::ERROR_PROGRASS_FAIL);
     	}
     	
-        $conn = open_db();
-        $update_return = 0;
-    	
+    $conn = open_db();
+    $update_return = 0;
+	
     	// 3. 获取事件文本。
-        $thing = html_encode($_POST['thing']);
-        
-	    // 更新
-        $update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
-              $_POST['death_person_count'], $_POST['hurt_person_count'], 
-              $_POST['missing_person_count'], $_POST['word_count']);
+    $thing = html_encode($_POST['thing']);
+    
+    // 更新
+    $update_return = update_thing_to_db($thing_uuid, $time_array, $thing, 0, 
+          $_POST['death_person_count'], $_POST['hurt_person_count'], 
+          $_POST['missing_person_count'], $_POST['word_count']);
     	
     	// 2.保存tags
     	if(strlen($thing_uuid) > 0)
     	{
-            insert_tag_from_input($_POST, $thing_uuid);
+        insert_tag_from_input($_POST, $thing_uuid);
     	}
         
     	// exit.

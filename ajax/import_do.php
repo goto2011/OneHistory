@@ -78,15 +78,15 @@
     	$context = one_line_flag(html_encode($_POST['context']));
     	$token = strtok($context, "\r");
     	$line_index = 0;               // 行号，含空行。
-        $thing_index = 0;              // 事件串号，一行一条，不含空行。
-        $thing_index_inside_tag = 0;   //  笔记编号。
-        
-        // 获取标签内编号的基数。
-        if (($operate_type == 2) && (is_index_inside_tag() == 1))
-        {
-            // 根据 笔记标签 来读取标签内编号。
-            $thing_index_inside_tag = get_index_base_inside_tag($_POST['note_tags']);
-        }
+    $thing_index = 0;              // 事件串号，一行一条，不含空行。
+    $thing_index_inside_tag = 0;   //  笔记编号。
+    
+    // 获取标签内编号的基数。
+    if (($operate_type == 2) && (is_index_inside_tag() == 1))
+    {
+        // 根据 笔记标签 来读取标签内编号。
+        $thing_index_inside_tag = get_index_base_inside_tag($_POST['note_tags']);
+    }
     	
     	while(($token != false) && (strlen($token) > 0))
     	{
@@ -123,10 +123,11 @@
                     }
                     else 
                     {
-                        // 是否同时保存序号。
+                        // 保存事件和时间
                         if (is_index_inside_tag() == 1)
                         {
                             $thing_index_inside_tag++;
+							// 保存序号
                             $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), 
                                 $my_array['thing'], $thing_index_inside_tag);
                         }
@@ -136,9 +137,9 @@
                                 $my_array['thing']);
                         }
                         
+                        // 保存标签
                         if ($thing_uuid != "")
                         {
-                            // 保存标签
                             insert_tag_from_input($_POST, $thing_uuid);
                         }
                         else 

@@ -253,6 +253,12 @@ function get_thing_substring($tag_id)
 /**
  * 完成 事件、标签、事件-标签对的三表联合查询。
  * 返回 sql 语句是为了打印log，因为这个函数是整个系统的瓶颈。
+ * $sql_object：对象类型
+ * $sql_param：查询条件
+ * $order_substring：排序子句
+ * &$tag_id_array：输出tag id
+ * &$tag_param_array：输出tag parameter
+ * return: $sql_string，返回sql语句，方便外层在超时时打印。
  */
 function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_id_array, &$tag_param_array)
 {
@@ -281,7 +287,7 @@ function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_i
             $tag_id_array[$my_tag_id_row['thing_UUID']][$array_index] = $my_tag_id_row['property_UUID'];
         }
         
-        // 保存 tag uuid 和 tag type 的对应关系。
+        // 保存 tag uuid 和 tag type、名称、hot_index 的对应关系。
         // 下标是 tag uuid。一个 tag uuid 对应一个 tag type。
         if (!array_key_exists($my_tag_id_row['property_UUID'], $tag_param_array))
         {

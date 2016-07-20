@@ -52,52 +52,69 @@
         echo "</nobr></form></div>";
     }
 
+    // 通过数据库生成每个事件的标签信息。2016-07-20
+    function print_item_tags_from_db($thing_uuid)
+    {
+        $result_string = "";
+        $result = get_tags_from_thing_UUID($thing_uuid);
+        
+        if (mysql_num_rows($result) > 0)
+        {
+            $result_string = "<align='left' style='font-family:微软雅黑'>";
+            
+            while($row = mysql_fetch_array($result))
+            {
+                $result_string .= create_tag_link($row['property_type'], $row['property_UUID'], 
+                    $row['property_name'], $row['hot_index']);
+            }
+            $result_string .= "</div>";
+        }
+        
+        return $result_string;
+    }
+
     /**
-     * 更新每个条目的标签. 2015-9-1
-     * @$person_count_string: 打印死亡人数、受伤人数、失踪人数（为节省界面，作为标签的一部分，没有超链接）
+     * 生成每个事件的标签信息. 2015-9-1
+     * $thing_UUID：要查找的事件 uuid。
+     * $person_count_string: 打印死亡人数、受伤人数、失踪人数（为节省界面，作为标签的一部分，没有超链接）
      */
     function print_item_tags($thing_UUID, $tag_id_array, $tag_param_array, $person_count_string)
     {
-        $result_string = "";
-        $array_has_data = false;
-        
         $result_string = "<div align='left' style='font-family:微软雅黑'>";
+        // 死亡人数放在最前面。
         $result_string .= $person_count_string . "&nbsp;&nbsp;&nbsp;";
               
         // 数组中存在指定 thing uuid.
         if (array_key_exists($thing_UUID, $tag_id_array))
         {
+            // 通过$thing_UUID
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "print_item_tags(). Tag_hit!");
             for ($ii = 0; $ii < count($tag_id_array[$thing_UUID]); $ii++)
             {
                 $my_tag_id = $tag_id_array[$thing_UUID][$ii];
+                // 数组中存在指定的 tag_id
                 if (array_key_exists($my_tag_id, $tag_param_array))
                 {
                     $result_string .= create_tag_link($tag_param_array[$my_tag_id][0], $my_tag_id, 
                             $tag_param_array[$my_tag_id][1], $tag_param_array[$my_tag_id][2]);
-                    $array_has_data = true;
+                }
+                else 
+                {
+                    // 只要有一个tag不存在，则所有tag重新从数据库中读取。
+                    $GLOBALS['log']->error(date('H:i:s') . "-" . "print_item_tags(). Tag_not_hit!");
+                    $GLOBALS['log']->error("thing_UUID: " . $thing_UUID);
+                    $GLOBALS['log']->error("tag_UUID: " . $my_tag_id);
+                    return print_item_tags_from_db($thing_UUID);
                 }
             }
             $result_string .= "</div>";
         }
-        
-        // 数组中不存在，则获取数据库的数据。
-        if ($array_has_data == false)
+        // thing uuid 数组中不存在，则获取数据库的数据。
+        else
         {
             $GLOBALS['log']->error(date('H:i:s') . "-" . "print_item_tags(). Tag_not_hit!");
-            $result = get_tags_from_thing_UUID($thing_UUID);
-            
-            if (mysql_num_rows($result) > 0)
-            {
-                $result_string .= "<align='left' style='font-family:微软雅黑'>";
-                
-                while($row = mysql_fetch_array($result))
-                {
-                    $result_string .= create_tag_link($row['property_type'], $row['property_UUID'], 
-                        $row['property_name'], $row['hot_index']);
-                }
-                $result_string .= "</div>";
-            }
+            $GLOBALS['log']->error("thing_UUID: " . $thing_UUID);
+            return print_item_tags_from_db($thing_UUID);
         }
         
         return $result_string;
