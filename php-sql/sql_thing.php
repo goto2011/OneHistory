@@ -10,6 +10,7 @@ function get_thing_db($thing_uuid)
     if ($result == FALSE)
     {
         $GLOBALS['log']->error("error: get_thing_db() -- $sql_string 。");
+        return "";
     }
     
     return $result;
@@ -256,11 +257,12 @@ function get_thing_substring($tag_id)
  * $sql_object：对象类型
  * $sql_param：查询条件
  * $order_substring：排序子句
- * &$tag_id_array：输出tag id
+ * &$tag_id_array：输出 tag id
  * &$tag_param_array：输出tag parameter
  * return: $sql_string，返回sql语句，方便外层在超时时打印。
  */
-function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_id_array, &$tag_param_array)
+function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_id_array, 
+        &$tag_param_array)
 {
     // step1: 获取当前页的事件相关 tag id。(以 thing_UUID 为key。)
     $sql_string = "";

@@ -261,7 +261,7 @@ function get_tag_search_substring($property_UUID)
  * $tags_array: tag 数组.
  * $thing_uuid: 事件id.
  */
-function insert_tag_from_input($tags_array, $thing_uuid)
+function insert_tag_from_input($tags_array, $thing_uuid, $old_tag_string)
 {
     $tags_insert_count = 0;
 	$tag_types = array();
@@ -313,9 +313,12 @@ function insert_tag_from_input($tags_array, $thing_uuid)
     // 2016-07-17
     if ($tags_insert_count > 0)
     {
-        $update_string = update_tag_type_string("", $tag_types);
-        // 更新出错了也要继续。
-        update_tag_types_to_db($thing_uuid, $update_string);
+        $update_string = update_tag_type_string($old_tag_string, $tag_types);
+        if ($update_string != "-1")
+        {
+            // 更新出错了也要继续，所以不计较返回值。
+            update_tag_types_to_db($thing_uuid, $update_string);
+        }
     }
     
     return $tags_insert_count;
@@ -833,8 +836,7 @@ function re_add_thing_tag_map()
  */
 function update_tag_types_to_db($thing_uuid, $tag_string)
 {
-   $sql_string = "update thing_time set property_types = '$tag_string' where uuid = '$thing_uuid'";
-    
+    $sql_string = "update thing_time set property_types = '$tag_string' where uuid = '$thing_uuid'";
     if (mysql_query($sql_string) == FALSE)
     {
         $GLOBALS['log']->error("error: update_tag_types_to_db() -- $sql_string 。");
@@ -893,6 +895,7 @@ function tag_type_to_string($tag_type)
 	{
 		return $old_tag_string . $result_stirng;
 	}
+    // “-1”说明不需要刷新.
 	else 
 	{
 		return "-1";

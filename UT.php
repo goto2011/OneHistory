@@ -800,6 +800,8 @@
     function UT_update_tag_type_string($old_tag_string, $tag_types, $check)
     {
         $result = update_tag_type_string($old_tag_string, $tag_types);
+        if ($result == "-1") $result = $old_tag_string;
+        
         if($result != $check)
         {
             echo " -- " . $result . "</br> -- " . $check . " --</br>";
@@ -812,21 +814,25 @@
 	assert('UT_tag_types_to_string($tag_types, "-a3-a10-a9-a7")');
     $tag_types = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20);
     assert('UT_tag_types_to_string($tag_types, "-a1-a2-a3-a4-a5-a6-a7-a8-a9-a10-a11-a12-a13-a14-a15-a16-a17-a18-a19-a20")');
+    
     $old_tag_string = "";
     $tag_types = array(3, 10, 9, 7);
     assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-a3-a10-a9-a7")');
     $old_tag_string = "-a3-a10-a9-a7";
     $tag_types = array(3, 10, 9, 7);
-    assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-1")');
+    assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-a3-a10-a9-a7")');
     $old_tag_string = "--a9-a7-a3-a10";
     $tag_types = array(3, 10, 9, 7);
-    assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-1")');
+    assert('UT_update_tag_type_string($old_tag_string, $tag_types, "--a9-a7-a3-a10")');
     $old_tag_string = "-a7-a3-a10";
     $tag_types = array(3, 10, 9, 7);
     assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-a7-a3-a10-a9")');
     $old_tag_string = "-a3-a7-a3-a10";
     $tag_types = array(3, 10, 9, 7, 8, 7, 9, 7 , 8, 7, 7, 2, 3, 5, 5, 5);
     assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-a3-a7-a3-a10-a9-a8-a2-a5")');
+    $old_tag_string = "-a3-a7-a3-a10";
+    $tag_types = array(3, 7);
+    assert('UT_update_tag_type_string($old_tag_string, $tag_types, "-a3-a7-a3-a10")');
     
     
 	

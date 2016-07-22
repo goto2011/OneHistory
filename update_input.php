@@ -67,6 +67,8 @@ function succ_callback(data)
 // 发起Ajax通讯。
 function ajax_do()
 {
+    // alert("begin.");
+    
     // 数据合法性检查。
     if (tags_check() > 0)
     {
@@ -165,7 +167,8 @@ function ajax_do()
             'death_person_count'    :death_person_count,
             'hurt_person_count'     :hurt_person_count,
             'missing_person_count'  :missing_person_count,
-            'word_count'            :word_count
+            'word_count'            :word_count,
+            'tags_string'           :document.getElementById("tags_string").value
             
         },
         async:false,
@@ -207,6 +210,7 @@ function ajax_do()
     $hurt_person_count = "";
     $missing_person_count = "";
 	$word_count = "";
+    $tags_string = "";
 	
     // 更新 item_index, 暂时无用.
     if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
@@ -240,6 +244,8 @@ function ajax_do()
         {
             $missing_person_count = html_encode($row['related_number3']);
         }
+        
+        $tags_string = html_encode($row['property_types']);
 	}
 
 /*
@@ -332,6 +338,7 @@ function ajax_do()
 
 <input type="hidden" id="originator" name="originator" value="<?php echo html_encode($_GET['update_once']); ?>">
 <input type="hidden" id="thing_length" name="thing_length" value="<?php echo get_thing_length(); ?>">
+<input type="hidden" id="tags_string" name="tags_string" value="<?php echo $tags_string; ?>">
 
 <p>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
