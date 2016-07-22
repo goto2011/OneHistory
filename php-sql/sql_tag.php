@@ -779,14 +779,47 @@ function re_calc_tag_hot_index()
 }
 
 /**
- * 计算事件-标签类型映射. 2016-07-17
+ * 计算单个事件的标签类型映射. 2016-07-22
+ * return: 1 成功；0 失败。
+ */
+function update_thing_tag_map($thing_uuid) 
+{
+    // $GLOBALS['log']->error("update_thing_tag_map() -- $thing_uuid .");
+    
+    $tag_types = array();
+    
+    // 1.获取当前事件的所有标签的类型
+    $sql_string = "select property_type from property b where exists ( select property_UUID from 
+        thing_property c where b.property_UUID=c.property_UUID and c.thing_UUID='$thing_uuid')";
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: re_add_thing_tag_map() -- $sql_string 。");
+        return 0;
+    }
+    
+    // 2.拼接字符串
+    while($row = mysql_fetch_array($result))
+    {
+        $tag_types[] = $row['property_type'];
+    }
+    $my_string = tag_types_to_string($tag_types);
+    unset($tag_types);
+    
+    // 3.更新到数据库
+    if (update_tag_types_to_db($thing_uuid, $my_string) == 0)
+    {
+        return 0;
+    }
+    // $GLOBALS['log']->error("update_thing_tag_map() -- ok .");
+    return 1;
+}
+ 
+/**
+ * 计算全部事件-标签类型映射. 2016-07-17
  */
 function re_add_thing_tag_map()
 {
-    $thing_uuids = array();
-	$tag_types = array();
-	$my_string = "";
-	
 	// 1.遍历所有事件
     $sql_string = " select uuid from thing_time ";
 	$result = mysql_query($sql_string);
@@ -798,36 +831,13 @@ function re_add_thing_tag_map()
 	
 	while($row = mysql_fetch_array($result))
     {
-        $thing_uuids[] = $row['uuid'];
-    }
-	
-	foreach ($thing_uuids as $thing_uuid)
-	{
-		// 2.获取当前事件的所有标签的类型
-		$sql_string = "select property_type from property b where exists ( select property_UUID from 
-			thing_property c where b.property_UUID=c.property_UUID and c.thing_UUID='$thing_uuid')";
-		$result = mysql_query($sql_string);
-	    if ($result == FALSE)
-	    {
-	        $GLOBALS['log']->error("error: re_add_thing_tag_map() -- $sql_string 。");
-	        return 0;
-	    }
-		
-		// 3.拼接字符串
-		while($row = mysql_fetch_array($result))
-		{
-			$tag_types[] = $row['property_type'];
-		}
-		$my_string = tag_types_to_string($tag_types);
-		unset($tag_types);
-		
-		// 4.更新到数据库
-        if (update_tag_types_to_db($thing_uuid, $my_string) == 0)
+        // 失败1个，则马上返回失败。
+        if (update_thing_tag_map($row['uuid']) == 0)
         {
             return 0;
         }
-	}
-	
+    }
+    
 	return 1;
 }
 
@@ -907,6 +917,23 @@ function tag_type_to_string($tag_type)
  */
 function delete_tag_to_db($tag_uuid)
 {
+    // $GLOBALS['log']->error("delete_tag_to_db() -- $tag_uuid .");
+    $thing_uuids = array();
+    
+    // 0. 更新事件-tag类型映射
+    $sql_string = "select thing_UUID from thing_property where property_UUID = '$tag_uuid'";
+    $result = mysql_query($sql_string);
+    if ($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: delete_tag_to_db() -- $sql_string 。");
+        return 0;
+    }
+    
+    while($row = mysql_fetch_array($result))
+    {
+        $thing_uuids[] = $row['thing_UUID'];
+    }
+    
     // 1. 删除标签相关的标签-事件对
     $sql_string = "delete from thing_property where property_UUID = '$tag_uuid'";
     if (mysql_query($sql_string) === FALSE)
@@ -915,7 +942,16 @@ function delete_tag_to_db($tag_uuid)
         return 0;
     }
     
-    // 2.删除标签相关的关注记录
+    // 2. 更新事件-tag类型映射
+    foreach ($thing_uuids as $thing_uuid)
+    {
+        if (update_thing_tag_map($thing_uuid) == 0)
+        {
+            return 0;
+        }
+    }
+    
+    // 3.删除标签相关的关注记录
     $sql_string = "delete from follow where property_UUID = '$tag_uuid'";
     if (mysql_query($sql_string) === FALSE)
     {
@@ -923,7 +959,7 @@ function delete_tag_to_db($tag_uuid)
         return 0;
     }    
     
-    // 3. 删除标签
+    // 4. 删除标签
     $sql_string = "delete from property where property_UUID = '$tag_uuid'";
     if (mysql_query($sql_string) === FALSE)
     {
