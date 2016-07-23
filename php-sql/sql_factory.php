@@ -89,7 +89,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     else if ($sql_param['has_period'] == TRUE)
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                            from property b, thing_property c, (select distinct uuid from thing_time a where ( $where_sub ) 
+                            from property b, thing_property c, (select uuid from thing_time a where ( $where_sub ) 
                             and (a.year_order >= $begin_year and a.year_order < $end_year) $order_substring) t 
                             where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
@@ -97,7 +97,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, 
-                            (select distinct uuid from thing_time a where $where_sub $order_substring) t 
+                            (select uuid from thing_time a where $where_sub $order_substring) t 
                             where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     break;
@@ -119,12 +119,12 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     }
                     else if ($sql_param['has_period'] == TRUE)
                     {
-                        return "select distinct a.* from thing_time a where ( $where_sub ) 
+                        return "select a.* from thing_time a where ( $where_sub ) 
                             and a.year_order >= $begin_year and a.year_order < $end_year ";
                     }
                     else
                     {
-                        return "select distinct a.* from thing_time a where $where_sub ";
+                        return "select a.* from thing_time a where $where_sub ";
                     }
                     break;
                 
@@ -164,28 +164,28 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     if(!is_infinite($begin_year) && !is_infinite($end_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                            from property b, thing_property c, (select distinct a.uuid 
+                            from property b, thing_property c, (select a.uuid 
                             from thing_time a where ((year_order >= $begin_year) and (year_order <= $end_year)) 
                             $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                            from property b, thing_property c, (select distinct a.uuid 
+                            from property b, thing_property c, (select a.uuid 
                             from thing_time a $order_substring) t 
                             where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     else if(is_infinite($begin_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                            from property b, thing_property c, (select distinct a.uuid 
+                            from property b, thing_property c, (select a.uuid 
                             from thing_time a where (year_order <= $end_year) 
                             $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     else if(is_infinite($end_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
-                            from property b, thing_property c, (select distinct a.uuid 
+                            from property b, thing_property c, (select a.uuid 
                             from thing_time a where (year_order >= $begin_year) 
                             $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
@@ -255,7 +255,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                         {
                             // 全部条目
                             case tab_type::CONST_TOTAL:
-                                return "select count(distinct a.uuid) from thing_time a ";
+                                return "select count(a.uuid) from thing_time a ";
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
@@ -272,7 +272,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                 break;
                             // 分期
                             case tab_type::CONST_PERIOD:
-                                return "select count(distinct a.uuid) from thing_time a ";
+                                return "select count(a.uuid) from thing_time a ";
                                 break;
                             default:
                                 if ($tag_type > 0)

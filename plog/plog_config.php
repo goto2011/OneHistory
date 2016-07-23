@@ -13,7 +13,7 @@ return array(
 			'formatter' => 'generic',
 			'enabled' => true,
 			'config' => array(
-				'dir' => dirname(dirname(__FILE__)).'/logs/error',
+				'dir' => dirname(dirname(__FILE__)).'/logs',
 			),
 		),
 	),

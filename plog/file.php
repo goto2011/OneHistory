@@ -8,7 +8,7 @@ class Plog_File extends Plog_Handler_Abstract
 	{
 		$log_message = $this->_format().PHP_EOL;
 		$dir = rtrim($this->_local_config['dir'], '/');
-		$dest_dir = $dir.'/'.date('Y').'/'.date('m');
+		$dest_dir = $dir.'/'.date('Y').'-'.date('m');
 		if(!is_dir($dest_dir))
 		{
 			mkdir($dest_dir, 0777, true);

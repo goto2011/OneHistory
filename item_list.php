@@ -54,7 +54,7 @@ function flash_item_list()
         $begin_year = get_begin_year(get_period_big_index(), get_period_small_index());
         $end_year = get_end_year(get_period_big_index(), get_period_small_index());
     }
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
     // 生成sql语句的查询子句。**
     // search 要兼顾 tag 和 period。所以检索优先级最高。
@@ -90,15 +90,13 @@ function flash_item_list()
         $sql_object = sql_object::CONST_SEARCH;
         // $my_array = get_search_where_sub();   // 关键词检索
     }
-    else
-    if (is_tag())
+    else if (is_tag())
     {
         $sql_param = array("tag_id" => get_property_UUID());
         $sql_object = sql_object::CONST_TAG;
         // $my_array = get_tag_search_substring(get_property_UUID());   // tag检索
     }
-    else
-    if (is_period_tag(get_current_tag_id()))
+    else if (is_period_tag(get_current_tag_id()))
     {
         $sql_param = array(
             "begin_year" => $begin_year,
@@ -114,23 +112,25 @@ function flash_item_list()
         // $my_array = get_thing_substring(get_current_tag_id());     // 类型检索
     }
 
-    // $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
+    $GLOBALS['log']->error(date('H:i:s') . "-flash_item_list(). Step7-" . get_current_tag_id());
     // 打印搜索区
     if (is_show_search_box(get_current_tag_id()))
     {
         print_search_zone();
     }
 
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8");
     // 打印标签区。
     print_tags_zone();
 
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
     // 计算总页数和当前页偏移量.
     $page_size = get_page_size();
     $offset = $page_size * (get_page() - 1);
     // 获得条目数量. ***
     $item_count = get_thing_count($sql_object, $sql_param);
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9-2");
+    
     // 打印表格遍历条.
     print_list_control($item_count, $page_size, get_page());
 
@@ -138,20 +138,19 @@ function flash_item_list()
     {
         print_tag_control();
     }
-    else
-    if (is_period_tag(get_current_tag_id()))
+    else if (is_period_tag(get_current_tag_id()))
     {
         print_period_info();
     }
 
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step10");
     // 打印“添加标签”输入框。2015-4-21
     if (is_show_add_tag())
     {
         print_add_tag_form();
     }
 
-    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
+    $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step11");
     // 打印表头。
     print_item_list_head();
 
