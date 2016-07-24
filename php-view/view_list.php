@@ -572,6 +572,25 @@
         
         return $result;
     }
+
+    /**
+     * 打印查找到的标签.
+     */
+    function print_seach_tags_zone($sql_param)
+    {
+        echo "<div align='left'>";
+        echo "<p><span id='tag_type'>符合条件的标签:</span>";
+        $sql_string = "";
+        $result = get_tags_from_search($sql_param, $sql_string);
+        
+        while($row = mysql_fetch_array($result))
+        {
+            echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                $row['hot_index'], "tag_normal");
+        }
+    
+        echo "</div>";
+    }
     
     // 打印标签区
     function print_tags_zone()

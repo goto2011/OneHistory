@@ -644,6 +644,24 @@ function search_tag_from_array($tag_name, &$tags_array, $is_need_delete)
 /**
  * 根据 thing 检索子句获取相关的 tag 属性。
  */
+function get_tags_from_search($sql_param, &$sql_string)
+{
+    $sql_string = get_sql_qurey(sql_object::CONST_SEARCH, sql_type::CONST_GET_SEARCH_TAGS, $sql_param);
+    
+    $result = mysql_query($sql_string);
+    if($result == FALSE)
+    {
+        $GLOBALS['log']->error("error: get_tags_from_search() -- $sql_string 。");
+        return NULL;
+    }
+    // $GLOBALS['log']->error("test: get_tag_param_array_from_thing() -- $sql_string 。");
+    
+    return $result;
+}
+
+/**
+ * 根据 thing 检索子句获取相关的 tag 属性。
+ */
 function get_tag_param_array_from_thing($sql_object, $sql_param, $order_substring, &$sql_string)
 {
     $sql_string = get_sql_qurey($sql_object, sql_type::CONST_GET_TAGS, $sql_param, $order_substring);

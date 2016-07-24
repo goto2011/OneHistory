@@ -16,6 +16,7 @@ class sql_type {
     const CONST_GET_THING_COUNT     =   1;
     const CONST_GET_TAGS            =   2;
     const CONST_GET_THING_ITEMS     =   3;
+    const CONST_GET_SEARCH_TAGS     =   4;
 };
 
 // 生成SQL语句。
@@ -28,6 +29,8 @@ class sql_type {
 //  4. =======标签类型/Tab页=======  // CONST_TAG_TYPE
 function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = "")
 {
+    // $GLOBALS['log']->error("get_sql_qurey() -- " . $sql_object . " -- " . $sql_type);
+    
     switch ($sql_object) {
         //  1. =======检索=======
         case sql_object::CONST_SEARCH:
@@ -127,7 +130,19 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                         return "select a.* from thing_time a where $where_sub ";
                     }
                     break;
-                
+                    
+                // 检索满足条件的标签. 2016-07-24
+                case sql_type::CONST_GET_SEARCH_TAGS:
+                    // 先排除检索条件是时间的情况
+                    $time_array = get_time_from_native($sql_param['search_key']);
+                    if ($time_array['status'] == "ok")
+                    {
+                        return "";
+                    }
+                    $where_sub = str_replace("a.thing", "b.property_name", $where_sub);
+                    return "select b.* from property b where $where_sub ";
+                    break;
+                    
                 default:
                     
                     break;
@@ -399,6 +414,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
             
             break;
     } // $sql_object
+    
+    return "";
 }
 
 

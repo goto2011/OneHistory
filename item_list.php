@@ -123,6 +123,13 @@ function flash_item_list()
     // 打印标签区。
     print_tags_zone();
 
+    // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step8-2");
+    // 打印查找到的标签。
+    if (is_search())
+    {
+        print_seach_tags_zone($sql_param);
+    }
+    
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9");
     // 计算总页数和当前页偏移量.
     $page_size = get_page_size();
@@ -192,7 +199,8 @@ function flash_item_list()
             echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
 
             // 死亡人数、受伤人数、失踪人数、字数。
-            $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], $row['related_number3'], $row['related_number4']);
+            $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], 
+                $row['related_number3'], $row['related_number4']);
 
             $thing_context = $row['thing'];
             // 高亮 检索关键字。 2016-01-27
@@ -207,7 +215,8 @@ function flash_item_list()
             }
 
             // 事件字段
-            echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" . get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
+            echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" . 
+                get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
 
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step15");
             // 标签字段。 ***

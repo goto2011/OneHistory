@@ -271,7 +271,7 @@ function get_thing_tag_prompt($sql_object, $sql_param, $order_substring, &$tag_i
     
     if($tag_id_result == NULL)
     {
-        $GLOBALS['log']->error("error: get_tag_param_array_from_thing().");
+        $GLOBALS['log']->error("error: get_thing_tag_prompt().");
         return $sql_string;
     }
     
