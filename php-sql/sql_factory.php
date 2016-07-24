@@ -144,7 +144,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     if(!is_infinite($begin_year) && !is_infinite($end_year))
                     {
                         return "select count(a.uuid) from thing_time a 
-                            where ((year_order >= $begin_year) and (year_order <= $end_year)) ";
+                            where ((year_order >= $begin_year) and (year_order < $end_year)) ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
@@ -152,7 +152,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     }
                     else if(is_infinite($begin_year))
                     {
-                        return "select count(a.uuid) from thing_time a where (year_order <= $end_year) ";
+                        return "select count(a.uuid) from thing_time a where (year_order < $end_year) ";
                     }
                     else if(is_infinite($end_year))
                     {
@@ -165,7 +165,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
-                            from thing_time a where ((year_order >= $begin_year) and (year_order <= $end_year)) 
+                            from thing_time a where ((year_order >= $begin_year) and (year_order < $end_year)) 
                             $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
@@ -179,7 +179,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
-                            from thing_time a where (year_order <= $end_year) 
+                            from thing_time a where (year_order < $end_year) 
                             $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
                     }
                     else if(is_infinite($end_year))
@@ -195,7 +195,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                 case sql_type::CONST_GET_THING_ITEMS:
                     if(!is_infinite($begin_year) && !is_infinite($end_year))
                     {
-                        return "select a.* from thing_time a where ((year_order >= $begin_year) and (year_order <= $end_year)) ";
+                        return "select a.* from thing_time a where ((year_order >= $begin_year) and (year_order < $end_year)) ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
@@ -203,7 +203,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                     }
                     else if(is_infinite($begin_year))
                     {
-                        return "select a.* from thing_time a where (year_order <= $end_year) ";
+                        return "select a.* from thing_time a where (year_order < $end_year) ";
                     }
                     else if(is_infinite($end_year))
                     {

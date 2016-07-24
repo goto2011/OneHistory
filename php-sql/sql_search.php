@@ -178,15 +178,25 @@ function get_time_search_substring($time_array)
     else 
     {
         $year_order_min = get_year_order($time_array['time'] - $time_array['time_limit'], $time_array['time_type']);
-        $year_order_max = get_year_order($time_array['time'] + $time_array['time_limit'], $time_array['time_type']);
+        // 月份有31天，增加一天。
+        if ($time_array['time_limit_type'] == 2)
+        {
+            $year_order_max = get_year_order($time_array['time'] + $time_array['time_limit'] + 1, $time_array['time_type']);
+        }
+        else
+        {
+            $year_order_max = get_year_order($time_array['time'] + $time_array['time_limit'], $time_array['time_type']);
+        }
+        // $GLOBALS['log']->error("get_time_search_substring(). year_order_min = " . $year_order_min);
+        // $GLOBALS['log']->error("year_order_max = " . $year_order_max);
         
-        return " ( a.year_order >= " . $year_order_min . " and a.time <= " . $year_order_max . " ) ";
+        return " ( a.year_order >= " . $year_order_min . " and a.year_order <= " . $year_order_max . " ) ";
     }
 }
  
  
 /**
- * 根据 search条件对象 生成 search查询之条件字句.
+ * 根据 search条件对象 生成 search查询之条件字句.（此函数已失效）
  */
 function get_search_where_sub()
 {

@@ -242,7 +242,7 @@ function is_vip_tag_tab($tag_index_id)
 ///////////////////////////////////////////////////////////////////////////////
 
 /**
- * 获取tag的检索条件子句。
+ * 获取tag的检索条件子句。（此函数已失效）
  */
 function get_tag_search_substring($property_UUID)
 {

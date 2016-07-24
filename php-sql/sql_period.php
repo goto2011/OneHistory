@@ -3,7 +3,32 @@
 // period 相关的函数。主要是和sql相关的。    -->
 
 
-// 生成 period 查询之条件字句
+/**
+ * 获取各时期事件的数量。
+ */
+function get_thing_count_by_period()
+{
+    $period_count = array();
+    
+    $sql_string = "select ceil((year_order - 99) / 100) as period , count(uuid) as count 
+            from thing_time where year_order >= -1000 group by ceil((year_order - 99) / 100) ";
+    if(($result = mysql_query($sql_string)) == FALSE)
+    {
+        $GLOBALS['log']->error("error: get_thing_count_by_period() -- $sql_string 。");
+        return NULL;
+    }
+    while($row = mysql_fetch_array($result))
+    {
+        $my_period = $row['period'];
+        $my_count = $row['count'];
+        $period_count[$my_period] = $my_count;
+    }
+    
+    return $period_count;
+}
+
+
+// 生成 period 查询之条件字句。(此函数已失效)
 function get_period_where_sub($begin_year, $end_year)
 {
     if(!is_infinite($begin_year) && !is_infinite($end_year))

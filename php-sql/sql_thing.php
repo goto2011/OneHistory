@@ -176,7 +176,7 @@ function add_order_page_substring($offset, $page_size)
 }
 
 /**
- * 根据 substring 获取满足条件的事件数量。
+ * 根据 substring 获取满足条件的事件数量。（此函数已失效）
 */
 function get_thing_count($sql_object, $sql_param)
 {
@@ -193,7 +193,7 @@ function get_thing_count($sql_object, $sql_param)
     return $row[0];
 }
 
-// 获取事件 查询子句。
+// 获取事件 查询子句。（此函数已失效）
 function get_thing_substring($tag_id)
 {
     switch ($tag_id)

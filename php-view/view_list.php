@@ -368,16 +368,29 @@
         
         return $result;
     }
-        
+    
     // 打印 分期 tag 链接
-    function create_period_link($index)
+    function create_period_link($index, $period_count = NULL)
     {
         $result = "";
+        $hot_index = 0;
+        
         for ($ii = get_small_id_begin($index); $ii <= get_small_id_end($index); $ii++)
         {
-            $sql_param = array("begin_year"=>get_begin_year($index, $ii), "end_year"=>get_end_year($index, $ii));
+            if ($period_count == NULL)
+            {
+                $sql_param = array("begin_year"=>get_begin_year($index, $ii), 
+                    "end_year"=>get_end_year($index, $ii));
+                $hot_index = get_thing_count(sql_object::CONST_PERIOD, $sql_param);
+                // $GLOBALS['log']->error("create_period_link(): 1");
+            }
+            else 
+            {
+                $my_index = get_century_index($index, $ii);
+                $hot_index = $period_count[$my_index];
+                // $GLOBALS['log']->error("create_period_link(): 2");
+            }
             
-            $hot_index = get_thing_count(sql_object::CONST_PERIOD, $sql_param);
             $result .= "<a id='tag_normal' href='item_frame.php?big=$index&small=$ii'>" 
                 . get_period_name($index, $ii) . "(" .  $hot_index. ")</a>";
         }
@@ -595,10 +608,18 @@
         {
             echo "<br />";
             
-            for ($ii = get_big_id_begin(); $ii <= get_big_id_end(); $ii++)
+            $period_count = get_thing_count_by_period();
+            // print_r($period_count);
+            
+            // 第一组值需要重新从数据库中读取。
+            echo "<span id='tag_type'>" . get_big_period_name(get_big_id_begin()) . ":</span>" 
+                    . create_period_link(get_big_id_begin()) . "<br />";
+                    
+            // 后面每组值从 数组中获取。
+            for ($ii = get_big_id_begin() + 1; $ii <= get_big_id_end(); $ii++)
             {
                 echo "<span id='tag_type'>" . get_big_period_name($ii) . ":</span>" 
-                    . create_period_link($ii) . "<br />";
+                    . create_period_link($ii, $period_count) . "<br />";
             }
         }
         // 是 vip tag。其它所有。
