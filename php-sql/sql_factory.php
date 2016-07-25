@@ -140,7 +140,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                         return "";
                     }
                     $where_sub = str_replace("a.thing", "b.property_name", $where_sub);
-                    return "select b.* from property b where $where_sub ";
+                    return "select b.* from property b where $where_sub order by b.hot_index desc ";
                     break;
                     
                 default:
