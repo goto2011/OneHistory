@@ -176,7 +176,7 @@
             $item_start = $item_end;
         }
         
-        // form 要包大部分.
+        // form 字段要包大部分.
         if (is_show_add_tag())
         {
             echo "<form method='post' action='./ajax/list_add_tag_do.php'  onSubmit='return checkbox_check()'>";
