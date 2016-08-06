@@ -43,20 +43,6 @@ $topic = array
         array("石器时代", "normal", "sigle-key", "石器时代"),
         array("青铜时代", "normal", "sigle-key", "青铜时代"),
         array("铁器时代", "normal", "sigle-key", "铁器时代"),
-        array("磁山文化"),
-        array("仰韶文化"),
-        array("红山文化"),
-        array("龙山文化"),
-        array("大汶口文化"),
-        array("二里头文化"),
-        array("河姆渡文化"),
-        array("三星堆文化"),
-        array("良渚文化"),
-        array("盘龙城遗址"),
-        array("玉文化", "super", "multe-key", "玉器"),
-        array("陶瓷文化", "super", "multe-key", "陶", "瓷"),
-        array("丝绸文化", "super", "multe-key", "丝绸", "丝绸之路"),
-        array("茶文化", "super", "multe-key", "茶"),
     ),
     array
     (
@@ -147,14 +133,13 @@ $topic = array
         array("同性恋"),
         array("伦理学"),
         array("心理学"),
-        array("经济学"),
-        array("户口"),
-        array("晋商"),
-        array("盐商"),
+        // array("晋商"),
+        // array("盐商"),
     ),
     array
     (
         // 经济
+        array("经济", "super", "sigle-key", "经济"),
         array("农业"),
         array("土地制度", "super", "multe-key", "平分土地",  "均分土地",  "分配土地", "土地面积", 
                 "井田制", "初税亩", "摊丁入亩", "一条鞭法", "两税法", "租庸调", "均田", "土改", 
@@ -169,6 +154,8 @@ $topic = array
         array("IT技术"),
         array("IT行业"),
         array("手机行业"),
+        array("能源", "super", "multe-key", "石油", "煤", "天然气", "太阳能", "核电", "可再生能源", "油页岩", 
+                "水电", "火电", "二氧化碳排放", "温室效应"),
         array("1933年经济危机"),
     ),
     array
@@ -177,14 +164,8 @@ $topic = array
         array("民主", "super", "multe-key", "独裁", "选举", "专制"),
         array("宪政", "normal", "multe-key", "宪政", "宪法", "制宪"),
         array("财政税收", "super", "multe-key", "财政", "税收"),
-        array("司法独立", "super", "multe-key", "司法改革", "律师"),
-        array("言论自由", "super", "sigle-key", "言论自由"),
-        array("新闻自由", "super", "sigle-key", "新闻自由"),
-        array("反腐", "normal", "multe-key", "贪污", "腐败", "腐化", "亏空"),
         array("法律犯罪", "normal", "multe-key", "法律", "犯罪"),
         array("国际关系"),
-        array("能源", "super", "multe-key", "石油", "煤", "天然气", "太阳能", "核电", "可再生能源", "油页岩", 
-            "水电", "火电", "二氧化碳排放", "温室效应"),
     ),
     array
     (

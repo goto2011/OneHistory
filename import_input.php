@@ -162,10 +162,10 @@ function ajax_do(operate_type)
             
             'die_tags'      :document.getElementById("die_tags").value,
             'solution_tags' :document.getElementById("solution_tags").value,
-            'start_tags'    :document.getElementById("start_tags").value,
-            'end_tags'      :document.getElementById("end_tags").value,
+            // 'start_tags'    :document.getElementById("start_tags").value,
+            // 'end_tags'      :document.getElementById("end_tags").value,
             'country_tags'  :document.getElementById("country_tags").value,
-            'geography_tags':document.getElementById("geography_tags").value,
+            // 'geography_tags':document.getElementById("geography_tags").value,
             'person_tags'   :document.getElementById("person_tags").value,
             'source_tags'   :document.getElementById("source_tags").value,
             'free_tags'     :document.getElementById("free_tags").value,
@@ -176,7 +176,7 @@ function ajax_do(operate_type)
             'source_tags'   :document.getElementById("source_tags").value,
             'source_detail' :document.getElementById("source_detail").value,
             'note_tags'     :document.getElementById("note_tags").value,
-            'land_tags'     :document.getElementById("land_tags").value,
+            // 'land_tags'     :document.getElementById("land_tags").value,
             'index_inside_tag':document.getElementById("index_inside_tag").checked
         },
         async:false,

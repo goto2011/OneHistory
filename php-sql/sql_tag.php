@@ -39,14 +39,14 @@ $tag_control = array(
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "世界",             1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国",             1,    1,      "dynasty_tags"),    // vip tag.
-    array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
-    array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
+    // array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
+    // array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
     // array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
     // array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
     array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
-    array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
-    array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
+    // array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
+    // array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
     array(tab_type::CONST_RESURCE,        "出处",             1,    0,      "source_tags"),
     array(tab_type::CONST_NOTE,           "笔记",             1,    0,      "note_tags"),
     array(tab_type::CONST_MANAGER,        "管理",             3,    0,      ""),
