@@ -24,12 +24,6 @@ if (check_list_param() == false)
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
 <script type='text/javascript' src='./js/data.js'></script>
 
-<script type="text/javascript">
-    window.onload = function() {
-        altRows('alternatecolor');
-    }
-</script>
-
 <?php
 // main().
 flash_item_list();
@@ -57,7 +51,7 @@ function flash_item_list()
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step3");
 
     // 生成sql语句的查询子句。**
-    // search 要兼顾 tag 和 period。所以检索优先级最高。
+    // search 要兼顾 tag 和 period。所以检索最先考虑。
     if (is_search())
     {
         // 获取查询子句。
@@ -138,15 +132,17 @@ function flash_item_list()
     $item_count = get_thing_count($sql_object, $sql_param);
     $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step9-2");
     
-    // 打印表格遍历条.
+    // 打印表格控制条.
     print_list_control($item_count, $page_size, get_page());
 
     if (is_tag())
     {
+        // 打印tag属性条
         print_tag_control();
     }
     else if (is_period_tag(get_current_tag_id()))
     {
+        // 打印时期属性条
         print_period_info();
     }
 
@@ -166,7 +162,7 @@ function flash_item_list()
     if ($item_count > 0)
     {
         // 查询子句增加排序、分页。
-        $order_substring = add_order_page_substring($offset, $page_size);
+        $order_substring = add_order_page_substring($sql_object, $offset, $page_size);
 
         // 完成 事件、标签、事件-标签对的三表联合查询。****
         $tag_id_array = array();
@@ -185,44 +181,13 @@ function flash_item_list()
         while ($row = mysql_fetch_array($result))
         {
             $index++;
-
-            echo "<tr>";
-            if (is_show_add_tag())
-            {
-                echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
-            }
-            // 序号
-            echo "<td>$index</td>";
-            // 时间字段
-            echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
-            // 时间范围字段
-            echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
-
-            // 死亡人数、受伤人数、失踪人数、字数。
-            $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], 
-                $row['related_number3'], $row['related_number4']);
-
-            $thing_context = $row['thing'];
-            // 高亮 检索关键字。 2016-01-27
-            if (is_search())
-            {
-                $search_key = search_key();
-                $key_array = get_highline_key_string($search_key);
-                for ($ii = 0; $ii < count($key_array); $ii++)
-                {
-                    $thing_context = preg_replace("/($key_array[$ii])/i", "<b style=\"color:red\">\\1</b>", $thing_context);
-                }
-            }
-
-            // 事件字段
-            echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" . 
-                get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
-
+            // 打印主界面的表格的每一行
+            print_table_line($index, $row);
+            
             // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step15");
             // 标签字段。 ***
             echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
             echo "</tr>";
-            // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step16");
         }// while
 
         // $GLOBALS['log']->error(date('H:i:s') . "-" . "flash_item_list(). Step17");

@@ -54,7 +54,7 @@
      * 显示 tag 输入框.
      * 参数：$view_type: =1, update; =2, import.
      */
-    function show_tag_input_view($view_type, $thing_uuid = "")
+    function show_tag_input_view($view_type, $thing_uuid = "", $is_metadata = 0)
     {
         $my_index = 0;
         
@@ -100,17 +100,28 @@
                     $my_index++;
                 }
                 
-                // 显示“标签内序号”，只用于笔记序号。仅显示在 import 界面。
-                if ($view_type == 2)
+                if (is_note(get_tag_id_from_index($ii)))
                 {
-                    if (is_note(get_tag_id_from_index($ii)))
+                    echo "<td width='400'>";
+                    
+                    // 显示“标签内序号”，只用于笔记序号。仅显示在 import 界面。
+                    if ($view_type == 2)
                     {
-                        echo "<td width='400'>";
-                        echo "<input type='checkbox' id='index_inside_tag' value='' />笔记标签内保持序号";
-                        echo "</p></tr>";
-                        
-                        $my_index++;
+                        echo "<input type='checkbox' id='index_inside_tag' value='' />笔记标签内保持序号    ";
                     }
+                    // 显示“是否为元数据”
+                    if ($is_metadata == 1)
+                    {
+                        echo "<input type='checkbox' id='is_metadata' checked=true />是元数据";
+                    }
+                    else 
+                    {
+                        echo "<input type='checkbox' id='is_metadata' />是元数据";
+                    }
+                    
+                    echo "</p></tr>";
+                    
+                    $my_index++;
                 }
                 
                 $my_index++;

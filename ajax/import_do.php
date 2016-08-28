@@ -51,21 +51,6 @@ if ($_POST['operate_type'] == "update_data")
 }
 
 /**
- * 判断是否为“标签内保持序号”。
- */
-function is_index_inside_tag()
-{
-    if (($_POST['index_inside_tag'] == "true") && (strlen($_POST['note_tags']) > 0))
-    {
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-/**
  * 按行读入数据并进行处理。返回0表示成功，其它值都表示有错误发生。
  * $operate_type==1, 数据校验。
  * $operate_type==2，数据输入。
@@ -113,12 +98,14 @@ function handle_data_line($operate_type)
             if ($operate_type == 2)
             {
                 $thing_index++;
+                
+                $is_metadata = is_metadata();
 
-                // 从 update_input.php “重构数据”来的事件，会持有 $ori_thing_uuid。
+                // 从 update_input.php “重构数据”来的事件，会持有非空的 $ori_thing_uuid。但只有第一条。
                 if (($thing_index == 1) && ($ori_thing_uuid != ""))
                 {
                     if (update_thing_to_db($ori_thing_uuid, 
-                        get_time_from_native($my_array['time']), $my_array['thing']) != 1)
+                        get_time_from_native($my_array['time']), $my_array['thing'], $is_metadata) != 1)
                     {
                         ajax_error_exit(error_id::ERROR_UPDATE_FAIL);
                     }
@@ -132,12 +119,12 @@ function handle_data_line($operate_type)
                         $thing_index_inside_tag++;
                         // 保存序号
                         $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), 
-                                $my_array['thing'], $thing_index_inside_tag);
+                                $my_array['thing'], $is_metadata, $thing_index_inside_tag);
                     }
                     else
                     {
                         $thing_uuid = insert_thing_to_db(get_time_from_native($my_array['time']), 
-                                $my_array['thing']);
+                                $my_array['thing'], $is_metadata);
                     }
 
                     // 保存标签

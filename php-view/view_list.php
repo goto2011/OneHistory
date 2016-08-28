@@ -149,7 +149,7 @@
 
 
     /**
-     * 打印表格遍历条(表格上下两条都有)。
+     * 打印表格控制条(表格上下两条都有)。
      * 参数：$item_count：总数。
      *      $page_size：每页数量。
      *      $curr_page：当前页。
@@ -302,6 +302,7 @@
                 }
             }
         }
+        echo "  <option value='is_metadata'>加为元数据</option>";
         
         echo "</select>";
         echo "<nobr><input name='tag_name' type='text' width='150px'></nobr>";
@@ -313,17 +314,17 @@
     // 打印条目列表的表头
     function print_item_list_head()
     {
-        echo "<table class='altrowstable' id='alternatecolor' style='border-width: 1px;'>";
+        echo "<table class='table_main' border='0' cellspacing='0' cellpadding='0'>";
         echo "<tr>";
         if(is_show_add_tag())
         {
             echo "<td></td>";
         }
-        echo "<td style='font-family:微软雅黑; text-align:center; width:3%' >编号</td>";
-        echo "<td style='font-family:微软雅黑; text-align:center; width:8%' >时间</td>";
-        echo "<td style='font-family:微软雅黑; text-align:center; width:5%' >时间上下限</td>";
-        echo "<td style='font-family:微软雅黑; text-align:center; width:54%' >事件</td>";
-        echo "<td style='font-family:微软雅黑; text-align:center; width:30%' >标签</td>";
+        echo "<td style='width:4%' >编号</td>";
+        echo "<td style='width:8%' >时间</td>";
+        echo "<td style='width:3%' >精度</td>";
+        echo "<td style='width:65%' >事 件</td>";
+        echo "<td style='width:20%' >标 签</td>";
         echo "</tr>";
     }
     
@@ -696,5 +697,48 @@
         echo " -- <nobr class='thick'>当前时间: $name ( $begin - $end ) </nobr></div>";
     }
     
+    // 打印主界面的表格的每一行
+    function print_table_line($index, $row)
+    {
+        // 元数据蓝色高亮显示.
+        if ($row['is_metadata'] == "1")
+        {
+            echo "<tr class='is_metadata'>";
+        }
+        else
+        {    
+            echo "<tr>";
+        }
+        
+        if (is_show_add_tag())
+        {
+            echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
+        }
+        // 序号
+        echo "<td>$index</td>";
+        // 时间字段
+        echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
+        // 时间范围字段
+        echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
     
+        // 死亡人数、受伤人数、失踪人数、字数。
+        $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], 
+            $row['related_number3'], $row['related_number4']);
+    
+        $thing_context = $row['thing'];
+        // 高亮 检索关键字。 2016-01-27
+        if (is_search())
+        {
+            $search_key = search_key();
+            $key_array = get_highline_key_string($search_key);
+            for ($ii = 0; $ii < count($key_array); $ii++)
+            {
+                $thing_context = preg_replace("/($key_array[$ii])/i", "<b style=\"color:red\">\\1</b>", $thing_context);
+            }
+        }
+    
+        // 事件字段
+        echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" . 
+            get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
+    }
 ?>

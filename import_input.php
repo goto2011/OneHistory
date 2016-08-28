@@ -177,7 +177,10 @@ function ajax_do(operate_type)
             'source_detail' :document.getElementById("source_detail").value,
             'note_tags'     :document.getElementById("note_tags").value,
             // 'land_tags'     :document.getElementById("land_tags").value,
-            'index_inside_tag':document.getElementById("index_inside_tag").checked
+            // 笔记标签内保持序号
+            'index_inside_tag':document.getElementById("index_inside_tag").checked,
+            // 是否是元数据
+            'is_metadata'     :document.getElementById("is_metadata").checked
         },
         async:false,
         method:'POST',
@@ -283,7 +286,7 @@ function ajax_do(operate_type)
 
 <?php
     // 显示 tag 输入框.
-    show_tag_input_view(2, $thing_uuid);
+    show_tag_input_view(2, $thing_uuid, 0);
 ?>
 
 </table>

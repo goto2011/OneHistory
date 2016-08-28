@@ -8,7 +8,7 @@ class sql_object {
     const CONST_SEARCH      =   1;
     const CONST_PERIOD      =   2;
     const CONST_TAG         =   3;
-    const CONST_TAG_TYPE    =   4;
+    const CONST_TAG_TYPE    =   4;  /* 即各tab页 */
 };
 
 // sql 类型。
@@ -21,10 +21,10 @@ class sql_type {
 
 // 生成SQL语句。
 //  1. =======检索=======  // CONST_SEARCH
-//  1.1 获取事件数量       // CONST_GET_THING_COUNT
+//  1.1 获取事件数量        // CONST_GET_THING_COUNT
 //  1.2 获取当前页的所有tag // CONST_GET_TAGS
 //  1.3 获取当前页的事件    // CONST_GET_THING_ITEMS
-//  1.4 检索标签          // CONST_GET_SEARCH_TAGS
+//  1.4 检索标签           // CONST_GET_SEARCH_TAGS
 //  2. =======时期=======  // CONST_PERIOD
 //  3. =======标签=======  // CONST_TAG
 //  4. =======标签类型/Tab页=======  // CONST_TAG_TYPE

@@ -94,52 +94,30 @@
         if ($item_count > 0)
         {
             // 查询子句增加排序、分页。
-            $order_substring = add_order_page_substring($offset, $page_size);
+            $order_substring = add_order_page_substring($sql_object, $offset, $page_size);
             
             // 完成 事件、标签、事件-标签对的三表联合查询。
             $tag_id_array = array();
             $tag_param_array = array();
             $my_sql_thing = get_thing_tag_prompt($sql_object, $sql_param, $order_substring, 
                     $tag_id_array, $tag_param_array);
-        // 获取 thing 数据。***
+            // 获取 thing 数据。***
             $result = get_thing_item_db($sql_object, $sql_param, $order_substring);
-
             
-    		$index = $offset;
-    		
-    		while($row = mysql_fetch_array($result))
-    		{
-    			$index++;
-
-    			
-    			echo "<tr>";
-                if(is_show_add_tag())
-                {
-                    echo "<td><input name='groupCheckbox[]' type='checkbox' value='" . $row['uuid'] . "'></td>";
-                }
-                // 序号
-    			echo "<td>$index</td>";
-                // 时间字段
-    			echo "<td>" . get_time_string($row['time'], $row['time_type']) . "</td>";
-                // 时间范围字段
-    			echo "<td>" . get_time_limit_string($row['time_limit'], $row['time_limit_type']) . "</td>";
-    			
-                // 死亡人数、受伤人数、失踪人数、字数。
-            $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], 
-                $row['related_number3'], $row['related_number4']);
-                        
-                $thing_context = $row['thing'];
-                // 事件字段
-    			echo "<td><a href='update_input.php?thing_uuid=" . $row['uuid'] . "&update_once=" .
-    				get_update_token() . "&item_index=" . $index . "'>" . $thing_context . "</a></td>";
+        		$index = $offset;
+        		while($row = mysql_fetch_array($result))
+        		{
+        			$index++;
+        			// 打印主界面的表格的每一行
+                print_table_line($index, $row);
                 
-            // 标签字段。 ***
-    			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
-    			echo "</tr>";
-    		}
-    		
-    		echo "</table>";
-        print_list_control($item_count, $page_size, get_page()); ;// list control.
+                // 标签字段。 ***
+        			echo "<td>" . print_item_tags($row['uuid'], $tag_id_array, $tag_param_array, $person_count_string) . "</td>";
+        			echo "</tr>";
+        		}
+        		
+        	    echo "</table>";
+            print_list_control($item_count, $page_size, get_page()); ;// list control.
             
             // log print.
             $time_diff = strtotime("now") - $thing_list_begin; 

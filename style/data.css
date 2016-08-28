@@ -5,7 +5,7 @@ body {
              serif;
 }
 
-/* begin. 定义主页面各元素的样式. 2015-8-18. */
+/* 定义 tag 的样式. */
 #tag_type{
 	color: red;
 	font-size: 15px;
@@ -48,7 +48,50 @@ body {
 	letter-spacing: 1px;
 	padding-right: 10px;
 }
-/* end. 定义主页面各元素的样式. 2015-8-18. */
+
+/* 定义主界面的表格样式 */
+table.table_main{
+    font-family:verdana,arial,sans-serif,微软雅黑;
+    font-size:13px;
+    line-height:180%;
+    padding-top: 8px;
+    border:0;
+    border-top:1pt solid #C1DAD7;
+    border-left:1pt solid #C1DAD7;
+    margin: 0 auto;
+} /*总控制*/
+
+table.table_main tr:first-child{
+    background:#33CCFF; 
+    color:black;
+    font-size:16px;
+    font-weight:bold;
+    text-align:center;
+} /*第一行标题蓝色背景*/
+ 
+table.table_main td{
+    padding:5px 10px; 
+    /*text-align:center; */
+    border-right:1pt solid #C1DAD7;
+    border-bottom:1pt solid #C1DAD7;
+}
+
+table.table_main tr:nth-of-type(even){
+    background:#F9FAFA;
+} /* odd 标识奇数行，even标识偶数行 */
+
+table.table_main tr:hover{
+    background: #E0F0F0;
+} /*鼠标悬停后表格背景颜色*/
+
+table.table_main tr.is_context{
+    text-align:left;
+}
+
+table.table_main tr.is_metadata{
+    background-color:#AFEEEE;
+}/* 元数据蓝色高亮显示. */
+
 
 /* form {line-height: 5px;} */
 p.thick {
@@ -145,33 +188,6 @@ div.label {
 	color:black; 
 	font-weight:normal; 
 	display:none
-}
-
-table.altrowstable {
-	font-family: verdana,arial,sans-serif;
-	font-size:11px;
-	color:#333333;
-	border-width: 1px;
-	border-color: #a9c6c9;
-	border-collapse: collapse;
-}
-table.altrowstable th {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #a9c6c9;
-}
-table.altrowstable td {
-	border-width: 1px;
-	padding: 8px;
-	border-style: solid;
-	border-color: #a9c6c9;
-}
-.oddrowcolor{
-	background-color:#d4e3e5;
-}
-.evenrowcolor{
-	background-color:#c3dde0;
 }
 
 .fixed{

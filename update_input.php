@@ -168,8 +168,10 @@ function ajax_do()
             'hurt_person_count'     :hurt_person_count,
             'missing_person_count'  :missing_person_count,
             'word_count'            :word_count,
-            'tags_string'           :document.getElementById("tags_string").value
-            
+            // 传递过来的 tag类型集合的字符串
+            'tags_string'           :document.getElementById("tags_string").value,
+            // 是否是元数据
+            'is_metadata'           :document.getElementById("is_metadata").checked
         },
         async:false,
         method:'POST',
@@ -211,6 +213,7 @@ function ajax_do()
     $missing_person_count = "";
 	$word_count = "";
     $tags_string = "";
+    $is_metadata = 0;
 	
     // 更新 item_index, 暂时无用.
     if (!empty($_GET['item_index']) && is_numeric($_GET['item_index']))
@@ -246,6 +249,7 @@ function ajax_do()
         }
         
         $tags_string = html_encode($row['property_types']);
+        $is_metadata = html_encode($row['is_metadata']);
 	}
 
 /*
@@ -322,8 +326,9 @@ function ajax_do()
     echo "</p></tr>";
     
     // 显示 tag 输入框.
-    show_tag_input_view(1, $thing_uuid);
- 
+    show_tag_input_view(1, $thing_uuid, $is_metadata);
+    
+    // $GLOBALS['log']->error("is_metadata: ". $is_metadata);
 ?>
 
 </table>

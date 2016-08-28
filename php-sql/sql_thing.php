@@ -2,6 +2,63 @@
 // created by duangan, 2015-3-30 -->
 // thing 相关的函数。主要是和sql相关的。    -->
 
+
+/**
+ * 判断是否为“标签内保持序号”。
+ */
+function is_index_inside_tag()
+{
+    if (($_POST['index_inside_tag'] == "true") && (strlen($_POST['note_tags']) > 0))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * 判断是否为“元数据”。
+ */
+ function is_metadata()
+ {
+    if ($_POST['is_metadata'] == "true")
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+ }
+ 
+ /**
+  * 写入“元数据”标志位。
+  */
+function update_metadata($thing_uuids)
+{
+    $my_stirng = "";
+    for ($ii = 0; $ii < count($thing_uuids); $ii++)
+    {
+        $my_stirng .= "'" . html_encode($thing_uuids[$ii]) . "',";
+    }
+    // 去掉最后的分隔符
+    $my_stirng = substr($my_stirng, 0 ,strlen($my_stirng) - 1);
+    
+    $sql_string = "UPDATE thing_time set is_metadata = 1 where uuid in($my_stirng)";
+    
+    if (mysql_query($sql_string) === TRUE)
+    {
+        return count($thing_uuids);
+    }
+    else
+    {
+        $GLOBALS['log']->error("error: update_metadata() -- $sql_string 。" . mysql_error());
+        return 0;
+    }
+}
+
 // 根据thing uuid获取thing各项属性。
 function get_thing_db($thing_uuid)
 {
@@ -71,7 +128,7 @@ function get_index_base_inside_tag($note_tags)
  * 将事件-时间数据写入数据库. 
  * @return: 返回时间的uuid。
  */
-function insert_thing_to_db($time_array, $thing, $thing_index = 0)
+function insert_thing_to_db($time_array, $thing, $is_metadata = 0, $thing_index = 0)
 {
     if ($time_array['status'] != "ok")
     {
@@ -96,8 +153,10 @@ function insert_thing_to_db($time_array, $thing, $thing_index = 0)
 
     $thing_uuid = create_guid();
     $sql_string = "INSERT INTO thing_time(uuid, time, time_type, time_limit, time_limit_type, 
-       thing, add_time, public_tag, user_UUID, year_order, thing_index) VALUES('$thing_uuid', '$time', $time_type, 
-       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . "', $year_order, $thing_index)";
+       thing, add_time, public_tag, user_UUID, year_order, thing_index, is_metadata) 
+       VALUES('$thing_uuid', '$time', $time_type, 
+       $time_limit, $time_limit_type, '$thing', now(), 1, '" . get_user_id() . 
+       "', $year_order, $thing_index, $is_metadata)";
     
     if (mysql_query($sql_string) === TRUE)
     {
@@ -112,10 +171,11 @@ function insert_thing_to_db($time_array, $thing, $thing_index = 0)
 
 /**
  * 将事件的更新数据写入数据库.
+ * $is_metadata: 可选参数，是否是元数据。
  * @$thing_index: 可选参数，事件在笔记标签中的序号。默认值为0。
  * @return: 成功返回1, 失败返回0.
  */
-function update_thing_to_db($thing_uuid, $time_array, $thing, 
+function update_thing_to_db($thing_uuid, $time_array, $thing, $is_metadata = 0, 
     $thing_index = 0, $death_person_count = 0, $hurt_person_count = 0, 
     $missing_person_count = 0, $word_count = 0)
 {
@@ -137,6 +197,7 @@ function update_thing_to_db($thing_uuid, $time_array, $thing,
         $sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
             time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order , 
             thing_index = $thing_index , 
+            is_metadata = $is_metadata , 
             related_number1 = $death_person_count , 
             related_number2 = $hurt_person_count , 
             related_number3 = $missing_person_count , 
@@ -147,6 +208,7 @@ function update_thing_to_db($thing_uuid, $time_array, $thing,
     {
         $sql_string = "UPDATE thing_time set time = '$time', time_type = $time_type, thing = '$thing', 
             time_limit = $time_limit, time_limit_type = $time_limit_type , year_order = $year_order , 
+            is_metadata = $is_metadata , 
             related_number1 = $death_person_count , 
             related_number2 = $hurt_person_count , 
             related_number3 = $missing_person_count , 
@@ -167,16 +229,25 @@ function update_thing_to_db($thing_uuid, $time_array, $thing,
 
 /**
  * 给查询子句增加排序、分页。
+ * $sql_object: 根据显示对象的不同，order string使用不同的参数。检索和标签时，
+ * $offset, $page_size: 分页。
  */
-function add_order_page_substring($offset, $page_size)
+function add_order_page_substring($sql_object, $offset, $page_size)
 {
     // return $thing_substring . 
     //     " order by thing_time.year_order ASC, thing_time.thing_index ASC limit $offset, $page_size ";
-    return " order by a.year_order ASC, a.thing_index ASC limit $offset, $page_size ";
+    if (($sql_object == sql_object::CONST_SEARCH) || ($sql_object == sql_object::CONST_TAG))
+    {
+        return " order by a.is_metadata DESC, a.year_order ASC, a.thing_index ASC limit $offset, $page_size ";
+    }
+    else 
+    {
+        return " order by a.year_order ASC, a.thing_index ASC limit $offset, $page_size ";
+    }
 }
 
 /**
- * 根据 substring 获取满足条件的事件数量。（此函数已失效）
+ * 根据 substring 条件，获取事件数量。
 */
 function get_thing_count($sql_object, $sql_param)
 {
