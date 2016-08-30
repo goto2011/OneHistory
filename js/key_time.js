@@ -123,6 +123,7 @@ $(function() {
 		height: '35px',
 		removeWithBackspace : false,
 		defaultText:'添加标签',
+        // autocomplete_url:'autocomplete/fake_plaintext_endpoint.html',
 		onAddTag: onAddTag
 	});
 

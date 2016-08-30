@@ -79,7 +79,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             from property b, thing_property c, (select distinct uuid from thing_time a 
                             inner join thing_property c on $where_sub and a.uuid = c.thing_UUID 
                             and c.property_UUID = '$search_tag_uuid' order_substring) t 
-                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else if ($search_tag_type > 0)
                     {
@@ -88,21 +89,24 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             inner join thing_property c on $where_sub and a.uuid = c.thing_UUID 
                             inner join property b on b.property_UUID = c.property_UUID 
                             and b.property_type = $search_tag_type $order_substring) t 
-                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else if ($sql_param['has_period'] == TRUE)
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select uuid from thing_time a where ( $where_sub ) 
                             and (a.year_order >= $begin_year and a.year_order < $end_year) $order_substring) t 
-                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, 
                             (select uuid from thing_time a where $where_sub $order_substring) t 
-                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     break;
                     
@@ -182,28 +186,32 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
                             from thing_time a where ((year_order >= $begin_year) and (year_order < $end_year)) 
-                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else if(is_infinite($begin_year) && is_infinite($end_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
                             from thing_time a $order_substring) t 
-                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else if(is_infinite($begin_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
                             from thing_time a where (year_order < $end_year) 
-                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     else if(is_infinite($end_year))
                     {
                         return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                             from property b, thing_property c, (select a.uuid 
                             from thing_time a where (year_order >= $begin_year) 
-                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid ";
+                            $order_substring) t where b.property_UUID=c.property_UUID and c.thing_UUID=t.uuid 
+                            order by tag_priority DESC ";
                     }
                     
                     break;
@@ -247,7 +255,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                             from property b, thing_property c, (select distinct a.uuid from thing_time a 
                             inner join thing_property b on b.property_UUID = '$property_UUID' 
                             and a.UUID=b.thing_UUID $order_substring) t where c.thing_UUID=t.uuid 
-                            and b.property_UUID = c.property_UUID ";
+                            and b.property_UUID = c.property_UUID order by tag_priority DESC ";
                     break;
                 case sql_type::CONST_GET_THING_ITEMS:
                     return "select distinct a.* from thing_time a
@@ -313,7 +321,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                 return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                                         from property b, thing_property c, (select a.uuid 
                                         from thing_time a $order_substring) t where c.thing_UUID=t.uuid 
-                                        and b.property_UUID = c.property_UUID  ";
+                                        and b.property_UUID = c.property_UUID 
+                                        order by tag_priority DESC ";
                                 break;
                             // 我的关注
                             case tab_type::CONST_MY_FOLLOW:
@@ -322,7 +331,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                     from thing_time a, thing_property c, follow e 
                                     where e.user_UUID = '" . get_user_id() . "' 
                                     and a.UUID = c.thing_UUID and e.property_UUID = c.property_UUID $order_substring) t where 
-                                    c.thing_UUID=t.thing_UUID and b.property_UUID = c.property_UUID";
+                                    c.thing_UUID=t.thing_UUID and b.property_UUID = c.property_UUID 
+                                    order by tag_priority DESC ";
                                 break;
                             // 最新，指7天内新建的标签(暂时删除)
                             case tab_type::CONST_NEWEST:
@@ -336,7 +346,8 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                 return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                                         from property b, thing_property c, (select a.uuid 
                                         from thing_time a $order_substring) t where c.thing_UUID=t.uuid 
-                                        and  b.property_UUID=c.property_UUID ";
+                                        and  b.property_UUID=c.property_UUID 
+                                        order by tag_priority DESC ";
                                 break;
                             default:
                                 if ($tag_type > 0)
@@ -352,7 +363,7 @@ function get_sql_qurey($sql_object, $sql_type, $sql_param, $order_substring = ""
                                     return "select distinct b.property_UUID, b.property_name, b.property_type, b.hot_index, c.thing_UUID 
                                         from property b, thing_property c, (select a.uuid from thing_time a where a.property_types 
                                         like '%$my_tag%' $order_substring ) t where b.property_UUID = c.property_UUID 
-                                        and t.uuid=c.thing_UUID";
+                                        and t.uuid=c.thing_UUID order by tag_priority DESC ";
                                 }
                                 else
                                 {
