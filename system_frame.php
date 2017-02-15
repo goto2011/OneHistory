@@ -91,18 +91,89 @@ function succ_callback(operate_type, data)
     change_status_lable(operate_type, res_status, 1);
 }
 
+// 选中标签后的处理
+function tag_selected(evt)
+{
+    var evt = evt || window.event;
+    var e = evt.srcElement || evt.target;
+    var obj = document.getElementById("tag_list_select");
+
+    var system_manager_ajax = xhr({
+        url:'./ajax/general_ajax.php',
+        data:{
+            'operate_type'      :"tag_selected",
+            'selected_tag_id'   :obj.options[obj.selectedIndex].value
+        },
+        async:false,
+        method:'GET',
+        complete: function () {
+        },
+        success: function (data) {
+            alert(data);
+        },
+        error: function () {
+            succ_callback(operate_type, "fail");
+        }
+    });
+}
+
+// 修改标签属性
+function tag_property_modify(evt)
+{
+    var evt=evt || window.event;
+    var e =evt.srcElement || evt.target;
+    
+    var system_manager_ajax = xhr({
+        url:'./ajax/general_ajax.php',
+        data:{
+            'operate_type'      :"tag_property_modify",
+            'vip_tag_checked'   :get_checkbox_value("tag_modify_type")
+        },
+        async:false,
+        method:'GET',
+        complete: function () {
+        },
+        success: function (data) {
+            // 解析 json数据。
+            tag_obj = JSON.parse(data);
+            // alert(tag_obj[0][1]);
+            
+            var obj = document.getElementById('tag_list_select');
+            obj.options.length = 0;
+            obj.style.visibility = 'visible';
+            for (var ii = 0; ii < tag_obj.length; ii++)
+            {
+                obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
+            }
+        },
+        error: function () {
+            succ_callback(operate_type, "fail");
+        }
+    });
+}
+
 // 发起Ajax通讯。
 function ajax_do(operate_type)
 {
     // 将控件灰掉，防止用户多次点击。
     make_button_status(operate_type, true);
     change_status_lable(operate_type, "", 0);
+    var vip_tag_checked = "";
+    
+    if (operate_type == "re_thing_add_vip_tag")
+    {
+        vip_tag_checked = get_checkbox_value("tag_type");
+    }
+    else
+    {
+        vip_tag_checked = get_checkbox_value("tag_modify_type");
+    }
             
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
             'operate_type'      :operate_type,
-            'vip_tag_checked'   :get_checkbox_value("tag_type")
+            'vip_tag_checked'   :vip_tag_checked
         },
         async:false,
         method:'GET',
@@ -121,14 +192,16 @@ function ajax_do(operate_type)
 
 <div class="system_user">
     <input type="submit" style="font-size:18pt" value="计算时间轴指数" 
-        id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" /></p>  <!-- 提交 -->
+        id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" />  <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
-</div>
-
-<div class="system_user">
+    
     <input type="submit" style="font-size:18pt" value="计算Tag热门指数" 
-        id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /></p> <!-- 提交 -->
+        id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /> <!-- 提交 -->
     <div class="label" id="re_calc_tag_hot_index_label"></div>
+    
+    <input type="submit" style="font-size:18pt" value="计算事件-标签类型映射" 
+        id="re_add_thing_tag_map" onclick="ajax_do('re_add_thing_tag_map')" /> <!-- 提交 -->
+    <div class="label" id="re_add_thing_tag_map_label"></div>
 </div>
 
 <div class="system_user">
@@ -150,13 +223,31 @@ function ajax_do(operate_type)
 ?>
     </br></br><div class="label" id="re_thing_add_vip_tag_label"></div>
 </div>
+
+
+<div class="system_user" style="width:700px">
+    <input type="submit" style="font-size:18pt" value="修改标签属性" 
+        id="tag_property_modify" /></p> <!-- 非提交 -->   
+<?php
+
+    for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
+    {
+        if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))
+        {
+            // 此处保存下标为好.
+            // $tag_id = get_tag_id_from_index($ii);
+            $tag_name = get_tag_list_name_from_index($ii);
+            
+            echo "&nbsp;&nbsp;<input type='radio' name=tag_modify_type value='$ii' 
+                onclick='tag_property_modify()'>$tag_name";
+        }
+    }
+?>
+    &nbsp;&nbsp;<select id='tag_list_select' style="visibility:hidden" onchange='tag_selected()'>
     
-<div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算事件-标签类型映射" 
-        id="re_add_thing_tag_map" onclick="ajax_do('re_add_thing_tag_map')" /></p> <!-- 提交 -->
-    <div class="label" id="re_add_thing_tag_map_label"></div>
+    </br></br><div class="label" id="tag_property_modify_label"></div>
 </div>
-    
+ 
 </div>
 
  

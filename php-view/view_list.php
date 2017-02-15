@@ -725,7 +725,12 @@
         $person_count_string = print_person_count($row['related_number1'], $row['related_number2'], 
             $row['related_number3'], $row['related_number4']);
     
-        $thing_context = $row['thing'];
+        if ($row['thing'] == "") {
+            $thing_context = "--";
+        } else {
+            $thing_context = $row['thing'];
+        }
+        
         // 高亮 检索关键字。 2016-01-27
         if (is_search())
         {

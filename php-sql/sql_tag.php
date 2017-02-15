@@ -499,7 +499,7 @@ function get_tags_name($thing_uuid, $tag_type)
  */
 function get_sourece_detail($my_tag_uuid)
 {
-    if (($my_array = get_tag_type_from_UUID($my_tag_uuid)) != NULL)
+    if (($my_array = get_tag_from_UUID($my_tag_uuid)) != NULL)
     {
         return $my_array['detail'];
     }
@@ -514,7 +514,7 @@ function get_sourece_detail($my_tag_uuid)
  */
 function get_tag_type($my_tag_uuid)
 {
-    if (($my_array = get_tag_type_from_UUID($my_tag_uuid)) != NULL)
+    if (($my_array = get_tag_from_UUID($my_tag_uuid)) != NULL)
     {
         return $my_array['property_type'];
     }
@@ -528,14 +528,14 @@ function get_tag_type($my_tag_uuid)
 /**
  * 根据 uuid 获取 tag 各属性.
  */
-function get_tag_type_from_UUID($tag_UUID)
+function get_tag_from_UUID($tag_UUID)
 {
     $sql_string = "select * from property where property_UUID='$tag_UUID' limit 0,1";
     
     $result = mysql_query($sql_string); 
     if($result == FALSE)
     {
-        $GLOBALS['log']->error("error: get_tag_type_from_UUID() -- $tag_UUID -- $sql_string 。");
+        $GLOBALS['log']->error("error: get_tag_from_UUID() -- $tag_UUID -- $sql_string 。");
         return NULL;
     }
     
@@ -546,16 +546,17 @@ function get_tag_type_from_UUID($tag_UUID)
 /**
  * 获取符合条件的tags.
  */
-function get_tags_db($tag_id, $tags_show_limit)
+function get_tags_db($tag_type, $tags_show_limit)
 {
-    switch ($tag_id)
+    switch ($tag_type)
     {
         // 全部条目
         case tab_type::CONST_TOTAL:
             // 全部条目容许显示的 tag 数量翻倍.
             // 全部中不显示“出处”标签。
-            $sql_string = "select property_UUID, property_name, property_type, hot_index from property where property_type != 3 order by hot_index desc
-                     limit 0, " . ($tags_show_limit * 2);
+            $sql_string = "select property_UUID, property_name, property_type, hot_index from 
+                    property where property_type != 3 order by hot_index desc
+                    limit 0, " . ($tags_show_limit * 2);
             break;
 
         // 我的关注
@@ -566,7 +567,7 @@ function get_tags_db($tag_id, $tags_show_limit)
                     limit 0, " . $tags_show_limit;
             break;
 
-        // 最新，指1周内的
+        // 最新，指1周内的(不再使用)
         case tab_type::CONST_NEWEST:
             $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
                     where DATE_SUB(CURDATE(), INTERVAL 1 WEEK) <= date(add_time) order by add_time DESC 
@@ -579,11 +580,12 @@ function get_tags_db($tag_id, $tags_show_limit)
                      limit 0, " . $tags_show_limit;
             break;
 
+        // tag type
         default:
-            if ($tag_id > 0)
+            if ($tag_type > 0)
             {
                 $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
-                    where property_type = $tag_id order by hot_index desc limit 0, " . $tags_show_limit;
+                    where property_type = $tag_type order by hot_index desc limit 0, " . $tags_show_limit;
             }
             else 
             {

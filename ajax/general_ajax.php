@@ -43,7 +43,7 @@
     // 自动将事件添加vip标签
     else if($_GET['operate_type'] == "re_thing_add_vip_tag")
     {
-        if (vip_tag_search_to_db($_GET['vip_tag_checked']) == 1)
+        if (vip_tag_search_to_db(html_encode($_GET['vip_tag_checked'])) == 1)
         {
             echo "ok";
         }
@@ -65,6 +65,36 @@
             echo "fail";
         }
 	}
+    
+    // 修改标签属性
+    else if($_GET['operate_type'] == "tag_property_modify")
+    {
+        $tag_type = get_tag_id_from_index(html_encode($_GET['vip_tag_checked']));
+        $result = get_tags_db($tag_type, 1000);
+        $tags_name = array();
+        
+        $ii = 0;
+        while($row = mysql_fetch_array($result))
+        {
+            // $tags_name[$row['property_UUID']] = iconv("gb2312", "utf-8", $row['property_name']);
+            // $tags_name[$row['property_UUID']] = urlencode($row['property_name']);
+            $tags_name[$ii] = array($row['property_UUID'], urlencode($row['property_name']));
+            $ii++;
+        }
+        
+        echo urldecode(json_encode($tags_name));
+    }
+    
+    // 修改标签属性
+    else if($_GET['operate_type'] == "tag_selected")
+    {
+        $tag_id = html_encode($_GET['selected_tag_id']);
+        
+        $row = get_tag_from_UUID($tag_id);
+        $tag_param = array();
+        
+        echo urldecode(json_encode($tag_param));
+    }
 
     // exit.
     mysql_close($conn);
