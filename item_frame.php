@@ -7,8 +7,14 @@
 <?php
     require_once 'init.php';
     is_user(3);
-    require_once "data.php";
+    
     require_once "sql.php";
+    if (!check_db_valid()){
+        echo '数据库链接失败!';
+        return;
+    }
+    
+    require_once "data.php";
     require_once "list_control.php";
     
     // 检查 list control对象的状态和版本号。
@@ -16,11 +22,10 @@
     if ((get_list_control_init_status() == 0) || (list_control_version_check(5) == 0))
     {
         list_control_init();
-        // $GLOBALS['log']->error("test1 - " . print_list_param());
     }
         
     /**
-     * 清除检索条件相关字段。
+     * 清除检索条件相关字段.
      */
     function empty_search_params()
     {
@@ -123,8 +128,7 @@
 <script type="text/javascript" src="./js/jquery.min.js"></script>
 <script type="text/javascript" src="./js/jquery.easyui.min.js"></script>
 
-<?php 
-
+<?php
 	// 分配令牌。
 	alloc_update_token();
 	// alloc_import_token();

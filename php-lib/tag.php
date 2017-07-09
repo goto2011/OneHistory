@@ -10,7 +10,7 @@ require_once "tag_city.php";
 require_once "tag_person.php";
 require_once "tag_key_thing.php";
 require_once "tag_land.php";
-require_once "tag_die.php";
+require_once "tag_war.php";
 require_once "tag_country.php";
 require_once "tag_solution.php";
 

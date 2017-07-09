@@ -3,6 +3,8 @@
 // 放那些时间系统和论坛都要访问的sql函数。    -->
 
 // 根据 user_uuid 获取 thing 的数量
+//  $user_ids: user_uuid数组
+//  $sql_query_func: 
 function get_thing_count_by_user($user_ids, $sql_query_func)
 {
     if ((count($user_ids) == 0) && (!function_exists($sql_query_func)))

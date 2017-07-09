@@ -1,9 +1,3 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
-
 <?php 
     require_once 'init.php';
     is_user(1);
@@ -11,10 +5,14 @@
     
     if(!is_vip_user())
     {
-        echo "本页面只能管理员才能访问! 抱歉. ";
+        echo "本页面只能管理员才能访问!";
         exit;
     }
 ?>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
 <script type='text/javascript' src='./js/data.js'></script>
@@ -91,13 +89,13 @@ function succ_callback(operate_type, data)
     change_status_lable(operate_type, res_status, 1);
 }
 
-// 选中标签后的处理
+// 修改标签属性 step2: 选中标签后的处理
 function tag_selected(evt)
 {
     var evt = evt || window.event;
     var e = evt.srcElement || evt.target;
     var obj = document.getElementById("tag_list_select");
-
+    
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -117,7 +115,7 @@ function tag_selected(evt)
     });
 }
 
-// 修改标签属性
+// 修改标签属性 step1: 选择标签类型
 function tag_property_modify(evt)
 {
     var evt=evt || window.event;
@@ -143,6 +141,7 @@ function tag_property_modify(evt)
             obj.style.visibility = 'visible';
             for (var ii = 0; ii < tag_obj.length; ii++)
             {
+                // 将数据更新到界面。
                 obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
             }
         },
@@ -160,6 +159,7 @@ function ajax_do(operate_type)
     change_status_lable(operate_type, "", 0);
     var vip_tag_checked = "";
     
+    // 批量更新 事件-VIP标签
     if (operate_type == "re_thing_add_vip_tag")
     {
         vip_tag_checked = get_checkbox_value("tag_type");
@@ -168,7 +168,7 @@ function ajax_do(operate_type)
     {
         vip_tag_checked = get_checkbox_value("tag_modify_type");
     }
-            
+
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -191,11 +191,11 @@ function ajax_do(operate_type)
 </script>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="计算时间轴指数" 
+    <input type="submit" style="font-size:18pt" value="计算事件-时间轴指数" 
         id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" />  <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
     
-    <input type="submit" style="font-size:18pt" value="计算Tag热门指数" 
+    <input type="submit" style="font-size:18pt" value="计算标签-热门指数" 
         id="re_calc_tag_hot_index" onclick="ajax_do('re_calc_tag_hot_index')" /> <!-- 提交 -->
     <div class="label" id="re_calc_tag_hot_index_label"></div>
     
@@ -205,10 +205,9 @@ function ajax_do(operate_type)
 </div>
 
 <div class="system_user">
-    <input type="submit" style="font-size:18pt" value="自动将事件添加vip标签" 
+    <input type="submit" style="font-size:18pt" value="批量更新事件-VIP标签" 
         id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->   
 <?php
-
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))
@@ -216,7 +215,6 @@ function ajax_do(operate_type)
             // 此处保存下标为好.
             // $tag_id = get_tag_id_from_index($ii);
             $tag_name = get_tag_list_name_from_index($ii);
-            
             echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$ii' >$tag_name";
         }
     }
@@ -226,10 +224,10 @@ function ajax_do(operate_type)
 
 
 <div class="system_user" style="width:700px">
-    <input type="submit" style="font-size:18pt" value="修改标签属性" 
-        id="tag_property_modify" /></p> <!-- 非提交 -->   
+    <input type="submit" style="font-size:18pt" value="修改VIP标签的属性" 
+        id="tag_property_modify" /></p> <!-- 非提交 -->
 <?php
-
+    // 列出 key.
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
         if ((is_vip_tag_tab($ii) == 1) && (is_show_input_tag($ii) == 1))
@@ -243,9 +241,31 @@ function ajax_do(operate_type)
         }
     }
 ?>
-    &nbsp;&nbsp;<select id='tag_list_select' style="visibility:hidden" onchange='tag_selected()'>
+    <!-- tag列表 -->
+    </br>&nbsp;&nbsp;<select id='tag_list_select' style="visibility:hidden" 
+        onchange='tag_selected()'>
+    </br>
+    </br>
+<?php
+    $tag_name = "123";
+    $tag_count = 0;
+    $begin_time = "";
+    $big_day = "";
+    $end_time = "";
     
-    </br></br><div class="label" id="tag_property_modify_label"></div>
+    // <!-- 标签名称 -->
+    echo "<p class='thick'>标签名称:<input id='tag_name' value='$tag_name' />";
+    // <!-- 数量（不可编辑） -->
+    echo "<p class='thick'>事件数量:<input id='tag_count' value='$tag_count' />";
+    // <!-- 开始时间 -->
+    echo "<p class='thick'>开始时间:<input id='begin_time' value='$begin_time' />";
+    // <!-- BigDay时间 -->
+    echo "<p class='thick'>BigDay:<input id='big_day' value='$big_day' />";
+    // <!-- 结束时间 -->
+    echo "<p class='thick'>结束时间:<input id='end_time' value='$end_time' />";
+        
+    echo "</br></br><div class='label' id='tag_property_modify_label'></div>";
+?>
 </div>
  
 </div>

@@ -1,21 +1,21 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
 <?php 
     require_once 'init.php';
-    require_once "waf.php";
     is_user(3);
+    require_once "waf.php";
     require_once "data.php";
     require_once "sql.php";
     
     define('PUN_ROOT', dirname(__FILE__).'/bbs/');
     require_once "common.php";
+
+    $conn = open_db();
 ?>
 
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1255791580'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s95.cnzz.com/z_stat.php%3Fid%3D1255791580' type='text/javascript'%3E%3C/script%3E"));</script>
-
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
 <title></title>
 </head>
@@ -35,8 +35,20 @@
     
 <div id="welcome" style="float:center;">
 <?php
-    echo get_user_name() . "，欢迎您！ --- " . get_system_name() . ". " . get_system_version();
+    if (is_guest())
+    {
+        echo get_user_name() . "，欢迎您！ --- " . get_system_name();
+    }
+    else
+    {
+        $grace_array = get_current_user_grade();
+        echo get_user_name() . "，" . $grace_array[0] . " / " . $grace_array[1]
+        . " / " . $grace_array[2] .  " --- " . get_system_name();
+    }
     echo "&nbsp;&nbsp;&nbsp";
+    
+    mysql_close($conn);
+    $conn = null;
 ?>
 </div>
 
@@ -74,12 +86,9 @@
 ?>
     <a href="./login.php?action=out&id=<?=$pun_user['id']?>&csrf_token=<?=pun_hash($pun_user['id'].pun_hash(get_remote_address()))?>"  class="red_black_underline"  target="_top">退出</a>
 <?php
-    }
-    else 
-    {
+    } else {
 ?>
     <a href="./register.php"  class="red_black_underline"  target="_top">注册账号</a>
-    /
     <a href="./login.php"  class="red_black_underline"  target="_top">登陆</a>
 <?php        
     }

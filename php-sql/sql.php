@@ -22,11 +22,30 @@ function open_db()
     global $db_username;
     global $db_password;
     global $db_name;
-	$conn = @mysql_connect($db_host, $db_username, $db_password) or die("数据库链接错误!");
-	mysql_select_db($db_name, $conn);	       // 打开数据库
-	mysql_query("set names 'UTF8'");           // 使用utf8中文编码
-	
-	return $conn;
+	$conn = @mysql_connect($db_host, $db_username, $db_password);
+    
+    if (!$conn) {
+        $GLOBALS['log']->error('数据库连接失败！');
+        return null;
+    } else {
+        mysql_select_db($db_name, $conn);         // 打开数据库
+        mysql_query("set names 'UTF8'");           // 使用utf8中文编码
+        return $conn;
+    }
+}
+
+/**
+ * 检查数据库是否可用。
+ */
+function check_db_valid()
+{
+    global $db_host;
+    global $db_username;
+    global $db_password;
+    global $db_name;
+    $conn = @mysql_connect($db_host, $db_username, $db_password);
+    
+    return ($conn != null);
 }
 
 // 将数据库查询到的多条记录集一次放入一个数组（通用接口，暂时没有使用）

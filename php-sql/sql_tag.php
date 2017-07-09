@@ -35,7 +35,7 @@ $tag_control = array(
     // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
     array(tab_type::CONST_PERIOD,         "时期",             0,    1,      ""),                // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(tab_type::CONST_DIE,            "非正常死亡",       1,    1,      "die_tags"),       // vip tag.
+    array(tab_type::CONST_DIE,            "战争及死亡史",       1,    1,      "die_tags"),       // vip tag.
     array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_COUNTRY,        "世界",             1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国",             1,    1,      "dynasty_tags"),    // vip tag.

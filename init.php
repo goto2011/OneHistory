@@ -23,11 +23,10 @@
     Plog::set_config(include 'plog_config.php');
     $log = Plog::factory(__FILE__);
     
-    
     require_once "list_control.php";
     require_once "sql_user.php";
     
-    // 如果用户没有登陆, 则进入登录界面.
+    // 如果用户没有登陆, 则根据登陆类型跳转。1和2是跳转到登录界面；3则什么也不做。
     // $login_type: 1表示根目录下登陆；2表示子目录下登陆；3表示不需要账号即可访问的页面。
     function is_user($login_type)
     {

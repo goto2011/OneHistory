@@ -147,6 +147,7 @@ function insert_thing_to_db($time_array, $thing, $is_metadata = 0, $thing_index 
     $thing_uuid = thing_context_is_exist($thing);
     if ($thing_uuid != "")
     {
+        // 如果存在，则更新事件属性。
         update_thing_to_db($thing_uuid, $time_array, $thing, $thing_index);
         return $thing_uuid;
     }
