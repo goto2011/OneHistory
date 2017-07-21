@@ -40,7 +40,7 @@
         }
     }
     
-    // 自动将事件添加vip标签
+    // 刷新 vip tag。
     else if($_GET['operate_type'] == "re_thing_add_vip_tag")
     {
         if (vip_tag_search_to_db(html_encode($_GET['vip_tag_checked'])) == 1)

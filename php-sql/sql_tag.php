@@ -37,8 +37,8 @@ $tag_control = array(
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
     array(tab_type::CONST_DIE,            "战争及死亡史",       1,    1,      "die_tags"),       // vip tag.
     array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
-    array(tab_type::CONST_COUNTRY,        "世界",             1,    1,      "country_tags"),    // vip tag.
-    array(tab_type::CONST_DYNASTY,        "中国",             1,    1,      "dynasty_tags"),    // vip tag.
+    array(tab_type::CONST_COUNTRY,        "世界历史",             1,    1,      "country_tags"),    // vip tag.
+    array(tab_type::CONST_DYNASTY,        "中国历史",             1,    1,      "dynasty_tags"),    // vip tag.
     array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
     // array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
     // array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
@@ -1079,6 +1079,7 @@ function vip_tag_search_to_db($tag_index)
         {
             for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
             {
+                // 根据 vip tag的属性生成sql语句。
                 $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj);
                 if ($search_sub != "")
                 {
@@ -1149,7 +1150,7 @@ function get_vip_tag_substring($vip_tag_struct, $index_big, $index_small)
             $search_sub = get_search_where_sub_by_key_time($search_key, $begin_year, $end_year);
         }
     }
-    // 目前只有“中国”标签符合。
+    // 中国、骑马民族专用。
     else if($my_search_flag == "tag-time")
     {
         $search_tag = get_tag_uuid_from_name($vip_tag_struct->get_tag_time_tag($index_big, $index_small), $tag_type);

@@ -145,7 +145,10 @@ function get_user_grade($user_id)
     
     // 1个事件算1分，1个tag算3分，计算用户等级。
     $total_scare = $thing_count + 3 * $tag_cout;
-    $current_grace = floor(sqrt($total_scare / 25)) + 1;
+    // $total_scare = 72706
+    $delt = 4 * ($total_scare / 25) - 1;
+    // $current_grace = 54
+    $current_grace = floor((1 + sqrt($delt)) / 2);
     $current_scare = $total_scare - $current_grace * ($current_grace - 1) * 25;
     $next_grace_scare = $current_grace * 50;
     
@@ -224,19 +227,19 @@ function user_is_login()
 // 确认当前用户是否是管理员
 function is_manager()
 {
-    return ((get_user_id() == 1) || (get_user_id() == 2));
+    return (($_SESSION['user_right'] == 1) || ($_SESSION['user_right'] == 2));
 }
 
 // 确认当前用户是否是添加者
 function is_adder()
 {
-    return (get_user_id() == 5);
+    return ($_SESSION['user_right'] == 5);
 }
 
 // 确认当前用户是否是删除者
 function is_deleter()
 {
-    return (get_user_id() == 6);
+    return ($_SESSION['user_right'] == 6);
 }
 
 // 是否为 vip 用户
@@ -248,13 +251,13 @@ function is_vip_user()
 // 确认当前用户是否是普通登录用户
 function is_normal()
 {
-    return (get_user_id() == 4);
+    return ($_SESSION['user_right'] == 4);
 }
 
 // 确认当前用户是否是未登录用户
 function is_guest()
 {
-    return (get_user_id() == 0);
+    return ($_SESSION['user_right'] == 0);
 }
 
 /*
