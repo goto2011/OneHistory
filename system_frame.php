@@ -223,7 +223,7 @@ function ajax_do(operate_type)
 </div>
 
 
-<div class="system_user" style="width:700px">
+<div class="system_user" style="width:700px;height:400px">
     <input type="submit" style="font-size:18pt" value="修改VIP标签的属性" 
         id="tag_property_modify" /></p> <!-- 非提交 -->
 <?php

@@ -110,7 +110,7 @@ function get_index_base_inside_tag($note_tags)
    
     if($result == FALSE)
     {
-       $GLOBALS['log']->error("error: get_tag_uuid_from_name() -- $sql_string 。");
+       $GLOBALS['log']->error("error: get_index_base_inside_tag() -- $sql_string 。");
        return 0;
     }
    

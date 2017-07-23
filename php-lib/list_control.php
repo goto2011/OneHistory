@@ -42,6 +42,12 @@ class tab_type {
     const CONST_SOLUTION    = 16;  // add，2016-01-10
 }
 
+// 获取“我的关注”的 tab id.
+function get_myfollow_id()
+{
+    return tab_type::CONST_MY_FOLLOW;
+}
+
 // current list
 function set_current_list($cur_list)
 {

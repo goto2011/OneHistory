@@ -279,7 +279,7 @@
         echo "</div>";
     }
     
-    // 打印添加 tag 界面.
+    // 打印 添加tag 控件。
     function print_add_tag_form()
     {
         echo "<span style='display:inline-block; right:3%; position:absolute;' >添加标签 : ";
@@ -452,7 +452,7 @@
         return $result;
     }
     /**
-     * 打印 tag 链接。通用化。2015-8-9。
+     * 打印 vip tag 链接。通用化。2015-8-9。
      */
     function create_vip_tag_link($vip_tag_class, $index, &$tags_db)
     {
@@ -611,6 +611,7 @@
             
             while($row = mysql_fetch_array($result))
             {
+                // 当前选中了特定 tag。
                 if ((is_tag()) && ($my_tag_uuid == $row['property_UUID']))
                 {
                     echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
@@ -622,6 +623,26 @@
                         $row['hot_index'], "tag_normal");
                 }
             }
+            // “全部”和“我的关注” 合一，所以要再来一遍。
+            // 获取property数据表的数据
+            echo "<br><br><a id='tag_type'>我的关注:</a>";
+            $result = get_tags_db(get_myfollow_id(), get_page_tags_size());
+            
+            while($row = mysql_fetch_array($result))
+            {
+                // 当前选中了特定 tag。
+                if ((is_tag()) && ($my_tag_uuid == $row['property_UUID']))
+                {
+                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                        $row['hot_index'], "tag_selected");
+                }
+                else 
+                {
+                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                        $row['hot_index'], "tag_normal");
+                }
+            }
+            echo "<br>";
         }
         // “时期”。
         else if(is_period(get_current_tag_id()))

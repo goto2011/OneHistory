@@ -31,7 +31,8 @@ function tag_list_max()
 // [4]表示tag 输入框的id（字符串，用于import/input页面）。
 $tag_control = array(
     array(tab_type::CONST_TOTAL,          "全部",             0,    0,      ""),
-    array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
+    // “我的关注”合并到首页。
+    // array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
     // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
     array(tab_type::CONST_PERIOD,         "时期",             0,    1,      ""),                // vip tag.
     array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
@@ -50,6 +51,7 @@ $tag_control = array(
     array(tab_type::CONST_NOTE,           "笔记",             1,    0,      "note_tags"),
     array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
     array(tab_type::CONST_MANAGER,        "管理",             3,    0,      ""),
+    array(tab_type::CONST_MANAGER,        "用户",             3,    0,      ""),
 );
 
 
@@ -326,22 +328,25 @@ function insert_tag_from_input($tags_array, $thing_uuid, $old_tag_string)
 
 /**
  * 将 事件-标签对 插入数据库.
+ * $ignore_check_exist: =true表示忽略检查 事件-标签对 是否存在。默认为false。
  */
-function insert_thing_tag($tag_uuid, $thing_uuid)
+function insert_thing_tag($tag_uuid, $thing_uuid, $ignore_check_exist = false)
 {
     // step4: 检查 事件-标签对 是否存在。
-    $sql_string = "select property_UUID from thing_property 
-        where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid' ";
-
-    $result = mysql_query($sql_string);
-    if ($result == FALSE)
-    {
-        $GLOBALS['log']->error("error: insert_thing_tag() -- $sql_string 。");
-        return 0;
+    if ($ignore_check_exist == false){
+        $sql_string = "select property_UUID from thing_property 
+            where thing_UUID='$thing_uuid' and property_UUID='$tag_uuid' ";
+    
+        $result = mysql_query($sql_string);
+        if ($result == FALSE)
+        {
+            $GLOBALS['log']->error("error: insert_thing_tag() -- $sql_string 。");
+            return 0;
+        }
     }
 
     // step5: 如果不存在则保存.
-    if (mysql_num_rows($result) == 0)
+    if (($ignore_check_exist == true) || (mysql_num_rows($result) == 0))
     {
         $sql_string = "insert into thing_property(thing_UUID, property_UUID, add_time, user_UUID)
             VALUES('$thing_uuid', '$tag_uuid', now(), '" . get_user_id() . "')";
@@ -1068,6 +1073,7 @@ function vip_tag_search_to_db($tag_index)
             $GLOBALS['log']->error("error: vip_tag_search_to_db() -- $tag_type 。");
             return 0;
         }
+        // 初始化 vip tag
         $my_vip_tag = vip_tag_struct_init($tag_type);
         if ($my_vip_tag == NULL)
         {
@@ -1080,7 +1086,8 @@ function vip_tag_search_to_db($tag_index)
             for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
             {
                 // 根据 vip tag的属性生成sql语句。
-                $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj);
+                $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj, $tag_type);
+                // $GLOBALS['log']->error($search_sub);
                 if ($search_sub != "")
                 {
                     $my_tag_name = $my_vip_tag->get_tag_name($ii, $jj);
@@ -1117,9 +1124,9 @@ function get_vip_tag_name($vip_tag_struct, $index_big, $index_small)
  
  
 /**
- * 跟踪vip tag 生成查询子句
+ * 根据vip tag各属性生成查询子句
  */
-function get_vip_tag_substring($vip_tag_struct, $index_big, $index_small)
+function get_vip_tag_substring($vip_tag_struct, $index_big, $index_small, $tag_type)
 {
     $search_sub = "";
     $my_search_flag = $vip_tag_struct->get_tag_search_flag($index_big, $index_small);
@@ -1153,7 +1160,8 @@ function get_vip_tag_substring($vip_tag_struct, $index_big, $index_small)
     // 中国、骑马民族专用。
     else if($my_search_flag == "tag-time")
     {
-        $search_tag = get_tag_uuid_from_name($vip_tag_struct->get_tag_time_tag($index_big, $index_small), $tag_type);
+        $search_tag = get_tag_uuid_from_name($vip_tag_struct->get_tag_time_tag($index_big, 
+            $index_small), $tag_type);
         $begin_year = $vip_tag_struct->get_tag_time_begin_year($index_big, $index_small);
         $end_year = $vip_tag_struct->get_tag_time_end_year($index_big, $index_small);
         if (($search_tag != "") && ($begin_year != 0) && ($end_year != 0))
@@ -1178,7 +1186,7 @@ function tag_search_to_db($search_sub, $tag_name, $tag_type)
     {
         $add_thing_tag_number = 0;
         
-        // 2. 生成检索条件。获取符合条件的thing 表结果集.
+        // 2. 生成检索条件。获取符合条件的 thing 表结果集.
         // vip tag的检索不可能是时间，所以 $enable_time_search 设置为 FALSE。
         $db_result = get_thing_item_by_key($search_sub, $tag_uuid);
         
@@ -1191,7 +1199,8 @@ function tag_search_to_db($search_sub, $tag_name, $tag_type)
                 
                 if (strlen($thing_uuid) > 0)
                 {
-                    $add_thing_tag_number += insert_thing_tag($tag_uuid, $thing_uuid);
+                    // 第三个参数 true 表示忽略在插入前检查 事件-标签对 是否存在，目的是提高性能。
+                    $add_thing_tag_number += insert_thing_tag($tag_uuid, $thing_uuid, true);
                 }
             }
         }// if

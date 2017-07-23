@@ -21,15 +21,17 @@ require_once "tag_solution.php";
 /** vip tag struct的字段列表：
  * 1. tag name：tag显示名称。如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
  * 2. show flag: tag显示属性。有两种：“super”和“normal”，默认值为normal。带 super 属性的标签会加粗加大字体。
+ *  允许这样定义： [tag name][super]，即各属性为super+sigle-key，且关键字即为tag显示名称。
  * 3. search flag: 检索属性。有四种："sigle-key"、"multe-key"、"key-time"、"tag-time".
- *      sigle-key: 单关键字。最常见，所以也可以不指定search flag。
+ *      sigle-key: 单关键字。
  *      multe-key: 多关键字。需要指定。
  *      key-time:  关键字和时间区间的组合。需要指定。（目前仅用于“标签中如何划分古代文明和现代国家？”）。支持多个。
- *      tag-time:  tag和时间区间的组合。需要指定。（目前仅用于 中国朝代 tab页 之 正朔朝代。仅支持一个。
- * 4. 检索关键字。可能有多个。
- * 5. 时间范围字段。
+ *      tag-time:  指定tag和时间区间的组合。需要指定。（目前仅用于 中国朝代 tab页 之 正朔朝代。仅支持一个。
+ * 4. 检索关键字。
+ * 5. 时间范围字段 begin year/end year 总是放在最后两个，且只支持年份。
  *      对于key-time是这样的：[tag name][show flag][search flag][key1][key2][key3][begin year][end year].
  *      对于tag-time是这样的：[tag name][show flag][search flag][tag name][begin year][end year].
+ * 6. 简写模式：只允许1、2这两种，其它则必须写完整形式。注意，除1、2两种外，其它形式中tag显示名称不算在关键字范围内。
 **/
 class vip_tag_class{
     private $vip_tag_big_name;
@@ -111,7 +113,9 @@ class vip_tag_class{
     public function get_tag_search_flag($big_id, $small_id)
     {
         // 如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
-        if (count($this->vip_tag_struct[$big_id - 1][$small_id - 1]) == 1)
+        // 如果有两个字段，则属性为sigle-key，且关键字即为tag显示名称。
+        $tag_param_count = count($this->vip_tag_struct[$big_id - 1][$small_id - 1]); 
+        if (($tag_param_count == 1) || ($tag_param_count == 2))
         {
             return "sigle-key";
         }
@@ -129,7 +133,8 @@ class vip_tag_class{
         $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
         
         // 如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
-        if (count($my_vip_tag) == 1)
+        // 如果有两个字段，则属性为sigle-key，且关键字即为tag显示名称。
+        if ((count($my_vip_tag) == 1) || (count($my_vip_tag) == 2))
         {
             return $my_vip_tag[0];
         }
@@ -152,8 +157,8 @@ class vip_tag_class{
         {
             $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
             
-            // 多关键字的情况下，tag显示名称 默认为也参与检索。
-            $my_key_string = $my_vip_tag[0] . " ";
+            // 多关键字的情况下，tag显示名称 默认为也参与检索。--这一点去掉。
+            // $my_key_string = $my_vip_tag[0] . " ";
             
             for ($ii = 3; $ii < count($my_vip_tag); $ii++)
             {
