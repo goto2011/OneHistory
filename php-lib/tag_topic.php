@@ -2,7 +2,7 @@
 // created by duangan, 2015-5-4 -->
 // support topic deal function.    -->
 
-// 朝代 big
+// 主题 big
 $topic_big = array(
     "历史",
     "科学技术",
@@ -15,7 +15,7 @@ $topic_big = array(
     "其它"
 );
 
-// 朝代 tag vip struct.
+// 主题 tag vip struct.
 $topic = array
 (
     array
@@ -129,7 +129,7 @@ $topic = array
         array("小说"),
         array("音乐", "super", "multe-key", "音乐", "民族乐器", "西洋乐器", "钢琴", "竖琴", "提琴", 
             "口琴", "电子琴", "管乐器", "弦乐器", "打击乐器", "锣", "鼓", "钹", "吉他", "琵琶", "笛", 
-            "二胡", "编钟", "贝司", "萨克斯", "交响乐", "乐队", "乐团", "民乐", "古筝"),
+            "二胡", "编钟", "贝司", "萨克斯", "交响乐", "乐队", "乐团", "民乐", "古筝", "磬", "埙"),
         array("美术"),
         array("雕像"),
         array("电影"),

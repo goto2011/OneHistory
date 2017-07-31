@@ -625,24 +625,26 @@
             }
             // “全部”和“我的关注” 合一，所以要再来一遍。
             // 获取property数据表的数据
-            echo "<br><br><a id='tag_type'>我的关注:</a>";
-            $result = get_tags_db(get_myfollow_id(), get_page_tags_size());
-            
-            while($row = mysql_fetch_array($result))
-            {
-                // 当前选中了特定 tag。
-                if ((is_tag()) && ($my_tag_uuid == $row['property_UUID']))
+            if (!is_guest()) {
+                echo "<br><br><a id='tag_type'>我的关注:</a>";
+                $result = get_tags_db(get_myfollow_id(), get_page_tags_size());
+                
+                while($row = mysql_fetch_array($result))
                 {
-                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
-                        $row['hot_index'], "tag_selected");
+                    // 当前选中了特定 tag。
+                    if ((is_tag()) && ($my_tag_uuid == $row['property_UUID']))
+                    {
+                        echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                            $row['hot_index'], "tag_selected");
+                    }
+                    else 
+                    {
+                        echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
+                            $row['hot_index'], "tag_normal");
+                    }
                 }
-                else 
-                {
-                    echo create_normal_tag_link($row['property_UUID'], $row['property_name'], 
-                        $row['hot_index'], "tag_normal");
-                }
+                echo "<br>";
             }
-            echo "<br>";
         }
         // “时期”。
         else if(is_period(get_current_tag_id()))
