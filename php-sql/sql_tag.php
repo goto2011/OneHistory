@@ -1050,63 +1050,80 @@ function tag_is_vip($tag_uuid)
             }
         }
     }
-    
     return 0;
 }
 
 /**
- * 将vip tag 作为关键字自动检索。（最重要函数，每次修改都要慎之又慎。）
- * 参数：$tag_index：tag index，即下标。
- * 返回值：1表示成功。
+ * 按index获取 vip tag 的对象
  */
-function vip_tag_search_to_db($tag_index)
+function get_vip_tag_object($tag_index) 
 {
-    // 本函数执行时间长，去掉php执行时间限制。
-    ini_set('max_execution_time', '0');
-    
     // 根据下标 判断是否是 vip tag.
     if(is_vip_tag_tab($tag_index))
     {
         $tag_type = get_tag_id_from_index($tag_index);
         if ($tag_type < 0)
         {
-            $GLOBALS['log']->error("error: vip_tag_search_to_db() -- $tag_type 。");
-            return 0;
+            $GLOBALS['log']->error("error: get_vip_tag_object() -- $tag_type 。");
+            return NULL;
         }
         // 初始化 vip tag
         $my_vip_tag = vip_tag_struct_init($tag_type);
         if ($my_vip_tag == NULL)
         {
-            $GLOBALS['log']->error("error: vip_tag_search_to_db() -- vip_tag_struct_init NULL 。");
-            return 0;
+            $GLOBALS['log']->error("error: get_vip_tag_object() -- vip_tag_struct_init NULL 。");
         }
         
-        for ($ii = $my_vip_tag->get_big_begin(); $ii <= $my_vip_tag->get_big_end() - 1; $ii++)
+        return $my_vip_tag;
+    }
+    return NULL;
+}
+ 
+/**
+ * 获取指定vip tag 的数量。
+ */
+function get_vip_tag_count($vip_tag_object)
+{
+    $tag_count = 0;
+    for ($ii = $vip_tag_object->get_big_begin(); $ii <= $vip_tag_object->get_big_end() - 1; $ii++)
+    {
+        $tag_count += $vip_tag_object->get_small_end($ii);
+    }
+    
+    return $tag_count;
+}
+ 
+/**
+ * 将vip tag 作为关键字自动检索。（最重要函数，每次修改都要慎之又慎。）
+ * $vip_tag_object：vip tag 对象。
+ * 返回值：返回vip tag name 表示成功。
+ *      返回 “okok”表示step已经到头。
+ */
+function vip_tag_search_to_db($vip_tag_object, $tag_index, $step)
+{
+    $my_curr_step = 0;
+    $tag_type = get_tag_id_from_index($tag_index);
+    for ($ii = $vip_tag_object->get_big_begin(); $ii <= $vip_tag_object->get_big_end() - 1; $ii++)
+    {
+        for ($jj = $vip_tag_object->get_small_begin($ii); $jj <= $vip_tag_object->get_small_end($ii); $jj++)
         {
-            for ($jj = $my_vip_tag->get_small_begin($ii); $jj <= $my_vip_tag->get_small_end($ii); $jj++)
-            {
+            $my_curr_step++;
+            if ($my_curr_step == $step) {
                 // 根据 vip tag的属性生成sql语句。
-                $search_sub = get_vip_tag_substring($my_vip_tag, $ii, $jj, $tag_type);
+                $search_sub = get_vip_tag_substring($vip_tag_object, $ii, $jj, $tag_type);
                 // $GLOBALS['log']->error($search_sub);
                 if ($search_sub != "")
                 {
-                    $my_tag_name = $my_vip_tag->get_tag_name($ii, $jj);
-                    // $GLOBALS['log']->error(date('H:i:s') . " - " . $search_sub . " - " . $my_tag_name);
+                    $my_tag_name = $vip_tag_object->get_tag_name($ii, $jj);
+                    $GLOBALS['log']->error($search_sub . " - " . $my_tag_name);
                     tag_search_to_db($search_sub, $my_tag_name, $tag_type);
+                    $GLOBALS['log']->error($my_tag_name . " finished.");
+                    return $my_tag_name;
                 }
             }
         }
     }
-    else 
-    {
-        $GLOBALS['log']->error("error: vip_tag_search_to_db() -- $tag_index 。");
-        return 0;
-    }
-    
-    // 恢复php执行时间限制。
-    ini_set('max_execution_time', '1500');
-    
-    return 1;
+    return "okok";
 }
 
 /**

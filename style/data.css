@@ -27,7 +27,7 @@ body {
 }
 
 #tag_nothing{
-	color: DarkSlateGray;
+	color: #8DEEEE;
 	font-size: 13px;
 	letter-spacing: 0.5px;
 	padding-right: 10px;
@@ -49,7 +49,7 @@ body {
 	padding-right: 10px;
 }
 
-/* 定义主界面的表格样式 */
+/* 定义主界面的表格样式，总控制 */
 table.table_main{
     font-family:verdana,arial,sans-serif,微软雅黑;
     font-size:13px;
@@ -59,7 +59,7 @@ table.table_main{
     border-top:1pt solid #C1DAD7;
     border-left:1pt solid #C1DAD7;
     margin: 0 auto;
-} /*总控制*/
+}
 
 table.table_main tr:first-child{
     background:#33CCFF; 
@@ -184,13 +184,6 @@ div.alert {
 	display:none
 }
 
-div.label {
-	font-size:18px; 
-	color:black; 
-	font-weight:normal; 
-	display:none
-}
-
 .fixed{
 	position:fixed; 
 	z-index:1
@@ -250,4 +243,39 @@ a.red_black_underline:hover, a.red_black_underline:active{
 	color:blue;
 	text-decoration:underline;    /* 鼠标到位有下划线. */
 }
-	
+
+
+/******************************************************/
+/* system_frame use */
+/******************************************************/
+div.label {
+    font-size:18px; 
+    color:black; 
+    font-weight:normal; 
+    display:none
+}
+
+#progress_border{
+    padding: 0; 
+    background-color: white; 
+    border: 1px solid navy; 
+    width: 500px;
+}
+
+#progress{
+    padding: 0; 
+    background-color: #FFCC66; 
+    border: 0; 
+    width: 0px; 
+    text-align: center; 
+    height: 16px;
+}
+
+#percent{
+    position: relative; 
+    text-align: center; 
+    font-weight: bold;
+    font-size: 8pt;
+    display:none
+}
+

@@ -33,22 +33,38 @@
 <div title="全球排名"   style="padding:10px;" href='system_rank.php' ></div>
 </div>
  -->
- 
- 
+
 <script>
-// 显示调用结果。
-function manager_show_status(this_form, is_ok, is_display)
+// 设置按钮的状态.
+function make_button_status(operate_type, disabled)
 {
+    // = true 表示去激活；= false 表示激活。
+    document.getElementById(operate_type).disabled = disabled;
+    
+    if (operate_type == "re_thing_add_vip_tag") {
+        var radios = document.getElementsByName("tag_type_radio");
+        for (ii = 0; ii < radios.length; ii++) {
+            radios[ii].disabled = disabled;
+        }
+    }
+}
+
+/**
+ * 设置状态条的状态。
+ */
+function change_status_lable(this_form, is_ok, is_display)
+{
+	this_form = this_form + "_label";
     if (is_display == 1)
     {
         document.getElementById(this_form).style.color = "red";
         if (is_ok == 1)
         {
-            document.getElementById(this_form).innerHTML = "更新成功!";
+            document.getElementById(this_form).innerHTML = "处理成功";
         }
         else
         {
-            document.getElementById(this_form).innerHTML = "更新失败!";
+            document.getElementById(this_form).innerHTML = "处理失败";
         }
         document.getElementById(this_form).style.display = "inline";
     }
@@ -56,21 +72,6 @@ function manager_show_status(this_form, is_ok, is_display)
     {
         document.getElementById(this_form).style.display = "none";
     }
-}
-
-// 设置按钮的状态.
-function make_button_status(operate_type, disabled)
-{
-    // = true 表示去激活；= false 表示激活。
-    document.getElementById(operate_type).disabled = disabled;
-}
-
-/**
- * 设置状态条的状态。
- */
-function change_status_lable(operate_type, res_status, is_display)
-{
-	manager_show_status(operate_type + "_label", res_status, is_display);
 }
 
 // 调用成功后的回调函数。
@@ -151,23 +152,108 @@ function tag_property_modify(evt)
     });
 }
 
-// 发起Ajax通讯。
+var width = 500;               // 显示的进度条长度，单位 px 
+var total = 0;                 // 总共需要操作的记录数 
+var pix = 0;                   // 每条记录的操作所占的进度条单位长度 
+var progress = 0;              // 当前进度条长度 
+var vip_tag_step = 0;          // 刷新vip tag的step计数器
+    
+function updateProgress(sMsg, iWidth) 
+{
+    document.getElementById("re_thing_add_vip_tag_label").style.display = "inline";
+    // document.getElementById("progress_border").style.display = "inline";
+    // document.getElementById("progress").style.display = "inline";
+    document.getElementById("percent").style.display = "inline";
+    
+    document.getElementById("re_thing_add_vip_tag_label").innerHTML = sMsg; 
+    document.getElementById("progress").style.width = iWidth + "px"; 
+    document.getElementById("percent").innerHTML = parseInt(iWidth / width * 100) + "%";
+}
+
+// 刷新vip tag调用成功后的回调函数。
+function thing_add_vip_tag_cb(operate_type, data)
+{
+    // alert(data);
+    // 返回数量
+    if (data.indexOf("ok1") != -1)
+    {
+        total = data.slice(4);
+        pix = width / total;
+        
+        updateProgress("处理开始", Math.min(width, Math.ceil(progress)));
+        
+        vip_tag_step++;
+        thing_add_vip_tag(vip_tag_step);
+    }
+    // 返回当前处理的vip tag name
+    else if (data.indexOf("ok2") != -1)
+    {
+        var tag_name = data.slice(4);
+        progress += pix;
+        updateProgress("\"".concat(tag_name, "\" 处理完毕"), Math.min(width, Math.floor(progress)));
+        vip_tag_step++;
+        thing_add_vip_tag(vip_tag_step);
+    }
+    // 返回最终结果: ok
+    else if (data.indexOf("ok3") != -1)
+    {
+        progress = width;
+        updateProgress("处理成功", Math.min(width, Math.floor(progress)));
+        make_button_status(operate_type, false);
+        change_status_lable(operate_type, 1, 1);
+    }
+    else if (data == "fail")
+    {
+        make_button_status(operate_type, false);
+        change_status_lable(operate_type, 0, 1);
+    }
+}
+
+// 发起刷新vip tag的Ajax通讯。
+function thing_add_vip_tag(step)
+{
+    operate_type = "re_thing_add_vip_tag";
+    // 将控件灰掉，防止用户多次点击。
+    if (step == 0){
+        vip_tag_step = 0;
+        progress = 0;
+        make_button_status(operate_type, true);
+        change_status_lable(operate_type, "", 0);
+    }
+    // alert(step);
+    
+    // 批量更新 事件-VIP标签
+    var vip_tag_checked = get_checkbox_value("tag_type_radio");
+
+    var system_manager_ajax = xhr({
+        url:'./ajax/general_ajax.php',
+        data:{
+            'operate_type'      :operate_type,
+            'vip_tag_checked'   :vip_tag_checked,
+            'step'              :step
+        },
+        async:false,
+        method:'GET',
+        complete: function () {
+        },
+        success: function (data) {
+            thing_add_vip_tag_cb(operate_type, data);
+        },
+        error: function () {
+            thing_add_vip_tag_cb(operate_type, "fail");
+        }
+    });
+    // system_manager_ajax.send();
+}
+
+// 发起Ajax通讯-通用。
 function ajax_do(operate_type)
 {
     // 将控件灰掉，防止用户多次点击。
     make_button_status(operate_type, true);
     change_status_lable(operate_type, "", 0);
     var vip_tag_checked = "";
-    
-    // 批量更新 事件-VIP标签
-    if (operate_type == "re_thing_add_vip_tag")
-    {
-        vip_tag_checked = get_checkbox_value("tag_type");
-    }
-    else
-    {
-        vip_tag_checked = get_checkbox_value("tag_modify_type");
-    }
+    vip_tag_checked = get_checkbox_value("tag_modify_type_radio");
 
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
@@ -204,9 +290,10 @@ function ajax_do(operate_type)
     <div class="label" id="re_add_thing_tag_map_label"></div>
 </div>
 
-<div class="system_user">
+
+<div class="system_user" style="height:150">
     <input type="submit" style="font-size:18pt" value="批量更新事件-VIP标签" 
-        id="re_thing_add_vip_tag" onclick="ajax_do('re_thing_add_vip_tag')" /></p> <!-- 提交 -->   
+        id="re_thing_add_vip_tag" onclick="thing_add_vip_tag(0)" /></p> <!-- 提交 -->   
 <?php
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
@@ -215,11 +302,18 @@ function ajax_do(operate_type)
             // 此处保存下标为好.
             // $tag_id = get_tag_id_from_index($ii);
             $tag_name = get_tag_list_name_from_index($ii);
-            echo "&nbsp;&nbsp;<input type='radio' name=tag_type value='$ii' >$tag_name";
+            echo "&nbsp;&nbsp;<input type='radio' name='tag_type_radio' value='$ii' >$tag_name";
         }
     }
 ?>
-    </br></br><div class="label" id="re_thing_add_vip_tag_label"></div>
+    </br></br>
+    <div id="progress_border">
+    <div id="progress">
+    <div id="percent">0%</div>
+    </div>
+    </div>
+    <div class="label" id="re_thing_add_vip_tag_label"></div>
+    </div>
 </div>
 
 
@@ -236,7 +330,7 @@ function ajax_do(operate_type)
             // $tag_id = get_tag_id_from_index($ii);
             $tag_name = get_tag_list_name_from_index($ii);
             
-            echo "&nbsp;&nbsp;<input type='radio' name=tag_modify_type value='$ii' 
+            echo "&nbsp;&nbsp;<input type='radio' name='tag_modify_type_radio' value='$ii' 
                 onclick='tag_property_modify()'>$tag_name";
         }
     }

@@ -40,22 +40,44 @@
         }
     }
     
-    // 刷新 vip tag。
+    // 批量更新事件-VIP标签
     else if($_GET['operate_type'] == "re_thing_add_vip_tag")
     {
-        if (vip_tag_search_to_db(html_encode($_GET['vip_tag_checked'])) == 1)
-        {
-            echo "ok";
-        }
-        else
-        {
+        // 本函数执行时间长，去掉php执行时间限制。
+        ini_set('max_execution_time', '0');
+        
+        $tag_index = html_encode($_GET['vip_tag_checked']);
+        $tag_step = html_encode($_GET['step']);
+        $vip_tag_object = get_vip_tag_object($tag_index);
+        if (($vip_tag_object == NULL) || (!is_numeric($tag_step))) {
             echo "fail";
+        } else {
+            if ($_GET['step'] == 0) {
+                $vip_tag_count = get_vip_tag_count($vip_tag_object);
+                if ($vip_tag_object == 0) {
+                    echo "fail";
+                } else {
+                    echo "ok1-" . $vip_tag_count;
+                }
+            }
+            if ($_GET['step'] > 0) {
+                $my_tag_name = vip_tag_search_to_db($vip_tag_object, $tag_index, $tag_step);
+                if ($my_tag_name != "okok") {
+                    echo "ok2-" . $my_tag_name;
+                } else {
+                    echo "ok3";
+                }
+            }
         }
+        // 恢复php执行时间限制。
+        ini_set('max_execution_time', '1500');
     }
 	
 	// 计算事件-标签类型映射
 	else if($_GET['operate_type'] == "re_add_thing_tag_map")
 	{
+	    set_time_limit(0);
+        
         if (re_add_thing_tag_map() == 1)
         {
             echo "ok";
