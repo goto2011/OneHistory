@@ -40,7 +40,7 @@ $tag_control = array(
     array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
     array(tab_type::CONST_COUNTRY,        "世界历史",             1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国历史",             1,    1,      "dynasty_tags"),    // vip tag.
-    array(tab_type::CONST_TOPIC,          "专题",             1,    1,      "topic_tags"),      // vip tag.
+    array(tab_type::CONST_TOPIC,          "领域",             1,    1,      "topic_tags"),      // vip tag.
     // array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
     // array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
     // array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.

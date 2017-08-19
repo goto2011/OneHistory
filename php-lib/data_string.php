@@ -2,6 +2,14 @@
 // created by duangan, 2015-3-29 -->
 // support time deal function.    -->
 
+/**
+ * 返回导入时每多少条返回一次。暂定20.
+ */
+function get_import_callback_count() {
+    return 20;
+}
+
+
 // 获取thing字段的最大长度。暂定为400。
 function get_thing_length()
 {

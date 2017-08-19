@@ -83,7 +83,7 @@
                 }
                 else 
                 {
-                    echo "<td width='400'>";
+                    echo "<td width='400' height='30'>";
                     echo $my_print;
                     echo "</tr>";
                 }

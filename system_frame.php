@@ -17,6 +17,7 @@
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
 <script type='text/javascript' src='./js/data.js'></script>
 <script type='text/javascript' src='./js/ajax.js'></script>
+<script type='text/javascript' src='./js/progress_view.js'></script>
 
 <title>系统设置</title>
 </head>
@@ -152,75 +153,59 @@ function tag_property_modify(evt)
     });
 }
 
-var width = 500;               // 显示的进度条长度，单位 px 
-var total = 0;                 // 总共需要操作的记录数 
-var pix = 0;                   // 每条记录的操作所占的进度条单位长度 
-var progress = 0;              // 当前进度条长度 
-var vip_tag_step = 0;          // 刷新vip tag的step计数器
-    
-function updateProgress(sMsg, iWidth) 
-{
-    document.getElementById("re_thing_add_vip_tag_label").style.display = "inline";
-    // document.getElementById("progress_border").style.display = "inline";
-    // document.getElementById("progress").style.display = "inline";
-    document.getElementById("percent").style.display = "inline";
-    
-    document.getElementById("re_thing_add_vip_tag_label").innerHTML = sMsg; 
-    document.getElementById("progress").style.width = iWidth + "px"; 
-    document.getElementById("percent").innerHTML = parseInt(iWidth / width * 100) + "%";
-}
+//////////////  刷新vip tag   begin  ///////////////////////////
+// 当前步骤计数。
+var vip_tag_step = 0;
+var progress = Progress_view.createNew();
 
 // 刷新vip tag调用成功后的回调函数。
+// step1: 获取vip tag的数量。
+// step2: 一个个的刷新。
+// step3: 完成。
+// 其中一个环节出错就终止。
 function thing_add_vip_tag_cb(operate_type, data)
 {
     // alert(data);
     // 返回数量
-    if (data.indexOf("ok1") != -1)
+    if (data.indexOf("step1") != -1)
     {
-        total = data.slice(4);
-        pix = width / total;
-        
-        updateProgress("处理开始", Math.min(width, Math.ceil(progress)));
-        
-        vip_tag_step++;
-        thing_add_vip_tag(vip_tag_step);
+        progress.init(500, data.slice(6), "re_thing_add_vip_tag_label", 
+            "progress_border", "progress", "percent");
+        progress.update("处理开始", vip_tag_step);
+        thing_add_vip_tag(++vip_tag_step);
     }
     // 返回当前处理的vip tag name
-    else if (data.indexOf("ok2") != -1)
+    else if (data.indexOf("step2") != -1)
     {
-        var tag_name = data.slice(4);
-        progress += pix;
-        updateProgress("\"".concat(tag_name, "\" 处理完毕"), Math.min(width, Math.floor(progress)));
-        vip_tag_step++;
-        thing_add_vip_tag(vip_tag_step);
+        var tag_name = data.slice(6);
+        progress.update("\"".concat(tag_name, "\" 标签处理完毕"), vip_tag_step);
+        thing_add_vip_tag(++vip_tag_step);
     }
     // 返回最终结果: ok
-    else if (data.indexOf("ok3") != -1)
+    else if (data.indexOf("step3") != -1)
     {
-        progress = width;
-        updateProgress("处理成功", Math.min(width, Math.floor(progress)));
+        vip_tag_step = progress.getTotal();
+        progress.update("处理成功", vip_tag_step);
         make_button_status(operate_type, false);
-        change_status_lable(operate_type, 1, 1);
     }
     else if (data == "fail")
     {
+        progress.update("处理失败", vip_tag_step);
         make_button_status(operate_type, false);
-        change_status_lable(operate_type, 0, 1);
     }
 }
 
 // 发起刷新vip tag的Ajax通讯。
 function thing_add_vip_tag(step)
 {
-    operate_type = "re_thing_add_vip_tag";
+    // alert("step=" + step);
+    var operate_type = "re_thing_add_vip_tag";
     // 将控件灰掉，防止用户多次点击。
     if (step == 0){
         vip_tag_step = 0;
-        progress = 0;
         make_button_status(operate_type, true);
         change_status_lable(operate_type, "", 0);
     }
-    // alert(step);
     
     // 批量更新 事件-VIP标签
     var vip_tag_checked = get_checkbox_value("tag_type_radio");
@@ -245,6 +230,8 @@ function thing_add_vip_tag(step)
     });
     // system_manager_ajax.send();
 }
+//////////////  刷新vip tag   end  ///////////////////////////
+
 
 // 发起Ajax通讯-通用。
 function ajax_do(operate_type)

@@ -41,6 +41,10 @@
     }
     
     // 批量更新事件-VIP标签
+    // step1: 获取vip tag的数量。
+    // step2: 一个个的刷新。
+    // step3: 完成。
+    // 然后一个环节出错就终止。
     else if($_GET['operate_type'] == "re_thing_add_vip_tag")
     {
         // 本函数执行时间长，去掉php执行时间限制。
@@ -57,15 +61,15 @@
                 if ($vip_tag_object == 0) {
                     echo "fail";
                 } else {
-                    echo "ok1-" . $vip_tag_count;
+                    echo "step1-" . $vip_tag_count;
                 }
             }
             if ($_GET['step'] > 0) {
                 $my_tag_name = vip_tag_search_to_db($vip_tag_object, $tag_index, $tag_step);
                 if ($my_tag_name != "okok") {
-                    echo "ok2-" . $my_tag_name;
+                    echo "step2-" . $my_tag_name;
                 } else {
-                    echo "ok3";
+                    echo "step3";
                 }
             }
         }

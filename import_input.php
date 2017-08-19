@@ -35,6 +35,7 @@
 <script type='text/javascript' src='./js/data.js'></script>
 <script type='text/javascript' src='./js/ajax.js'></script>
 <script type='text/javascript' src='./js/key_time.js'></script>
+<script type='text/javascript' src='./js/progress_view.js'></script>
 
 <script>
 // 设置按钮的状态.
@@ -43,104 +44,85 @@ function make_button_status(operate_type, disabled)
     document.getElementById(operate_type).disabled = disabled;
 }
 
-// "check_data_label"
-function show_check_data_status(is_ok, error_line)
+// 更新token
+function update_token(token)
 {
-    document.getElementById("update_data_label").style.display = "none";
-    // document.getElementById("check_data_label").disabled = false;
-    if (is_ok == 1)
-    {
-        document.getElementById("check_data_label").innerHTML = "数据检验ok，可以保存。";
-    }
-    else
-    {
-        if (error_line.length > 0)
-        {
-            document.getElementById("check_data_label").innerHTML = "数据有错！ 错误行：" + error_line + "。";
-        }
-        else
-        {
-            document.getElementById("check_data_label").innerHTML = "数据有错！";
-        }
-    }
-    document.getElementById("check_data_label").style.display = "inline";
-}
-
-// "update_data_label"
-function show_update_data_status(is_ok)
-{
-    document.getElementById("check_data_label").style.display = "none";
-    // document.getElementById("update_data_label").disabled = false;
-    if (is_ok == 1)
-    {
-        document.getElementById("update_data_label").innerHTML = "数据保存ok。";
-    }
-    else
-    {
-        document.getElementById("update_data_label").innerHTML = "数据保存失败 ！";
-    }
-    document.getElementById("update_data_label").style.display = "inline";
-}
-
-// 清空 textedit 的内容
-function blank_context(token)
-{
-    /*
-    document.getElementById("start_tags").value = "";
-    document.getElementById("end_tags").value = "";
-    document.getElementById("country_tags").value = "";
-    document.getElementById("geography_tags").value = "";
-    document.getElementById("person_tags").value = "";
-    document.getElementById("source_tags").value = "";
-    document.getElementById("free_tags").value = "";
-    */
-    document.getElementById("context").value = "";
-    document.getElementById("context").focus();
-    
     document.getElementById("originator").value = token;
 }
 
+// 当前步骤计数。
+var vip_tag_step = 0;
+var progress = Progress_view.createNew();
+
 // 调用成功后的回调函数。
+// step1: 获取待处理的数量，并确认数据格式是否正确。返回：("step1", 行数, 出错行号)
+// step2: 批量导入。返回：("step2", 行数, token)
+// step3: 完成。返回：("step3", token)
+// 其中一个环节出错就终止。
 function succ_callback(operate_type, data)
 {
-    make_button_status(operate_type, false);
+    // alert(data);
+    var parmas = new Array();
+    parmas = data.split("-");
     
-    if (data.substring(0, 2) == "ok")
+    if ((parmas.length != 2) && (parmas.length !=3))
     {
-        res_status = 1;
+        progress.update("服务器返回错误: ".concat(data), vip_tag_step);
+        make_button_status(operate_type, false);
     }
-    else if (data.substring(0, 4) == "fail")
-    {
-        res_status = 0;
-    }
-    // alert("Ajax_status: " + data);
     
-    if (operate_type == "check_data")
+    // 返回数量
+    if (parmas[0] == "step1")
     {
-        var error_line = "";
-        if (res_status == 0)
-        {
-            error_line = data.substring(8);
+        progress.init(360, parmas[1], "update_data_label", "progress_border", 
+            "progress", "percent");
+        if (parmas[2] == 0) {
+            progress.update("处理开始", vip_tag_step);
+            ajax_do(++vip_tag_step);
+        } else if (parmas[2] > 0) {
+            progress.update("第 ".concat(parmas[2], " 行数据有错误"), vip_tag_step);
+            make_button_status(operate_type, false);
         }
-        // 显示错误信息。
-        show_check_data_status(res_status, error_line);
     }
-    else if (operate_type == "update_data")
+    // 返回当前处理的数量. 每20条返回一次。
+    else if (parmas[0] == "step2")
     {
-        show_update_data_status(res_status);
+        vip_tag_step = parmas[1];
+        progress.update("已导入 ".concat(vip_tag_step, "; 累计: ", progress.getTotal()), 
+            vip_tag_step);
+            
+        // 从后台获取 token. 
+        update_token(parmas[2]);
         
-        if (res_status == 1)
-        {
-            // 获取 token。echo "ok -- " . get_import_token();
-            var token = data.substring(6);
-            blank_context(token);
-        }
+        ajax_do(vip_tag_step);
+    }
+    // 返回最终结果: finish
+    else if (parmas[0] == "step3")
+    {
+        vip_tag_step = progress.getTotal();
+        progress.update("导入成功", vip_tag_step);
+        
+        // 从后台获取 token. 
+        update_token(parmas[1]);
+        document.getElementById("context").value = "";
+        document.getElementById("context").focus();
+        make_button_status(operate_type, false);
+    }
+    // 失败
+    else if (parmas[0] == "fail")
+    {
+        // 显示错误信息。
+        progress.update("第 ".concat(parmas[1], " 行数据有错误"), vip_tag_step);
+        make_button_status(operate_type, false);
     }
 }
 
 // 发起Ajax通讯。
-function ajax_do(operate_type)
+function ajax_do(step)
 {
+    // alert(step);
+    operate_type = "update_data";
+    
     // 数据检查。
     if (tags_check() > 0)
     {
@@ -149,9 +131,11 @@ function ajax_do(operate_type)
     }
     
     // 将控件灰掉，防止用户多次点击。
-    document.getElementById("check_data_label").style.display = "none";
-    document.getElementById("update_data_label").style.display = "none";
-    make_button_status(operate_type, true);
+    if (step == 0){
+        vip_tag_step = 0;
+        document.getElementById("update_data_label").style.display = "none";
+        make_button_status(operate_type, true);
+    }
     
     var import_ajax = xhr({
         url:'./ajax/import_do.php',
@@ -180,7 +164,8 @@ function ajax_do(operate_type)
             // 笔记标签内保持序号
             'index_inside_tag':document.getElementById("index_inside_tag").checked,
             // 是否是元数据
-            'is_metadata'     :document.getElementById("is_metadata").checked
+            'is_metadata'     :document.getElementById("is_metadata").checked,
+            'step'            :step
         },
         async:false,
         method:'POST',
@@ -231,8 +216,8 @@ function ajax_do(operate_type)
         }
     }
 ?>
+<font size="5" color="red" >导入事件</font>
 
-<font size="5" color="red" >导入事件</font><br>
 <table width="100%" border="0">
 <tr>
 <td width="50%">
@@ -247,24 +232,7 @@ function ajax_do(operate_type)
         echo $time_thing;
     }
 ?>
-</textarea></p>
-
-<div>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    
-    <input type="submit" style="font-size:22pt; color:red" value="检查数据" 
-        id="check_data" onclick="ajax_do('check_data')" /> <!-- 提交 -->
-    
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <div class="label" style="display:none; color: red;" id="check_data_label"></div>
-</div>
+</textarea>
 <!-- 事件内容输入 end -->
 </td>
 
@@ -304,22 +272,39 @@ function ajax_do(operate_type)
             
 </td>
 </tr>
+<tr>
+<td>
+    
+<!-- 提交 begin -->
+<table class="normal">
+<tr>
+<td>
+    <div id="progress_border" style="width:360px">
+    <div id="progress">
+    <div id="percent">0%</div>
+    </div>
+    </div>
+</td>
+<td>
+    <input type="hidden" id="originator" value="<?php echo html_encode(get_import_token()) ?>">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" style="font-size:22pt; color:red" value="导入事件" 
+        id="update_data" onclick="ajax_do(0)" /> 
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <class="label" style="display:none; color: red;" id="update_data_label">
+</td>
+</tr>
+</table>
+<!-- 提交 end -->
+</td>
+<td></td>
+</tr>
+
 </table>
 
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-<input type="hidden" id="originator" value="<?php echo html_encode(get_import_token()) ?>">
-<input type="submit" style="font-size:22pt; color:red" value="导入事件" id="update_data" onclick="ajax_do('update_data')" /> <!-- 提交 -->
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<class="label" style="display:none; color: red;" id="update_data_label">
 
+    
 <?php
     // exit
     mysql_close($conn);
