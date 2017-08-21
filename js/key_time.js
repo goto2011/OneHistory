@@ -1,13 +1,15 @@
 // <!--  // created by duangan, 2015-8-16	-->
 // <!--  // support key and time data deal in import/upate page. -->
 
-// 检查数据是包含标点符号。=1，是；=0，不是。通用。
+// 检查数据是包含标点符号。
+// 返回： =1，是；=0，不是。通用。
 function is_dot(string)
 {
 	return (!(/^[,(\-)《》.a-zA-z0-9\u4E00-\u9FA5]*$/.test(string)));
 }
 
-// tag 数据检查。=1，不合格；=0，合格。
+// tag 数据检查。
+// 返回： =1，不合格；=0，合格。
 function tag_check(tag, tag_name)
 {
     if(is_dot(tag_name))

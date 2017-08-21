@@ -549,9 +549,29 @@ function get_tag_from_UUID($tag_UUID)
 }
 
 /**
- * 获取符合条件的tags.
+ * 获取排序子句。
+ * $order_type: 排序方式。
+ *      =0：按hot_index排序，默认值。 
+ *      =1：按标题排序，即汉字、字母序。
  */
-function get_tags_db($tag_type, $tags_show_limit)
+function get_order_substring($order_type)
+{
+    if ($order_type == 0){
+        return " order by hot_index desc ";
+    } else if ($order_type == 1){
+        return " order by convert(property_name using gbk) ASC ";
+    }
+}
+ 
+/**
+ * 获取符合条件的tags.
+ * $tag_type: tag 类型
+ * $tags_show_limit: 数量
+ * $order_type: 排序方式。
+ *      =0：按hot_index排序，默认值。 
+ *      =1：按标题排序，即字母序。
+ */
+function get_tags_db($tag_type, $tags_show_limit, $order_type = 0)
 {
     switch ($tag_type)
     {
@@ -560,16 +580,16 @@ function get_tags_db($tag_type, $tags_show_limit)
             // 全部条目容许显示的 tag 数量翻倍.
             // 全部中不显示“出处”标签。
             $sql_string = "select property_UUID, property_name, property_type, hot_index from 
-                    property where property_type != 3 order by hot_index desc
-                    limit 0, " . ($tags_show_limit * 2);
+                    property where property_type != 3 " . get_order_substring($order_type) . 
+                    "limit 0, " . ($tags_show_limit * 2);
             break;
 
         // 我的关注
         case tab_type::CONST_MY_FOLLOW:
             $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
                     where property_UUID in(select property_UUID from follow
-                    where user_UUID = '" . get_user_id() . "') order by hot_index desc
-                    limit 0, " . $tags_show_limit;
+                    where user_UUID = '" . get_user_id() . "') " . get_order_substring($order_type) . 
+                    "limit 0, " . $tags_show_limit;
             break;
 
         // 最新，指1周内的(不再使用)
@@ -589,8 +609,9 @@ function get_tags_db($tag_type, $tags_show_limit)
         default:
             if ($tag_type > 0)
             {
-                $sql_string = "select property_UUID, property_name, property_type, hot_index from property 
-                    where property_type = $tag_type order by hot_index desc limit 0, " . $tags_show_limit;
+                $sql_string = "select property_UUID, property_name, property_type, hot_index 
+                    from property where property_type = $tag_type " . get_order_substring($order_type) . 
+                    " limit 0, " . $tags_show_limit;
             }
             else 
             {

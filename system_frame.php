@@ -91,13 +91,64 @@ function succ_callback(operate_type, data)
     change_status_lable(operate_type, res_status, 1);
 }
 
-// 修改标签属性 step2: 选中标签后的处理
-function tag_selected(evt)
+//////////////////////  设置vip tag属性   begin  ///////////////////////////
+
+// 检查时间字段的格式。
+// 时间仅支持年份（公元前为负数）和年月日。
+function check_time_input(view_id)
 {
-    var evt = evt || window.event;
-    var e = evt.srcElement || evt.target;
+    var value = document.getElementById(view_id).value;
+    if ((value = null) || (value = "")) {
+        return true;
+    }
+    return (check_number(value) || check_date(value));
+}
+
+// 修改标签属性 step3: 修改标签属性
+function change_vip_tag()
+{
+    var operate_type = "tag_property_modify";
+    // 1. "开始时间"不能为空
+    if (!validate_required(document.getElementById("begin_time"))){
+        alert("开始时间不能为空");
+    }
+    // 2. 判断输入的时间是否合法
+    if ((!check_time_input("begin_time")) || (!check_time_input("big_day"))
+        || (!check_time_input("end_time")))
+    {
+        alert("时间格式不对");
+    }
+    // 3. 传输
     var obj = document.getElementById("tag_list_select");
-    
+    var system_manager_ajax = xhr({
+        url:'./ajax/general_ajax.php',
+        data:{
+            'operate_type'      :"change_vip_tag",
+            'selected_tag_id'   :obj.options[obj.selectedIndex].value,
+            'begin_time'        :document.getElementById("begin_time").value,
+            'big_day'           :document.getElementById("big_day").value,
+            'end_time'          :document.getElementById("end_time").value,
+            'country_name'      :document.getElementById("country_name").value
+        },
+        async:false,
+        method:'GET',
+        complete: function () {
+        },
+        success: function (data) {
+            // alert(data);
+            
+        },
+        error: function () {
+            succ_callback(operate_type, "fail");
+        }
+    });
+}
+
+// 修改标签属性 step2: 选中标签后的处理
+function tag_selected()
+{
+    var operate_type = "tag_property_modify";
+    var obj = document.getElementById("tag_list_select");
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -109,7 +160,16 @@ function tag_selected(evt)
         complete: function () {
         },
         success: function (data) {
-            alert(data);
+            // alert(data);
+            // 解析 json数据。
+            var tag_obj = JSON.parse(data);
+            document.getElementById("tag_name").value = tag_obj[1];
+            document.getElementById("tag_count").value = tag_obj[2];
+            document.getElementById("begin_time").value = tag_obj[3];
+            document.getElementById("big_day").value = tag_obj[4];
+            document.getElementById("end_time").value = tag_obj[5];
+            document.getElementById("country_name").value = tag_obj[6];
+            document.getElementById("tag_property_modify").disabled = false;
         },
         error: function () {
             succ_callback(operate_type, "fail");
@@ -117,32 +177,32 @@ function tag_selected(evt)
     });
 }
 
-// 修改标签属性 step1: 选择标签类型
-function tag_property_modify(evt)
+// 修改标签属性 step1: 选择标签类型，获取标签列表
+function select_vip_tag_type()
 {
-    var evt=evt || window.event;
-    var e =evt.srcElement || evt.target;
-    
+    // alert("select_vip_tag_type");
+    var operate_type = "tag_property_modify";
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
-            'operate_type'      :"tag_property_modify",
-            'vip_tag_checked'   :get_checkbox_value("tag_modify_type")
+            'operate_type'      :"select_vip_tag_type",
+            'vip_tag_checked'   :get_checkbox_value("tag_modify_type_radio")
         },
         async:false,
         method:'GET',
         complete: function () {
         },
         success: function (data) {
+            // alert(data);
             // 解析 json数据。
-            tag_obj = JSON.parse(data);
-            // alert(tag_obj[0][1]);
+            var tag_obj = JSON.parse(data);
             
             var obj = document.getElementById('tag_list_select');
             obj.options.length = 0;
             obj.style.visibility = 'visible';
             for (var ii = 0; ii < tag_obj.length; ii++)
             {
+                // alert(tag_obj[ii][1] + "-" + tag_obj[ii][0]);
                 // 将数据更新到界面。
                 obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
             }
@@ -152,6 +212,9 @@ function tag_property_modify(evt)
         }
     });
 }
+//////////////  设置vip tag属性   end  ///////////////////////////
+
+
 
 //////////////  刷新vip tag   begin  ///////////////////////////
 // 当前步骤计数。
@@ -263,7 +326,8 @@ function ajax_do(operate_type)
 }
 </script>
 
-<div class="system_user">
+<fieldset style="width:600px;">
+<legend>计算数据</legend>
     <input type="submit" style="font-size:18pt" value="计算事件-时间轴指数" 
         id="re_calc_year_order" onclick="ajax_do('re_calc_year_order')" />  <!-- 提交 -->
     <div class="label" id="re_calc_year_order_label"></div>
@@ -275,12 +339,13 @@ function ajax_do(operate_type)
     <input type="submit" style="font-size:18pt" value="计算事件-标签类型映射" 
         id="re_add_thing_tag_map" onclick="ajax_do('re_add_thing_tag_map')" /> <!-- 提交 -->
     <div class="label" id="re_add_thing_tag_map_label"></div>
-</div>
+</fieldset>
 
 
-<div class="system_user" style="height:150">
-    <input type="submit" style="font-size:18pt" value="批量更新事件-VIP标签" 
-        id="re_thing_add_vip_tag" onclick="thing_add_vip_tag(0)" /></p> <!-- 提交 -->   
+<fieldset style="width:600px;">
+<legend>批量更新事件-VIP标签</legend>
+<div style="positon:relative;">
+<div id='div_top'>选择类型: </div>
 <?php
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
     {
@@ -293,7 +358,12 @@ function ajax_do(operate_type)
         }
     }
 ?>
-    </br></br>
+    </br>
+    <!-- 提交 -->
+    <input type="submit" style="font-size:18pt; position:absolute;top:28%;left:35%;margin-left:50px;margin-top:40px"
+        value="开始" id="re_thing_add_vip_tag" onclick="thing_add_vip_tag(0)" />
+    
+</br></br>
     <div id="progress_border">
     <div id="progress">
     <div id="percent">0%</div>
@@ -302,11 +372,14 @@ function ajax_do(operate_type)
     <div class="label" id="re_thing_add_vip_tag_label"></div>
     </div>
 </div>
+</div>
+</fieldset>
 
 
-<div class="system_user" style="width:700px;height:400px">
-    <input type="submit" style="font-size:18pt" value="修改VIP标签的属性" 
-        id="tag_property_modify" /></p> <!-- 非提交 -->
+<fieldset style="width:600px;">
+<legend>修改VIP标签属性</legend>
+<div style="positon:relative;">
+<div id='div_top'>选择类型: </div>
 <?php
     // 列出 key.
     for ($ii = tag_list_min(); $ii <= tag_list_max(); $ii++)
@@ -318,39 +391,41 @@ function ajax_do(operate_type)
             $tag_name = get_tag_list_name_from_index($ii);
             
             echo "&nbsp;&nbsp;<input type='radio' name='tag_modify_type_radio' value='$ii' 
-                onclick='tag_property_modify()'>$tag_name";
+                onclick='select_vip_tag_type()'>$tag_name";
         }
     }
 ?>
-    <!-- tag列表 -->
-    </br>&nbsp;&nbsp;<select id='tag_list_select' style="visibility:hidden" 
-        onchange='tag_selected()'>
-    </br>
-    </br>
-<?php
-    $tag_name = "123";
-    $tag_count = 0;
-    $begin_time = "";
-    $big_day = "";
-    $end_time = "";
-    
-    // <!-- 标签名称 -->
-    echo "<p class='thick'>标签名称:<input id='tag_name' value='$tag_name' />";
-    // <!-- 数量（不可编辑） -->
-    echo "<p class='thick'>事件数量:<input id='tag_count' value='$tag_count' />";
-    // <!-- 开始时间 -->
-    echo "<p class='thick'>开始时间:<input id='begin_time' value='$begin_time' />";
-    // <!-- BigDay时间 -->
-    echo "<p class='thick'>BigDay:<input id='big_day' value='$big_day' />";
-    // <!-- 结束时间 -->
-    echo "<p class='thick'>结束时间:<input id='end_time' value='$end_time' />";
-        
-    echo "</br></br><div class='label' id='tag_property_modify_label'></div>";
-?>
-</div>
- 
-</div>
+</br></br>
+<fieldset>
+<table border="0" align="center">
+<tr>
+<td width=50%>
+    <div id='div_top'>选择标签: </div>
+    <select id='tag_list_select' size=18 onchange='tag_selected()'></select>
+</td>
+<td width=50%>
+    <fieldset>
+    <p class='thick'>标签名称: <input id='tag_name' readOnly="true" />
+    <p class='thick'>事件数量: <input id='tag_count' readOnly="true" />
+    <p class='thick'>开始时间: <input id='begin_time' />
+    <p class='thick'>BigDay&nbsp;&nbsp;: <input id='big_day' />
+    <p class='thick'>结束时间: <input id='end_time' />
+    <p class='thick'>国家地区: <input id='country_name' />
 
+    </br>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="submit" style="font-size:18pt" value="修改" disabled="true" 
+        id="tag_property_modify" onclick='change_vip_tag()' />
+    <div class="label" id="tag_property_modify_label"></div>
+    </fieldset>
+</td>
+</tr>
+</table>
+</fieldset>
+</div>
+</fieldset>
  
 <!-- tab页 end -->
 

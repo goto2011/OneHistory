@@ -248,6 +248,19 @@ a.red_black_underline:hover, a.red_black_underline:active{
 /******************************************************/
 /* system_frame use */
 /******************************************************/
+fieldset {  
+    padding:10px;
+    margin:10px;
+    color:#333;
+    /* border:#06c dashed 1px; */
+}
+
+legend{
+    color:#06c;
+    font-weight:800;
+    background:#fff;
+}
+
 div.label {
     font-size:18px; 
     color:black; 
@@ -277,5 +290,11 @@ div.label {
     font-weight: bold;
     font-size: 8pt;
     display:none
+}
+
+div.div_top{
+    align: left;
+    valign: top;
+    
 }
 

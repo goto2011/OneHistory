@@ -92,32 +92,41 @@
         }
 	}
     
-    // 修改标签属性
-    else if($_GET['operate_type'] == "tag_property_modify")
+    // 修改标签属性-返回指定类型的tag。
+    else if($_GET['operate_type'] == "select_vip_tag_type")
     {
         $tag_type = get_tag_id_from_index(html_encode($_GET['vip_tag_checked']));
-        $result = get_tags_db($tag_type, 1000);
-        $tags_name = array();
+        $result = get_tags_db($tag_type, 1000, 1);
         
-        $ii = 0;
-        while($row = mysql_fetch_array($result))
-        {
-            // $tags_name[$row['property_UUID']] = iconv("gb2312", "utf-8", $row['property_name']);
-            // $tags_name[$row['property_UUID']] = urlencode($row['property_name']);
-            $tags_name[$ii] = array($row['property_UUID'], urlencode($row['property_name']));
-            $ii++;
+        if($result == NULL){
+            echo urldecode("fail");
+        } else {
+            $tags_name = array();
+            $ii = 0;
+            while($row = mysql_fetch_array($result))
+            {
+                // $tags_name[$row['property_UUID']] = iconv("gb2312", "utf-8", $row['property_name']);
+                // $tags_name[$row['property_UUID']] = urlencode($row['property_name']);
+                $tags_name[$ii] = array($row['property_UUID'], urlencode($row['property_name']));
+                $ii++;
+            }
+            $json_string = json_encode($tags_name);
+            if ($json_string == FALSE) {
+                echo urldecode("fail");
+            } else {
+                echo urldecode($json_string);
+            }
         }
-        
-        echo urldecode(json_encode($tags_name));
     }
     
-    // 修改标签属性
+    // 修改标签属性-返回指定标签的属性
     else if($_GET['operate_type'] == "tag_selected")
     {
         $tag_id = html_encode($_GET['selected_tag_id']);
-        
         $row = get_tag_from_UUID($tag_id);
-        $tag_param = array();
+        $tag_param = array($row['property_UUID'], $row['property_name'], 
+            $row['hot_index'], $row['tag_begin'], $row['tag_bigday'],
+            $row['tag_end'], $row['tag_region']);
         
         echo urldecode(json_encode($tag_param));
     }
