@@ -92,45 +92,56 @@
         }
 	}
     
-    // 修改标签属性-返回指定类型的tag。
+    // 修改标签属性 step1 - 返回指定类型的tags。
     else if($_GET['operate_type'] == "select_vip_tag_type")
     {
         $tag_type = get_tag_id_from_index(html_encode($_GET['vip_tag_checked']));
         $result = get_tags_db($tag_type, 1000, 1);
-        
-        if($result == NULL){
-            echo urldecode("fail");
-        } else {
-            $tags_name = array();
-            $ii = 0;
-            while($row = mysql_fetch_array($result))
-            {
-                // $tags_name[$row['property_UUID']] = iconv("gb2312", "utf-8", $row['property_name']);
-                // $tags_name[$row['property_UUID']] = urlencode($row['property_name']);
-                $tags_name[$ii] = array($row['property_UUID'], urlencode($row['property_name']));
-                $ii++;
-            }
-            $json_string = json_encode($tags_name);
-            if ($json_string == FALSE) {
-                echo urldecode("fail");
-            } else {
-                echo urldecode($json_string);
-            }
-        }
+        echo get_json_from_tags_db($result);
     }
     
-    // 修改标签属性-返回指定标签的属性
+    // 修改标签属性 step2 - 返回指定标签的属性
     else if($_GET['operate_type'] == "tag_selected")
     {
         $tag_id = html_encode($_GET['selected_tag_id']);
         $row = get_tag_from_UUID($tag_id);
-        $tag_param = array($row['property_UUID'], $row['property_name'], 
-            $row['hot_index'], $row['tag_begin'], $row['tag_bigday'],
-            $row['tag_end'], $row['tag_region']);
+        $tag_param = array($row['property_UUID'], $row['property_name'], $row['hot_index'], 
+            $row['tag_begin'], $row['tag_bigday'], $row['tag_end'], $row['tag_tree_type'], 
+            $row['parent_tag']);
         
         echo urldecode(json_encode($tag_param));
     }
+    
+    // 修改标签属性 step3 - 选择标签树类型
+    else if($_GET['operate_type'] == "tag_tree_type_selected")
+    {
+        $tag_tree_type_id = html_encode($_GET['selected_tag_tree_type_id']);
+        $result = get_tags_by_tree_type($tag_tree_type_id);
+        echo get_json_from_tags_db($result);
+    }
 
+    // 修改标签属性 step4 - 保存指定标签的属性
+    else if($_GET['operate_type'] == "tag_property_save")
+    {
+        $tag_id = html_encode($_GET['selected_tag_id']);
+        
+        $begin_time = html_encode($_GET['begin_time']);
+        $big_day = html_encode($_GET['big_day']);
+        $end_time = html_encode($_GET['end_time']);
+        $tag_tree_type = html_encode($_GET['tag_tree_type']);
+        $parent_node = html_encode($_GET['parent_node']);
+        echo "mm";
+        // 保存
+        if(save_tag_params($tag_id, get_year_order_from_simple_time($begin_time), 
+            get_year_order_from_simple_time($big_day), get_year_order_from_simple_time($end_time),
+            $tag_tree_type, $parent_node) == true)
+        {
+            echo "ok";
+        } else {
+            echo "fail";
+        }
+    }
+    
     // exit.
     mysql_close($conn);
     $conn = null;

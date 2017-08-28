@@ -354,6 +354,28 @@ function trim_time_string($time_string)
     return $time_string;
 }
 
+/**
+ * 根据用户输入的简写时间（仅支持年份和年月日）获取 year_order
+ * return 0 表示失败。
+ */
+function get_year_order_from_simple_time($user_input_time)
+{
+    if ($begin_time != null) {
+        // 判断时间字符串是否格式正确
+        $my_time = get_time_from_native($user_input_time);
+        if ($my_time['status'] != "ok"){
+            return 0;
+        }
+        if (is_numeric($user_input_time)){
+            return get_year_order($user_input_time, 2);
+        } else {
+            return get_year_order($user_input_time, 3);
+        }
+    } else {
+        return 0;
+    }
+}
+
 // 根据 time 字段的时间数字,生成 year_order.
 function get_year_order($time_number, $time_type)
 {

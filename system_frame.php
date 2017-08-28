@@ -95,40 +95,74 @@ function succ_callback(operate_type, data)
 
 // 检查时间字段的格式。
 // 时间仅支持年份（公元前为负数）和年月日。
-function check_time_input(view_id)
+function check_input_time(view_id)
 {
     var value = document.getElementById(view_id).value;
-    if ((value = null) || (value = "")) {
+    if ((value == null) || (value == "")) {
         return true;
     }
     return (check_number(value) || check_date(value));
 }
 
-// 修改标签属性 step3: 修改标签属性
-function change_vip_tag()
+// 修改标签属性 step4: 保存标签属性
+function tag_property_save()
 {
-    var operate_type = "tag_property_modify";
-    // 1. "开始时间"不能为空
-    if (!validate_required(document.getElementById("begin_time"))){
-        alert("开始时间不能为空");
-    }
-    // 2. 判断输入的时间是否合法
-    if ((!check_time_input("begin_time")) || (!check_time_input("big_day"))
-        || (!check_time_input("end_time")))
+    alert("tag_property_save");
+    var operate_type = "tag_property_save";
+    // 1. 判断输入的时间是否合法
+    if (!(check_input_time("begin_time") && check_input_time("big_day")
+        && check_input_time("end_time")))
     {
         alert("时间格式不对");
+        document.getElementById("begin_time").focus();
+        return;
     }
-    // 3. 传输
-    var obj = document.getElementById("tag_list_select");
+    // alert("test1");
+    
+    // 2. 传输
+    var tag_obj = document.getElementById("tag_list_select");
+    alart(tag_obj.options[tag_obj.selectedIndex].value);
+    var tag_tree_obj = document.getElementById("tag_tree_type");
+    alert(tag_tree_obj.options[tag_tree_obj.selectedIndex].value);
+    var parent_obj = document.getElementById("parent_tag_id");
+    var parent_value = parent_obj.options[parent_obj.selectedIndex].value;
+    if (parent_value == null)parent_value = "";
+    alert(parent_value);
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
-            'operate_type'      :"change_vip_tag",
-            'selected_tag_id'   :obj.options[obj.selectedIndex].value,
+            'operate_type'      :"tag_property_save",
+            'selected_tag_id'   :tag_obj.options[tag_obj.selectedIndex].value,
             'begin_time'        :document.getElementById("begin_time").value,
             'big_day'           :document.getElementById("big_day").value,
             'end_time'          :document.getElementById("end_time").value,
-            'country_name'      :document.getElementById("country_name").value
+            'tag_tree_type'     :tag_tree_obj.options[tag_tree_obj.selectedIndex].value,
+            'parent_node'       :parent_value
+        },
+        async:false,
+        method:'GET',
+        complete: function () {
+        },
+        success: function (data) {
+            alert(data);
+            succ_callback(operate_type, data);
+        },
+        error: function () {
+            succ_callback(operate_type, "fail");
+        }
+    });
+}
+
+// 修改标签属性 step3: 选中标签树类型后的处理
+function tag_tree_type_selected()
+{
+    // alert("tag_tree_type_selected");
+    var operate_type = "tag_property_save";
+    var system_manager_ajax = xhr({
+        url:'./ajax/general_ajax.php',
+        data:{
+            'operate_type'      :"tag_tree_type_selected",
+            'selected_tag_tree_type_id'   :document.getElementById("tag_tree_type").value
         },
         async:false,
         method:'GET',
@@ -136,7 +170,20 @@ function change_vip_tag()
         },
         success: function (data) {
             // alert(data);
+            // 解析 json 数据。
+            var tag_obj = JSON.parse(data);
             
+            var obj = document.getElementById('parent_tag_id');
+            obj.options.length = 0;
+            for (var ii = 0; ii < tag_obj.length; ii++)
+            {
+                // alert(tag_obj[ii][1] + "-" + tag_obj[ii][0]);
+                // 将数据更新到界面。
+                // tag_obj[ii][1] 为标题，tag_obj[ii][0] 为value。
+                obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
+            }
+            
+            document.getElementById("tag_property_save").disabled = false;
         },
         error: function () {
             succ_callback(operate_type, "fail");
@@ -147,7 +194,7 @@ function change_vip_tag()
 // 修改标签属性 step2: 选中标签后的处理
 function tag_selected()
 {
-    var operate_type = "tag_property_modify";
+    var operate_type = "tag_property_save";
     var obj = document.getElementById("tag_list_select");
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
@@ -161,15 +208,19 @@ function tag_selected()
         },
         success: function (data) {
             // alert(data);
-            // 解析 json数据。
+            // 解析 json 数据。
             var tag_obj = JSON.parse(data);
             document.getElementById("tag_name").value = tag_obj[1];
             document.getElementById("tag_count").value = tag_obj[2];
             document.getElementById("begin_time").value = tag_obj[3];
             document.getElementById("big_day").value = tag_obj[4];
             document.getElementById("end_time").value = tag_obj[5];
-            document.getElementById("country_name").value = tag_obj[6];
-            document.getElementById("tag_property_modify").disabled = false;
+            var tag_tree_type = tag_obj[6];
+            if (tag_tree_type >= 3 && tag_tree_type <= 15){
+                $(".tag_tree_type").val(tag_tree_type);
+            }
+            document.getElementById("parent_node").value = tag_obj[7];
+            document.getElementById("begin_time").focus();
         },
         error: function () {
             succ_callback(operate_type, "fail");
@@ -180,8 +231,7 @@ function tag_selected()
 // 修改标签属性 step1: 选择标签类型，获取标签列表
 function select_vip_tag_type()
 {
-    // alert("select_vip_tag_type");
-    var operate_type = "tag_property_modify";
+    var operate_type = "tag_property_save";
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -204,6 +254,7 @@ function select_vip_tag_type()
             {
                 // alert(tag_obj[ii][1] + "-" + tag_obj[ii][0]);
                 // 将数据更新到界面。
+                // tag_obj[ii][1] 为标题，tag_obj[ii][0] 为value。
                 obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
             }
         },
@@ -401,24 +452,41 @@ function ajax_do(operate_type)
 <tr>
 <td width=50%>
     <div id='div_top'>选择标签: </div>
-    <select id='tag_list_select' size=18 onchange='tag_selected()'></select>
+    <select id='tag_list_select' size=23 onchange='tag_selected()'></select>
 </td>
 <td width=50%>
     <fieldset>
     <p class='thick'>标签名称: <input id='tag_name' readOnly="true" />
     <p class='thick'>事件数量: <input id='tag_count' readOnly="true" />
+    <p class='thick'>标签树类型: 
+        <select id='tag_tree_type' onChange="tag_tree_type_selected();">
+            <option value='3'>中国王朝</option>
+            <option value='4'>中国皇帝</option>
+            <option value='5'>中国年号</option>
+            <option value='6'>外国国家</option>
+            <option value='7'>外国王朝</option>
+            <option value='8'>外国皇帝</option>
+            <option value='9'>中国省份</option>
+            <option value='10'>中国城市</option>
+            <option value='11'>外国城市</option>
+            <option value='12'>中国人</option>
+            <option value='13'>外国人</option>
+            <option value='14'>中国组织</option>
+            <option value='15'>外国组织</option>
+        </select>
+    <p class='thick'>上级节点: 
+        <select id='parent_tag_id'"></select>
     <p class='thick'>开始时间: <input id='begin_time' />
     <p class='thick'>BigDay&nbsp;&nbsp;: <input id='big_day' />
     <p class='thick'>结束时间: <input id='end_time' />
-    <p class='thick'>国家地区: <input id='country_name' />
 
-    </br>
+    </br></br>
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
     &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="submit" style="font-size:18pt" value="修改" disabled="true" 
-        id="tag_property_modify" onclick='change_vip_tag()' />
-    <div class="label" id="tag_property_modify_label"></div>
+    <input type="submit" style="font-size:18pt" value="保存" disabled="true" 
+        id="tag_property_save" onclick='tag_property_save()' />
+    <div class="label" id="tag_property_save_label"></div>
     </fieldset>
 </td>
 </tr>

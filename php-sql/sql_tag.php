@@ -562,6 +562,54 @@ function get_order_substring($order_type)
         return " order by convert(property_name using gbk) ASC ";
     }
 }
+
+/**
+ * 将tag数据表的返回值组装成json字符串。只包含 tag_uuid, tag_name
+ * 如果出现数据异常，则返回 urldecode("fail")。
+ */
+function get_json_from_tags_db($tags_db)
+{
+    if($tags_db == NULL){
+        return urldecode("fail");
+    } else {
+        $tags_name = array();
+        $ii = 0;
+        while($row = mysql_fetch_array($tags_db))
+        {
+            // $tags_name[$row['property_UUID']] = iconv("gb2312", "utf-8", $row['property_name']);
+            // $tags_name[$row['property_UUID']] = urlencode($row['property_name']);
+            $tags_name[$ii] = array($row['property_UUID'], urlencode($row['property_name']));
+            $ii++;
+        }
+        $json_string = json_encode($tags_name);
+        if ($json_string == FALSE) {
+            return urldecode("fail");
+        } else {
+            return urldecode($json_string);
+        }
+    }
+}
+
+/**
+ * 按指定的 tag_tree_type_id 获取tags。
+ */
+function get_tags_by_tree_type($tag_tree_type_id)
+{
+    if (!is_valid_tag_tree_type($tag_tree_type_id)) {
+        return null;
+    }
+     
+    $sql_string = "select property_UUID, property_name, property_type, hot_index from 
+         property where tag_tree_type = " . $tag_tree_type_id;
+        
+    $result = mysql_query($sql_string);
+    if ($result == FALSE) {
+        $GLOBALS['log']->error("error: get_tags_by_tree_type() -- $sql_string 。");
+        $result = NULL;
+    }
+
+    return $result;
+}
  
 /**
  * 获取符合条件的tags.
@@ -825,6 +873,24 @@ function re_calc_tag_hot_index()
 }
 
 /**
+ * 保存 tag 的各项属性
+ */
+function save_tag_params($tag_id, $begin_time, $big_day, $end_time, $tag_tree_type, $parent_node)
+{
+    $sql_string = "update property set begin_time = $begin_time, big_day = $big_day, 
+        end_time = $end_time, tag_tree_type = $tag_tree_type, parent_node = '$parent_node'
+        where property_UUID = '" . $tag_id . "'";
+    
+    if (mysql_query($sql_string) === FALSE)
+    {
+        $GLOBALS['log']->error("Error: save_tag_params() -- $sql_string , " . mysql_error());
+        return false;
+    }
+    
+    return true;
+}
+ 
+/**
  * 计算单个事件的标签类型映射. 2016-07-22
  * return: 1 成功；0 失败。
  */
@@ -1014,6 +1080,14 @@ function delete_tag_to_db($tag_uuid)
     }
     
     return 1;
+}
+
+/**
+ * 判断是否是正确的 tag_tree_type
+ */
+function is_valid_tag_tree_type($tag_tree_type)
+{
+    return (($tag_tree_type >= 3) && ($tag_tree_type <= 15));
 }
 
 /**
