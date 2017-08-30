@@ -15,9 +15,12 @@
 <link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />
 
 <link rel="stylesheet" type="text/css" href="./style/data.css" />
+
+<script type="text/javascript" src="./js/jquery.min.js"></script>
 <script type='text/javascript' src='./js/data.js'></script>
 <script type='text/javascript' src='./js/ajax.js'></script>
 <script type='text/javascript' src='./js/progress_view.js'></script>
+
 
 <title>系统设置</title>
 </head>
@@ -91,7 +94,7 @@ function succ_callback(operate_type, data)
     change_status_lable(operate_type, res_status, 1);
 }
 
-//////////////////////  设置vip tag属性   begin  ///////////////////////////
+//////////////////////  设置 tag属性   begin  ///////////////////////////
 
 // 检查时间字段的格式。
 // 时间仅支持年份（公元前为负数）和年月日。
@@ -107,7 +110,7 @@ function check_input_time(view_id)
 // 修改标签属性 step4: 保存标签属性
 function tag_property_save()
 {
-    alert("tag_property_save");
+    // alert("tag_property_save");
     var operate_type = "tag_property_save";
     // 1. 判断输入的时间是否合法
     if (!(check_input_time("begin_time") && check_input_time("big_day")
@@ -117,17 +120,15 @@ function tag_property_save()
         document.getElementById("begin_time").focus();
         return;
     }
-    // alert("test1");
     
     // 2. 传输
     var tag_obj = document.getElementById("tag_list_select");
-    alart(tag_obj.options[tag_obj.selectedIndex].value);
     var tag_tree_obj = document.getElementById("tag_tree_type");
-    alert(tag_tree_obj.options[tag_tree_obj.selectedIndex].value);
-    var parent_obj = document.getElementById("parent_tag_id");
-    var parent_value = parent_obj.options[parent_obj.selectedIndex].value;
-    if (parent_value == null)parent_value = "";
-    alert(parent_value);
+    var parent_obj = document.getElementById("parent_tag");
+    var parent_tag = "";
+    if (parent_obj.selectedIndex != -1) {
+        parent_tag = parent_obj.options[parent_obj.selectedIndex].value;
+    }
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
         data:{
@@ -137,14 +138,14 @@ function tag_property_save()
             'big_day'           :document.getElementById("big_day").value,
             'end_time'          :document.getElementById("end_time").value,
             'tag_tree_type'     :tag_tree_obj.options[tag_tree_obj.selectedIndex].value,
-            'parent_node'       :parent_value
+            'parent_tag'        :parent_tag
         },
         async:false,
         method:'GET',
         complete: function () {
         },
         success: function (data) {
-            alert(data);
+            // alert(data);
             succ_callback(operate_type, data);
         },
         error: function () {
@@ -172,8 +173,8 @@ function tag_tree_type_selected()
             // alert(data);
             // 解析 json 数据。
             var tag_obj = JSON.parse(data);
-            
-            var obj = document.getElementById('parent_tag_id');
+            // 更新 parent_tag
+            var obj = document.getElementById('parent_tag');
             obj.options.length = 0;
             for (var ii = 0; ii < tag_obj.length; ii++)
             {
@@ -182,7 +183,7 @@ function tag_tree_type_selected()
                 // tag_obj[ii][1] 为标题，tag_obj[ii][0] 为value。
                 obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
             }
-            
+            document.getElementById("tag_property_save_label").style.display = "none";
             document.getElementById("tag_property_save").disabled = false;
         },
         error: function () {
@@ -217,10 +218,14 @@ function tag_selected()
             document.getElementById("end_time").value = tag_obj[5];
             var tag_tree_type = tag_obj[6];
             if (tag_tree_type >= 3 && tag_tree_type <= 15){
-                $(".tag_tree_type").val(tag_tree_type);
+                $("#tag_tree_type").val(tag_tree_type);
+            } else {
+                $("#tag_tree_type").val(0);
             }
-            document.getElementById("parent_node").value = tag_obj[7];
+            document.getElementById("parent_tag").value = tag_obj[7];
+            // 处理界面风格
             document.getElementById("begin_time").focus();
+            document.getElementById("tag_property_save_label").style.display = "none";
         },
         error: function () {
             succ_callback(operate_type, "fail");
@@ -246,7 +251,8 @@ function select_vip_tag_type()
             // alert(data);
             // 解析 json数据。
             var tag_obj = JSON.parse(data);
-            
+            document.getElementById("tag_property_save_label").style.display = "none";
+            // 更新 tag_list_select
             var obj = document.getElementById('tag_list_select');
             obj.options.length = 0;
             obj.style.visibility = 'visible';
@@ -263,7 +269,7 @@ function select_vip_tag_type()
         }
     });
 }
-//////////////  设置vip tag属性   end  ///////////////////////////
+//////////////  设置 tag属性   end  ///////////////////////////
 
 
 
@@ -460,6 +466,7 @@ function ajax_do(operate_type)
     <p class='thick'>事件数量: <input id='tag_count' readOnly="true" />
     <p class='thick'>标签树类型: 
         <select id='tag_tree_type' onChange="tag_tree_type_selected();">
+            <option value='0'>--请选择--</option>
             <option value='3'>中国王朝</option>
             <option value='4'>中国皇帝</option>
             <option value='5'>中国年号</option>
@@ -475,7 +482,7 @@ function ajax_do(operate_type)
             <option value='15'>外国组织</option>
         </select>
     <p class='thick'>上级节点: 
-        <select id='parent_tag_id'"></select>
+        <select id='parent_tag'"></select>
     <p class='thick'>开始时间: <input id='begin_time' />
     <p class='thick'>BigDay&nbsp;&nbsp;: <input id='big_day' />
     <p class='thick'>结束时间: <input id='end_time' />

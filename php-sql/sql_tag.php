@@ -591,7 +591,36 @@ function get_json_from_tags_db($tags_db)
 }
 
 /**
- * 按指定的 tag_tree_type_id 获取tags。
+ * 根据当前 tag_tree_type 获取父 tag_tree_type。
+ */
+function get_parent_tag_tree_type($tag_tree_type_id)
+{
+    // 中国皇帝，上级为3：中国王朝
+    if ($tag_tree_type_id == 4) return 3;
+    // 中国皇帝年号，上级为4：中国皇帝
+    if ($tag_tree_type_id == 5) return 4;
+    // 外国王朝，上级为6：外国国家
+    if ($tag_tree_type_id == 7) return 6;
+    // 外国皇帝（含国王、女王、元首、总统、总理、首相等），上级为7：外国王朝
+    if ($tag_tree_type_id == 8) return 7;
+    // 中国城市，上级为9：中国省份，直辖市无上级
+    if ($tag_tree_type_id == 10) return 9;
+    // 外国城市，上级为6：外国国家
+    if ($tag_tree_type_id == 11) return 6;
+    // 中国人，上级为9：中国省份
+    if ($tag_tree_type_id == 12) return 9;
+    // 外国人，上级为6：外国国家
+    if ($tag_tree_type_id == 13) return 6;
+    // 中国组织，上级为10：中国城市
+    if ($tag_tree_type_id == 14) return 10;
+    // 外国组织，上级为11：外国城市
+    if ($tag_tree_type_id == 15) return 11;
+    
+    return 0;
+}
+
+/**
+ * 按指定的 tag_tree_type 获取tags。
  */
 function get_tags_by_tree_type($tag_tree_type_id)
 {
@@ -875,10 +904,10 @@ function re_calc_tag_hot_index()
 /**
  * 保存 tag 的各项属性
  */
-function save_tag_params($tag_id, $begin_time, $big_day, $end_time, $tag_tree_type, $parent_node)
+function save_tag_params($tag_id, $begin_time, $big_day, $end_time, $tag_tree_type, $parent_tag)
 {
-    $sql_string = "update property set begin_time = $begin_time, big_day = $big_day, 
-        end_time = $end_time, tag_tree_type = $tag_tree_type, parent_node = '$parent_node'
+    $sql_string = "update property set tag_begin = $begin_time, tag_bigday = $big_day, 
+        tag_end = $end_time, tag_tree_type = $tag_tree_type, parent_tag = '$parent_tag'
         where property_UUID = '" . $tag_id . "'";
     
     if (mysql_query($sql_string) === FALSE)

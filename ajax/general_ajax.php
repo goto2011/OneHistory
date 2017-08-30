@@ -116,7 +116,7 @@
     else if($_GET['operate_type'] == "tag_tree_type_selected")
     {
         $tag_tree_type_id = html_encode($_GET['selected_tag_tree_type_id']);
-        $result = get_tags_by_tree_type($tag_tree_type_id);
+        $result = get_tags_by_tree_type(get_parent_tag_tree_type($tag_tree_type_id));
         echo get_json_from_tags_db($result);
     }
 
@@ -129,12 +129,12 @@
         $big_day = html_encode($_GET['big_day']);
         $end_time = html_encode($_GET['end_time']);
         $tag_tree_type = html_encode($_GET['tag_tree_type']);
-        $parent_node = html_encode($_GET['parent_node']);
-        echo "mm";
+        $parent_tag = html_encode($_GET['parent_tag']);
+
         // 保存
         if(save_tag_params($tag_id, get_year_order_from_simple_time($begin_time), 
             get_year_order_from_simple_time($big_day), get_year_order_from_simple_time($end_time),
-            $tag_tree_type, $parent_node) == true)
+            $tag_tree_type, $parent_tag) == true)
         {
             echo "ok";
         } else {
