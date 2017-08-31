@@ -184,7 +184,6 @@ function tag_tree_type_selected()
                 obj.options.add(new Option(tag_obj[ii][1], tag_obj[ii][0]));
             }
             document.getElementById("tag_property_save_label").style.display = "none";
-            document.getElementById("tag_property_save").disabled = false;
         },
         error: function () {
             succ_callback(operate_type, "fail");
@@ -224,7 +223,8 @@ function tag_selected()
             }
             document.getElementById("parent_tag").value = tag_obj[7];
             // 处理界面风格
-            document.getElementById("begin_time").focus();
+            document.getElementById("tag_property_save").disabled = false;
+            document.getElementById("tag_tree_type").focus();
             document.getElementById("tag_property_save_label").style.display = "none";
         },
         error: function () {
