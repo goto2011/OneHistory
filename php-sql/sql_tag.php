@@ -625,11 +625,11 @@ function get_parent_tag_tree_type($tag_tree_type_id)
 function get_tags_by_tree_type($tag_tree_type_id)
 {
     if (!is_valid_tag_tree_type($tag_tree_type_id)) {
-        return null;
+        return NULL;
     }
      
     $sql_string = "select property_UUID, property_name, property_type, hot_index from 
-         property where tag_tree_type = " . $tag_tree_type_id;
+         property where tag_tree_type = " . $tag_tree_type_id . get_order_substring(1);
         
     $result = mysql_query($sql_string);
     if ($result == FALSE) {

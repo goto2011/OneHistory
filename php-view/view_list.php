@@ -477,15 +477,25 @@
                 {
                     $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_super");
                 }
-                else 
+                else if ($is_super == "normal")
                 {
                     $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_normal");
+                }
+                else if ($is_super == "hide")
+                {
+                    // 如果有人关注，则显示。
+                    // 将来可改为如果自己关注，则显示。
+                    if (get_follows_count($my_uuid) >= 1) {
+                        $result .= create_normal_tag_link($my_uuid, $my_name, $my_hot_index, "tag_normal");
+                    }
                 }
             }
             // vip tag在数据库中没有。
             else 
             {
-                $result .= create_normal_tag_link("", $my_name, 0, "tag_nothing");
+                if ($is_super != "hide") {
+                    $result .= create_normal_tag_link("", $my_name, 0, "tag_nothing");
+                }
             }
         }
         

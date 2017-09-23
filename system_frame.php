@@ -128,6 +128,8 @@ function tag_property_save()
     var parent_tag = "";
     if (parent_obj.selectedIndex != -1) {
         parent_tag = parent_obj.options[parent_obj.selectedIndex].value;
+        // 如果是直辖市
+        if (parent_tag == "0")parent_tag = "";
     }
     var system_manager_ajax = xhr({
         url:'./ajax/general_ajax.php',
@@ -176,6 +178,10 @@ function tag_tree_type_selected()
             // 更新 parent_tag
             var obj = document.getElementById('parent_tag');
             obj.options.length = 0;
+            // 当前是中国城市时，增加一个新的项目：“直辖市”
+            if (document.getElementById("tag_tree_type").value == "10") {
+                obj.options.add(new Option("-直辖市-", 0));
+            }
             for (var ii = 0; ii < tag_obj.length; ii++)
             {
                 // alert(tag_obj[ii][1] + "-" + tag_obj[ii][0]);

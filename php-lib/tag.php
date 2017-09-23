@@ -20,7 +20,10 @@ require_once "tag_solution.php";
 
 /** vip tag struct的字段列表：
  * 1. tag name：tag显示名称。如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
- * 2. show flag: tag显示属性。有两种：“super”和“normal”，默认值为normal。带 super 属性的标签会加粗加大字体。
+ * 2. show flag: tag显示属性。有3种：
+ *      “super” 标签会加粗加大字体。
+ *      “normal” 普通字体。默认值为normal。
+ *      “hide” 标签不显示在tab页，但会显示在事件的标签字段中。
  *  允许这样定义： [tag name][super]，即各属性为super+sigle-key，且关键字即为tag显示名称。
  * 3. search flag: 检索属性。有四种："sigle-key"、"multe-key"、"key-time"、"tag-time".
  *      sigle-key: 单关键字。

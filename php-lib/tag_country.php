@@ -124,90 +124,119 @@ $country = array
     array
     (
         // 中东北非中亚
-        array("犹太人", "super", "multe-key", "犹太人", "希伯来语", "犹太教", "希伯来人", "犹太历", 
-                "犹太王国", "以色列王国", "锡安主义", "犹太复国主义运动"),
-        array("以色列", "super", "multe-key", "以色列", "耶路撒冷", "特拉维夫", "海法"),
+        array("以色列", "super", "multe-key", "以色列", "犹太人", "希伯来语", "犹太教", "希伯来人", 
+             "犹太历", "犹太王国", "锡安主义", "犹太复国主义运动"),
         
-        array("穆斯林国家", "super", "multe-key", "穆斯林国家", "中东", "阿拉伯", "伊斯兰教", "逊尼派", "什叶派", 
-            "阿联酋", "阿拉伯联合酋长国", "迪拜", "约旦", "安曼", "阿尔及利亚", "阿尔及尔", 
-            "科威特", "黎巴嫩", "贝鲁特", "也门", "萨那", "亚丁", "摩洛哥", "拉巴特", 
-            "苏丹", "喀土穆", "朱巴", "南苏丹", "突尼斯"),
-        array("土耳其", "super", "multe-key", "土耳其", "伊斯坦布尔", "安卡拉"),
-        array("埃及", "super", "key-time", "埃及", "开罗", "亚历山大", "苏伊士", "651", "2100"),
-        array("伊朗", "super", "key-time", "伊朗", "德黑兰", "马什哈德", "伊斯法罕", "642", "2100"),
-        array("叙利亚", "normal", "multe-key", "叙利亚", "大马士革", "阿勒颇"),
-        array("伊拉克", "normal", "key-time", "伊拉克", "巴格达", "巴士拉", "纳杰夫", "摩苏尔", "635", "2100"),
-        array("沙特阿拉伯", "normal", "multe-key", "沙特阿拉伯", "沙特", "利雅得", "麦加"),
-        array("利比亚", "normal", "multe-key", "利比亚", "的黎波里"),
-        array("卡塔尔", "normal", "multe-key", "卡塔尔", "多哈", "半岛电视台"),
-        array("石油天然气", "super", "multe-key", "石油", "天然气"), 
+        array("土耳其", "super"),
+        array("埃及", "super", "key-time", "埃及", "尼罗河", "651", "2100"),
+        array("伊朗", "super", "key-time", "伊朗", "波斯", "642", "2100"),
+        array("叙利亚"),
+        array("伊拉克", "normal", "key-time", "伊拉克", "635", "2100"),
+        array("沙特阿拉伯", "normal", "multe-key", "沙特阿拉伯", "沙特"),
+        array("利比亚"),
+        array("卡塔尔", "hide", "multe-key", "卡塔尔", "半岛电视台"),
+        array("阿联酋", "hide", "multe-key", "阿联酋", "阿拉伯联合酋长国"),
+        array("约旦", "hide"),
+        array("阿尔及利亚", "hide"),
+        array("科威特", "hide"),
+        array("黎巴嫩", "hide"),
+        array("也门", "hide"),
+        array("摩洛哥", "hide"),
+        array("苏丹", "hide"),
+        array("南苏丹", "hide"),
+        array("突尼斯", "hide"),
+        array("石油天然气", "super", "multe-key", "石油", "天然气", "油页岩"), 
         
-        array("巴勒斯坦", "normal", "multe-key", "巴勒斯坦", "加沙", "约旦河西岸", "杰里科"),
-        array("塞浦路斯", "normal", "multe-key", "塞浦路斯", "尼科西亚"),
-        array("阿富汗", "normal", "multe-key", "阿富汗", "坎布尔"),
-        array("高加索三国", "super", "multe-key", "高加索", "亚美尼亚", "阿塞拜疆", "格鲁吉亚", 
-                "埃里温", "巴库", "第比利斯"),
-        array("中亚五斯坦", "super", "multe-key", "中亚", "哈萨克斯坦", "乌兹别克斯坦", "吉尔吉斯斯坦",
-                 "塔吉克斯坦", "土库曼斯坦", "阿斯塔纳", "塔什干", "比什凯克", "杜尚别", "阿什哈巴德"),
-        array("库尔德人", "normal", "multe-key", "库尔德", "基尔库克"),       
+        array("巴勒斯坦", "normal", "multe-key", "巴勒斯坦", "约旦河西岸"),
+        array("阿富汗", "normal"),
+        array("库尔德", "super"),
+        array("塞浦路斯", "hide"),
+        array("亚美尼亚", "hide"),
+        array("阿塞拜疆", "hide"),
+        array("格鲁吉亚", "hide"),
+        array("哈萨克斯坦", "hide"),
+        array("乌兹别克斯坦", "hide"),
+        array("吉尔吉斯斯坦", "hide"),
+        array("塔吉克斯坦", "hide"),
+        array("土库曼斯坦", "hide"),
     ),
     array
     (
         // 亚洲
-        array("日本", "super", "multe-key", "日本", "东京", "大阪", "京都", "北海道"),
-        array("韩国", "super", "multe-key", "韩国", "汉城", "首尔", "济州"),
-        array("朝鲜", "normal", "multe-key", "朝鲜", "平壤"),
-        array("蒙古", "normal", "key-time", "蒙古", "乌兰巴托", "1904", "2011"),
+        array("日本", "super"),
+        array("韩国", "super"),
+        array("朝鲜", "normal"),
+        array("蒙古", "hide", "key-time", "蒙古", "1904", "2100"),
         
-        array("南亚", "super", "multe-key", "南亚", "孟加拉国", "达卡", "马尔代夫",
-            "马累", "尼泊尔", "加德满都", "斯里兰卡", "科伦坡"),
-        array("印度", "super", "key-time", "印度", "孟买", "加德满都", "新德里", "1600", "2100"),
-        array("巴基斯坦", "super", "multe-key", "巴基斯坦", "安卡拉"),
+        array("孟加拉国", "hide"),
+        array("马尔代夫", "hide"),
+        array("尼泊尔", "hide"),
+        array("斯里兰卡", "hide"),
+
+        array("印度", "super", "key-time", "印度", "印度教", "锡克教", "1600", "2100"),
+        array("巴基斯坦", "super"),
         
-        array("东南亚", "super", "multe-key", "东南亚", "东盟", "东南亚联盟", "柬埔寨", 
-            "金边", "老挝", "万象", "缅甸", "内比都", "仰光"),
-        array("印尼", "normal", "multe-key", "印尼", "雅加达", "印度尼西亚"),
-        array("越南", "normal", "multe-key", "越南", "河内", "西贡", "胡志明市"),
-        array("马来西亚", "normal", "multe-key", "马来西亚", "吉隆坡"),
-        array("泰国", "normal", "multe-key", "泰国", "曼谷"),
+        array("东南亚", "super", "multe-key", "东南亚", "东盟", "东南亚联盟"),
+        array("印尼", "normal", "multe-key", "印尼", "印度尼西亚"),
+        array("越南"),
+        array("马来西亚"),
+        array("泰国"),
         array("新加坡"),
-        array("菲律宾", "normal", "multe-key", "菲律宾", "马尼拉"),
+        array("菲律宾"),
+        array("柬埔寨", "hide"),
+        array("老挝", "hide"),
+        array("缅甸", "hide"),
     ),
     array
     (
         // 欧洲
         array("欧洲", "super", "multe-key", "欧洲", "欧盟", "欧洲联盟", "欧共体", "欧洲经济共同体", 
-            "欧洲共同体", "欧元", "申根", "捷克", "布拉格", "匈牙利", "布达佩斯", "斯洛伐克", 
-            "克拉科夫", "保加利亚", "索非亚", "罗马尼亚", "布加勒斯特", "阿尔巴尼亚", "地拉那"),
-        array("德国", "super", "multe-key", "德国", "德意志", "普鲁士", "条顿", "柏林"),
-        array("英国", "super", "multe-key", "英国", "英吉利", "伦敦", "利物浦", "大不列颠", "大英帝国"),
-        array("法国", "super", "multe-key", "法国", "法兰西", "巴黎", "拿破仑", "马赛"),
-        array("俄罗斯", "super", "multe-key", "俄罗斯", "俄国", "莫斯科", "沙皇", "圣彼得堡", "海参崴", "苏联"),
-        array("意大利", "normal", "key-time", "意大利", "罗马", "威尼斯", "佛罗伦萨", "热那亚", "米兰", 
-                "476", "2100"),
-        array("奥地利", "normal", "multe-key", "奥地利", "维也纳"),
-        array("西班牙", "normal", "multe-key", "西班牙", "马德里"),
-        array("葡萄牙", "normal", "multe-key", "葡萄牙", "里斯本"),
-        array("波兰", "normal", "multe-key", "波兰", "华沙"),
-        array("瑞士", "normal", "multe-key", "瑞士", "日内瓦"),
-        array("希腊", "normal", "multe-key", "希腊", "雅典"),
-        array("爱尔兰", "normal", "multe-key", "爱尔兰", "都柏林"),
-        array("乌克兰", "super", "multe-key", "乌克兰", "基辅", "克里米亚"),
-        array("底地三国", "normal", "multe-key", "荷兰", "比利时", "卢森堡", "阿姆斯特丹", "布鲁塞尔"),
-        array("北欧五国", "normal", "multe-key", "北欧", "挪威", "瑞典", "芬兰", "丹麦", "冰岛", 
-                "斯德哥尔摩", "奥斯陆", "赫尔辛基", "哥本哈根", "雷克雅未克"),
-        array("南斯拉夫诸国", "normal", "multe-key", "南斯拉夫", "斯洛文尼亚", "黑山", "塞尔维亚", 
-                "克罗地亚", "科索沃", "波黑", "马其顿", "卢布尔雅那", "波德戈里察", "贝尔格莱德", 
-                "萨格勒布", "萨拉热窝", "斯科普里"),
-        array("波罗的海三国", "normal", "multe-key", "波罗的海", "立陶宛", "拉脱维亚", "爱沙尼亚", 
-                "维尔纽斯", "里加", "塔林"),
+                "欧洲共同体", "欧元", "申根", "马约"),
+        array("德国", "super", "multe-key", "德国", "德意志", "普鲁士", "条顿"),
+        array("英国", "super", "multe-key", "英国", "英吉利", "大不列颠", "大英帝国"),
+        array("法国", "super", "multe-key", "法国", "法兰西", "拿破仑"),
+        array("俄罗斯", "super", "multe-key", "俄罗斯", "俄国", "苏联", "沙皇"),
+        array("意大利"),
+        array("奥地利"),
+        array("西班牙"),
+        array("葡萄牙"),
+        array("波兰"),
+        array("瑞士"),
+        array("希腊"),
+        array("荷兰"),
+        array("爱尔兰"),
+        array("乌克兰"),
+        
+        array("捷克", "hide"),
+        array("匈牙利", "hide"),
+        array("斯洛伐克", "hide"),
+        array("保加利亚", "hide"),
+        array("罗马尼亚", "hide"),
+        array("阿尔巴尼亚", "hide"),
+        array("比利时", "hide"),
+        array("卢森堡", "hide"),
+        array("挪威", "hide"),
+        array("瑞典", "hide"),
+        array("芬兰", "hide"),
+        array("丹麦", "hide"),
+        array("冰岛", "hide"),
+        
+        array("斯洛文尼亚", "hide"),
+        array("黑山", "hide"),
+        array("塞尔维亚", "hide"),
+        array("克罗地亚", "hide"),
+        array("科索沃", "hide"),
+        array("波黑", "hide"),
+        array("马其顿", "hide"),
+        array("立陶宛", "hide"),
+        array("拉脱维亚", "hide"),
+        array("爱沙尼亚", "hide"),
     ),
     array
     (
         // 美洲
-        array("美国", "super", "multe-key", "美国", "美利坚", "纽约", "华盛顿", "洛杉矶", "芝加哥", "波士顿", 
-                "亚特兰大", "休斯顿"),
-        array("加拿大", "normal", "multe-key", "加拿大", "多伦多", "温哥华", "魁北克", "渥太华", "爱斯基摩"),
+        array("美国", "super", "multe-key", "美国", "美利坚"),
+        array("加拿大", "normal", "multe-key", "加拿大", "爱斯基摩"),
         array("墨西哥"),
         
         // 国际组织
@@ -230,64 +259,421 @@ $country = array
     (
         // 其它地区
         // 南美
-        array("南美", "super", "multe-key", "南美", "古巴", "哈瓦那", "委内瑞拉", 
-            "加拉加斯", "玻利维亚", "拉巴斯", "智利", "圣地亚哥", "哥伦比亚", "乌拉圭", "蒙得维的亚", 
-            "圣菲波哥大", "厄瓜多尔", "基多", "巴拉圭", "亚松森", "秘鲁", "利马"),
-        array("巴西", "super", "multe-key", "巴西", "里约"),
-        array("阿根廷", "normal", "multe-key", "阿根廷", "布宜诺斯艾利斯"),
-        array("中美洲七国", "super", "multe-key", "中美洲", "危地马拉", "伯利兹", "萨尔瓦多", "洪都拉斯", 
-            "尼加拉瓜", "哥斯达黎加", "巴拿马"),
+        array("巴西", "super"),
+        array("阿根廷"),
+        array("古巴", "hide"),
+        array("委内瑞拉", "hide"),
+        array("玻利维亚", "hide"),
+        array("智利", "hide"),
+        array("哥伦比亚", "hide"),
+        array("乌拉圭", "hide"),
+        array("厄瓜多尔", "hide"),
+        array("巴拉圭", "hide"),
+        array("秘鲁", "hide"),
+        array("危地马拉", "hide"),
+        array("伯利兹", "hide"),
+        array("萨尔瓦多", "hide"),
+        array("洪都拉斯", "hide"),
+        array("尼加拉瓜", "hide"),
+        array("哥斯达黎加", "hide"),
+        array("巴拿马", "hide"),
 
         // 大洋洲
-        array("澳大利亚", "super", "multe-key", "澳大利亚", "堪培拉", "悉尼"),
-        array("新西兰", "normal", "multe-key", "新西兰", "惠灵顿"),
-        array("太平洋岛国", "normal", "multe-key", "太平洋岛国", "基里巴斯", "塔拉瓦", "图瓦卢", "富纳富提", 
-            "马绍尔群岛", "马朱罗", "斐济", "所罗门群岛", "霍尼亚拉", "帕劳", "梅莱凯奥克", 
-            "汤加", "努库阿洛法", "瑙鲁", "密克罗尼西亚联邦", "帕利基尔", "萨摩亚", "阿皮亚", 
-            "瓦努阿图", "维拉港", "巴布亚新几内亚", "莫尔兹比"),
+        array("澳大利亚", "super"),
+        array("新西兰"),
+        array("基里巴斯", "hide"),
+        array("图瓦卢", "hide"),
+        array("马绍尔群岛", "hide"),
+        array("斐济", "hide"),
+        array("所罗门群岛", "hide"),
+        array("帕劳", "hide"),
+        array("汤加", "hide"),
+        array("瑙鲁", "hide"),
+        array("密克罗尼西亚联邦", "hide"),
+        array("萨摩亚", "hide"),
+        array("瓦努阿图", "hide"),
+        array("巴布亚新几内亚", "hide"),
                 
         // 非洲
-        array("非洲", "super", "multe-key", "非洲", "非盟", "非洲联盟", "赞比亚", "卢萨卡", "布隆迪", "布琼布拉", 
-                "班吉", "几内亚", "科纳克里", "尼日尔", "尼亚美", "比绍", "博茨瓦纳", "哈博罗内", 
-                "加纳", "阿克拉", "布基纳法索", "瓦加杜古", "加蓬", "利伯维尔", "莱索托", "马塞卢", 
-                "圣多美", "莫桑比克", "马普托", "吉布提", "马拉维", "利隆圭", 
-                "毛里塔尼亚", "努瓦克肖特", "毛里求斯", "路易港", "贝宁", "波多诺伏", "毛里塔尼亚", 
-                "努瓦克肖特", "乌干达", "坎帕拉", "纳米比亚", "温得和克", "塞舌尔", "厄立特里亚",
-                "布隆迪", "布琼布拉", "卢旺达", "基加利", "马达加斯加", 
-                "塔那那利佛", "乍得", "恩贾梅纳", "马里", "巴马科", "刚果", "布拉柴维尔", "金沙萨", 
-                "安哥拉", "罗安达", "肯尼亚", "内罗毕", "尼日利亚", "阿布贾", "索马里", "摩加迪沙",
-                "津巴布韦", "哈拉雷", "坦桑尼亚", "达累斯萨拉姆", "埃塞俄比亚", "亚的斯亚贝巴"),
-        array("南非", "normal", "multe-key", "南非", "比勒陀利亚"),
-        
+        array("南非"),
+        array("赞比亚", "hide"),
+        array("几内亚", "hide"),
+        array("尼日尔", "hide"),
+        array("莫桑比克", "hide"),
+        array("毛里塔尼亚", "hide"),
+        array("毛里求斯", "hide"),
+        array("乌干达", "hide"),
+        array("纳米比亚", "hide"),
+        array("厄立特里亚", "hide"),
+        array("布隆迪", "hide"),
+        array("卢旺达", "hide"),
+        array("马达加斯加", "hide"),
+        array("刚果", "hide"),
+        array("安哥拉", "hide"),
+        array("肯尼亚", "hide"),
+        array("尼日利亚", "hide"),
+        array("索马里", "hide"),
+        array("津巴布韦", "hide"),
+        array("坦桑尼亚", "hide"),
+        array("埃塞俄比亚", "hide"),
     ),
     array
     (
-        // 大城市
-        array("纽约"),
-        array("伦敦"),
-        array("巴黎"),
-        array("东京"),
-        array("芝加哥"),
-        array("洛杉矶"),
-        array("布鲁塞尔"),
-        array("悉尼"),
-        array("首尔", "normal", "multe-key", "首尔", "汉城"),
-        array("多伦多"),
-        
-        array("柏林"),
-        array("罗马"),
-        array("维也纳"),
-        array("莫斯科"),
-        array("阿姆斯特丹"),
-        array("马德里"),
-        array("西雅图"),
-        array("波士顿"),
-        array("大阪"),
-        array("孟买"),
-        array("伊斯坦布尔"),
+        // 以色列
         array("耶路撒冷"),
+        array("特拉维夫", "hide"), 
+        array("海法", "hide"),
+        
+        // 阿联酋
+        array("迪拜", "hide"),
+        
+        // 约旦
+        array("安曼", "hide"),
+        
+        // 阿尔及利亚
+        array("阿尔及尔", "hide"),
+        
+        // 黎巴嫩
+        array("贝鲁特", "hide"),
+        
+        // 土耳其
+        array("伊斯坦布尔", "normal", "multe-key", "伊斯坦布尔", "拜占庭", "康斯坦丁堡"),
+        array("安卡拉", "hide"),
+        
+        // 埃及
         array("开罗"),
-        array("巴格达"),
+        array("亚历山大", "hide"),
+        array("苏伊士", "hide"),
+        
+        // 伊朗
+        array("德黑兰", "hide"),
+        array("马什哈德", "hide"),
+        array("伊斯法罕", "hide"),
+        
+        // 叙利亚
+        array("大马士革", "hide"),
+        array("阿勒颇", "hide"),
+        
+        // 伊拉克
+        array("巴格达", "hide"),
+        array("巴士拉", "hide"),
+        array("纳杰夫", "hide"),
+        array("摩苏尔", "hide"),
+        
+        // 沙特阿拉伯
+        array("利雅得", "hide"),
+        array("麦加", "hide"),
+        
+        // 利比亚
+        array("的黎波里", "hide"),
+        
+        // 卡塔尔
+        array("多哈", "hide"),
+        
+        // 也门
+        array("萨那", "hide"),
+        array("亚丁", "hide"),
+        
+        // 摩洛哥
+        array("拉巴特", "hide"),
+        
+        // 苏丹
+        array("喀土穆", "hide"),
+        
+        // 南苏丹
+        array("朱巴", "hide"),
+        
+        // 巴勒斯坦
+        array("加沙", "hide"),
+        array("杰里科", "hide"),
+        
+        // 塞浦路斯
+        array("尼科西亚", "hide"),
+        
+        // 阿富汗
+        array("喀布尔", "hide"),
+        array("坎大哈", "hide"),
+        
+        // 亚美尼亚
+        array("埃里温", "hide"),
+        
+        // 阿塞拜疆
+        array("巴库", "hide"),
+        
+        // 格鲁吉亚
+        array("第比利斯", "hide"),
+        array("巴统", "hide"),
+        
+        // 哈萨克斯坦
+        array("阿斯塔纳", "hide"),
+        array("阿拉木图", "hide"),
+        array("乌拉尔", "hide"),
+        
+        // 乌兹别克斯坦
+        array("塔什干", "hide"),
+        
+        // 吉尔吉斯斯坦
+        array("比什凯克", "hide"),
+        
+        // 塔吉克斯坦
+        array("杜尚别", "hide"),
+        
+        // 土库曼斯坦
+        array("阿什哈巴德", "hide"),
+        
+        // 库尔德
+        array("基尔库克", "hide"),
+        
+        // 日本
+        array("东京"),
+        array("大阪"),
+        array("京都", "hide"),
+        array("北海道", "hide"),
+        
+        // 韩国
+        array("首尔", "normal", "multe-key", "首尔", "汉城"),
+        array("济州", "hide"),
+        
+        // 朝鲜
+        array("平壤", "hide"),
+        
+        // 蒙古
+        array("乌兰巴托", "hide"),
+        
+        // 孟加拉国
+        array("达卡", "hide"),
+        
+        // 马尔代夫
+        array("马累", "hide"),
+        
+        // 尼泊尔
+        array("加德满都", "hide"),
+        
+        // 斯里兰卡
+        array("科伦坡", "hide"),
+        
+        // 印度
+        array("孟买"),
+        array("新德里", "hide"),
+        array("班加罗尔", "hide"),
+        array("加尔各答", "hide"),
+        
+        // 巴基斯坦
+        array("安卡拉", "hide"),
+        
+        // 柬埔寨
+        array("金边", "hide"),
+        
+        // 老挝
+        array("万象", "hide"),
+        
+        // 缅甸
+        array("内比都", "hide"),
+        array("仰光", "hide"),
+        
+        // 印尼
+        array("雅加达", "hide"),
+        
+        // 越南
+        array("河内", "hide"),
+        array("胡志明市", "hide", "multe-key", "胡志明市", "西贡"),
+        
+        // 马来西亚
+        array("吉隆坡", "hide"),
+        
+        // 泰国
+        array("曼谷", "hide"),
+        
+        // 菲律宾
+        array("马尼拉", "hide"),
+        
+        // 捷克
+        array("布拉格", "hide"),
+        
+        // 匈牙利
+        array("布达佩斯", "hide"),
+        
+        // 斯洛伐克
+        array("克拉科夫", "hide"),
+        
+        // 保加利亚
+        array("索非亚", "hide"),
+        
+        // 罗马尼亚
+        array("布加勒斯特", "hide"),
+        
+        // 阿尔巴尼亚
+        array("地拉那", "hide"),
+        
+        // 荷兰
+        array("阿姆斯特丹"),
+        
+        // 比利时
+        array("布鲁塞尔"),
+        
+        // 挪威
+        array("斯德哥尔摩", "hide"),
+        
+        // 瑞典
+        array("奥斯陆", "hide"),
+        
+        // 芬兰
+        array("赫尔辛基", "hide"),
+        
+        // 丹麦
+        array("哥本哈根", "hide"),
+        
+        // 冰岛
+        array("雷克雅未克", "hide"),
+        
+        // 斯洛文尼亚
+        array("卢布尔雅那", "hide"),
+        
+        // 黑山
+        array("波德戈里察", "hide"),
+        
+        // 塞尔维亚
+        array("贝尔格莱德", "hide"),
+        
+        // 克罗地亚
+        array("萨格勒布", "hide"),
+        
+        // 波黑
+        array("萨拉热窝", "hide"),
+        
+        // 马其顿
+        array("斯科普里", "hide"),
+        
+        // 科索沃
+        array("普里什蒂纳", "hide"),
+        
+        // 立陶宛
+        array("维尔纽斯", "hide"),
+        
+        // 拉脱维亚
+        array("里加", "hide"),
+        
+        // 爱沙尼亚
+        array("塔林", "hide"),
+        
+        // 德国
+        array("柏林"),
+        
+        // 英国
+        array("伦敦"),
+        array("利物浦", "hide"),
+        
+        // 法国
+        array("巴黎"),
+        array("马赛", "hide"),
+        
+        // 俄罗斯
+        array("莫斯科"),
+        array("圣彼得堡", "hide"),
+        array("海参崴", "hide"),
+        
+        // 意大利
+        array("罗马"),
+        array("威尼斯", "hide"),
+        array("佛罗伦萨", "hide"),
+        array("热那亚", "hide"),
+        array("米兰", "hide"),
+        
+        // 奥地利
+        array("维也纳"),
+        
+        // 西班牙
+        array("马德里", "hide"),
+        
+        // 葡萄牙
+        array("里斯本", "hide"),
+        
+        // 波兰
+        array("华沙", "hide"),
+        
+        // 瑞士
+        array("日内瓦"),
+        
+        // 希腊
+        array("雅典"),
+        
+        // 爱尔兰
+        array("都柏林", "hide"),
+        
+        // 乌克兰
+        array("基辅", "hide"),
+        array("克里米亚", "hide"),
+        
+        // 美国
+        array("纽约"),
+        array("洛杉矶"),
+        array("芝加哥"),
+        array("西雅图", "hide"),
+        array("华盛顿", "hide"),
+        array("波士顿", "hide"),
+        array("亚特兰大", "hide"),
+        array("休斯顿", "hide"),
+        
+        // 加拿大
+        array("多伦多", "hide"),
+        array("温哥华", "hide"),
+        array("魁北克", "hide"),
+        array("渥太华", "hide"),
+        
+        // 巴西
+        array("巴西利亚", "hide"),
+        array("里约", "normal", "multe-key", "里约热内卢", "里约"),
+        array("圣保罗", "hide"),
+        
+        // 阿根廷
+        array("布宜诺斯艾利斯", "hide"),
+        
+        // 古巴
+        array("哈瓦那", "hide"),
+        
+        // 委内瑞拉
+        array("加拉加斯", "hide"),
+        
+        // 玻利维亚
+        array("拉巴斯", "hide"),
+        
+        // 智利
+        array("圣地亚哥", "hide"),
+        
+        // 哥伦比亚
+        array("波哥大", "hide"),
+        
+        // 乌拉圭
+        array("蒙得维的亚", "hide"),
+        
+        // 厄瓜多尔
+        array("基多", "hide"),
+        
+        // 巴拉圭
+        array("亚松森", "hide"),
+        
+        // 秘鲁
+        array("利马", "hide"),
+        
+        // 澳大利亚
+        array("堪培拉", "hide"),
+        array("悉尼"),
+        
+        // 新西兰
+        array("惠灵顿", "hide"),
+        
+        // 肯尼亚
+        array("内罗毕", "hide"),
+        
+        // 索马里
+        array("摩加迪沙", "hide"),
+        
+        // 埃塞俄比亚
+        array("亚的斯亚贝巴", "hide"),
+        
+        // 南非
+        array("比勒陀利亚", "hide"),
+
     ),
     array
     (
