@@ -3,7 +3,7 @@ require_once 'init.php';
 is_user(3);
 require_once "sql.php";
 require_once "data.php";
-require_once "tag.php";
+require_once "vip_tag.php";
 require_once "list_control.php";
 require_once "view_list.php";
 

@@ -3,245 +3,6 @@
 // tag 相关的函数。主要是和sql相关的。    -->
 
 require_once 'data.php';
-require_once 'tag.php';
-require_once 'list_control.php';
-
-// 获取tag list 最小值
-function tag_list_min()
-{
-    return 1;
-}
-
-// 获取tag list 的最大值
-function tag_list_max()
-{
-    global $tag_control;
-    return count($tag_control);
-}
-
-// tag list 、tag index、tag id 对应关系。
-// [0]表示数据库中的tag type；为负数表示不保存到数据库，只在逻辑上使用。
-// [1]表示标签名称；
-// [2]表示是标签显示特征：
-//      0-tab，非tag；
-//      1-tag tab；
-//      2-tag，非tab；
-//      3-vip用户才显示的。
-// [3]表示是否为key tag (0不是，1是)。
-// [4]表示tag 输入框的id（字符串，用于import/input页面）。
-$tag_control = array(
-    array(tab_type::CONST_TOTAL,          "全部",             0,    0,      ""),
-    // “我的关注”合并到首页。
-    // array(tab_type::CONST_MY_FOLLOW,      "我的关注",         0,    0,      ""),
-    // array(tab_type::CONST_NEWEST,         "最新标签",         0,    0,      ""),
-    array(tab_type::CONST_PERIOD,         "时期",             0,    1,      ""),                // vip tag.
-    array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
-    array(tab_type::CONST_DIE,            "战争及死亡史",       1,    1,      "die_tags"),       // vip tag.
-    array(tab_type::CONST_SOLUTION,       "人性和解决方案",    1,    1,      "solution_tags"),   // vip tag.
-    array(tab_type::CONST_COUNTRY,        "世界历史",             1,    1,      "country_tags"),    // vip tag.
-    array(tab_type::CONST_DYNASTY,        "中国历史",             1,    1,      "dynasty_tags"),    // vip tag.
-    array(tab_type::CONST_TOPIC,          "领域",             1,    1,      "topic_tags"),      // vip tag.
-    // array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
-    // array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
-    // array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
-    // array(tab_type::CONST_OFFICE,         "官制",             1,    0,      "office_tags"),
-    // array(tab_type::CONST_BEGIN,          "事件开始",         2,    0,      "start_tags"),
-    // array(tab_type::CONST_END,            "事件结束",         2,    0,      "end_tags"),
-    array(tab_type::CONST_RESURCE,        "出处",             1,    0,      "source_tags"),
-    array(tab_type::CONST_NOTE,           "笔记",             1,    0,      "note_tags"),
-    array(tab_type::CONST_FREE,           "自由标签",         1,    0,      "free_tags"),
-    array(tab_type::CONST_MANAGER,        "管理",             3,    0,      ""),
-    array(tab_type::CONST_MANAGER,        "用户",             3,    0,      ""),
-);
-
-
-/**
- * 根据排列顺序给出tag 属性。2015-5-3.
- */
-function get_tag_list_from_index($tag_index_id)
-{
-    global $tag_control;
-    
-    if($tag_index_id > count($tag_control))
-    {
-        return -1;
-    }
-    else
-    {
-        return $tag_control[$tag_index_id - 1];
-    }
-}
-
-/**
- * 将 数组下标 转化为 tag id。 
- * 返回值：大于 0 表示为数据库中真实的tag type id；小于 0表示 tab id；-100 表示非法值。
- */
-function get_tag_id_from_index($tag_index_id)
-{
-    $my_tag_list = get_tag_list_from_index($tag_index_id); 
-    if ($my_tag_list != -1)
-    {
-        return $my_tag_list[0];
-    }
-    else 
-    {
-        return -100;
-    }
-}
-
-/**
- * 根据数组下标 获取 tag 名称。 返回-2表示非法值。
- */
-function get_tag_list_name_from_index($tag_index_id)
-{
-    $my_tag_list = get_tag_list_from_index($tag_index_id); 
-    if ($my_tag_list != -1)
-    {
-        return $my_tag_list[1];
-    }
-    else 
-    {
-        return -2;
-    }
-}
-
-/**
- * 根据数组下标 获取显示属性。 返回-2表示非法值。
- */
-function get_tag_show_type_from_index($tag_index_id)
-{
-    $my_tag_list = get_tag_list_from_index($tag_index_id); 
-    if ($my_tag_list != -1)
-    {
-        return $my_tag_list[2];
-    }
-    else 
-    {
-        return -2;
-    }
-}
-
-/**
- * 根据数组下标 获取key tag属性。 返回-2表示非法值。
- */
-function get_key_tag_type_from_index($tag_index_id)
-{
-    $my_tag_list = get_tag_list_from_index($tag_index_id); 
-    if ($my_tag_list != -1)
-    {
-        return $my_tag_list[3];
-    }
-    else 
-    {
-        return -2;
-    }
-}
-
-/**
- * 根据数组下标 获取 tag input id 属性。 返回""表示非法值。
- */
-function get_tag_key_from_index($tag_index_id)
-{
-    $my_tag_list = get_tag_list_from_index($tag_index_id); 
-    if ($my_tag_list != -1)
-    {
-        return $my_tag_list[4];
-    }
-    else 
-    {
-        return "";
-    }
-}
-
-/**
- * 是否显示在tag input界面（即import/udpate页面）上，即为真正的tag。
- */
-function is_show_input_tag($tag_index_id)
-{
-    $tag_show = get_tag_show_type_from_index($tag_index_id);
-    
-    if (($tag_show == 1) || ($tag_show == 2))
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * 是否显示在主界面的标签栏上. tag id + tab id.
- */
-function is_show_list_tab($tag_index_id)
-{
-    $tag_show = get_tag_show_type_from_index($tag_index_id);
-    
-    if (($tag_show == 0) || ($tag_show == 1))
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * 是否显示检索、add tag等界面.
- */
-function is_show_search_add($tag_index_id)
-{
-    $tag_show = get_tag_show_type_from_index($tag_index_id);
-    
-    if ($tag_show == 1)
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * 是否为vip用户才显示的tab界面.
- */
-function is_vip_user_show_tab($tag_index_id)
-{
-    $tag_show = get_tag_show_type_from_index($tag_index_id);
-    
-    // 3是管理界面
-    if ($tag_show == 3)
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-/**
- * 是否是 vip tag.
- */
-function is_vip_tag_tab($tag_index_id)
-{
-    $tag_show = get_key_tag_type_from_index($tag_index_id);
-    
-    if ($tag_show == 1)
-    {
-        return 1;
-    }
-    else 
-    {
-        return 0;
-    }
-}
-
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
 
 /**
  * 获取tag的检索条件子句。（此函数已失效）
@@ -1178,9 +939,9 @@ function tag_is_vip($tag_uuid)
 }
 
 /**
- * 按index获取 vip tag 的对象
+ * 按index获取 一组vip tag。
  */
-function get_vip_tag_object($tag_index) 
+function get_vip_tag_group($tag_index) 
 {
     // 根据下标 判断是否是 vip tag.
     if(is_vip_tag_tab($tag_index))
@@ -1188,14 +949,14 @@ function get_vip_tag_object($tag_index)
         $tag_type = get_tag_id_from_index($tag_index);
         if ($tag_type < 0)
         {
-            $GLOBALS['log']->error("error: get_vip_tag_object() -- $tag_type 。");
+            $GLOBALS['log']->error("error: get_vip_tag_group() -- $tag_type 。");
             return NULL;
         }
         // 初始化 vip tag
         $my_vip_tag = vip_tag_struct_init($tag_type);
         if ($my_vip_tag == NULL)
         {
-            $GLOBALS['log']->error("error: get_vip_tag_object() -- vip_tag_struct_init NULL 。");
+            $GLOBALS['log']->error("error: get_vip_tag_group() -- vip_tag_struct_init NULL 。");
         }
         
         return $my_vip_tag;

@@ -147,8 +147,6 @@ function get_time_number($time_string, $time_type)
 }
 
 
-
-
 // 每月多少天.
 $month_days = array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);
 
@@ -377,6 +375,7 @@ function get_year_order_from_simple_time($user_input_time)
 }
 
 // 根据 time 字段的时间数字,生成 year_order.
+// $time_type:  1:距今年;  2:公元年;  3:年月日;  4:年月日 时分秒.
 function get_year_order($time_number, $time_type)
 {
     if(($time_type == 3) || ($time_type == 4))
@@ -392,25 +391,18 @@ function get_year_order($time_number, $time_type)
             $my_year_days = is_bc($my_array[0]) ? 366 : 365;
             $my_year_order += (float)get_year_days($my_array[0], $my_array[1], $my_array[2]) 
                         / $my_year_days;
-        }
-        // 兼容公元前的情况。
-        else 
-        {
+        } else {
+            // 兼容公元前的情况。
             $my_year_order -= $my_array[1];   // year
             $my_year_days = is_bc($my_array[1]) ? 366 : 365;
             $my_year_order -= (float)get_year_days($my_array[1], $my_array[2], $my_array[3]) 
                         / $my_year_days;
         }
-        
         return $my_year_order;
-    }
-    else if($time_type == 2)
-    {
+    } else if($time_type == 2) {
         return $time_number;
-    }
-    // 针对“距今**年”。
-    else 
-    {
+    } else {
+        // 针对“距今**年”。
         return $time_number + get_current_year();
     }
 }

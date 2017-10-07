@@ -6,12 +6,11 @@ require_once "tag_period.php";
 require_once "tag_dynasty.php";
 require_once "tag_country.php";
 require_once "tag_topic.php";
-require_once "tag_city.php";
+// require_once "tag_city.php";
 require_once "tag_person.php";
-require_once "tag_key_thing.php";
-require_once "tag_land.php";
+// require_once "tag_key_thing.php";
+// require_once "tag_land.php";
 require_once "tag_war.php";
-require_once "tag_country.php";
 require_once "tag_solution.php";
 
 // 变量列表：
@@ -25,11 +24,12 @@ require_once "tag_solution.php";
  *      “normal” 普通字体。默认值为normal。
  *      “hide” 标签不显示在tab页，但会显示在事件的标签字段中。
  *  允许这样定义： [tag name][super]，即各属性为super+sigle-key，且关键字即为tag显示名称。
- * 3. search flag: 检索属性。有四种："sigle-key"、"multe-key"、"key-time"、"tag-time".
+ * 3. search flag: 检索属性。有如下：
  *      sigle-key: 单关键字。
  *      multe-key: 多关键字。需要指定。
- *      key-time:  关键字和时间区间的组合。需要指定。（目前仅用于“标签中如何划分古代文明和现代国家？”）。支持多个。
- *      tag-time:  指定tag和时间区间的组合。需要指定。（目前仅用于 中国朝代 tab页 之 正朔朝代。仅支持一个。
+ *      key-time : 关键字和时间区间的组合。支持多个关键字。支持2个时间字段。需要指定。
+ *      key-time3: 关键字和时间区间的组合，支持多个关键字。支持3个时间字段。需要指定。
+ *      tag-time : 指定tag和时间区间的组合。需要指定。（目前仅用于 中国朝代 tab页 之 正朔朝代。仅支持一个。
  * 4. 检索关键字。
  * 5. 时间范围字段 begin year/end year 总是放在最后两个，且只支持年份。
  *      对于key-time是这样的：[tag name][show flag][search flag][key1][key2][key3][begin year][end year].
@@ -87,6 +87,14 @@ class vip_tag_class{
     }
     
     /**
+     * 获取 vig tag 对象。
+     */
+    public function get_vip_tag($big_id, $small_id)
+    {
+        return $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+    }
+    
+    /**
      * 获取 tag 名称.
      */
     public function get_tag_name($big_id, $small_id)
@@ -100,7 +108,7 @@ class vip_tag_class{
     public function get_tag_show_flag($big_id, $small_id)
     {
         // 如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
-        if (count($this->vip_tag_struct[$big_id - 1][$small_id - 1]) == 1)
+        if (count($this->get_vip_tag($big_id, $small_id)) == 1)
         {
             return "normal";
         }
@@ -117,7 +125,7 @@ class vip_tag_class{
     {
         // 如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
         // 如果有两个字段，则属性为sigle-key，且关键字即为tag显示名称。
-        $tag_param_count = count($this->vip_tag_struct[$big_id - 1][$small_id - 1]); 
+        $tag_param_count = count($this->get_vip_tag($big_id, $small_id)); 
         if (($tag_param_count == 1) || ($tag_param_count == 2))
         {
             return "sigle-key";
@@ -133,7 +141,7 @@ class vip_tag_class{
      */
     public function get_tag_single_key($big_id, $small_id)
     {
-        $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+        $my_vip_tag = $this->get_vip_tag($big_id, $small_id);
         
         // 如果只有这一个字段，则各属性为：normal+sigle-key，且关键字即为tag显示名称（绝大多数如此）。
         // 如果有两个字段，则属性为sigle-key，且关键字即为tag显示名称。
@@ -177,25 +185,38 @@ class vip_tag_class{
     }
     
     /**
+     * 根据 flag 返回时间字段的数量
+     */
+    private function get_time_count($vip_tag_flag){
+        $my_time_count = 0;
+        if ($vip_tag_flag == "key-time") {
+            $my_time_count = 2;
+        } else if ($vip_tag_flag == "key-time3") {
+            $my_time_count = 3;
+        }
+        
+        return $my_time_count;
+    }
+    
+    /**
      * 获取 vip tag 的 key-time 之 key。失败返回""。
      */
     public function get_key_time_key($big_id, $small_id)
     {
-        if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
+        $my_flag = $this->get_tag_search_flag($big_id, $small_id);
+        $my_time_count = $this->get_time_count($my_flag);
+        
+        if (($my_flag == "key-time") || ($my_flag == "key-time3"))
         {
-            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
+            $my_vip_tag = $this->get_vip_tag($big_id, $small_id);
             
             // tag显示名称 默认为也参与检索。
             $my_key_string = $my_vip_tag[0] . " ";
             
-            for ($ii = 3; $ii < count($my_vip_tag); $ii++)
+            for ($ii = 3; $ii < count($my_vip_tag) - $my_time_count; $ii++)
             {
-                if (!is_numeric($my_vip_tag[$ii]))
-                {
-                    $my_key_string .= $my_vip_tag[$ii] . " ";
-                }
+                $my_key_string .= $my_vip_tag[$ii] . " ";
             }
-            
             return $my_key_string;
         }
         else 
@@ -205,28 +226,50 @@ class vip_tag_class{
     }
     
     /**
+     * 根据数字字段的位置id，获取指定的数字字段。
+     * $time_index = 0, begin year
+     * $time_index = 1, big year
+     * $time_index = 2, end year
+     */
+    private function get_time_by_index($big_id, $small_id, $time_index)
+    {
+        $my_flag = $this->get_tag_search_flag($big_id, $small_id);
+        $my_time_count = $this->get_time_count($my_flag);
+        
+        if (($my_flag != "key-time") && ($my_flag != "key-time3")) {
+            return 0;
+        }
+        if (($my_flag != "key-time3") && ($time_index == 1)){
+            return 0;
+        }
+        // key-time 的 $time_index 要做调整。
+        if (($my_flag == "key-time") && ($time_index == 2)) {
+            $time_index = 1;
+        }
+        
+        if (($my_flag == "key-time") || ($my_flag == "key-time3")) {
+            $my_vip_tag = $this->get_vip_tag($big_id, $small_id);
+            return $my_vip_tag[count($my_vip_tag) - $my_time_count + $time_index];
+        } else {
+            return 0;
+        }
+    }
+    
+    /**
      * 获取 vip tag 的 key-time 之 begin year。失败返回0。
      */
     public function get_key_time_begin_year($big_id, $small_id)
     {
-        if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
-        {
-            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
-            
-            for ($ii = 4; $ii < count($my_vip_tag); $ii++)
-            {
-                // 第一个数字默认为 begin year.
-                if(is_numeric($my_vip_tag[$ii]))
-                {
-                    return $my_vip_tag[$ii];
-                }
-            }
-            return 0;
-        }
-        else 
-        {
-            return 0;
-        }
+        // 第一个数字默认为 begin year.
+        return $this->get_time_by_index($big_id, $small_id, 0);
+    }
+    
+    /**
+     * 获取 vip tag 的 key-time 之 big year。失败返回0。
+     */
+    public function get_key_time_big_day($big_id, $small_id)
+    {
+        return $this->get_time_by_index($big_id, $small_id, 1);
     }
     
     /**
@@ -234,25 +277,8 @@ class vip_tag_class{
      */
     public function get_key_time_end_year($big_id, $small_id)
     {
-        if ($this->get_tag_search_flag($big_id, $small_id) == "key-time")
-        {
-            $my_vip_tag = $this->vip_tag_struct[$big_id - 1][$small_id - 1];
-            
-            // 最后一个字段为 end year。如果不是，则说明出错。
-            $my_end_year = $my_vip_tag[count($my_vip_tag) - 1];
-            if(is_numeric($my_end_year))
-            {
-                return $my_end_year;
-            }
-            else
-            {
-                return 0;
-            }
-        }
-        else 
-        {
-            return 0;
-        }
+        // 最后一个数字默认为 end year.
+        return $this->get_time_by_index($big_id, $small_id, 2);
     }
     
     /**
@@ -321,12 +347,12 @@ class vip_tag_class{
 /** 
  * vip_tag_init: 根据制定 tag type id 初始化 vip_tag_struct。
  * 
- *  array(tab_type::CONST_TOPIC,          "领域",             1,    1,      "topic_tags"),      // vip tag.
+ *  array(tab_type::CONST_TOPIC,          "领域",            1,    1,      "topic_tags"),      // vip tag.
     array(tab_type::CONST_COUNTRY,        "国家民族",         1,    1,      "country_tags"),    // vip tag.
     array(tab_type::CONST_DYNASTY,        "中国朝代",         1,    1,      "dynasty_tags"),    // vip tag.
-    array(tab_type::CONST_LAND,           "地理",             1,    1,      "land_tags"),       // vip tag.
-    array(tab_type::CONST_CITY,           "城市",             1,    1,      "geography_tags"),  // vip tag.
-    array(tab_type::CONST_PERSON,         "人物",             1,    1,      "person_tags"),     // vip tag.
+    array(tab_type::CONST_LAND,           "地理",            1,    1,      "land_tags"),       // vip tag.
+    array(tab_type::CONST_CITY,           "城市",            1,    1,      "geography_tags"),  // vip tag.
+    array(tab_type::CONST_PERSON,         "人物",            1,    1,      "person_tags"),     // vip tag.
     array(tab_type::CONST_KEY_THING,      "关键事件",         1,    1,      "key_tags"),        // vip tag.
  */
 function vip_tag_struct_init($vip_tag_id)

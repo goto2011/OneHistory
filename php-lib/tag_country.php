@@ -148,7 +148,7 @@ $country = array
         array("石油天然气", "super", "multe-key", "石油", "天然气", "油页岩"), 
         
         array("巴勒斯坦", "normal", "multe-key", "巴勒斯坦", "约旦河西岸"),
-        array("阿富汗", "normal"),
+        array("阿富汗"),
         array("库尔德", "super"),
         array("塞浦路斯", "hide"),
         array("亚美尼亚", "hide"),
@@ -165,7 +165,7 @@ $country = array
         // 亚洲
         array("日本", "super"),
         array("韩国", "super"),
-        array("朝鲜", "normal"),
+        array("朝鲜"),
         array("蒙古", "hide", "key-time", "蒙古", "1904", "2100"),
         
         array("孟加拉国", "hide"),
@@ -338,7 +338,6 @@ $country = array
         
         // 土耳其
         array("伊斯坦布尔", "normal", "multe-key", "伊斯坦布尔", "拜占庭", "康斯坦丁堡"),
-        array("安卡拉", "hide"),
         
         // 埃及
         array("开罗"),

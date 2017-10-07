@@ -52,20 +52,20 @@
         
         $tag_index = html_encode($_GET['vip_tag_checked']);
         $tag_step = html_encode($_GET['step']);
-        $vip_tag_object = get_vip_tag_object($tag_index);
-        if (($vip_tag_object == NULL) || (!is_numeric($tag_step))) {
+        $vip_tag_group = get_vip_tag_group($tag_index);
+        if (($vip_tag_group == NULL) || (!is_numeric($tag_step))) {
             echo "fail";
         } else {
             if ($_GET['step'] == 0) {
-                $vip_tag_count = get_vip_tag_count($vip_tag_object);
-                if ($vip_tag_object == 0) {
+                $vip_tag_count = get_vip_tag_count($vip_tag_group);
+                if ($vip_tag_group == 0) {
                     echo "fail";
                 } else {
                     echo "step1-" . $vip_tag_count;
                 }
             }
             if ($_GET['step'] > 0) {
-                $my_tag_name = vip_tag_search_to_db($vip_tag_object, $tag_index, $tag_step);
+                $my_tag_name = vip_tag_search_to_db($vip_tag_group, $tag_index, $tag_step);
                 if ($my_tag_name != "okok") {
                     echo "step2-" . $my_tag_name;
                 } else {

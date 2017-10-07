@@ -6,7 +6,7 @@
     is_user(3);
     require_once "data.php";
     require_once "sql.php";
-    require_once 'tag.php';
+    require_once 'vip_tag.php';
     require_once "list_control.php";
 
     // 唯一可设置 list_type 的位置.
