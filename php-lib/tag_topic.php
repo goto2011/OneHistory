@@ -11,6 +11,7 @@ $topic_big = array(
     "西方思想",
     "中国思想",
     "经济",
+    "IT行业",
     "艺术体育",
     "其它"
 );
@@ -114,11 +115,44 @@ $topic = array
         array("农业"),
         array("工业"),
         array("金融业"),
-        array("IT技术"),
-        array("IT行业"),
-        array("手机行业"),
         array("能源", "super", "multe-key", "能源", "石油", "煤", "天然气", "太阳能", "核电", "可再生能源", 
             "油页岩", "水电", "火电", "风电", "碳排放", "温室效应"),
+    ),
+    array
+    (
+        // IT行业
+        array("IT行业", "super", "multe-key", "微软", "Microsoft", "盖茨", "Windows", "IBM", "Inter", 
+            "新浪", "高通", "搜狐", "网易", "丁磊", "三星"),
+        array("IT技术", "super", "multe-key", "IT技术", "Linux", "区块链", "SQL", 
+            "搜索引擎", "维基", "敏捷", "设计模式", "算法", "PageRank"),
+        array("马斯克", "super", "multe-key", "马斯克", "特斯拉", "SpaceX", "SolarCity"),
+        
+        array("人工智能",  "super", "multe-key", "人工智能", "深度学习", "神经网络", "大数据", 
+            "机器学习", "数据挖掘", "AlphaGo", "云计算"),
+        array("机器人", "super", "multe-key", "机器人", "无人驾驶", "自动驾驶", "无人机", "大疆", 
+            "uber", "滴滴快车", "ofo", "摩拜单车"),
+        
+        // "拉里·佩奇", "谢尔盖·布林", "埃里克·施密特"
+        array("Google", "super", "multe-key", "Google", "谷歌", "Alphabet", "android", 
+            "安卓", "GMail", "YouTube", "GReader", "Chrome", "Google Glass"),
+        array("苹果", "super", "multe-key", "苹果", "apple", "mac", "ios", "IPhone", "乔布斯"),
+        
+        array("手机行业", "super", "multe-key", "手机", "诺基亚", "努比亚", "魅族", "乐视", 
+            "酷派", "联想手机", "360", "OPPO", "vivo", "Galaxy", "诺基亚", "摩托罗拉", "Nexus"),
+        array("华为", "normal", "multe-key", "华为公司", "08机", "任正非"),
+        array("小米", "normal", "multe-key", "小米", "雷军"),
+        array("锤子手机", "normal", "multe-key", "锤子", "罗永浩"),
+        
+        array("运营商", "normal", "multe-key", "运营商", "移动", "联通", "电信"),
+        array("电子商务", "super", "multe-key", "电子商务", "电商", "阿里巴巴", "马云", "阿里云", 
+            "蚂蚁金服", "支付宝", "淘宝", "京东", "当当", "一号店", "菜鸟", "顺丰", "网易严选", 
+            "亚马逊", "Amazon", "美团", "饿了么"),
+        array("游戏", "super", "multe-key", "游戏", "王者荣耀", "RPG", "即时战略", "地下城与勇士", 
+            "生化危机", "神秘岛", "穿越火线", "星际争霸", "VR战警", "命令与征服", "刺客信条", "风色幻想", 
+            "模拟人生", "劲乐团", "魔兽世界", "暗黑破坏神", "dota", "疯狂的小鸟", "水果忍者"),
+        array("广告", "super", "multe-key", "广告", "Google", "百度", "门户网站", "Admob", "AdWords"),
+        array("社交", "super", "multe-key", "社交", "腾讯", "QQ", "微信", "马化腾", "陌陌", "微博", 
+            "Facebook", "扎克伯格", "Twitter", "知乎", "豆瓣"),
     ),
     array
     (

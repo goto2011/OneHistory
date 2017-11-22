@@ -5,7 +5,6 @@
 $person_big = array
 (
     "科学人文宗教",
-    "工商人物",
     "外国政治人物",
     "中国远古",
     "中国古代",
@@ -361,37 +360,6 @@ $person = array
     ),
     array
     (
-        // 工商业人物
-        array("古腾堡"),
-        array("瓦特"),
-        array("莱特兄弟"),
-        array("爱迪生"),
-        // array("亚历山大·贝尔"),
-        array("福特"),
-        array("宝马汽车"),
-        array("苹果"),
-        array("乔布斯"),
-        array("盖茨"),
-        array("微软"),
-        array("Google"),
-        array("FaceBook"),
-        array("扎克伯格"),
-        array("Wiki"),
-        array("诺基亚"),
-        array("特斯拉"),
-        array("马斯克"),
-        array("雷军"),
-        array("小米"),
-        array("任正非"),
-        array("华为"),
-        array("腾讯"),
-        array("马化腾"),
-        array("联想"),
-        array("支付宝"),
-        
-    ),
-    array
-    (
         // 外国政治人物
         array("梭伦"),
         
@@ -427,6 +395,13 @@ $person = array
         array("罗斯福"),
         array("凯末尔"),
         
+        array("古腾堡"),
+        array("瓦特"),
+        array("莱特兄弟"),
+        array("爱迪生"),
+        // array("亚历山大·贝尔"),
+        array("福特"),
+        
         array("列宁"),
         array("斯大林"),
         array("希特勒"),
@@ -458,8 +433,22 @@ $person = array
         // array("夏朝", "normal", "tag-time", "中国", "-2070", "-1600"),
         
         // array("商朝", "normal", "tag-time", "中国", "-1600", "-1046"),
-        array("商汤", "normal", "key-time", "商汤", "成汤", "-1670", "-1587"),
-        array("外丙", "normal", "key-time", "外丙", "-1642", "-1584"),
+        array("商汤", "normal", "multe-key", "商汤", "成汤", "子履", "商太祖"),
+        array("外丙", "normal", "multe-key", "外丙", "子胜", "商哀王"),
+        array("仲壬", "normal", "multe-key", "仲壬", "中壬", "子庸", "商懿王"),
+        array("太甲", "normal", "multe-key", "太甲", "子至", "商太宗"),
+        array("沃丁", "normal", "multe-key", "沃丁", "羌丁", "子绚", "商昭王"),
+        array("太庚", "normal", "multe-key", "太庚", "小庚", "子辩", "商宣王"),
+        array("小甲", "normal", "multe-key", "小甲", "子高", "商敬王"),
+        array("雍己", "normal", "multe-key", "雍己", "子密"),
+        array("太戊", "normal", "multe-key", "太戊", "天戊", "商中宗"),
+        array("仲丁", "normal", "multe-key", "仲丁", "中丁", "子庄"),
+        array("外壬", "normal", "multe-key", "外壬", "卜壬", "子发"),
+        array("河亶甲", "normal", "multe-key", "河亶甲", "戋甲", "子整"),
+        array("祖乙", "normal", "multe-key", "祖乙", "且乙", "子滕", "商桓王"),
+        array("祖辛", "normal", "multe-key", "祖辛", "且辛", "子旦"),
+        array("商汤", "normal", "multe-key", "商汤", "成汤", "子履"),
+        
         array("盘庚", "normal", "key-time", "盘庚", "般庚", "-1300", "-1200"),
         array("小辛", "normal", "key-time", "小辛", "-1200", "-1250"),
         array("小乙", "normal", "key-time", "小乙", "-1251", "-1251"),
@@ -472,7 +461,9 @@ $person = array
         array("文丁", "normal", "key-time", "文丁", "-1112", "-1102"),
         array("帝乙", "normal", "key-time", "帝乙", "-1101", "-1076"),
         array("帝辛", "normal", "key-time", "帝辛", "-1075", "-1046"),
+        
         // array("周朝", "super", "tag-time", "中国", "-1046", "-770"),
+        
         // array("春秋战国", "super", "tag-time", "中国", "-770", "-221"),
         // array("秦朝", "normal", "tag-time", "中国", "-221", "-206"),
         

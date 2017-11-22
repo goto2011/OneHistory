@@ -845,8 +845,7 @@
     {
         $search_sub = "Param error.";
         $my_vip_tag = vip_tag_struct_init($tag_type);
-        if ($my_vip_tag != NULL)
-        {
+        if ($my_vip_tag != NULL) {
             $search_sub = get_vip_tag_substring($my_vip_tag, $index_big, $index_small);
             $vip_tag_name = get_vip_tag_name($my_vip_tag, $index_big, $index_small);
         }
@@ -855,17 +854,26 @@
         $search_sub = str_replace("  ", " ", $search_sub);
         $search_sub = str_replace("  ", " ", $search_sub);
         
-        if (trim($check) !== $search_sub)
-        {
+        if (trim($check) !== $search_sub) {
             echo " -- " . $tag_type . " -- " . $vip_tag_name . " --</br>";
             echo $search_sub . "</br>";
             echo trim($check) . "</br>";
             return FALSE;
-        }
-        else 
-        {
+        } else {
             return TRUE;
         }
+    }
+    
+    // 检查时间格式
+    function UT_vip_tag_time_format($time_field, $error_message)
+    {
+        if ($my_time != 0) {
+            $time_array = get_time_from_native($my_time); 
+            if ($time_array['status'] != "ok") {
+                return FALSE;
+            }
+        }
+        return TRUE;
     }
 
     // 检查每个 vip tag的格式
@@ -911,44 +919,37 @@
         }
         // 6. 2个时间字段
         if ($search_flag == "key-time") {
-            $time_array = get_time_from_native($vip_tag_group->get_key_time_begin_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_key_time_begin_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error1. --</br>" . $vip_tag_name;
                 return FALSE;
             }
-            $time_array = get_time_from_native($vip_tag_group->get_key_time_end_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_key_time_end_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error2. --</br>" . $vip_tag_name;
                 return FALSE;
             }
         }
         
         if ($search_flag == "tag-time") {
-            $time_array = get_time_from_native($vip_tag_group->get_tag_time_begin_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_tag_time_begin_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error3. --</br>" . $vip_tag_name;
                 return FALSE;
             }
-            $time_array = get_time_from_native($vip_tag_group->get_tag_time_end_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_tag_time_end_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error4. --</br>" . $vip_tag_name;
                 return FALSE;
             }
         }
         // 7. 3个时间字段
         if ($search_flag == "key-time3") {
-            $time_array = get_time_from_native($vip_tag_group->get_key_time_begin_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_key_time_begin_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error5. --</br>" . $vip_tag_name;
                 return FALSE;
             }
-            $time_array = get_time_from_native($vip_tag_group->get_key_time_big_day($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_key_time_big_day($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error6. --</br>" . $vip_tag_name;
                 return FALSE;
             }
-            $time_array = get_time_from_native($vip_tag_group->get_key_time_end_year($big_id, $small_id)); 
-            if ($time_array['status'] != "ok") {
+            if (UT_vip_tag_time_format($vip_tag_group->get_key_time_end_year($big_id, $small_id)) == FALSE) {
                 echo " -- " . $big_id . " -- " . $small_id . " time field is error7. --</br>" . $vip_tag_name;
                 return FALSE;
             }
