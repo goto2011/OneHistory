@@ -43,7 +43,7 @@ function check_db_valid()
     global $db_username;
     global $db_password;
     global $db_name;
-    $conn = @mysql_connect($db_host, $db_username, $db_password);
+    $conn = @mysqli_connect($db_host, $db_username, $db_password);
     
     return ($conn != null);
 }

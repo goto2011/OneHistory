@@ -1386,7 +1386,7 @@ $dynasty = array
         
         
         array("中华民国", "super"),
-        array("中华人民共和国", "super"),
+        // array("中华人民共和国", "super"),
         array("台湾", "super"),
         array("香港", "super", "multe-key", "香港", "香港岛", "九龙", "新界", "特首", "行政长官", "立法会"),
     ),

@@ -122,23 +122,25 @@ $topic = array
     (
         // IT行业
         array("IT行业", "super", "multe-key", "微软", "Microsoft", "盖茨", "Windows", "IBM", "Inter", 
-            "新浪", "高通", "搜狐", "网易", "丁磊", "三星"),
-        array("IT技术", "super", "multe-key", "IT技术", "Linux", "区块链", "SQL", 
-            "搜索引擎", "维基", "敏捷", "设计模式", "算法", "PageRank"),
-        array("马斯克", "super", "multe-key", "马斯克", "特斯拉", "SpaceX", "SolarCity"),
-        
-        array("人工智能",  "super", "multe-key", "人工智能", "深度学习", "神经网络", "大数据", 
-            "机器学习", "数据挖掘", "AlphaGo", "云计算"),
+            "高通", "qualcomm", "博通", "Broadcom", "三星"),
+        array("IT技术", "super", "multe-key", "IT技术", "Linux", "区块链", "比特币", "SQL", 
+            "搜索引擎", "维基", "敏捷", "设计模式", "算法", "PageRank", "量子计算", "芯片", "CPU"),
+            
+        array("人工智能",  "super", "multe-key", "人工智能", "深度学习", "神经网络", "机器学习" , 
+            "大数据", "数据挖掘", "AlphaGo", "云计算", "模式识别", "统计建模", "数据挖掘", 
+            "知识发现", "预测分析", "数据科学", "自适应系统", "自组织系统"),
         array("机器人", "super", "multe-key", "机器人", "无人驾驶", "自动驾驶", "无人机", "大疆", 
-            "uber", "滴滴快车", "ofo", "摩拜单车"),
+            "波士顿动力", "无人车", "新能源"),
         
+        array("马斯克", "super", "multe-key", "马斯克", "特斯拉", "Tesla", "SpaceX", "SolarCity"),
         // "拉里·佩奇", "谢尔盖·布林", "埃里克·施密特"
         array("Google", "super", "multe-key", "Google", "谷歌", "Alphabet", "android", 
-            "安卓", "GMail", "YouTube", "GReader", "Chrome", "Google Glass"),
+            "安卓", "GMail", "YouTube", "GReader", "Chrome"),
         array("苹果", "super", "multe-key", "苹果", "apple", "mac", "ios", "IPhone", "乔布斯"),
         
         array("手机行业", "super", "multe-key", "手机", "诺基亚", "努比亚", "魅族", "乐视", 
-            "酷派", "联想手机", "360", "OPPO", "vivo", "Galaxy", "诺基亚", "摩托罗拉", "Nexus"),
+            "酷派", "联想手机", "360", "OPPO", "vivo", "Galaxy", "诺基亚", "摩托罗拉", "Nexus",
+            "Pixel"),
         array("华为", "normal", "multe-key", "华为公司", "08机", "任正非"),
         array("小米", "normal", "multe-key", "小米", "雷军"),
         array("锤子手机", "normal", "multe-key", "锤子", "罗永浩"),
@@ -147,12 +149,15 @@ $topic = array
         array("电子商务", "super", "multe-key", "电子商务", "电商", "阿里巴巴", "马云", "阿里云", 
             "蚂蚁金服", "支付宝", "淘宝", "京东", "当当", "一号店", "菜鸟", "顺丰", "网易严选", 
             "亚马逊", "Amazon", "美团", "饿了么"),
+        array("社交", "super", "multe-key", "社交", "腾讯", "QQ", "微信", "马化腾", "陌陌", "微博", 
+            "Facebook", "扎克伯格", "Twitter", "知乎", "豆瓣"),
         array("游戏", "super", "multe-key", "游戏", "王者荣耀", "RPG", "即时战略", "地下城与勇士", 
             "生化危机", "神秘岛", "穿越火线", "星际争霸", "VR战警", "命令与征服", "刺客信条", "风色幻想", 
             "模拟人生", "劲乐团", "魔兽世界", "暗黑破坏神", "dota", "疯狂的小鸟", "水果忍者"),
-        array("广告", "super", "multe-key", "广告", "Google", "百度", "门户网站", "Admob", "AdWords"),
-        array("社交", "super", "multe-key", "社交", "腾讯", "QQ", "微信", "马化腾", "陌陌", "微博", 
-            "Facebook", "扎克伯格", "Twitter", "知乎", "豆瓣"),
+        array("广告", "super", "multe-key", "广告", "Google", "百度", "门户网站", "Admob", 
+            "AdWords", "新浪", "搜狐", "网易", "丁磊", "今日头条"),
+        array("共享经济", "super", "multe-key", "共享经济", "分享经济", "uber", "滴滴", "ofo", 
+            "摩拜单车", "共享单车", "Airbnb", "共享充电宝", "共享自行车"),
     ),
     array
     (
